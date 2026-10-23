@@ -1,0 +1,35 @@
+name: Batch Generate Posts
+on:
+  workflow_dispatch:
+    inputs:
+      topics:
+        description: 'Topics (one per line)'
+        required: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate posts
+        env:
+          DEEPSEEK_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          mkdir -p posts
+          echo "${{ github.event.inputs.topics }}" | while read -r topic; do
+            [ -z "$topic" ] && continue
+            SLUG=$(echo "$topic" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+            echo "Generating: $topic → posts/$SLUG.json"
+            curl -s https://api.deepseek.com/v1/chat/completions \
+              -H "Authorization: Bearer $DEEPSEEK_KEY" \
+              -H "Content-Type: application/json" \
+              -d "{\"model\":\"deepseek-chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Generate AssignmentWaly JSON for: $topic\"}],\"response_format\":{\"type\":\"json_object\"}}" \
+              > "posts/$SLUG.json"
+          done
+
+      - name: Commit generated posts
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: '🤖 Auto-generate batch posts'
+          file_pattern: 'posts/*.json'
