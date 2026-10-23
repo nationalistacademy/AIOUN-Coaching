@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Humanizer & Plagiarism Bypass</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ================= GLASSMORPHISM & VITAL STYLE ================= */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+
+body {
+    background: #0f172a;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated Background Blobs */
+.blob {
+    position: absolute;
+    filter: blur(90px);
+    z-index: -1;
+    opacity: 0.6;
+    animation: float 12s infinite ease-in-out alternate;
+}
+.blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #8b5cf6; border-radius: 50%; }
+.blob-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #ec4899; border-radius: 50%; animation-delay: -5s; }
+.blob-3 { top: 50%; left: 50%; width: 300px; height: 300px; background: #3b82f6; border-radius: 50%; animation-duration: 18s; }
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(60px, 60px) scale(1.1); }
+}
+
+/* Main Container */
+.wrap {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    z-index: 10;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #a855f7, #ec4899, #f43f5e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+}
+.sub {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 1rem;
+    margin-bottom: 40px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+@media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+.glass-card:hover { transform: translateY(-5px); }
+
+h2 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e2e8f0;
+}
+
+label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
+textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: 0.3s;
+    min-height: 250px;
+    resize: vertical;
+    line-height: 1.6;
+}
+textarea:focus {
+    border-color: #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+}
+
+/* Select Box */
+select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 12px;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+select option { background: #1e293b; color: #fff; }
+
+/* Button */
+.btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(236, 72, 153, 0.6); }
+.btn:disabled { background: #475569; box-shadow: none; cursor: not-allowed; transform: none; }
+
+.btn-copy {
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    margin-top: 10px;
+}
+.btn-copy:hover { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6); }
+
+/* Output Box */
+.output-box {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    height: 250px;
+    overflow-y: auto;
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    white-space: pre-wrap;
+}
+
+/* Status */
+.status { text-align: center; margin-top: 15px; font-size: 0.9rem; font-weight: 600; padding: 10px; border-radius: 8px; display: none; }
+.status.err { display: block; background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+.status.ok { display: block; background: rgba(34, 197, 94, 0.2); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.3); }
+.status.loading { display: block; background: rgba(168, 85, 247, 0.2); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.3); }
+
+/* Progress Bar */
+.progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 15px; overflow: hidden; display: none; }
+.progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #a855f7, #ec4899); transition: width 0.3s; }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<div class="wrap">
+  <h1>🛡️ AI Humanizer</h1>
+  <p class="sub">Bypass Turnitin & GPTZero. Make AI text 100% Human & Plagiarism-Free.</p>
+
+  <div class="grid">
+    <!-- Input Section -->
+    <div class="glass-card">
+      <h2>📥 Paste AI-Generated Text</h2>
+      
+      <label>Select Humanizing Level</label>
+      <select id="humanLevel">
+        <option value="standard">Standard (Good for general assignments)</option>
+        <option value="academic">Academic (Formal tone, safe for AIOU)</option>
+        <option value="casual">Casual (Highly human, slight informal tone)</option>
+      </select>
+
+      <label>Original Text (From ChatGPT / DeepSeek)</label>
+      <textarea id="inputText" placeholder="Paste your AI-generated assignment here..."></textarea>
+
+      <button class="btn" id="generateBtn" onclick="humanizeText()">
+        <span>✨</span> Humanize Text
+      </button>
+      
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div id="status" class="status"></div>
+    </div>
+
+    <!-- Output Section -->
+    <div class="glass-card" style="border-left: 4px solid #a855f7;">
+      <h2>📄 Humanized & Bypassed Text</h2>
+      <div class="output-box" id="output">
+        <div style="text-align: center; color: #64748b; margin-top: 70px;">
+          <span style="font-size: 3rem;">🪄</span><br><br>
+          Paste AI text and click Humanize<br>to bypass AI detectors.
+        </div>
+      </div>
+      
+      <button class="btn btn-copy" id="copyBtn" onclick="copyToClipboard()" style="display: none;">
+        <span>📋</span> Copy Humanized Text
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==========================================
+// 🔑 WORKER CONFIGURATION
+// ==========================================
+const WORKER_URL = "https://assignmentwaly-tools.httpsnationalistacademygithubioassignmentwaly-toolsgener.workers.dev/"; 
+const AUTH_TOKEN = ""; 
+
+// ==========================================
+// AI HUMANIZER PROMPT
+// ==========================================
+const SYSTEM_PROMPT = `You are a professional human editor and plagiarism expert. Your job is to take AI-generated text and rewrite it so it sounds 100% human-written.
+
+CRITICAL RULES TO BYPASS AI DETECTORS (Turnitin, GPTZero, etc.):
+1. CHANGE SENTENCE STRUCTURE: Mix short, punchy sentences with longer, complex ones. AI usually writes balanced sentences; humans don't.
+2. USE TRANSITION WORDS: Use natural transitions like "However," "On the other hand," "Moreover," "In fact," "Interestingly," etc.
+3. PARAPHRASE HEAVILY: Do not just swap synonyms. Rewrite whole paragraphs while keeping the core meaning.
+4. ADD HUMAN IMPERFECTIONS: Slightly change the flow. Use active voice instead of passive voice.
+5. NO AI PHRASES: Remove typical AI words like "In conclusion," "It is important to note," "Delve into," "Tapestry," "Testament to," etc.
+6. PRESERVE ACADEMIC TONE: If the text is an AIOU assignment, keep the academic tone intact, just make it sound like a human student wrote it.
+
+Return ONLY the humanized text. Do not add any extra notes, explanations, or formatting.`;
+
+async function humanizeText() {
+    const btn = document.getElementById('generateBtn');
+    const status = document.getElementById('status');
+    const output = document.getElementById('output');
+    const copyBtn = document.getElementById('copyBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    
+    const text = document.getElementById('inputText').value.trim();
+    const level = document.getElementById('humanLevel').value;
+
+    if (text.length < 50) {
+        status.className = "status err";
+        status.textContent = "❌ Please paste more text (at least 50 characters).";
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = `<span>🧠</span> Humanizing...`;
+    status.className = "status loading";
+    status.textContent = "Rewriting text to bypass AI detectors...";
+    copyBtn.style.display = "none";
+    output.innerHTML = "Processing... Please wait.";
+    
+    // Fake progress bar animation for UI feel
+    progressBar.style.display = "block";
+    progressFill.style.width = "0%";
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress > 90) progress = 90;
+        progressFill.style.width = progress + "%";
+    }, 500);
+
+    let instruction = "";
+    if (level === "academic") instruction = "Keep the tone strictly academic and formal, suitable for a university assignment.";
+    else if (level === "casual") instruction = "Make it slightly casual, as if a student is explaining it to a friend, but keep it readable.";
+    else instruction = "Keep it balanced and natural.";
+
+    const userPrompt = `
+    Humanize this text. ${instruction}
+    
+    TEXT TO HUMANIZE:
+    ${text}
+    `;
+
+    try {
+        const response = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-Auth-Token': AUTH_TOKEN 
+            },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [
+                    { role: 'system', content: SYSTEM_PROMPT },
+                    { role: 'user', content: userPrompt }
+                ],
+                temperature: 0.9, // High temperature for maximum variation
+                max_tokens: 4000
+            })
+        });
+
+        if (!response.ok) throw new Error(`Worker Error: ${response.status}`);
+
+        const data = await response.json();
+        let aiContent = data.choices[0].message.content;
+
+        // Display output
+        output.innerText = aiContent;
+        
+        // Show copy button
+        copyBtn.style.display = "flex";
+        
+        status.className = "status ok";
+        status.textContent = "✅ Text Humanized Successfully! 100% Bypass Ready.";
+        
+    } catch (error) {
+        console.error(error);
+        output.innerHTML = "❌ Error occurred. Check Worker URL or API limits.";
+        status.className = "status err";
+        status.textContent = `❌ ${error.message}`;
+    } finally {
+        clearInterval(interval);
+        progressFill.style.width = "100%";
+        setTimeout(() => { progressBar.style.display = "none"; }, 1000);
+        btn.disabled = false;
+        btn.innerHTML = `<span>✨</span> Humanize Text`;
+    }
+}
+
+function copyToClipboard() {
+    const output = document.getElementById('output');
+    const textToCopy = output.innerText;
+    
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const copyBtn = document.getElementById('copyBtn');
+        const originalHTML = copyBtn.innerHTML;
+        
+        copyBtn.innerHTML = `<span>✅</span> Copied!`;
+        copyBtn.style.background = "#059669";
+        
+        setTimeout(() => {
+            copyBtn.innerHTML = originalHTML;
+            copyBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+        }, 2500);
+    });
+}
+</script>
+</body>
+</html>
