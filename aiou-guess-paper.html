@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIOU Guess Paper Extractor - AI Powered</title>
+<!-- Google Fonts for Premium Look -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ================= VITAL & GLASSMORPHISM STYLE ================= */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+
+body {
+    background: #0f172a;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated Background Blobs */
+.blob {
+    position: absolute;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.7;
+    animation: float 10s infinite ease-in-out alternate;
+}
+.blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #22c55e; border-radius: 50%; }
+.blob-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #3b82f6; border-radius: 50%; animation-delay: -5s; }
+.blob-3 { top: 40%; left: 40%; width: 300px; height: 300px; background: #8b5cf6; border-radius: 50%; animation-duration: 15s; }
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, 50px) scale(1.1); }
+}
+
+/* Main Container */
+.wrap {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    z-index: 10;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #4ade80, #3b82f6, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+}
+.sub {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 1rem;
+    margin-bottom: 40px;
+    font-weight: 300;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+@media(max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+.glass-card:hover { transform: translateY(-5px); }
+
+h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e2e8f0;
+}
+
+/* Inputs & Textarea */
+label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
+input[type="text"], textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 12px 15px;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: 0.3s;
+}
+input[type="text"]:focus, textarea:focus {
+    border-color: #4ade80;
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.2);
+}
+textarea { min-height: 120px; resize: vertical; }
+
+/* File Upload Box */
+.upload-box {
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+    background: rgba(0,0,0,0.1);
+    position: relative;
+}
+.upload-box:hover { background: rgba(255,255,255,0.05); border-color: #4ade80; }
+.upload-box input[type="file"] {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+}
+.upload-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+.upload-text { font-size: 0.9rem; color: #94a3b8; }
+.file-name { margin-top: 10px; font-size: 0.85rem; color: #4ade80; font-weight: 600; }
+
+/* Button */
+.btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 25px;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(34, 197, 94, 0.6); }
+.btn:disabled { background: #475569; box-shadow: none; cursor: not-allowed; transform: none; }
+
+/* Output Box */
+.output-box {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    height: 500px;
+    overflow-y: auto;
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.output-box strong { color: #4ade80; }
+
+/* Custom Scrollbar */
+.output-box::-webkit-scrollbar { width: 8px; }
+.output-box::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+.output-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+/* Status Badge */
+.status { text-align: center; margin-top: 15px; font-size: 0.9rem; font-weight: 600; padding: 10px; border-radius: 8px; display: none; }
+.status.err { display: block; background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+.status.ok { display: block; background: rgba(34, 197, 94, 0.2); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.3); }
+.status.loading { display: block; background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+/* AI Highlights */
+.badge-hot { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; background: #ef4444; color: white; margin-right: 5px; }
+.badge-med { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; background: #f59e0b; color: white; margin-right: 5px; }
+</style>
+<!-- PDF.js Library for Reading PDFs in Browser -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+
+<!-- Animated Background Blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<div class="wrap">
+  <h1>🎯 AIOU Guess Paper</h1>
+  <p class="sub">Upload Past Papers (PDF/Images) & Let AI find the Most Important Questions.</p>
+
+  <div class="grid">
+    <!-- Input Section -->
+    <div class="glass-card">
+      <h2>📥 Upload Past Papers</h2>
+      
+      <label>Course Name / Code</label>
+      <input type="text" id="courseName" placeholder="e.g. Business Mathematics (1429)">
+
+      <!-- File Upload Box -->
+      <label style="margin-top: 20px;">Upload PDF or Image</label>
+      <div class="upload-box">
+        <input type="file" id="fileInput" accept=".pdf, image/*" onchange="handleFileUpload(event)">
+        <span class="upload-icon">📄</span>
+        <div class="upload-text">Click to Browse or Drag & Drop</div>
+        <div class="upload-text" style="font-size: 0.75rem; margin-top: 5px;">(Supports PDF, JPG, PNG)</div>
+        <div id="fileName" class="file-name"></div>
+      </div>
+
+      <!-- Manual Text Fallback -->
+      <label style="margin-top: 20px;">Or Paste Text Manually</label>
+      <textarea id="rawText" placeholder="Paste questions here..."></textarea>
+
+      <button class="btn" id="generateBtn" onclick="extractGuessPaper()">
+        <span>🔍</span> Extract Important Questions
+      </button>
+      
+      <div id="status" class="status"></div>
+    </div>
+
+    <!-- Output Section -->
+    <div class="glass-card" style="border-left: 4px solid #22c55e;">
+      <h2>📄 AI Analysis & Guess Paper</h2>
+      <div class="output-box" id="output">
+        <div style="text-align: center; color: #64748b; margin-top: 50px;">
+          <span style="font-size: 3rem;">🤖</span><br><br>
+          Upload a past paper or paste text<br>to see the magic happen!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Set PDF.js Worker path
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ==========================================
+// 🔑 WORKER CONFIGURATION
+// ==========================================
+const WORKER_URL = "https://assignmentwaly-tools.YOUR-SUBDOMAIN.workers.dev"; 
+const AUTH_TOKEN = ""; 
+
+// Variable to store extracted text from file
+let extractedText = "";
+
+// ==========================================
+// FILE HANDLING LOGIC
+// ==========================================
+async function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const fileNameDisplay = document.getElementById('fileName');
+    const status = document.getElementById('status');
+    const output = document.getElementById('output');
+    
+    fileNameDisplay.textContent = `📎 ${file.name}`;
+    extractedText = ""; // Reset previous text
+    document.getElementById('rawText').value = "";
+
+    if (file.type === 'application/pdf') {
+        status.className = "status loading";
+        status.textContent = "⏳ Extracting text from PDF... Please wait.";
+        output.innerHTML = "Reading PDF pages...";
+
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+            let fullText = "";
+            
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += pageText + "\n";
+            }
+            
+            extractedText = fullText;
+            status.className = "status ok";
+            status.textContent = `✅ PDF Text Extracted (${pdf.numPages} Pages)! Ready to analyze.`;
+            output.innerHTML = `✅ <strong>${pdf.numPages} pages loaded.</strong><br><br>Click "Extract Important Questions" to let AI analyze the data.`;
+            
+        } catch (error) {
+            console.error(error);
+            status.className = "status err";
+            status.textContent = "❌ Failed to read PDF. Try pasting text manually.";
+        }
+    } 
+    else if (file.type.startsWith('image/')) {
+        status.className = "status err";
+        status.textContent = "⚠️ Image reading requires OCR (Coming soon). Please paste text manually.";
+    }
+}
+
+// ==========================================
+// AI PROMPT LOGIC
+// ==========================================
+const SYSTEM_PROMPT = `You are an expert AIOU (Allama Iqbal Open University) exam analyzer.
+Your task is to analyze the past papers provided by the user and generate a highly accurate "Guess Paper".
+
+RULES:
+1. Group similar questions together.
+2. Categorize questions using:
+   🔥 **HIGH PRIORITY (Must Prepare)** (Repeated questions)
+   ⭐ **MEDIUM PRIORITY** (Occasional questions)
+   📚 **SUBJECTIVE (Long Questions)**
+3. At the end, provide an "AIOU Exam Tip".
+4. Return the output in clean HTML format using <br>, <strong>, and <span class="badge-hot">HIGH</span>. Do NOT use markdown blocks.`;
+
+async function extractGuessPaper() {
+    const btn = document.getElementById('generateBtn');
+    const status = document.getElementById('status');
+    const output = document.getElementById('output');
+    const rawText = document.getElementById('rawText').value.trim();
+    
+    // Combine uploaded text and manual text
+    const finalText = (extractedText + "\n" + rawText).trim();
+    const courseName = document.getElementById('courseName').value.trim();
+
+    if (finalText.length < 50) {
+        status.className = "status err";
+        status.textContent = "❌ Please upload a PDF or paste at least 50 characters.";
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = `<span>⏳</span> AI is Analyzing...`;
+    status.className = "status loading";
+    status.textContent = "Reading data and finding patterns... (20-40 seconds)";
+    output.innerHTML = `<div style="text-align:center; margin-top:50px;">
+        <span style="font-size:3rem;">🧠</span><br><br>
+        AI is scanning your paper...<br>Finding repeated questions...
+    </div>`;
+
+    const userPrompt = `
+    Course: ${courseName || "AIOU Course"}
+    DATA:
+    ${finalText}
+    
+    Generate the Guess Paper.`;
+
+    try {
+        const response = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-Auth-Token': AUTH_TOKEN 
+            },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [
+                    { role: 'system', content: SYSTEM_PROMPT },
+                    { role: 'user', content: userPrompt }
+                ],
+                temperature: 0.4, 
+                max_tokens: 4000
+            })
+        });
+
+        if (!response.ok) throw new Error(`Worker Error: ${response.status}`);
+
+        const data = await response.json();
+        let aiContent = data.choices[0].message.content;
+
+        // Formatting output
+        aiContent = aiContent
+            .replace(/🔥/g, '<span class="badge-hot">🔥 HIGH</span>')
+            .replace(/⭐/g, '<span class="badge-med">⭐ MEDIUM</span>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\n/g, '<br>');
+
+        output.innerHTML = aiContent;
+        status.className = "status ok";
+        status.textContent = "✅ Guess Paper Generated Successfully!";
+
+    } catch (error) {
+        console.error(error);
+        output.innerHTML = "❌ Error occurred. Check your Worker URL or API limits.";
+        status.className = "status err";
+        status.textContent = `❌ ${error.message}`;
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>🔍</span> Extract Important Questions`;
+    }
+}
+</script>
+</body>
+</html>
