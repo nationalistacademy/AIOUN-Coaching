@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Diagram & Graph Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- Mermaid.js for Flowcharts -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<!-- html2canvas for Downloading as Image -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+/* ================= VITAL & GLASSMORPHISM STYLE ================= */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+
+body {
+    background: #0f172a;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated Background Blobs */
+.blob { position: absolute; filter: blur(90px); z-index: -1; opacity: 0.6; animation: float 12s infinite ease-in-out alternate; }
+.blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #f59e0b; border-radius: 50%; }
+.blob-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #ef4444; border-radius: 50%; animation-delay: -5s; }
+.blob-3 { top: 50%; left: 50%; width: 300px; height: 300px; background: #8b5cf6; border-radius: 50%; animation-duration: 18s; }
+
+@keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 60px) scale(1.1); } }
+
+/* Main Container */
+.wrap { width: 100%; max-width: 1200px; padding: 20px; z-index: 10; }
+
+h1 {
+    text-align: center; font-size: 2.5rem; font-weight: 700;
+    background: linear-gradient(to right, #f59e0b, #ef4444, #8b5cf6);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px;
+}
+.sub { text-align: center; color: #94a3b8; font-size: 1rem; margin-bottom: 40px; }
+
+.grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; }
+@media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); transition: transform 0.3s ease;
+}
+.glass-card:hover { transform: translateY(-5px); }
+
+h2 { font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: #e2e8f0; }
+
+label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
+textarea, select {
+    width: 100%; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px; padding: 15px; color: #fff; font-size: 0.95rem; outline: none; transition: 0.3s;
+    margin-bottom: 15px; font-family: inherit;
+}
+textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
+textarea:focus, select:focus { border-color: #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
+select option { background: #1e293b; color: #fff; }
+
+/* Button */
+.btn {
+    width: 100%; padding: 15px; border: none; border-radius: 12px;
+    background: linear-gradient(135deg, #f59e0b, #ef4444); color: white;
+    font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); display: flex; justify-content: center; align-items: center; gap: 10px;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6); }
+.btn:disabled { background: #475569; box-shadow: none; cursor: not-allowed; transform: none; }
+.btn-download { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); margin-top: 15px; display: none; }
+
+/* Output Area */
+.output-area {
+    background: #fff; /* White background for diagram */
+    border-radius: 12px; padding: 20px; min-height: 400px;
+    display: flex; justify-content: center; align-items: center;
+    overflow: auto; position: relative;
+}
+.mermaid { background: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+/* Status */
+.status { text-align: center; margin-top: 15px; font-size: 0.9rem; font-weight: 600; padding: 10px; border-radius: 8px; display: none; }
+.status.err { display: block; background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+.status.ok { display: block; background: rgba(34, 197, 94, 0.2); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.3); }
+.status.loading { display: block; background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<div class="wrap">
+  <h1>🎨 AI Diagram Generator</h1>
+  <p class="sub">Describe your topic, and AI will draw the perfect flowchart or graph for your assignment.</p>
+
+  <div class="grid">
+    <!-- Input Form -->
+    <div class="glass-card">
+      <h2>📝 What do you need?</h2>
+      
+      <label>Paste the Question or Topic</label>
+      <textarea id="promptInput" placeholder="e.g. Draw a flowchart showing the process of Photosynthesis... OR Explain the water cycle..."></textarea>
+
+      <label>Select Diagram Type</label>
+      <select id="diagramType">
+        <option value="flowchart">Flowchart / Process Diagram</option>
+        <option value="mindmap">Mind Map (For Ideas)</option>
+        <option value="sequence">Sequence Diagram (Steps)</option>
+        <option value="graph">Bar/Line Graph (Data)</option>
+      </select>
+
+      <button class="btn" id="generateBtn" onclick="generateDiagram()">
+        <span>🪄</span> Generate Diagram
+      </button>
+      
+      <div id="status" class="status"></div>
+    </div>
+
+    <!-- Output Section -->
+    <div class="glass-card" style="border-left: 4px solid #f59e0b;">
+      <h2>🖼️ Preview & Download</h2>
+      
+      <div class="output-area" id="outputArea">
+        <!-- Default placeholder -->
+        <div style="text-align: center; color: #64748b;" id="placeholderText">
+          <span style="font-size: 4rem;">📊</span><br><br>
+          Your diagram will appear here.
+        </div>
+        
+        <!-- Actual Mermaid Render -->
+        <div class="mermaid" id="mermaidOutput" style="display: none;"></div>
+      </div>
+      
+      <button class="btn btn-download" id="downloadBtn" onclick="downloadImage()">
+        <span>📥</span> Download as PNG Image
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Initialize Mermaid
+mermaid.initialize({ 
+    startOnLoad: false, 
+    theme: 'default',
+    securityLevel: 'loose'
+});
+
+// ==========================================
+// 🔑 WORKER CONFIGURATION
+// ==========================================
+const WORKER_URL = "https://assignmentwaly-tools.httpsnationalistacademygithubioassignmentwaly-toolsgener.workers.dev/"; 
+const AUTH_TOKEN = ""; 
+
+// ==========================================
+// AI SYSTEM PROMPT (Mermaid Coder)
+// ==========================================
+const SYSTEM_PROMPT = `You are an expert AI that writes Mermaid.js code to draw diagrams.
+Your ONLY output should be raw, valid Mermaid code. Do NOT wrap it in markdown (no \`\`\`mermaid).
+Do NOT provide any explanation.
+
+RULES:
+1. If the user asks for a flowchart, use 'graph TD' or 'graph LR'.
+2. If the user asks for a mind map, use 'mindmap'.
+3. If the user asks for a sequence, use 'sequenceDiagram'.
+4. Keep the text inside nodes short and clear.
+5. Do not use special characters that break Mermaid syntax.
+
+Example Output for "Water Cycle":
+graph TD
+A[Water Evaporates] --> B(Condensation)
+B --> C[Precipitation]
+C --> D(Collection)
+D --> A`;
+
+async function generateDiagram() {
+    const btn = document.getElementById('generateBtn');
+    const status = document.getElementById('status');
+    const mermaidOutput = document.getElementById('mermaidOutput');
+    const placeholderText = document.getElementById('placeholderText');
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    const prompt = document.getElementById('promptInput').value.trim();
+    const type = document.getElementById('diagramType').value;
+
+    if (!prompt) {
+        status.className = "status err";
+        status.textContent = "❌ Please enter a topic or question.";
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = `<span>🧠</span> AI is Drawing...`;
+    status.className = "status loading";
+    status.textContent = "Generating Mermaid syntax... Please wait.";
+    downloadBtn.style.display = "none";
+
+    const userPrompt = `
+    Create a ${type} diagram for the following request:
+    "${prompt}"
+    `;
+
+    try {
+        const response = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-Auth-Token': AUTH_TOKEN 
+            },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [
+                    { role: 'system', content: SYSTEM_PROMPT },
+                    { role: 'user', content: userPrompt }
+                ],
+                temperature: 0.1, // Very low temp for strict syntax adherence
+                max_tokens: 1000
+            })
+        });
+
+        if (!response.ok) throw new Error(`Worker Error: ${response.status}`);
+
+        const data = await response.json();
+        let mermaidCode = data.choices[0].message.content.trim();
+        
+        // Safety: Remove markdown formatting if AI adds it anyway
+        mermaidCode = mermaidCode.replace(/```mermaid/g, '').replace(/```/g, '').trim();
+
+        // Render Mermaid
+        placeholderText.style.display = 'none';
+        mermaidOutput.style.display = 'block';
+        mermaidOutput.innerHTML = mermaidCode;
+        
+        // Re-render Mermaid to apply styles
+        mermaid.init(undefined, mermaidOutput);
+
+        status.className = "status ok";
+        status.textContent = "✅ Diagram Generated Successfully!";
+        downloadBtn.style.display = "flex";
+
+    } catch (error) {
+        console.error(error);
+        status.className = "status err";
+        status.textContent = "❌ Failed to generate diagram. Try phrasing differently.";
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>🪄</span> Generate Diagram`;
+    }
+}
+
+// Function to download diagram as PNG
+async function downloadImage() {
+    const outputArea = document.getElementById('outputArea');
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    downloadBtn.innerHTML = `<span>⏳</span> Processing Image...`;
+    
+    try {
+        const canvas = await html2canvas(outputArea, {
+            scale: 2, // High resolution
+            backgroundColor: '#ffffff'
+        });
+        
+        const link = document.createElement('a');
+        link.download = 'AIOU_Diagram.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        downloadBtn.innerHTML = `<span>✅</span> Downloaded!`;
+        setTimeout(() => {
+            downloadBtn.innerHTML = `<span>📥</span> Download as PNG Image`;
+        }, 3000);
+        
+    } catch (error) {
+        console.error("Image download failed", error);
+        alert("Failed to download image. Try again.");
+        downloadBtn.innerHTML = `<span>📥</span> Download as PNG Image`;
+    }
+}
+</script>
+</body>
+</html>
