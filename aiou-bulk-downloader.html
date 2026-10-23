@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk Assignment ZIP Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- Libraries for DOCX & ZIP Generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.0.2/docx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<style>
+/* ================= VITAL & GLASSMORPHISM STYLE ================= */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+
+body {
+    background: #0f172a;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated Background Blobs */
+.blob { position: absolute; filter: blur(90px); z-index: -1; opacity: 0.6; animation: float 12s infinite ease-in-out alternate; }
+.blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #3b82f6; border-radius: 50%; }
+.blob-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #10b981; border-radius: 50%; animation-delay: -5s; }
+.blob-3 { top: 50%; left: 50%; width: 300px; height: 300px; background: #8b5cf6; border-radius: 50%; animation-duration: 18s; }
+
+@keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 60px) scale(1.1); } }
+
+/* Main Container */
+.wrap { width: 100%; max-width: 1200px; padding: 20px; z-index: 10; }
+
+h1 {
+    text-align: center; font-size: 2.5rem; font-weight: 700;
+    background: linear-gradient(to right, #3b82f6, #10b981, #8b5cf6);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px;
+}
+.sub { text-align: center; color: #94a3b8; font-size: 1rem; margin-bottom: 40px; }
+
+.grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; }
+@media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); transition: transform 0.3s ease;
+}
+.glass-card:hover { transform: translateY(-5px); }
+
+h2 { font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: #e2e8f0; }
+
+/* Student List Items */
+.student-item {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+}
+.remove-btn {
+    position: absolute; top: -10px; right: -10px; background: #ef4444; color: white;
+    border: none; width: 25px; height: 25px; border-radius: 50%; font-weight: bold; cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.remove-btn:hover { background: #dc2626; }
+
+label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 5px; color: #cbd5e1; }
+input, textarea {
+    width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 0.85rem; outline: none; margin-bottom: 10px;
+    font-family: inherit;
+}
+textarea { min-height: 80px; resize: vertical; line-height: 1.5; }
+input:focus, textarea:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
+
+/* Buttons */
+.btn {
+    width: 100%; padding: 15px; border: none; border-radius: 12px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: white;
+    font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); display: flex; justify-content: center; align-items: center; gap: 10px;
+    margin-top: 10px;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6); }
+.btn:disabled { background: #475569; box-shadow: none; cursor: not-allowed; transform: none; }
+
+.btn-add { background: rgba(255, 255, 255, 0.1); border: 1px dashed rgba(255, 255, 255, 0.3); box-shadow: none; margin-bottom: 20px; font-size: 0.9rem; padding: 12px; }
+.btn-add:hover { background: rgba(255, 255, 255, 0.15); box-shadow: none; }
+
+.btn-download { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+
+/* Status */
+.status { text-align: center; margin-top: 15px; font-size: 0.9rem; font-weight: 600; padding: 10px; border-radius: 8px; display: none; }
+.status.err { display: block; background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+.status.ok { display: block; background: rgba(34, 197, 94, 0.2); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.3); }
+.status.loading { display: block; background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+/* Scrollable area */
+.student-list-container { max-height: 500px; overflow-y: auto; padding-right: 10px; }
+.student-list-container::-webkit-scrollbar { width: 6px; }
+.student-list-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+.student-list-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<div class="wrap">
+  <h1>📥 Bulk Assignment Downloader</h1>
+  <p class="sub">Generate multiple MS Word files and download them all in one ZIP folder.</p>
+
+  <div class="grid">
+    <!-- Input Section -->
+    <div class="glass-card">
+      <h2>👨‍🎓 Students List</h2>
+      
+      <div id="studentsContainer" class="student-list-container">
+        <!-- Student rows will be added here -->
+      </div>
+
+      <button class="btn btn-add" onclick="addStudentRow()">+ Add Another Student</button>
+      
+      <button class="btn btn-download" id="generateBtn" onclick="generateZIP()">
+        <span>📦</span> Generate ZIP File
+      </button>
+      
+      <div id="status" class="status"></div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="glass-card" style="border-left: 4px solid #10b981;">
+      <h2>💡 How it works?</h2>
+      <ul style="list-style-type: none; line-height: 1.8; color: #cbd5e1; font-size: 0.95rem;">
+        <li>✅ <b>Step 1:</b> Add student details (Name, Roll No, Course).</li>
+        <li>✅ <b>Step 2:</b> Paste their assignment text.</li>
+        <li>✅ <b>Step 3:</b> Click Generate.</li>
+        <li>✅ <b>Result:</b> The tool will create separate MS Word files for each student and pack them into a single ZIP file for you.</li>
+      </ul>
+      <br>
+      <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); padding: 15px; border-radius: 8px; font-size: 0.85rem; color: #93c5fd;">
+        <b>Note:</b> This tool runs 100% in your browser. Your data is never sent to any server. It is fast, free, and secure.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Initialize with one empty row
+window.onload = () => { addStudentRow(); };
+
+function addStudentRow() {
+    const container = document.getElementById('studentsContainer');
+    const row = document.createElement('div');
+    row.className = 'student-item';
+    row.innerHTML = `
+        <button class="remove-btn" onclick="this.parentElement.remove()">×</button>
+        <label>Student Name</label>
+        <input type="text" class="s-name" placeholder="e.g. Ali Khan">
+        
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+                <label>Roll No</label>
+                <input type="text" class="s-roll" placeholder="AB123456">
+            </div>
+            <div style="flex: 2;">
+                <label>Course</label>
+                <input type="text" class="s-course" placeholder="e.g. Math (1429)">
+            </div>
+        </div>
+        
+        <label>Assignment Content (Paste here)</label>
+        <textarea class="s-text" placeholder="Paste the assignment text here..."></textarea>
+    `;
+    container.appendChild(row);
+}
+
+async function generateZIP() {
+    const btn = document.getElementById('generateBtn');
+    const status = document.getElementById('status');
+    const rows = document.querySelectorAll('.student-item');
+    
+    if (rows.length === 0) {
+        status.className = "status err";
+        status.textContent = "❌ Please add at least one student.";
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = `<span>⏳</span> Generating ZIP...`;
+    status.className = "status loading";
+    status.textContent = "Creating Word files and packing ZIP...";
+
+    try {
+        const zip = new JSZip();
+        let validCount = 0;
+        
+        const { Document, Packer, Paragraph, TextRun, HeadingLevel } = docx;
+
+        for (let i = 0; i < rows.length; i++) {
+            const name = rows[i].querySelector('.s-name').value.trim() || `Student_${i+1}`;
+            const roll = rows[i].querySelector('.s-roll').value.trim() || "N/A";
+            const course = rows[i].querySelector('.s-course').value.trim() || "AIOU Course";
+            const text = rows[i].querySelector('.s-text').value.trim();
+
+            if (!text) continue; // Skip empty assignments
+
+            validCount++;
+
+            // Create Document
+            const doc = new Document({
+                sections: [{
+                    properties: {},
+                    children: [
+                        // Header
+                        new Paragraph({
+                            text: "ALLAMA IQBAL OPEN UNIVERSITY",
+                            heading: HeadingLevel.HEADING_1,
+                            alignment: "center",
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({ text: `Name: ${name}`, bold: true }),
+                                new TextRun({ text: ` | Roll No: ${roll}`, bold: true }),
+                                new TextRun({ text: ` | Course: ${course}`, bold: true }),
+                            ],
+                            alignment: "center",
+                        }),
+                        new Paragraph({ text: "\n" }),
+                        
+                        // Assignment Content
+                        ...text.split('\n').map(line => new Paragraph({
+                            children: [new TextRun(line)],
+                            spacing: { after: 120 } // Line spacing
+                        }))
+                    ],
+                }],
+            });
+
+            // Generate Blob and add to ZIP
+            const blob = await Packer.toBlob(doc);
+            const safeFileName = name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            zip.file(`${safeFileName}_${roll}.docx`, blob);
+        }
+
+        if (validCount === 0) {
+            throw new Error("No assignment text provided.");
+        }
+
+        // Generate ZIP
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+        saveAs(zipBlob, "AIOU_Assignments_Batch.zip");
+
+        status.className = "status ok";
+        status.textContent = `✅ Successfully generated ${validCount} files in ZIP!`;
+
+    } catch (error) {
+        console.error(error);
+        status.className = "status err";
+        status.textContent = `❌ ${error.message || "Failed to generate ZIP."}`;
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>📦</span> Generate ZIP File`;
+    }
+}
+</script>
+</body>
+</html>
