@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AssignmentWaly AI Studio - All-in-One</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- Mermaid for Diagrams -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<!-- Docx for Word Generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.0.2/docx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<style>
+/* ================= VITAL & GLASSMORPHISM STYLE ================= */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+
+body {
+    background: #0b1120;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated Background Blobs */
+.blob { position: absolute; filter: blur(100px); z-index: -1; opacity: 0.5; animation: float 15s infinite ease-in-out alternate; }
+.blob-1 { top: -10%; left: -10%; width: 600px; height: 600px; background: #6366f1; border-radius: 50%; }
+.blob-2 { bottom: -10%; right: -10%; width: 500px; height: 500px; background: #ec4899; border-radius: 50%; animation-delay: -5s; }
+.blob-3 { top: 40%; left: 30%; width: 400px; height: 400px; background: #10b981; border-radius: 50%; animation-duration: 20s; }
+
+@keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(80px, 80px) scale(1.1); } }
+
+/* Layout */
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; min-height: 100vh; }
+header { text-align: center; margin-bottom: 30px; }
+h1 {
+    font-size: 2.5rem; font-weight: 700;
+    background: linear-gradient(to right, #818cf8, #f472b6, #34d399);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.sub { color: #94a3b8; font-size: 1rem; margin-top: 5px; }
+
+/* Stepper Navigation */
+.stepper { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
+.step {
+    display: flex; align-items: center; gap: 10px; padding: 10px 20px; border-radius: 30px;
+    background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.3s;
+}
+.step.active { background: rgba(99, 102, 241, 0.2); border-color: #6366f1; color: #fff; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); }
+.step.completed { background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #34d399; }
+.step-num { background: rgba(255, 255, 255, 0.1); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+.step.active .step-num { background: #6366f1; }
+.step.completed .step-num { background: #10b981; }
+
+/* Main Workspace */
+.workspace { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; flex: 1; }
+@media(max-width: 1000px) { .workspace { grid-template-columns: 1fr; } }
+
+/* Glass Panels */
+.glass-panel {
+    background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 25px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; position: relative;
+}
+
+/* Inputs */
+label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; margin-top: 15px; }
+input, textarea, select {
+    width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px; padding: 12px 15px; color: #fff; font-size: 0.95rem; outline: none; transition: 0.3s;
+    font-family: inherit;
+}
+textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
+input:focus, textarea:focus { border-color: #6366f1; box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
+
+/* Buttons */
+.btn {
+    padding: 12px 20px; border: none; border-radius: 10px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;
+    font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); display: flex; justify-content: center; align-items: center; gap: 8px;
+    margin-top: 15px;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6); }
+.btn:disabled { background: #334155; box-shadow: none; cursor: not-allowed; transform: none; }
+.btn-green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+.btn-pink { background: linear-gradient(135deg, #ec4899, #be185d); box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); }
+.btn-sm { padding: 8px 15px; font-size: 0.85rem; margin-top: 5px; }
+
+/* Output Area */
+.output-box {
+    background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px;
+    padding: 20px; height: 400px; overflow-y: auto; font-size: 0.95rem; line-height: 1.7; color: #e2e8f0;
+    white-space: pre-wrap; margin-top: 15px;
+}
+.output-box::-webkit-scrollbar { width: 6px; }
+.output-box::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
+
+/* Diagram Area */
+#diagramArea { background: #fff; border-radius: 12px; min-height: 200px; padding: 20px; display: flex; justify-content: center; align-items: center; margin-top: 15px; overflow: hidden; }
+
+/* Utilities */
+.hidden { display: none !important; }
+.status { text-align: center; font-size: 0.85rem; font-weight: 600; padding: 8px; border-radius: 8px; margin-top: 10px; }
+.status.err { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+.status.ok { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+.status.loading { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; }
+
+/* Tabs inside Step 2 */
+.tabs { display: flex; gap: 10px; margin-bottom: 10px; }
+.tab { flex: 1; padding: 10px; text-align: center; background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.3s; }
+.tab.active { background: #6366f1; color: white; }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<div class="container">
+    <header>
+        <h1>AssignmentWaly AI Studio</h1>
+        <div class="sub">All-in-One Solution: Write, Humanize, Draw & Download</div>
+    </header>
+
+    <!-- Stepper -->
+    <div class="stepper">
+        <div class="step active" id="nav-step-1" onclick="switchStep(1)"><div class="step-num">1</div> Details</div>
+        <div class="step" id="nav-step-2" onclick="switchStep(2)"><div class="step-num">2</div> Write & Humanize</div>
+        <div class="step" id="nav-step-3" onclick="switchStep(3)"><div class="step-num">3</div> Diagram</div>
+        <div class="step" id="nav-step-4" onclick="switchStep(4)"><div class="step-num">4</div> Download</div>
+    </div>
+
+    <div class="workspace">
+        <!-- ================= LEFT PANEL (CONTROLS) ================= -->
+        <div class="glass-panel">
+            
+            <!-- STEP 1: DETAILS -->
+            <div id="step-1">
+                <h2>📝 Student & Course Details</h2>
+                <label>Student Name</label>
+                <input type="text" id="sName" placeholder="e.g. Ali Khan">
+                
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:1;">
+                        <label>Roll Number</label>
+                        <input type="text" id="sRoll" placeholder="AB123456">
+                    </div>
+                    <div style="flex:1;">
+                        <label>Semester</label>
+                        <input type="text" id="sSemester" placeholder="Autumn 2026">
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:2;">
+                        <label>Course Name</label>
+                        <input type="text" id="sCourse" placeholder="e.g. Business Mathematics">
+                    </div>
+                    <div style="flex:1;">
+                        <label>Course Code</label>
+                        <input type="text" id="sCode" placeholder="e.g. 1429">
+                    </div>
+                </div>
+
+                <label>Paste Questions Here</label>
+                <textarea id="sQuestions" placeholder="Paste the assignment questions from AIOU portal..."></textarea>
+                
+                <button class="btn" onclick="switchStep(2)">Next: Generate Assignment ➔</button>
+            </div>
+
+            <!-- STEP 2: WRITER & HUMANIZER -->
+            <div id="step-2" class="hidden">
+                <h2>🧠 AI Writer & Humanizer</h2>
+                <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:15px;">AI will write the assignment first, then rewrite it to bypass Turnitin.</p>
+                
+                <button class="btn btn-pink" id="btnWrite" onclick="generateAssignment()">
+                    <span>✨</span> 1. Generate Assignment
+                </button>
+                <div id="writeStatus" class="status hidden"></div>
+
+                <hr style="border-color:rgba(255,255,255,0.1); margin: 20px 0;">
+
+                <button class="btn btn-green" id="btnHumanize" onclick="humanizeText()" disabled>
+                    <span>🪄</span> 2. Humanize (Bypass AI)
+                </button>
+                <div id="humanizeStatus" class="status hidden"></div>
+
+                <button class="btn" onclick="switchStep(3)" style="margin-top:20px;">Next: Generate Diagram ➔</button>
+            </div>
+
+            <!-- STEP 3: DIAGRAM -->
+            <div id="step-3" class="hidden">
+                <h2>🎨 AI Diagram Generator</h2>
+                <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:15px;">Enter a specific topic to draw a diagram (Optional).</p>
+                
+                <label>Diagram Topic (e.g. Water Cycle, Demand & Supply)</label>
+                <input type="text" id="diagramPrompt" placeholder="What should the diagram be about?">
+                
+                <button class="btn btn-pink" id="btnDraw" onclick="generateDiagram()">
+                    <span>🖌️</span> Generate Diagram
+                </button>
+                <div id="diagramStatus" class="status hidden"></div>
+
+                <button class="btn" onclick="switchStep(4)" style="margin-top:20px;">Next: Download ➔</button>
+            </div>
+
+            <!-- STEP 4: DOWNLOAD -->
+            <div id="step-4" class="hidden">
+                <h2>📥 Download Assignment</h2>
+                <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:15px;">Your Word file will include the Front Page, Text, and Diagrams.</p>
+                
+                <button class="btn btn-green" onclick="downloadWordFile()">
+                    <span>📄</span> Download as MS Word (.docx)
+                </button>
+                <div id="downloadStatus" class="status hidden"></div>
+            </div>
+
+        </div>
+
+        <!-- ================= RIGHT PANEL (PREVIEW) ================= -->
+        <div class="glass-panel" style="background: rgba(255,255,255,0.02);">
+            
+            <div class="tabs" id="previewTabs">
+                <div class="tab active" onclick="switchTab('text')">📝 Assignment Text</div>
+                <div class="tab" onclick="switchTab('diagram')">🖼️ Diagram</div>
+            </div>
+
+            <!-- Text Preview -->
+            <div id="preview-text">
+                <div class="output-box" id="textOutput">
+                    <div style="text-align: center; color: #64748b; margin-top: 100px;">
+                        <span style="font-size: 3rem;">🤖</span><br><br>
+                        Your assignment text will appear here.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagram Preview -->
+            <div id="preview-diagram" class="hidden">
+                <div id="diagramArea">
+                    <div style="text-align: center; color: #64748b;" id="diagramPlaceholder">
+                        <span style="font-size: 3rem;">📊</span><br><br>
+                        Your diagram will appear here.
+                    </div>
+                    <div class="mermaid" id="mermaidOutput" style="display: none;"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+// ==========================================
+// 🔑 WORKER CONFIGURATION
+// ==========================================
+const WORKER_URL = "https://assignmentwaly-tools.httpsnationalistacademygithubioassignmentwaly-toolsgener.workers.dev/"; 
+const AUTH_TOKEN = ""; 
+
+// Initialize Mermaid
+mermaid.initialize({ startOnLoad: false, theme: 'default' });
+
+// Global State
+let currentText = "";
+let humanizedText = "";
+let mermaidCode = "";
+
+// ==========================================
+// NAVIGATION LOGIC
+// ==========================================
+function switchStep(step) {
+    // Hide all steps
+    [1,2,3,4].forEach(i => {
+        document.getElementById(`step-${i}`).classList.add('hidden');
+        document.getElementById(`nav-step-${i}`).classList.remove('active', 'completed');
+    });
+    
+    // Show selected step
+    document.getElementById(`step-${step}`).classList.remove('hidden');
+    document.getElementById(`nav-step-${step}`).classList.add('active');
+    
+    // Mark previous as completed
+    for(let i=1; i<step; i++) document.getElementById(`nav-step-${i}`).classList.add('completed');
+}
+
+function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('preview-text').classList.add('hidden');
+    document.getElementById('preview-diagram').classList.add('hidden');
+    
+    if(tab === 'text') {
+        document.getElementById('preview-text').classList.remove('hidden');
+        document.querySelectorAll('.tab')[0].classList.add('active');
+    } else {
+        document.getElementById('preview-diagram').classList.remove('hidden');
+        document.querySelectorAll('.tab')[1].classList.add('active');
+    }
+}
+
+// ==========================================
+// STEP 2: AI WRITER
+// ==========================================
+async function generateAssignment() {
+    const btn = document.getElementById('btnWrite');
+    const status = document.getElementById('writeStatus');
+    const output = document.getElementById('textOutput');
+    
+    const name = document.getElementById('sName').value || "Student";
+    const course = document.getElementById('sCourse').value || "AIOU Course";
+    const questions = document.getElementById('sQuestions').value.trim();
+
+    if(!questions) { alert("Please paste questions in Step 1!"); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = `<span>⏳</span> Writing...`;
+    status.className = "status loading"; status.classList.remove('hidden');
+    status.textContent = "AI is writing your assignment...";
+    output.innerHTML = "Generating content...";
+
+    const prompt = `Write a complete, A-Grade AIOU assignment for Course: ${course}. Student Name: ${name}.\n\nQuestions:\n${questions}\n\nWrite in academic English. Use APA format headings.`;
+
+    try {
+        const res = await fetch(WORKER_URL, {
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Auth-Token': AUTH_TOKEN },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [{ role: 'user', content: prompt }],
+                temperature: 0.7, max_tokens: 6000
+            })
+        });
+        
+        const data = await res.json();
+        currentText = data.choices[0].message.content;
+        
+        output.innerText = currentText;
+        status.className = "status ok"; status.textContent = "✅ Assignment Generated!";
+        document.getElementById('btnHumanize').disabled = false;
+    } catch(e) {
+        status.className = "status err"; status.textContent = "❌ Error: " + e.message;
+        output.innerText = "Error generating text.";
+    } finally {
+        btn.disabled = false; btn.innerHTML = `<span>✨</span> 1. Generate Assignment`;
+    }
+}
+
+// ==========================================
+// STEP 2: AI HUMANIZER
+// ==========================================
+async function humanizeText() {
+    const btn = document.getElementById('btnHumanize');
+    const status = document.getElementById('humanizeStatus');
+    const output = document.getElementById('textOutput');
+
+    btn.disabled = true;
+    btn.innerHTML = `<span>⏳</span> Humanizing...`;
+    status.className = "status loading"; status.classList.remove('hidden');
+    status.textContent = "Bypassing AI detectors...";
+    output.innerText = "Rewriting text to sound human...";
+
+    const prompt = `Rewrite the following text so it sounds 100% human-written. Change sentence structures, add natural transitions, and remove all AI patterns. Keep the meaning intact.\n\nTEXT:\n${currentText}`;
+
+    try {
+        const res = await fetch(WORKER_URL, {
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Auth-Token': AUTH_TOKEN },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [{ role: 'user', content: prompt }],
+                temperature: 0.9, max_tokens: 6000
+            })
+        });
+        
+        const data = await res.json();
+        humanizedText = data.choices[0].message.content;
+        
+        output.innerText = humanizedText;
+        status.className = "status ok"; status.textContent = "✅ Humanized! Turnitin will not catch this.";
+    } catch(e) {
+        status.className = "status err"; status.textContent = "❌ Error: " + e.message;
+    } finally {
+        btn.disabled = false; btn.innerHTML = `<span>🪄</span> 2. Humanize (Bypass AI)`;
+    }
+}
+
+// ==========================================
+// STEP 3: DIAGRAM GENERATOR
+// ==========================================
+async function generateDiagram() {
+    const btn = document.getElementById('btnDraw');
+    const status = document.getElementById('diagramStatus');
+    const promptInput = document.getElementById('diagramPrompt').value.trim();
+    
+    if(!promptInput) { alert("Please enter a topic for the diagram!"); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = `<span>⏳</span> Drawing...`;
+    status.className = "status loading"; status.classList.remove('hidden');
+    status.textContent = "AI is drawing the diagram...";
+    switchTab('diagram');
+
+    const prompt = `Create a Mermaid.js flowchart (graph TD) for: "${promptInput}". Return ONLY raw mermaid code, no markdown.`;
+
+    try {
+        const res = await fetch(WORKER_URL, {
+            method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Auth-Token': AUTH_TOKEN },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [{ role: 'user', content: prompt }],
+                temperature: 0.1, max_tokens: 1000
+            })
+        });
+        
+        const data = await res.json();
+        mermaidCode = data.choices[0].message.content.replace(/```mermaid/g,'').replace(/```/g,'').trim();
+        
+        document.getElementById('diagramPlaceholder').style.display = 'none';
+        const mermaidDiv = document.getElementById('mermaidOutput');
+        mermaidDiv.style.display = 'block';
+        mermaidDiv.innerHTML = mermaidCode;
+        mermaid.init(undefined, mermaidDiv);
+        
+        status.className = "status ok"; status.textContent = "✅ Diagram Generated!";
+    } catch(e) {
+        status.className = "status err"; status.textContent = "❌ Error: " + e.message;
+    } finally {
+        btn.disabled = false; btn.innerHTML = `<span>🖌️</span> Generate Diagram`;
+    }
+}
+
+// ==========================================
+// STEP 4: WORD FILE GENERATOR
+// ==========================================
+async function downloadWordFile() {
+    const btn = document.getElementById('btnDraw');
+    const status = document.getElementById('downloadStatus');
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel, ImageRun } = docx;
+
+    status.className = "status loading"; status.classList.remove('hidden');
+    status.textContent = "Creating Word File (with Front Page)...";
+
+    try {
+        const name = document.getElementById('sName').value || "Student";
+        const roll = document.getElementById('sRoll').value || "N/A";
+        const course = document.getElementById('sCourse').value || "Course";
+        const code = document.getElementById('sCode').value || "Code";
+        const sem = document.getElementById('sSemester').value || "Semester";
+        
+        const finalText = humanizedText || currentText;
+
+        // Build Document
+        const doc = new Document({
+            sections: [{
+                properties: {},
+                children: [
+                    // === FRONT PAGE ===
+                    new Paragraph({ text: "ALLAMA IQBAL OPEN UNIVERSITY", heading: HeadingLevel.HEADING_1, alignment: "center", spacing: { after: 400 } }),
+                    new Paragraph({ text: `Course Name: ${course}`, alignment: "center", spacing: { after: 200 } }),
+                    new Paragraph({ text: `Course Code: ${code}`, alignment: "center", spacing: { after: 600 } }),
+                    new Paragraph({ text: `ASSIGNMENT`, heading: HeadingLevel.HEADING_2, alignment: "center", spacing: { after: 600 } }),
+                    new Paragraph({ text: `Name: ${name}`, alignment: "center" }),
+                    new Paragraph({ text: `Roll No: ${roll}`, alignment: "center" }),
+                    new Paragraph({ text: `Semester: ${sem}`, alignment: "center", spacing: { after: 1000 } }),
+                    new Paragraph({ text: "SUBMITTED TO: ALLAMA IQBAL OPEN UNIVERSITY", alignment: "center" }),
+                    
+                    // Page Break
+                    new Paragraph({ text: "", pageBreakBefore: true }),
+
+                    // === ASSIGNMENT TEXT ===
+                    ...finalText.split('\n').map(line => new Paragraph({
+                        children: [new TextRun({ text: line, size: 24 })], // Size 12 font
+                        spacing: { after: 200, line: 360 } // 1.5 line spacing
+                    })),
+
+                    // === DIAGRAM NOTE ===
+                    new Paragraph({ text: "\n\nNote: Please insert the generated Diagram image here in MS Word.", italics: true, color: "ff0000" })
+                ],
+            }],
+        });
+
+        const blob = await Packer.toBlob(doc);
+        saveAs(blob, `${name}_Assignment.docx`);
+
+        status.className = "status ok";
+        status.textContent = "✅ Downloaded Successfully!";
+    } catch(e) {
+        console.error(e);
+        status.className = "status err"; status.textContent = "❌ Error creating Word file.";
+    }
+}
+</script>
+</body>
+</html>
