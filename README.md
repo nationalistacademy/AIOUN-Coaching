@@ -1,123 +1,81 @@
 <div align="center">
 
-# 🤖 AssignmentWaly AI Agent
+# 🎓 AssignmentWaly AI Studio
 
-### AI-Powered Content Generator for AIOU Solved Assignments
+### The Ultimate All-in-One AI Toolkit for AIOU Students
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-View_Tool-1e6f3f?style=for-the-badge)](https://faiezhafeez.github.io/Assignmentwaly-Tools/generator.html)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Studio-Visit_Now-6366f1?style=for-the-badge)](https://nationalistacademy.github.io/Assignmentwaly-Tools/)
 [![DeepSeek](https://img.shields.io/badge/Powered_by-DeepSeek_API-7c3aed?style=for-the-badge)](https://platform.deepseek.com)
-[![Cloudflare](https://img.shields.io/badge/Proxy-Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare)](https://workers.cloudflare.com)
+[![Cloudflare](https://img.shields.io/badge/Security-Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare)](https://workers.cloudflare.com)
 [![GitHub Pages](https://img.shields.io/badge/Hosted_on-GitHub_Pages-181717?style=for-the-badge&logo=github)](https://pages.github.com)
-[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
-[![Made in Pakistan](https://img.shields.io/badge/Made_in-Pakistan_🇵🇰-green?style=for-the-badge)](#)
+[![License](https://img.shields.io/badge/License-MIT-10b981?style=for-the-badge)](LICENSE)
+[![Made in Pakistan](https://img.shields.io/badge/Made_in-Pakistan_🇵🇰-success?style=for-the-badge)](#)
 
-**Turn any topic into a fully formatted, SEO-optimized, AdSense-ready blog post for [AssignmentWaly](https://assignmentwaly.blogspot.com) in under 60 seconds.**
-
-[Features](#-features) · [Quick Start](#-quick-start-5-minutes) · [Architecture](#-architecture) · [Usage](#-usage) · [Troubleshooting](#-troubleshooting) · [FAQ](#-faq)
+**Write, Humanize, Draw, and Download AIOU Assignments — All in One Place.**
 
 </div>
 
 ---
 
-## 📋 Table of Contents
+## 🌟 Overview
 
-- [Overview](#-overview)
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Prerequisites](#-prerequisites)
-- [Quick Start (5 Minutes)](#-quick-start-5-minutes)
-  - [Step 1: Get DeepSeek API Key](#step-1-get-deepseek-api-key)
-  - [Step 2: Deploy Cloudflare Worker](#step-2-deploy-cloudflare-worker)
-  - [Step 3: Deploy to GitHub Pages](#step-3-deploy-to-github-pages)
-  - [Step 4: Configure & Use](#step-4-configure--use)
-- [Usage](#-usage)
-  - [Mode A — Generate From Topic](#mode-a--generate-from-topic)
-  - [Mode B — Format Existing Content](#mode-b--format-existing-content)
-- [Output Format](#-output-format)
-- [Configuration Reference](#-configuration-reference)
-- [Project Structure](#-project-structure)
-- [Troubleshooting](#-troubleshooting)
-- [Cost & Limits](#-cost--limits)
-- [Security Best Practices](#-security-best-practices)
-- [Optional: Batch Generation with GitHub Actions](#-optional-batch-generation-with-github-actions)
-- [FAQ](#-faq)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Credits & Support](#-credits--support)
+**AssignmentWaly AI Studio** is a comprehensive, serverless web application designed to automate the entire AIOU assignment creation process. Powered by **DeepSeek AI** and secured via **Cloudflare Workers**, it provides students and freelancers with a suite of 6 powerful tools to generate high-quality, plagiarism-free academic content.
+
+Whether you need to write an assignment from scratch, bypass Turnitin, generate complex diagrams, or bulk-download Word files for multiple students, this Studio does it all.
 
 ---
 
-## 🎯 Overview
+## 🛠️ The 6 Powerful Tools
 
-**AssignmentWaly AI Agent** is a free, open-source tool that generates complete blog posts for the [AssignmentWaly](https://assignmentwaly.blogspot.com) education blog. It uses **DeepSeek's AI** to convert a simple topic (or any existing content) into a production-ready HTML post with:
+### 1. 🧠 AI Assignment Writer
+*   **What it does:** Generates complete, A-Grade assignments in **APA format** based on your questions.
+*   **Key Feature:** Uses smart prompting to ensure the content is original, academic, and tailored to AIOU standards.
 
-- ✅ **Full SEO optimization** (meta tags, Open Graph, Twitter Cards, canonical URLs)
-- ✅ **GEO optimization** (FAQPage schema for AI Overviews & ChatGPT search)
-- ✅ **AdSense compliance** (substantial content, proper structure, no prohibited elements)
-- ✅ **JSON-LD structured data** (Article, Organization, Breadcrumb, FAQPage)
-- ✅ **Blogger-ready HTML** with inline CSS (matches existing post style)
-- ✅ **Automatic course tables, deadlines, FAQs, internal links, WhatsApp CTAs**
+### 2. 🛡️ AI Humanizer (Plagiarism Bypass)
+*   **What it does:** Takes AI-generated text and rewrites it to sound 100% human.
+*   **Key Feature:** Removes typical AI patterns and structures, allowing students to **bypass AI detectors** like Turnitin, GPTZero, and Copyleaks.
 
-**Who is this for?**
+### 3. 🎯 Guess Paper Extractor
+*   **What it does:** Analyzes past papers (PDF upload) and identifies the most repeated questions.
+*   **Key Feature:** Categorizes questions into High Priority, Medium Priority, and Subjective types to help students study smartly.
 
-- 📝 Education bloggers managing AIOU-related content
-- 🎓 Tutors uploading solved assignments regularly
-- 🏫 Any site needing bulk SEO-optimized content generation
-- 💼 Freelancers building content tools for education niche
+### 4. 🎨 AI Diagram Generator
+*   **What it does:** Auto-generates flowcharts, mind maps, and graphs based on a simple text prompt.
+*   **Key Feature:** Uses `Mermaid.js` to render diagrams that can be downloaded as high-resolution PNG images for assignments.
 
----
+### 5. 🖼️ Front Page / Cover Generator
+*   **What it does:** Creates an official AIOU assignment cover page.
+*   **Key Feature:** Live A4-size preview with perfect formatting. Students can directly "Print to PDF" without messing with MS Word tables.
 
-## ✨ Features
-
-### 🤖 AI-Powered Generation
-| Feature | Description |
-|---|---|
-| **Two Input Modes** | Generate from scratch (topic) or reformat existing content |
-| **Smart Extraction** | AI automatically finds courses, deadlines, FAQs from raw text |
-| **Bilingual Support** | Roman Urdu for callouts, English for SEO — matches AssignmentWaly style |
-| **Context-Aware** | Understands AIOU programs (AD LIS, MLIS, B.Ed, BA/B.Com, MA, etc.) |
-| **JSON Output** | Guaranteed valid JSON via `response_format: json_object` |
-
-### 🔍 SEO Optimized
-- Primary + secondary keyword placement
-- 155-char meta description
-- Auto-generated URL slug
-- Canonical URL tag
-- Open Graph tags (Facebook/LinkedIn preview)
-- Twitter Card tags
-- `robots` meta with `max-image-preview:large`
-- BreadcrumbList schema
-- Article schema with dates
-
-### 🚀 GEO Optimized (AI Search)
-- **FAQPage schema** — appears in Google AI Overviews, ChatGPT, Perplexity
-- **Article schema** with `datePublished` & `dateModified`
-- **Entity-rich** content (university, program, session clearly stated)
-- **Structured tables** — AI engines love tabular data
-- **Direct Q&A format** for FAQ sections
-
-### 💰 AdSense Friendly
-- Substantial unique content (500+ words auto-generated)
-- Clear navigation (header links → footer)
-- No auto-refresh, no misleading CTAs
-- Privacy-friendly (no tracking in output HTML)
-- Warning boxes to encourage original work (anti-plagiarism notice)
-
-### 🎨 Ready-to-Use Output
-- Inline CSS matching existing AssignmentWaly posts
-- Responsive tables (mobile-friendly)
-- Built-in search filter for courses
-- WhatsApp CTA button
-- "Back to Homepage" button
-- Social media teaser
-
-### 🔐 Secure by Design
-- API key never exposed in browser
-- Cloudflare Worker proxy handles all API calls
-- Optional `AUTH_TOKEN` prevents unauthorized use
-- No database, no cookies, no user tracking
-- localStorage only stores Worker URL + Auth Token locally
+### 6. 📥 Bulk Assignment Downloader
+*   **What it does:** Generates multiple MS Word (`.docx`) files at once and packs them into a single `.zip` folder.
+*   **Key Feature:** Perfect for freelancers and teachers managing assignments for multiple students at the same time.
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architecture & Security
+
+This project is built with a **Zero-Backend** architecture, ensuring high speed and zero hosting costs.
+
+```text
+┌──────────────────────────┐
+│  User's Browser          │
+│  ┌────────────────────┐  │
+│  │  GitHub Pages      │  │  ← Hosts the UI (HTML/JS/CSS)
+│  │  (The AI Studio)   │  │
+│  └────────────────────┘  │
+└────────────┬─────────────┘
+             │ Fetch API Request (CORS)
+             ▼
+┌──────────────────────────┐
+│  Cloudflare Worker       │  ← Hides API Key & Handles Auth
+│  ┌────────────────────┐  │
+│  │  Proxy Server      │  │
+│  └────────────────────┘  │
+└────────────┬─────────────┘
+             │ HTTPS POST (Bearer Token)
+             ▼
+┌──────────────────────────┐
+│  DeepSeek API            │  ← Generates the Content
+│  (deepseek-chat model)   │
+└──────────────────────────┘
