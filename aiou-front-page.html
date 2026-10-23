@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIOU Front Page Generator - Free PDF</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ================= VITAL & GLASSMORPHISM STYLE ================= */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+
+body {
+    background: #0f172a;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated Background Blobs */
+.blob {
+    position: absolute;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.6;
+    animation: float 10s infinite ease-in-out alternate;
+}
+.blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #0ea5e9; border-radius: 50%; }
+.blob-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #6366f1; border-radius: 50%; animation-delay: -5s; }
+.blob-3 { top: 40%; left: 40%; width: 300px; height: 300px; background: #14b8a6; border-radius: 50%; animation-duration: 15s; }
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, 50px) scale(1.1); }
+}
+
+/* Main Container */
+.wrap {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    z-index: 10;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #38bdf8, #818cf8, #2dd4bf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+}
+.sub {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 30px;
+}
+@media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e2e8f0;
+}
+
+label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 5px; color: #cbd5e1; }
+input, select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 15px;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: 0.3s;
+    margin-bottom: 15px;
+}
+input:focus, select:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+select option { background: #1e293b; color: #fff; }
+
+/* Button */
+.btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0ea5e9, #6366f1);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.6); }
+
+/* ================= FRONT PAGE PREVIEW (WHITE A4 SIZE) ================= */
+.preview-container {
+    background: #fff;
+    color: #000;
+    width: 100%;
+    aspect-ratio: 1 / 1.414; /* A4 Paper Ratio */
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Times New Roman', Times, serif;
+    position: relative;
+    overflow: hidden;
+}
+
+/* AIOU Logo Placeholder */
+.aiou-logo {
+    width: 120px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.course-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-family: Arial, sans-serif;
+}
+.course-code {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    font-family: Arial, sans-serif;
+}
+
+.assignment-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 40px;
+    font-family: Arial, sans-serif;
+}
+
+.details-table {
+    width: 100%;
+    max-width: 350px;
+    border-collapse: collapse;
+    margin-bottom: 50px;
+}
+.details-table td {
+    padding: 8px 0;
+    font-size: 1rem;
+    font-family: Arial, sans-serif;
+}
+.details-table .label {
+    font-weight: bold;
+    width: 40%;
+}
+.details-table .value {
+    border-bottom: 1px solid #000;
+    text-align: center;
+    font-weight: bold;
+}
+
+.submission-date {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: auto;
+    font-family: Arial, sans-serif;
+}
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<div class="wrap">
+  <h1>🖼️ AIOU Front Page Generator</h1>
+  <p class="sub">Fill the form and download your official AIOU assignment cover page instantly.</p>
+
+  <div class="grid">
+    <!-- Input Form -->
+    <div class="glass-card">
+      <h2>📝 Enter Details</h2>
+      
+      <label>Course Name</label>
+      <input type="text" id="courseName" placeholder="e.g. Business Mathematics" oninput="updatePreview()">
+
+      <label>Course Code</label>
+      <input type="text" id="courseCode" placeholder="e.g. 1429" oninput="updatePreview()">
+
+      <label>Assignment Number</label>
+      <select id="assignmentNo" onchange="updatePreview()">
+        <option value="1">Assignment No. 1</option>
+        <option value="2">Assignment No. 2</option>
+        <option value="3">Assignment No. 3</option>
+        <option value="4">Assignment No. 4</option>
+      </select>
+
+      <label>Student Name</label>
+      <input type="text" id="studentName" placeholder="e.g. Ali Khan" oninput="updatePreview()">
+
+      <label>Roll Number</label>
+      <input type="text" id="rollNo" placeholder="e.g. AB123456" oninput="updatePreview()">
+
+      <label>Semester</label>
+      <input type="text" id="semester" placeholder="e.g. Autumn 2026" oninput="updatePreview()">
+
+      <button class="btn" onclick="window.print()">
+        <span>🖨️</span> Download / Print PDF
+      </button>
+    </div>
+
+    <!-- Live Preview -->
+    <div>
+      <h2 style="color: #e2e8f0; margin-bottom: 15px;">👁️ Live Preview</h2>
+      <div class="preview-container" id="previewArea">
+        
+        <!-- AIOU Logo -->
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/1/1c/Allama_Iqbal_Open_University_logo.svg/1200px-Allama_Iqbal_Open_University_logo.svg.png" alt="AIOU Logo" class="aiou-logo">
+        
+        <div class="course-title" id="pv-course">Course Name</div>
+        <div class="course-code">Course Code: <span id="pv-code">Code</span></div>
+        
+        <div class="assignment-title" id="pv-assign">ASSIGNMENT NO. 1</div>
+
+        <table class="details-table">
+          <tr>
+            <td class="label">Name:</td>
+            <td class="value" id="pv-name">Student Name</td>
+          </tr>
+          <tr>
+            <td class="label">Roll No:</td>
+            <td class="value" id="pv-roll">Roll No</td>
+          </tr>
+          <tr>
+            <td class="label">Semester:</td>
+            <td class="value" id="pv-semester">Semester</td>
+          </tr>
+        </table>
+
+        <div class="submission-date">SUBMITTED TO: ALLAMA IQBAL OPEN UNIVERSITY</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Function to update the live preview in real-time
+function updatePreview() {
+    const courseName = document.getElementById('courseName').value || "Course Name";
+    const courseCode = document.getElementById('courseCode').value || "Code";
+    const assignmentNo = document.getElementById('assignmentNo').value;
+    const studentName = document.getElementById('studentName').value || "Student Name";
+    const rollNo = document.getElementById('rollNo').value || "Roll Number";
+    const semester = document.getElementById('semester').value || "Semester";
+
+    document.getElementById('pv-course').innerText = courseName;
+    document.getElementById('pv-code').innerText = courseCode;
+    document.getElementById('pv-assign').innerText = "ASSIGNMENT NO. " + assignmentNo;
+    document.getElementById('pv-name').innerText = studentName;
+    document.getElementById('pv-roll').innerText = rollNo;
+    document.getElementById('pv-semester').innerText = semester;
+}
+
+// ==========================================
+// PRINT SETTINGS (Hide everything except preview)
+// ==========================================
+const style = document.createElement('style');
+style.innerHTML = `
+  @media print {
+    body { background: #fff; }
+    .blob, h1, .sub, .glass-card, h2 { display: none !important; }
+    .wrap { max-width: 100%; padding: 0; margin: 0; }
+    .grid { display: block; }
+    .preview-container { 
+      box-shadow: none; 
+      width: 100%; 
+      height: 100vh; 
+      aspect-ratio: auto;
+      border: none;
+      margin: 0;
+      padding: 50px;
+    }
+  }
+`;
+document.head.appendChild(style);
+
+// Initialize empty preview
+updatePreview();
+</script>
+</body>
+</html>
