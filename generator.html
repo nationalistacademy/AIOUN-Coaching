@@ -497,4 +497,186 @@ function buildJsonLd(title, metaDesc, slug, faqsArr){
   };
 
   const crumbLd = {
-    "@
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://assignmentwaly.blogspot.com/" },
+      { "@type": "ListItem", "position": 2, "name": title, "item": "https://assignmentwaly.blogspot.com/p/" + slug + ".html" }
+    ]
+  };
+
+  return [orgLd, artLd, crumbLd, faqLd].filter(Boolean).map(o =>
+    `<script type="application/ld+json">\n${JSON.stringify(o, null, 2)}\n<\/script>`
+  ).join('\n');
+}
+
+/* ═══════════ MAIN GENERATOR ═══════════ */
+function generate(){
+  const title = v('title') || 'AIOU Solved Assignments';
+  const primaryKw = v('primaryKw');
+  const secondaryKw = v('secondaryKw');
+  const session = v('session');
+  const program = v('program');
+  const type = v('type');
+  const metaDesc = v('metaDesc');
+  const slug = v('slug') || 'post';
+  const imgs = images();
+  const coursesArr = courses();
+  const deadlinesArr = deadlines();
+  const faqsArr = faqs();
+  const links = chips();
+  const whatsapp = v('whatsapp');
+  const waMsg = v('waMsg');
+  const homeUrl = v('homeUrl') || 'https://assignmentwaly.blogspot.com/';
+  const waLink = `https://wa.me/${whatsapp}?text=${encodeURIComponent(waMsg)}`;
+  const pageUrl = `https://assignmentwaly.blogspot.com/p/${slug}.html`;
+
+  const html = `<!--ASSIGNMENTWALY AUTO POST – ${esc(title)}-->
+<!--Primary Keyword: ${esc(primaryKw)} | Secondary: ${esc(secondaryKw)}-->
+
+<!--SEO META (paste into Blogger <head>)-->
+<!--
+<meta name="description" content="${esc(metaDesc)}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<link rel="canonical" href="${esc(pageUrl)}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(metaDesc)}">
+<meta property="og:url" content="${esc(pageUrl)}">
+<meta property="og:image" content="${imgs[0] ? esc(imgs[0].url) : ''}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(metaDesc)}">
+-->
+
+<p><strong>Session:</strong> ${esc(session)} &nbsp;|&nbsp; <strong>Program:</strong> ${esc(program)} &nbsp;|&nbsp; <strong>Type:</strong> ${esc(type)}</p>
+
+<h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">📌 Explore More Resources on Assignmentwaly</h2>
+${buildChips(links)}
+
+${buildImages(imgs)}
+
+<div style="background: rgb(233, 245, 236); border-left: 4px solid rgb(30, 111, 63); border-radius: 8px; color: #1a1a1a; font-size: 0.95rem; margin: 15px 0px; padding: 12px 18px;">
+⭐ ${esc(v('infoText'))}
+</div>
+
+<p>Har course ke liye <strong>2 assignments</strong> hote hain. PDF links Google Drive par hosted hain – bilkul safe aur fast.</p>
+
+<div style="background: rgb(254, 243, 199); border-left: 4px solid rgb(245, 158, 11); border-radius: 16px; color: #1a1a1a; font-size: 0.9rem; margin: 15px 0px; padding: 15px 20px;">
+<strong>📌 Note:</strong> ${esc(v('noteText'))}
+</div>
+
+<!--Search Filter Bar-->
+<div style="margin: 20px 0px 25px;">
+  <div style="align-items: center; background: rgb(255, 255, 255); border-radius: 60px; border: 1px solid rgb(226, 232, 240); box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 15px; display: flex; gap: 12px; padding: 5px 20px;">
+    <svg fill="none" stroke="currentColor" style="color: #1e6f3f; height: 20px; width: 20px;" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+    <input autocomplete="off" id="codeSearch" placeholder="Search by course code or book name..." style="background: rgb(255, 255, 255); border: none; color: #334155; flex: 1 1 0%; font-size: 1rem; outline: none; padding: 10px 0px;" type="text" />
+    <svg fill="none" id="clearSearch" stroke="currentColor" style="color: #ef4444; cursor: pointer; display: none; height: 20px; width: 20px;" viewbox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+  </div>
+  <div id="searchResults" style="display: none; font-size: 0.9rem; font-weight: 500; margin-top: 10px;"></div>
+</div>
+
+${buildCoursesTable(coursesArr)}
+
+${buildDeadlinesTable(deadlinesArr)}
+
+<div style="border-left: 4px solid #f5b042; border-radius: 8px; border: 1px solid rgb(226, 232, 240); font-size: 0.9rem; margin: 15px 0px 0px; padding: 12px 15px;">
+  <strong>⚠️ Pro Tip:</strong> ${esc(v('tipText'))}
+</div>
+
+<h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">❓ Frequently Asked Questions (FAQs)</h2>
+${buildFaqs(faqsArr)}
+
+<h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">🔗 You Might Also Find Useful</h2>
+${buildChips(links)}
+
+<div style="background: rgb(233, 245, 236); border-radius: 20px; border: 1px solid rgb(187, 247, 208); color: #1a1a1a; margin: 40px 0px 20px; padding: 25px 20px; text-align: center;">
+  <h3 style="font-size: 22px; margin: 0px 0px 8px;">💬 Need Solved Assignments or Guess Papers?</h3>
+  <p style="color: #1a1a1a; margin: 5px 0px;">📘 Handwritten Solved Assignments | 📝 Guess Papers | 🎓 Exam Coaching</p>
+  <a href="${esc(waLink)}" rel="noopener noreferrer" style="align-items: center; background: rgb(37, 211, 102); border-radius: 50px; color: #1a1a1a; display: inline-flex; font-size: 16px; font-weight: bold; gap: 10px; margin-top: 20px; padding: 14px 30px; text-decoration: none;" target="_blank">📱 Chat on WhatsApp</a>
+</div>
+
+<div style="margin: 30px 0px 20px; text-align: center;">
+  <a href="${esc(homeUrl)}" style="background: rgb(245, 158, 11); border-radius: 50px; color: white; display: inline-block; font-size: 1rem; font-weight: 700; padding: 14px 35px; text-decoration: none;">🏠 Back to Assignmentwaly</a>
+</div>
+
+<script>
+(function(){
+  const s = document.getElementById('codeSearch');
+  const c = document.getElementById('clearSearch');
+  const r = document.getElementById('searchResults');
+  if(!s) return;
+  const rows = [];
+  document.querySelectorAll('table').forEach(t => t.querySelectorAll('tbody tr').forEach(x => rows.push(x)));
+  function f(){
+    const term = s.value.toLowerCase().trim();
+    let n = 0;
+    rows.forEach(row => {
+      const m = term === '' || row.textContent.toLowerCase().includes(term);
+      row.style.display = m ? '' : 'none';
+      if(m) n++;
+    });
+    if(term !== ''){
+      r.style.display = 'block';
+      r.innerHTML = '✅ Found ' + n + ' results for "' + term + '"';
+      c.style.display = 'inline-block';
+    } else {
+      r.style.display = 'none';
+      c.style.display = 'none';
+    }
+  }
+  s.addEventListener('input', f);
+  c.addEventListener('click', () => { s.value = ''; f(); });
+})();
+<\/script>
+
+<!--Meta Description: ${esc(metaDesc)}-->
+<!--Suggested URL Slug: ${esc(slug)}-->
+
+${buildJsonLd(title, metaDesc, slug, faqsArr)}
+
+<!--Facebook/WhatsApp: ${esc(v('socialTeaser'))} 👉 ${esc(pageUrl)}-->`;
+
+  document.getElementById('output').value = html;
+  document.getElementById('status').textContent = '✅ Generated! ' + html.length + ' chars';
+  document.getElementById('status').classList.remove('err');
+}
+
+function copyOut(){
+  const o = document.getElementById('output');
+  if(!o.value) return alert('Generate first');
+  navigator.clipboard.writeText(o.value).then(() => {
+    document.getElementById('status').textContent = '📋 Copied!';
+  });
+}
+
+function downloadOut(){
+  const o = document.getElementById('output');
+  if(!o.value) return alert('Generate first');
+  const blob = new Blob([o.value], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (v('slug') || 'post') + '.html';
+  a.click();
+}
+
+function fillDemo(){
+  document.getElementById('aiTopic').value = 'AIOU MLIS Solved Assignments Spring 2026';
+}
+
+function clearForm(){
+  if(!confirm('Clear all fields?')) return;
+  document.querySelectorAll('input,textarea').forEach(e => e.value = '');
+  ['imagesContainer','coursesContainer','deadlinesContainer','faqsContainer','linksContainer'].forEach(id => document.getElementById(id).innerHTML = '');
+  document.getElementById('output').value = '';
+}
+
+/* Init empty rows */
+addImageRow();
+addCourseRow();
+addDeadlineRow();
+addFaqRow();
+addLinkRow();
+</script>
+</body>
+</html>
