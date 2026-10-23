@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Assignmentwaly AI Agent — Post Generator</title>
-<meta name="description" content="AI-powered content generator for AssignmentWaly. Turn any AIOU topic into a fully formatted, SEO-optimized blog post in under 60 seconds.">
 <style>
 * { box-sizing: border-box; }
 body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f1f5f9; color: #1a1a1a; }
@@ -38,9 +37,6 @@ textarea { resize: vertical; min-height: 70px; }
 .status.err { color: #ef4444; }
 .log { background: #0f172a; color: #a5f3c3; font-family: Consolas, monospace; font-size: 11px; padding: 10px; border-radius: 6px; max-height: 150px; overflow-y: auto; margin-top: 10px; white-space: pre-wrap; display: none; }
 .log.show { display: block; }
-.tabs { display: flex; gap: 8px; margin-bottom: 12px; }
-.tab { padding: 6px 14px; background: #e2e8f0; border: none; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 600; }
-.tab.active { background: #1e6f3f; color: white; }
 .pill { display: inline-block; padding: 3px 10px; background: #dcfce7; color: #166534; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px; }
 .pill.warn { background: #fee2e2; color: #991b1b; }
 </style>
@@ -48,16 +44,16 @@ textarea { resize: vertical; min-height: 70px; }
 <body>
 <div class="wrap">
   <h1>🤖 Assignmentwaly AI Agent</h1>
-  <p class="sub">Powered by <strong>DeepSeek</strong> · Hosted on GitHub Pages · Fill → Generate → Copy → Paste in Blogger</p>
+  <p class="sub">Powered by <strong>DeepSeek</strong> · Updated <strong>JSON-LD @graph</strong> & HTML Output</p>
 
   <!-- AI Configuration -->
   <div class="card ai" style="margin-bottom:20px;">
     <h2>🔑 AI Configuration</h2>
     <div style="display:grid;grid-template-columns:2fr 2fr 1fr;gap:10px;align-items:end;">
       <div><label>Worker URL</label>
-        <input id="workerUrl" placeholder="https://assignmentwaly-ai.xxx.workers.dev"></div>
+        <input id="workerUrl" placeholder="https://blogger.assignmentwaly.workers.dev"></div>
       <div><label>Auth Token</label>
-        <input id="authToken" type="password" placeholder="aw-2026-secret-xyz123"></div>
+        <input id="authToken" type="password" placeholder="aw-2026-secret-xyz789"></div>
       <div><button class="btn-add" style="padding:10px" onclick="saveConfig()">💾 Save</button></div>
     </div>
     <div class="pill warn" id="cfgStatus">Not configured</div>
@@ -68,16 +64,16 @@ textarea { resize: vertical; min-height: 70px; }
     <div class="card ai">
       <h2>✨ Mode A — Generate From Topic</h2>
       <label>Topic / Program / Session</label>
-      <textarea id="aiTopic" placeholder="Example: AIOU MLIS (Master of Library & Information Science) Solved Assignments Spring 2026. Courses include 5641, 5642, 5643..."></textarea>
+      <textarea id="aiTopic" placeholder="Example: AIOU MLIS Solved Assignments Spring 2026. Courses include 5641, 5642..."></textarea>
       <label>Extra Notes (optional)</label>
-      <textarea id="aiNotes" placeholder="Program duration, deadlines, WhatsApp, anything special..."></textarea>
+      <textarea id="aiNotes" placeholder="Any special instructions..."></textarea>
       <button class="btn-ai" onclick="runAgent('topic')" id="btnA">🚀 Generate Everything</button>
     </div>
 
     <div class="card ai">
       <h2>📥 Mode B — Format Existing Content</h2>
       <label>Paste any content / notes / raw text</label>
-      <textarea id="aiContent" style="min-height:180px" placeholder="Paste your existing solved assignment content, old post HTML, WhatsApp notes, or any raw text here. AI will reformat it into the Assignmentwaly HTML format with all SEO, schema, and tables."></textarea>
+      <textarea id="aiContent" style="min-height:180px" placeholder="Paste raw content here. AI will reformat it."></textarea>
       <button class="btn-ai" onclick="runAgent('content')" id="btnB">🔄 Convert to Format</button>
     </div>
   </div>
@@ -86,7 +82,6 @@ textarea { resize: vertical; min-height: 70px; }
 
   <div class="actions">
     <button class="btn-main" onclick="generate()">🚀 Generate Post HTML</button>
-    <button class="btn-sec" onclick="fillDemo()">⚡ Demo</button>
     <button class="btn-sec" onclick="clearForm()">🗑️ Clear</button>
     <span class="status" id="status"></span>
   </div>
@@ -96,7 +91,7 @@ textarea { resize: vertical; min-height: 70px; }
       <h2>1. Basic Info</h2>
       <label>Page Title (H1)</label><input id="title">
       <label>Primary Keyword</label><input id="primaryKw">
-      <label>Secondary Keywords (comma separated)</label><input id="secondaryKw">
+      <label>Secondary Keywords</label><input id="secondaryKw">
       <label>Session</label><input id="session">
       <label>Program</label><input id="program">
       <label>Type</label><input id="type">
@@ -137,7 +132,6 @@ textarea { resize: vertical; min-height: 70px; }
 
     <div class="card">
       <h2>9. Output (Blogger Ready)</h2>
-      <div class="tabs"><button class="tab active">Full HTML</button></div>
       <textarea id="output" readonly></textarea>
       <div style="margin-top:10px;">
         <button class="btn-sec" onclick="copyOut()">📋 Copy</button>
@@ -164,14 +158,11 @@ function updateCfgStatus(){
       s.style.background = '#dcfce7';
       s.style.color = '#166534';
     } catch {
-      s.textContent = '⚠️ Invalid URL';
-      s.className = 'pill warn';
+      s.textContent = '⚠️ Invalid URL'; s.className = 'pill warn';
     }
   } else {
-    s.textContent = '⚠️ Not configured';
-    s.className = 'pill warn';
-    s.style.background = '#fee2e2';
-    s.style.color = '#991b1b';
+    s.textContent = '⚠️ Not configured'; s.className = 'pill warn';
+    s.style.background = '#fee2e2'; s.style.color = '#991b1b';
   }
 }
 window.addEventListener('DOMContentLoaded', () => {
@@ -189,48 +180,27 @@ function log(msg){
 }
 
 const SYSTEM_PROMPT = `You are an expert content formatter for "AssignmentWaly", a Pakistani education resource blog that provides AIOU (Allama Iqbal Open University) solved assignments.
-
-YOUR JOB: Return ONLY valid JSON (no markdown, no backticks, no explanation) that matches this exact schema:
-
+YOUR JOB: Return ONLY valid JSON (no markdown, no backticks, no explanation) matching this schema:
 {
-  "title": "SEO-optimized page title with primary keyword",
-  "primaryKw": "main keyword (e.g. AIOU [PROGRAM] Solved Assignments [SESSION])",
-  "secondaryKw": "3-5 comma-separated secondary keywords",
-  "session": "Spring 2026 OR Autumn 2026",
-  "program": "full program name (e.g. Associate Degree in Library & Information Sciences (AD LIS))",
+  "title": "SEO title",
+  "primaryKw": "main keyword",
+  "secondaryKw": "comma separated",
+  "session": "Spring 2026",
+  "program": "Full program name",
   "type": "Solved Assignments",
-  "metaDesc": "155-char SEO description with primary keyword",
-  "slug": "url-slug-like-this-2026",
-  "infoText": "Green callout: Urdu-Roman 2-3 sentences welcoming students",
-  "noteText": "Yellow callout: advice in Roman Urdu about not copying",
-  "tipText": "Orange callout: deadline reminder in Roman Urdu",
-  "courses": [
-    {"code":"9201","book":"Soft Skills","a1":"","a2":""}
-  ],
-  "deadlines": [
-    {"label":"Assignment 1 Submission","date":"30 June 2026"},
-    {"label":"Assignment 2 Submission","date":"22 August 2026"},
-    {"label":"Final Term Exams","date":"September – November 2026"}
-  ],
-  "faqs": [
-    {"q":"Question?","a":"Answer."}
-  ],
-  "links": [
-    {"label":"📘 MA History Books","url":"https://assignmentwaly.blogspot.com/p/aiou-ma-history-original-books-pdf.html"}
-  ],
+  "metaDesc": "155-char SEO description",
+  "slug": "url-slug",
+  "infoText": "Green callout in Roman Urdu",
+  "noteText": "Yellow callout in Roman Urdu",
+  "tipText": "Orange callout in Roman Urdu",
+  "courses": [{"code":"9201","book":"Soft Skills","a1":"","a2":""}],
+  "deadlines": [{"label":"Assignment 1","date":"30 June 2026"}],
+  "faqs": [{"q":"Question?","a":"Answer."}],
+  "links": [{"label":"📘 Books","url":"https://assignmentwaly.blogspot.com/p/aiou-ma-history-original-books-pdf.html"}],
   "whatsapp": "923702388998",
-  "waMsg": "Assalamualaikum Assignmentwaly, I need help with [PROGRAM] studies",
-  "socialTeaser": "🎓 [PROGRAM] Solved Assignments - [SESSION]! 📚 Free PDF download!"
-}
-
-RULES:
-- 5-10 courses in "courses" (if user didn't specify, use realistic AIOU codes for the program)
-- 5-7 FAQs that real students ask
-- Use the standard internal links from AssignmentWaly (MLIS, MA History, BA/B.Com, All Solved Assignments, B.Ed)
-- Roman Urdu for infoText, noteText, tipText (mixed English is fine)
-- a1/a2 = "" (empty — user will fill PDF URLs later) unless user provided them
-- Deadline dates: Assignment 1 → end June; Assignment 2 → end August; Exams → Sept-Nov
-- Never include markdown code fences in output. Pure JSON only.`;
+  "waMsg": "Assalamualaikum...",
+  "socialTeaser": "🎓 AIOU... Free PDF!"
+}`;
 
 async function callDeepSeek(userPrompt, forceJson = true){
   const workerUrl = localStorage.getItem('aw_worker');
@@ -242,13 +212,8 @@ async function callDeepSeek(userPrompt, forceJson = true){
     headers: { 'Content-Type': 'application/json', 'X-Auth-Token': token || '' },
     body: JSON.stringify({
       model: 'deepseek-chat',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userPrompt }
-      ],
-      json: forceJson,
-      temperature: 0.7,
-      max_tokens: 8000
+      messages: [{ role: 'system', content: SYSTEM_PROMPT },{ role: 'user', content: userPrompt }],
+      json: forceJson, temperature: 0.7, max_tokens: 8000
     })
   });
 
@@ -256,7 +221,6 @@ async function callDeepSeek(userPrompt, forceJson = true){
     const t = await res.text();
     throw new Error('Worker error ' + res.status + ': ' + t.slice(0, 200));
   }
-
   const data = await res.json();
   if(data.error) throw new Error(data.error);
   const content = data.choices?.[0]?.message?.content;
@@ -265,74 +229,53 @@ async function callDeepSeek(userPrompt, forceJson = true){
 }
 
 async function runAgent(mode){
-  logBox.textContent = '';
-  logBox.classList.add('show');
+  logBox.textContent = ''; logBox.classList.add('show');
   const btn = mode === 'topic' ? document.getElementById('btnA') : document.getElementById('btnB');
-  btn.disabled = true;
-  const origText = btn.textContent;
-  btn.textContent = '⏳ Thinking...';
-
+  btn.disabled = true; const origText = btn.textContent; btn.textContent = '⏳ Thinking...';
   try{
     let userPrompt;
     if(mode === 'topic'){
       const topic = document.getElementById('aiTopic').value.trim();
-      const notes = document.getElementById('aiNotes').value.trim();
       if(!topic) throw new Error('Enter a topic first');
-      userPrompt = `Generate a complete AssignmentWaly post JSON for:\n\nTOPIC:\n${topic}\n\nEXTRA NOTES:\n${notes || '(none)'}\n\nReturn pure JSON only.`;
+      userPrompt = `Generate AssignmentWaly JSON for:\n${topic}\n\nNotes:\n${document.getElementById('aiNotes').value}\n\nReturn pure JSON only.`;
     } else {
       const content = document.getElementById('aiContent').value.trim();
       if(!content) throw new Error('Paste some content first');
-      userPrompt = `The user pasted existing content below. Extract ALL relevant info (program, courses, deadlines, FAQs) and reformat into the AssignmentWaly JSON schema. If a field isn't in the content, generate a sensible default.\n\nPASTED CONTENT:\n"""\n${content.slice(0, 8000)}\n"""\n\nReturn pure JSON only.`;
+      userPrompt = `Reformat this into AssignmentWaly JSON:\n\n"""\n${content.slice(0, 8000)}\n"""\n\nReturn pure JSON only.`;
     }
 
     log('📡 Calling DeepSeek via Worker...');
     const raw = await callDeepSeek(userPrompt, true);
     log('📥 Got response (' + raw.length + ' chars)');
 
-    let jsonStr = raw.trim();
-    jsonStr = jsonStr.replace(/^```(?:json)?\s*/i, '').replace(/```$/, '').trim();
-    const first = jsonStr.indexOf('{');
-    const last = jsonStr.lastIndexOf('}');
+    let jsonStr = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/```$/, '').trim();
+    const first = jsonStr.indexOf('{'); const last = jsonStr.lastIndexOf('}');
     if(first >= 0 && last > first) jsonStr = jsonStr.slice(first, last + 1);
-
     const obj = JSON.parse(jsonStr);
+
     log('✅ Parsed JSON. Populating form...');
     populateForm(obj);
-    log('✅ Form filled! Review, then click "Generate Post HTML".');
+    log('✅ Form filled! Click "Generate Post HTML".');
     document.getElementById('status').textContent = '✅ AI fill complete';
     document.getElementById('status').classList.remove('err');
   } catch(e){
-    console.error(e);
-    log('❌ Error: ' + e.message);
+    console.error(e); log('❌ Error: ' + e.message);
     document.getElementById('status').textContent = '❌ ' + e.message;
     document.getElementById('status').classList.add('err');
   } finally {
-    btn.disabled = false;
-    btn.textContent = origText;
+    btn.disabled = false; btn.textContent = origText;
   }
 }
 
 function populateForm(o){
   const set = (id, val) => { if(val != null) document.getElementById(id).value = val; };
-  set('title', o.title);
-  set('primaryKw', o.primaryKw);
-  set('secondaryKw', o.secondaryKw);
-  set('session', o.session);
-  set('program', o.program);
-  set('type', o.type);
-  set('metaDesc', o.metaDesc);
-  set('slug', o.slug);
-  set('infoText', o.infoText);
-  set('noteText', o.noteText);
-  set('tipText', o.tipText);
-  set('whatsapp', o.whatsapp);
-  set('waMsg', o.waMsg);
-  set('homeUrl', 'https://assignmentwaly.blogspot.com/');
-  set('socialTeaser', o.socialTeaser);
-
-  ['coursesContainer','deadlinesContainer','faqsContainer','linksContainer','imagesContainer']
-    .forEach(id => document.getElementById(id).innerHTML = '');
-
+  set('title', o.title); set('primaryKw', o.primaryKw); set('secondaryKw', o.secondaryKw);
+  set('session', o.session); set('program', o.program); set('type', o.type);
+  set('metaDesc', o.metaDesc); set('slug', o.slug);
+  set('infoText', o.infoText); set('noteText', o.noteText); set('tipText', o.tipText);
+  set('whatsapp', o.whatsapp); set('waMsg', o.waMsg);
+  set('homeUrl', 'https://assignmentwaly.blogspot.com/'); set('socialTeaser', o.socialTeaser);
+  ['coursesContainer','deadlinesContainer','faqsContainer','linksContainer','imagesContainer'].forEach(id => document.getElementById(id).innerHTML = '');
   (o.courses || []).forEach(c => addCourseRow(c.code, c.book, c.a1 || '', c.a2 || ''));
   (o.deadlines || []).forEach(d => addDeadlineRow(d.label, d.date));
   (o.faqs || []).forEach(f => addFaqRow(f.q, f.a));
@@ -341,90 +284,28 @@ function populateForm(o){
 }
 
 /* ═══════════ DYNAMIC ROWS ═══════════ */
-function addImageRow(url='', alt=''){
-  const d = document.createElement('div');
-  d.className = 'row-item-img';
-  d.innerHTML = `<input placeholder="Image URL" value="${url}"><input placeholder="Alt" value="${alt}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`;
-  document.getElementById('imagesContainer').appendChild(d);
-}
-function addCourseRow(code='', book='', a1='', a2=''){
-  const d = document.createElement('div');
-  d.className = 'row-item';
-  d.innerHTML = `<input placeholder="Code" value="${code}"><input placeholder="Book" value="${book}"><input placeholder="A1 URL" value="${a1}"><input placeholder="A2 URL" value="${a2}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`;
-  document.getElementById('coursesContainer').appendChild(d);
-}
-function addDeadlineRow(label='', date=''){
-  const d = document.createElement('div');
-  d.className = 'row-item-2';
-  d.innerHTML = `<input placeholder="Label" value="${label}"><input placeholder="Date" value="${date}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`;
-  document.getElementById('deadlinesContainer').appendChild(d);
-}
-function addFaqRow(q='', a=''){
-  const d = document.createElement('div');
-  d.className = 'row-item-faq';
-  d.innerHTML = `<input placeholder="Q" value="${q}"><input placeholder="A" value="${a}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`;
-  document.getElementById('faqsContainer').appendChild(d);
-}
-function addLinkRow(label='', url=''){
-  const d = document.createElement('div');
-  d.className = 'row-item-2';
-  d.innerHTML = `<input placeholder="Label" value="${label}"><input placeholder="URL" value="${url}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`;
-  document.getElementById('linksContainer').appendChild(d);
-}
+function addImageRow(url='', alt=''){ const d=document.createElement('div'); d.className='row-item-img'; d.innerHTML=`<input placeholder="Image URL" value="${url}"><input placeholder="Alt" value="${alt}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`; document.getElementById('imagesContainer').appendChild(d); }
+function addCourseRow(code='', book='', a1='', a2=''){ const d=document.createElement('div'); d.className='row-item'; d.innerHTML=`<input placeholder="Code" value="${code}"><input placeholder="Book" value="${book}"><input placeholder="A1 URL" value="${a1}"><input placeholder="A2 URL" value="${a2}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`; document.getElementById('coursesContainer').appendChild(d); }
+function addDeadlineRow(label='', date=''){ const d=document.createElement('div'); d.className='row-item-2'; d.innerHTML=`<input placeholder="Label" value="${label}"><input placeholder="Date" value="${date}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`; document.getElementById('deadlinesContainer').appendChild(d); }
+function addFaqRow(q='', a=''){ const d=document.createElement('div'); d.className='row-item-faq'; d.innerHTML=`<input placeholder="Q" value="${q}"><input placeholder="A" value="${a}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`; document.getElementById('faqsContainer').appendChild(d); }
+function addLinkRow(label='', url=''){ const d=document.createElement('div'); d.className='row-item-2'; d.innerHTML=`<input placeholder="Label" value="${label}"><input placeholder="URL" value="${url}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`; document.getElementById('linksContainer').appendChild(d); }
 
 /* ═══════════ HELPERS ═══════════ */
 const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const v = id => document.getElementById(id).value.trim();
-const chips = () => {
-  const out = [];
-  document.querySelectorAll('#linksContainer .row-item-2').forEach(r => {
-    const [l, u] = r.querySelectorAll('input');
-    if(l.value && u.value) out.push({ label: l.value, url: u.value });
-  });
-  return out;
-};
-const images = () => {
-  const out = [];
-  document.querySelectorAll('#imagesContainer .row-item-img').forEach(r => {
-    const [u, a] = r.querySelectorAll('input');
-    if(u.value) out.push({ url: u.value, alt: a.value || v('title') });
-  });
-  return out;
-};
-const courses = () => {
-  const out = [];
-  document.querySelectorAll('#coursesContainer .row-item').forEach(r => {
-    const i = r.querySelectorAll('input');
-    if(i[0].value) out.push({ code: i[0].value, book: i[1].value, a1: i[2].value, a2: i[3].value });
-  });
-  return out;
-};
-const deadlines = () => {
-  const out = [];
-  document.querySelectorAll('#deadlinesContainer .row-item-2').forEach(r => {
-    const i = r.querySelectorAll('input');
-    if(i[0].value) out.push({ label: i[0].value, date: i[1].value });
-  });
-  return out;
-};
-const faqs = () => {
-  const out = [];
-  document.querySelectorAll('#faqsContainer .row-item-faq').forEach(r => {
-    const i = r.querySelectorAll('input');
-    if(i[0].value) out.push({ q: i[0].value, a: i[1].value });
-  });
-  return out;
-};
+const chips = () => { const out=[]; document.querySelectorAll('#linksContainer .row-item-2').forEach(r => { const [l,u]=r.querySelectorAll('input'); if(l.value && u.value) out.push({label:l.value, url:u.value}); }); return out; };
+const images = () => { const out=[]; document.querySelectorAll('#imagesContainer .row-item-img').forEach(r => { const [u,a]=r.querySelectorAll('input'); if(u.value) out.push({url:u.value, alt:a.value || v('title')}); }); return out; };
+const courses = () => { const out=[]; document.querySelectorAll('#coursesContainer .row-item').forEach(r => { const i=r.querySelectorAll('input'); if(i[0].value) out.push({code:i[0].value, book:i[1].value, a1:i[2].value, a2:i[3].value}); }); return out; };
+const deadlines = () => { const out=[]; document.querySelectorAll('#deadlinesContainer .row-item-2').forEach(r => { const i=r.querySelectorAll('input'); if(i[0].value) out.push({label:i[0].value, date:i[1].value}); }); return out; };
+const faqs = () => { const out=[]; document.querySelectorAll('#faqsContainer .row-item-faq').forEach(r => { const i=r.querySelectorAll('input'); if(i[0].value) out.push({q:i[0].value, a:i[1].value}); }); return out; };
 
 /* ═══════════ BUILDERS ═══════════ */
 function buildChips(links){
-  return `<div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0px;">
-${links.map(l => `    <a href="${esc(l.url)}" style="background: rgb(226, 232, 240); border-radius: 40px; border: 1px solid rgb(226, 232, 240); font-size: 0.9rem; font-weight: 500; padding: 8px 16px; text-decoration: none;">${esc(l.label)}</a>`).join('\n')}
-</div>`;
+  return `<div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0px;">\n${links.map(l => `    <a href="${esc(l.url)}" rel="internal" style="background: rgb(226, 232, 240); border-radius: 40px; border: 1px solid rgb(226, 232, 240); font-size: 0.9rem; font-weight: 500; padding: 8px 16px; text-decoration: none;">${esc(l.label)}</a>`).join('\n')}\n</div>`;
 }
 
 function buildImages(imgs){
-  return imgs.map(i => `<div class="separator" style="clear: both;"><a href="${esc(i.url)}" style="display: block; padding: 1em 0px; text-align: center;"><img alt="${esc(i.alt)}" border="0" src="${esc(i.url)}" /></a></div>`).join('\n');
+  return imgs.map(i => `<div class="separator" style="clear: both;"><a href="${esc(i.url)}" style="display: block; padding: 1em 0px; text-align: center;"><img alt="${esc(i.alt)}" border="0" src="${esc(i.url)}" loading="lazy" /></a></div>`).join('\n');
 }
 
 function buildCoursesTable(rows){
@@ -465,77 +346,117 @@ function buildFaqs(rows){
 </div>`).join('\n');
 }
 
-function buildJsonLd(title, metaDesc, slug, faqsArr){
-  const faqLd = faqsArr.length ? {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqsArr.map(f => ({
-      "@type": "Question",
-      "name": f.q,
-      "acceptedAnswer": { "@type": "Answer", "text": f.a }
-    }))
-  } : null;
+/* ═══════════ UPDATED JSON-LD @GRAPH ═══════════ */
+function buildJsonLd(title, metaDesc, slug, faqsArr, coursesArr, imagesArr){
+  const pageUrl = `https://assignmentwaly.blogspot.com/p/${slug}.html`;
+  const today = new Date().toISOString().split('T')[0];
+  
+  const graph = [];
+  
+  // 1. WebPage Schema
+  graph.push({
+    "@type": "WebPage",
+    "@id": pageUrl + "#webpage",
+    "url": pageUrl,
+    "name": title,
+    "description": metaDesc,
+    "datePublished": today,
+    "dateModified": today,
+    "isPartOf": { "@type": "WebSite", "@id": "https://assignmentwaly.blogspot.com/#website" }
+  });
 
-  const orgLd = {
-    "@context": "https://schema.org",
-    "@type": "EducationalOrganization",
-    "name": "AssignmentWaly",
+  // 2. WebSite Identity
+  graph.push({
+    "@type": "WebSite",
+    "@id": "https://assignmentwaly.blogspot.com/#website",
     "url": "https://assignmentwaly.blogspot.com",
-    "description": metaDesc,
-    "sameAs": ["https://wa.me/" + v('whatsapp')]
-  };
+    "name": "AssignmentWaly",
+    "publisher": {
+      "@type": "EducationalOrganization",
+      "name": "AssignmentWaly",
+      "url": "https://assignmentwaly.blogspot.com",
+      "sameAs": ["https://wa.me/" + v('whatsapp')]
+    }
+  });
 
-  const artLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": title,
-    "description": metaDesc,
-    "url": "https://assignmentwaly.blogspot.com/p/" + slug + ".html",
-    "datePublished": new Date().toISOString().split('T')[0],
-    "dateModified": new Date().toISOString().split('T')[0],
-    "publisher": { "@type": "Organization", "name": "AssignmentWaly" }
-  };
-
-  const crumbLd = {
-    "@context": "https://schema.org",
+  // 3. Breadcrumbs
+  graph.push({
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://assignmentwaly.blogspot.com/" },
-      { "@type": "ListItem", "position": 2, "name": title, "item": "https://assignmentwaly.blogspot.com/p/" + slug + ".html" }
+      { "@type": "ListItem", "position": 2, "name": title, "item": pageUrl }
     ]
-  };
+  });
 
-  return [orgLd, artLd, crumbLd, faqLd].filter(Boolean).map(o =>
-    `<script type="application/ld+json">\n${JSON.stringify(o, null, 2)}\n<\/script>`
-  ).join('\n');
+  // 4. Image Objects
+  if (imagesArr && imagesArr.length > 0) {
+    imagesArr.forEach((img, index) => {
+      graph.push({
+        "@type": "ImageObject",
+        "@id": pageUrl + "#image-" + (index + 1),
+        "url": img.url,
+        "caption": img.alt,
+        "representativeOfPage": index === 0
+      });
+    });
+  }
+
+  // 5. Course ItemList (Structured Data for Tables)
+  if (coursesArr && coursesArr.length > 0) {
+    graph.push({
+      "@type": "ItemList",
+      "name": "Course Assignments List",
+      "numberOfItems": coursesArr.length,
+      "itemListElement": coursesArr.map((c, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": c.code + " - " + c.book,
+        "item": c.a1 || pageUrl
+      }))
+    });
+  }
+
+  // 6. HowTo Schema (AI Overviews favorite)
+  graph.push({
+    "@type": "HowTo",
+    "name": "How to Download AIOU Solved Assignments",
+    "description": "Step-by-step guide to download AIOU solved assignments for Spring 2026.",
+    "step": [
+      { "@type": "HowToStep", "name": "Find Your Course", "text": "Look for your course code in the table above.", "position": 1 },
+      { "@type": "HowToStep", "name": "Click PDF Link", "text": "Click on the Assignment 1 or Assignment 2 PDF link.", "position": 2 },
+      { "@type": "HowToStep", "name": "Download & Write", "text": "Download the reference PDF and write your own answers.", "position": 3 }
+    ]
+  });
+
+  // 7. FAQPage
+  if (faqsArr && faqsArr.length > 0) {
+    graph.push({
+      "@type": "FAQPage",
+      "mainEntity": faqsArr.map(f => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": { "@type": "Answer", "text": f.a }
+      }))
+    });
+  }
+
+  const fullLd = { "@context": "https://schema.org", "@graph": graph };
+  return `<script type="application/ld+json">\n${JSON.stringify(fullLd, null, 2)}\n<\/script>`;
 }
 
 /* ═══════════ MAIN GENERATOR ═══════════ */
 function generate(){
   const title = v('title') || 'AIOU Solved Assignments';
-  const primaryKw = v('primaryKw');
-  const secondaryKw = v('secondaryKw');
-  const session = v('session');
-  const program = v('program');
-  const type = v('type');
-  const metaDesc = v('metaDesc');
-  const slug = v('slug') || 'post';
-  const imgs = images();
-  const coursesArr = courses();
-  const deadlinesArr = deadlines();
-  const faqsArr = faqs();
-  const links = chips();
-  const whatsapp = v('whatsapp');
-  const waMsg = v('waMsg');
-  const homeUrl = v('homeUrl') || 'https://assignmentwaly.blogspot.com/';
+  const primaryKw = v('primaryKw'), secondaryKw = v('secondaryKw'), session = v('session'), program = v('program'), type = v('type');
+  const metaDesc = v('metaDesc'), slug = v('slug') || 'post';
+  const imgs = images(), coursesArr = courses(), deadlinesArr = deadlines(), faqsArr = faqs(), links = chips();
+  const whatsapp = v('whatsapp'), waMsg = v('waMsg'), homeUrl = v('homeUrl') || 'https://assignmentwaly.blogspot.com/';
   const waLink = `https://wa.me/${whatsapp}?text=${encodeURIComponent(waMsg)}`;
   const pageUrl = `https://assignmentwaly.blogspot.com/p/${slug}.html`;
+  const today = new Date().toISOString().split('T')[0];
 
-  const html = `<!--ASSIGNMENTWALY AUTO POST – ${esc(title)}-->
-<!--Primary Keyword: ${esc(primaryKw)} | Secondary: ${esc(secondaryKw)}-->
-
-<!--SEO META (paste into Blogger <head>)-->
-<!--
+  const html = `<!-- SEO & GEO META TAGS (Paste in Blogger HTML View) -->
+<title>${esc(title)} | AssignmentWaly</title>
 <meta name="description" content="${esc(metaDesc)}">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="${esc(pageUrl)}">
@@ -543,61 +464,64 @@ function generate(){
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(metaDesc)}">
 <meta property="og:url" content="${esc(pageUrl)}">
-<meta property="og:image" content="${imgs[0] ? esc(imgs[0].url) : ''}">
+${imgs[0] ? `<meta property="og:image" content="${esc(imgs[0].url)}">` : ''}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(metaDesc)}">
--->
 
-<p><strong>Session:</strong> ${esc(session)} &nbsp;|&nbsp; <strong>Program:</strong> ${esc(program)} &nbsp;|&nbsp; <strong>Type:</strong> ${esc(type)}</p>
+<!-- POST CONTENT START -->
+<div itemscope itemtype="https://schema.org/Article">
+  
+  <p><strong>Session:</strong> <span itemprop="temporalCoverage">${esc(session)}</span> &nbsp;|&nbsp; <strong>Program:</strong> ${esc(program)} &nbsp;|&nbsp; <strong>Type:</strong> ${esc(type)}</p>
 
-<h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">📌 Explore More Resources on Assignmentwaly</h2>
-${buildChips(links)}
+  <h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">📌 Explore More Resources on Assignmentwaly</h2>
+  ${buildChips(links)}
 
-${buildImages(imgs)}
+  ${buildImages(imgs)}
 
-<div style="background: rgb(233, 245, 236); border-left: 4px solid rgb(30, 111, 63); border-radius: 8px; color: #1a1a1a; font-size: 0.95rem; margin: 15px 0px; padding: 12px 18px;">
-⭐ ${esc(v('infoText'))}
-</div>
-
-<p>Har course ke liye <strong>2 assignments</strong> hote hain. PDF links Google Drive par hosted hain – bilkul safe aur fast.</p>
-
-<div style="background: rgb(254, 243, 199); border-left: 4px solid rgb(245, 158, 11); border-radius: 16px; color: #1a1a1a; font-size: 0.9rem; margin: 15px 0px; padding: 15px 20px;">
-<strong>📌 Note:</strong> ${esc(v('noteText'))}
-</div>
-
-<!--Search Filter Bar-->
-<div style="margin: 20px 0px 25px;">
-  <div style="align-items: center; background: rgb(255, 255, 255); border-radius: 60px; border: 1px solid rgb(226, 232, 240); box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 15px; display: flex; gap: 12px; padding: 5px 20px;">
-    <svg fill="none" stroke="currentColor" style="color: #1e6f3f; height: 20px; width: 20px;" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-    <input autocomplete="off" id="codeSearch" placeholder="Search by course code or book name..." style="background: rgb(255, 255, 255); border: none; color: #334155; flex: 1 1 0%; font-size: 1rem; outline: none; padding: 10px 0px;" type="text" />
-    <svg fill="none" id="clearSearch" stroke="currentColor" style="color: #ef4444; cursor: pointer; display: none; height: 20px; width: 20px;" viewbox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+  <div style="background: rgb(233, 245, 236); border-left: 4px solid rgb(30, 111, 63); border-radius: 8px; color: #1a1a1a; font-size: 0.95rem; margin: 15px 0px; padding: 12px 18px;">
+  ⭐ ${esc(v('infoText'))}
   </div>
-  <div id="searchResults" style="display: none; font-size: 0.9rem; font-weight: 500; margin-top: 10px;"></div>
-</div>
 
-${buildCoursesTable(coursesArr)}
+  <p>Har course ke liye <strong>2 assignments</strong> hote hain. PDF links Google Drive par hosted hain – bilkul safe aur fast.</p>
 
-${buildDeadlinesTable(deadlinesArr)}
+  <div style="background: rgb(254, 243, 199); border-left: 4px solid rgb(245, 158, 11); border-radius: 16px; color: #1a1a1a; font-size: 0.9rem; margin: 15px 0px; padding: 15px 20px;">
+  <strong>📌 Note:</strong> ${esc(v('noteText'))}
+  </div>
 
-<div style="border-left: 4px solid #f5b042; border-radius: 8px; border: 1px solid rgb(226, 232, 240); font-size: 0.9rem; margin: 15px 0px 0px; padding: 12px 15px;">
-  <strong>⚠️ Pro Tip:</strong> ${esc(v('tipText'))}
-</div>
+  <!--Search Filter Bar-->
+  <div style="margin: 20px 0px 25px;">
+    <div style="align-items: center; background: rgb(255, 255, 255); border-radius: 60px; border: 1px solid rgb(226, 232, 240); box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 15px; display: flex; gap: 12px; padding: 5px 20px;">
+      <svg fill="none" stroke="currentColor" style="color: #1e6f3f; height: 20px; width: 20px;" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+      <input autocomplete="off" id="codeSearch" placeholder="Search by course code or book name..." style="background: rgb(255, 255, 255); border: none; color: #334155; flex: 1 1 0%; font-size: 1rem; outline: none; padding: 10px 0px;" type="text" />
+      <svg fill="none" id="clearSearch" stroke="currentColor" style="color: #ef4444; cursor: pointer; display: none; height: 20px; width: 20px;" viewbox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+    </div>
+    <div id="searchResults" style="display: none; font-size: 0.9rem; font-weight: 500; margin-top: 10px;"></div>
+  </div>
 
-<h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">❓ Frequently Asked Questions (FAQs)</h2>
-${buildFaqs(faqsArr)}
+  ${buildCoursesTable(coursesArr)}
 
-<h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">🔗 You Might Also Find Useful</h2>
-${buildChips(links)}
+  ${buildDeadlinesTable(deadlinesArr)}
 
-<div style="background: rgb(233, 245, 236); border-radius: 20px; border: 1px solid rgb(187, 247, 208); color: #1a1a1a; margin: 40px 0px 20px; padding: 25px 20px; text-align: center;">
-  <h3 style="font-size: 22px; margin: 0px 0px 8px;">💬 Need Solved Assignments or Guess Papers?</h3>
-  <p style="color: #1a1a1a; margin: 5px 0px;">📘 Handwritten Solved Assignments | 📝 Guess Papers | 🎓 Exam Coaching</p>
-  <a href="${esc(waLink)}" rel="noopener noreferrer" style="align-items: center; background: rgb(37, 211, 102); border-radius: 50px; color: #1a1a1a; display: inline-flex; font-size: 16px; font-weight: bold; gap: 10px; margin-top: 20px; padding: 14px 30px; text-decoration: none;" target="_blank">📱 Chat on WhatsApp</a>
-</div>
+  <div style="border-left: 4px solid #f5b042; border-radius: 8px; border: 1px solid rgb(226, 232, 240); font-size: 0.9rem; margin: 15px 0px 0px; padding: 12px 15px;">
+    <strong>⚠️ Pro Tip:</strong> ${esc(v('tipText'))}
+  </div>
 
-<div style="margin: 30px 0px 20px; text-align: center;">
-  <a href="${esc(homeUrl)}" style="background: rgb(245, 158, 11); border-radius: 50px; color: white; display: inline-block; font-size: 1rem; font-weight: 700; padding: 14px 35px; text-decoration: none;">🏠 Back to Assignmentwaly</a>
+  <h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">❓ Frequently Asked Questions (FAQs)</h2>
+  ${buildFaqs(faqsArr)}
+
+  <h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">🔗 You Might Also Find Useful</h2>
+  ${buildChips(links)}
+
+  <div style="background: rgb(233, 245, 236); border-radius: 20px; border: 1px solid rgb(187, 247, 208); color: #1a1a1a; margin: 40px 0px 20px; padding: 25px 20px; text-align: center;">
+    <h3 style="font-size: 22px; margin: 0px 0px 8px;">💬 Need Solved Assignments or Guess Papers?</h3>
+    <p style="color: #1a1a1a; margin: 5px 0px;">📘 Handwritten Solved Assignments | 📝 Guess Papers | 🎓 Exam Coaching</p>
+    <a href="${esc(waLink)}" rel="noopener noreferrer" style="align-items: center; background: rgb(37, 211, 102); border-radius: 50px; color: #1a1a1a; display: inline-flex; font-size: 16px; font-weight: bold; gap: 10px; margin-top: 20px; padding: 14px 30px; text-decoration: none;" target="_blank">📱 Chat on WhatsApp</a>
+  </div>
+
+  <div style="margin: 30px 0px 20px; text-align: center;">
+    <a href="${esc(homeUrl)}" style="background: rgb(245, 158, 11); border-radius: 50px; color: white; display: inline-block; font-size: 1rem; font-weight: 700; padding: 14px 35px; text-decoration: none;">🏠 Back to Assignmentwaly</a>
+  </div>
 </div>
 
 <script>
@@ -630,12 +554,11 @@ ${buildChips(links)}
 })();
 <\/script>
 
-<!--Meta Description: ${esc(metaDesc)}-->
-<!--Suggested URL Slug: ${esc(slug)}-->
+${buildJsonLd(title, metaDesc, slug, faqsArr, coursesArr, imgs)}
 
-${buildJsonLd(title, metaDesc, slug, faqsArr)}
-
-<!--Facebook/WhatsApp: ${esc(v('socialTeaser'))} 👉 ${esc(pageUrl)}-->`;
+<!--
+Social Teaser: ${esc(v('socialTeaser'))} 👉 ${esc(pageUrl)}
+-->`;
 
   document.getElementById('output').value = html;
   document.getElementById('status').textContent = '✅ Generated! ' + html.length + ' chars';
@@ -660,10 +583,6 @@ function downloadOut(){
   a.click();
 }
 
-function fillDemo(){
-  document.getElementById('aiTopic').value = 'AIOU MLIS Solved Assignments Spring 2026';
-}
-
 function clearForm(){
   if(!confirm('Clear all fields?')) return;
   document.querySelectorAll('input,textarea').forEach(e => e.value = '');
@@ -672,11 +591,7 @@ function clearForm(){
 }
 
 /* Init empty rows */
-addImageRow();
-addCourseRow();
-addDeadlineRow();
-addFaqRow();
-addLinkRow();
+addImageRow(); addCourseRow(); addDeadlineRow(); addFaqRow(); addLinkRow();
 </script>
 </body>
 </html>
