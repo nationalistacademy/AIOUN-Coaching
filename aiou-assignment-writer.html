@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIOU Assignment Writer (APA Format)</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f8fafc; color: #1e293b; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 20px; }
+h1 { color: #0f172a; text-align: center; }
+.sub { text-align: center; color: #64748b; margin-bottom: 30px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media(max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+.card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+label { display: block; font-weight: 600; margin: 15px 0 5px; font-size: 14px; }
+input, textarea, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; }
+textarea { min-height: 150px; resize: vertical; }
+.btn { background: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; transition: 0.2s; }
+.btn:hover { background: #1d4ed8; }
+.btn:disabled { background: #94a3b8; cursor: not-allowed; }
+.output-box { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; font-family: 'Times New Roman', Times, serif; font-size: 16px; line-height: 1.6; min-height: 500px; overflow-y: auto; white-space: pre-wrap; }
+.status { text-align: center; margin-top: 10px; font-weight: bold; font-size: 14px; }
+.status.err { color: #ef4444; }
+.status.ok { color: #22c55e; }
+.watermark { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎓 AIOU Assignment Writer</h1>
+  <p class="sub">Original, APA Formatted & Plagiarism-Free Assignments for Multiple Students</p>
+
+  <div class="grid">
+    <!-- Input Section -->
+    <div class="card">
+      <h2>📥 Assignment Details</h2>
+      
+      <label>Student Name</label>
+      <input type="text" id="studentName" placeholder="e.g. M Waseem Mir">
+
+      <label>Roll Number</label>
+      <input type="text" id="rollNo" placeholder="e.g. AB123456">
+
+      <label>Course Name & Code</label>
+      <input type="text" id="courseName" placeholder="e.g. Business Mathematics (1429)">
+
+      <label>Semester</label>
+      <input type="text" id="semester" placeholder="e.g. Autumn 2026">
+
+      <label>Paste Assignment Questions (from PDF/Image)</label>
+      <textarea id="questions" placeholder="Copy & paste the questions here... (e.g. Q.1 Find the sample space for choosing an odd number... Q.2 Define a random variable...)"></textarea>
+
+      <label>Language / Tone</label>
+      <select id="tone">
+        <option value="academic">Academic & Formal (Recommended)</option>
+        <option value="simple">Simple & Easy (For low marks risk)</option>
+        <option value="detailed">Highly Detailed (For maximum marks)</option>
+      </select>
+
+      <button class="btn" id="generateBtn" onclick="generateAssignment()">✨ Generate Assignment</button>
+      <div id="status" class="status"></div>
+    </div>
+
+    <!-- Output Section -->
+    <div class="card">
+      <h2>📄 Generated Assignment (APA Format)</h2>
+      <div class="output-box" id="output">Your assignment will appear here...</div>
+      <button class="btn" style="background:#10b981; margin-top:10px;" onclick="copyOutput()">📋 Copy to Clipboard</button>
+    </div>
+  </div>
+  <div class="watermark">Powered by DeepSeek AI & Cloudflare Worker</div>
+</div>
+
+<script>
+// ==========================================
+// 🔑 WORKER CONFIGURATION
+// ==========================================
+// Apna Cloudflare Worker URL yahan dalein
+const WORKER_URL = "https://assignmentwaly-tools.YOUR-SUBDOMAIN.workers.dev"; 
+// Agar aapne AUTH_TOKEN lagaya hai to yahan dalein, warna khali chhor den
+const AUTH_TOKEN = ""; 
+
+// ==========================================
+// AI SYSTEM PROMPT (The Magic Prompt)
+// ==========================================
+const SYSTEM_PROMPT = `You are an expert academic writer for Allama Iqbal Open University (AIOU).
+Your task is to write complete, high-quality assignments based on the provided questions.
+
+RULES FOR WRITING:
+1. FORMAT: Use APA style. Include a Title Page, Headings (Introduction, Main Body, Conclusion), and a References section.
+2. STRUCTURE: Break down each question logically. Use Part 1, Part 2, etc. Use bullet points, tables, or numbered lists where appropriate to make it readable.
+3. ORIGINALITY (COPYRIGHT): DO NOT copy word-for-word from textbooks. Explain concepts in your own words. Write in a way that it passes AIOU plagiarism checks easily. Change sentence structures and provide unique examples.
+4. AIOU STANDARDS: Mention local context (e.g., Pakistan, AIOU) where relevant. Use clear, academic English.
+5. TABLES: If a question requires a table, generate a clean HTML table.
+6. REFERENCES: Create a standard APA bibliography at the end. Use the provided course textbook as the main reference (e.g., "AIOU Course Code 1429 Study Guide").
+7. OUTPUT: Return the content in plain text with clear markdown-like spacing. Do not use markdown code blocks. Use HTML tags for Tables if needed.
+
+Write as if you are an A-grade student submitting this assignment.`;
+
+async function generateAssignment() {
+    const btn = document.getElementById('generateBtn');
+    const status = document.getElementById('status');
+    const output = document.getElementById('output');
+    
+    const studentName = document.getElementById('studentName').value.trim();
+    const rollNo = document.getElementById('rollNo').value.trim();
+    const courseName = document.getElementById('courseName').value.trim();
+    const semester = document.getElementById('semester').value.trim();
+    const questions = document.getElementById('questions').value.trim();
+    const tone = document.getElementById('tone').value;
+
+    if (!questions) {
+        status.textContent = "❌ Please paste the questions first.";
+        status.className = "status err";
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "⏳ AI is writing your assignment...";
+    status.textContent = "Connecting to AI... (It may take 30-60 seconds)";
+    status.className = "status";
+    output.innerHTML = "Generating... Please wait.";
+
+    const userPrompt = `
+    Student Name: ${studentName || "Student"}
+    Roll No: ${rollNo || "N/A"}
+    Course: ${courseName || "AIOU Course"}
+    Semester: ${semester || "Autumn 2026"}
+    Tone: ${tone}
+
+    HERE ARE THE QUESTIONS:
+    ${questions}
+
+    Please generate the complete assignment. Start with an APA Title Page, then answer all questions comprehensively, and end with References.
+    `;
+
+    try {
+        const response = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-Auth-Token': AUTH_TOKEN 
+            },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [
+                    { role: 'system', content: SYSTEM_PROMPT },
+                    { role: 'user', content: userPrompt }
+                ],
+                temperature: 0.8, // Thoda high temperature taake har student ka answer alag ho
+                max_tokens: 8000
+            })
+        });
+
+        if (!response.ok) {
+            const err = await response.text();
+            throw new Error(`Worker Error: ${response.status} - ${err}`);
+        }
+
+        const data = await response.json();
+        const aiContent = data.choices[0].message.content;
+
+        // Formatting the output beautifully
+        const finalOutput = aiContent
+            .replace(/\n/g, '<br>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold text support
+
+        output.innerHTML = finalOutput;
+        status.textContent = "✅ Assignment generated successfully!";
+        status.className = "status ok";
+
+    } catch (error) {
+        console.error(error);
+        output.innerHTML = "❌ Error occurred. Check console.";
+        status.textContent = `❌ ${error.message}`;
+        status.className = "status err";
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "✨ Generate Assignment";
+    }
+}
+
+function copyOutput() {
+    const output = document.getElementById('output');
+    const textToCopy = output.innerText; // Plain text for MS Word
+    
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = "✅ Copied! Paste in MS Word";
+        btn.style.background = "#059669";
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = "#10b981";
+        }, 3000);
+    });
+}
+</script>
+</body>
+</html>
