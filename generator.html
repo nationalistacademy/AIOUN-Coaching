@@ -1,598 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Assignmentwaly AI Agent — Post Generator</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AIOU Coaching — AI SEO Post Studio</title>
 <style>
-* { box-sizing: border-box; }
-body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f1f5f9; color: #1a1a1a; }
-.wrap { max-width: 1400px; margin: 0 auto; padding: 20px; }
-h1 { color: #1e3c72; margin: 0 0 8px; }
-.sub { color: #64748b; margin-bottom: 24px; font-size: 14px; }
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-@media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } }
-.card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
-.card h2 { font-size: 16px; color: #1e6f3f; border-left: 4px solid #1e6f3f; padding-left: 10px; margin: 0 0 15px; }
-.card.ai { background: linear-gradient(135deg, #ecfdf5, #f0fdf4); border: 2px solid #86efac; }
-label { display: block; font-size: 13px; font-weight: 600; margin: 10px 0 4px; color: #334155; }
-input, textarea, select { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 13px; }
-textarea { resize: vertical; min-height: 70px; }
-.row-item { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 6px; margin-bottom: 6px; }
-.row-item-2 { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; margin-bottom: 6px; }
-.row-item-faq { display: grid; grid-template-columns: 1fr 2fr auto; gap: 6px; margin-bottom: 6px; }
-.row-item-img { display: grid; grid-template-columns: 2fr 1fr auto; gap: 6px; margin-bottom: 6px; }
-.btn-add { background: #1e6f3f; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
-.btn-add:hover { background: #155a30; }
-.btn-remove { background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-.btn-ai { background: linear-gradient(135deg, #7c3aed, #a855f7); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px; }
-.btn-ai:hover { opacity: 0.9; }
-.btn-ai:disabled { opacity: 0.5; cursor: not-allowed; }
-.actions { margin: 20px 0; text-align: center; }
-.btn-main { background: linear-gradient(135deg, #1e6f3f, #2d8a55); color: white; border: none; padding: 14px 40px; border-radius: 50px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px rgba(30,111,63,0.4); }
-.btn-main:hover { transform: translateY(-2px); }
-.btn-sec { background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin: 0 5px; }
-#output { width: 100%; min-height: 500px; font-family: Consolas, monospace; font-size: 12px; border-radius: 8px; padding: 12px; border: 1px solid #cbd5e1; background: #0f172a; color: #a5f3c3; }
-.status { font-size: 12px; color: #1e6f3f; font-weight: 600; margin-left: 10px; }
-.status.err { color: #ef4444; }
-.log { background: #0f172a; color: #a5f3c3; font-family: Consolas, monospace; font-size: 11px; padding: 10px; border-radius: 6px; max-height: 150px; overflow-y: auto; margin-top: 10px; white-space: pre-wrap; display: none; }
-.log.show { display: block; }
-.pill { display: inline-block; padding: 3px 10px; background: #dcfce7; color: #166534; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px; }
-.pill.warn { background: #fee2e2; color: #991b1b; }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <h1>🤖 Assignmentwaly AI Agent</h1>
-  <p class="sub">Powered by <strong>DeepSeek</strong> · Updated <strong>JSON-LD @graph</strong> & HTML Output</p>
+:root{--g:#1e6f3f;--b:#1e3c72;--bg:#f1f5f9;--c:#fff;--t:#1a1a1a;--m:#64748b;--bd:#cbd5e1}
+@media(prefers-color-scheme:dark){:root{--bg:#0f172a;--c:#1e293b;--t:#e2e8f0;--m:#94a3b8;--bd:#475569}}
+*{box-sizing:border-box}body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:var(--bg);color:var(--t)}
+.w{max-width:1400px;margin:auto;padding:16px}h1{color:var(--b);margin:0 0 6px}@media(prefers-color-scheme:dark){h1{color:#93c5fd}}
+.s{color:var(--m);font-size:13px;margin:0 0 16px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:16px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+@media(max-width:1000px){.g,.g3{grid-template-columns:1fr}}
+.c{background:var(--c);border-radius:12px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:16px}
+.c.ai{border:2px solid #86efac}.g3 .c,.g .c{margin-bottom:0}
+h2{font-size:15px;color:var(--g);border-left:4px solid var(--g);padding-left:10px;margin:14px 0 10px}h2:first-child{margin-top:0}
+label{display:block;font-size:12px;font-weight:600;margin:8px 0 3px;color:var(--m)}
+input,textarea,select{width:100%;padding:7px 9px;border:1px solid var(--bd);border-radius:6px;font:inherit;font-size:13px;background:var(--c);color:var(--t)}
+textarea{resize:vertical;min-height:60px}
+.r{display:grid;gap:5px;margin-bottom:5px}.rm{background:#ef4444;color:#fff;border:0;border-radius:6px;padding:0 10px;cursor:pointer;font-weight:700}
+.b{background:var(--g);color:#fff;border:0;padding:7px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;margin:4px 4px 0 0}
+.b.o{background:#f59e0b}.b.p{background:linear-gradient(135deg,#7c3aed,#a855f7);width:100%;padding:11px;font-size:14px;margin-top:8px}
+.b:disabled{opacity:.5;cursor:wait}
+.cf{display:grid;grid-template-columns:2fr 2fr auto;gap:8px;align-items:end}@media(max-width:700px){.cf{grid-template-columns:1fr}}
+.pill{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;margin-top:8px;background:#dcfce7;color:#166534}.pill.w{background:#fee2e2;color:#991b1b}
+.act{text-align:center;margin:16px 0}.main{background:linear-gradient(135deg,#1e6f3f,#2d8a55);color:#fff;border:0;padding:13px 36px;border-radius:50px;font-size:16px;font-weight:700;cursor:pointer}
+#st{font-size:12px;font-weight:600;color:var(--g);margin-left:10px}#st.e{color:#ef4444}
+.log{background:#0f172a;color:#a5f3c3;font:11px Consolas,monospace;padding:10px;border-radius:6px;max-height:140px;overflow:auto;white-space:pre-wrap;display:none;margin:0 0 12px}.log.on{display:block}
+#out{min-height:380px;font:12px Consolas,monospace;background:#0f172a;color:#a5f3c3}
+.chips a{display:inline-block;margin:3px;padding:6px 12px;border-radius:30px;background:var(--bg);border:1px solid var(--bd);color:var(--t);font-size:12px;text-decoration:none}
+.sc{font-size:30px;font-weight:800}.ck{font-size:12px;line-height:1.7}.ok{color:#16a34a}.no{color:#dc2626}
+iframe{width:100%;height:520px;border:1px solid var(--bd);border-radius:8px;background:#fff;margin-top:8px}
+.os li{font-size:12px;margin:2px 0}.os b{color:var(--g)}
+</style></head>
+<body><div class="w">
+<h1>🎓 AIOU Coaching — AI SEO Post Studio</h1>
+<p class="s">DeepSeek Worker · OSINT Research · SEO Score · JSON-LD @graph · Live Preview · <b>aioucoaching.blogspot.com</b></p>
 
-  <!-- AI Configuration -->
-  <div class="card ai" style="margin-bottom:20px;">
-    <h2>🔑 AI Configuration</h2>
-    <div style="display:grid;grid-template-columns:2fr 2fr 1fr;gap:10px;align-items:end;">
-      <div><label>Worker URL</label>
-        <input id="workerUrl" placeholder="https://aiou-tools.httpsnationalistacademygithubioassignmentwaly-toolsgener.workers.dev/
-"></div>
-      <div><label>Auth Token</label>
-        <input id="authToken" type="password" placeholder="aw-2026-secret-xyz789"></div>
-      <div><button class="btn-add" style="padding:10px" onclick="saveConfig()">💾 Save</button></div>
-    </div>
-    <div class="pill warn" id="cfgStatus">Not configured</div>
-  </div>
+<div class="c ai" style="margin-bottom:16px"><h2>🔑 AI Configuration</h2>
+<div class="cf"><div><label>Worker URL</label><input id="workerUrl"></div><div><label>Auth Token</label><input id="authToken" type="password"></div><button class="b" onclick="saveCfg()">💾 Save</button></div>
+<span class="pill w" id="cfg"></span></div>
 
-  <!-- AI Generator Panels -->
-  <div class="grid" style="margin-bottom:20px;">
-    <div class="card ai">
-      <h2>✨ Mode A — Generate From Topic</h2>
-      <label>Topic / Program / Session</label>
-      <textarea id="aiTopic" placeholder="Example: AIOU MLIS Solved Assignments Spring 2026. Courses include 5641, 5642..."></textarea>
-      <label>Extra Notes (optional)</label>
-      <textarea id="aiNotes" placeholder="Any special instructions..."></textarea>
-      <button class="btn-ai" onclick="runAgent('topic')" id="btnA">🚀 Generate Everything</button>
-    </div>
-
-    <div class="card ai">
-      <h2>📥 Mode B — Format Existing Content</h2>
-      <label>Paste any content / notes / raw text</label>
-      <textarea id="aiContent" style="min-height:180px" placeholder="Paste raw content here. AI will reformat it."></textarea>
-      <button class="btn-ai" onclick="runAgent('content')" id="btnB">🔄 Convert to Format</button>
-    </div>
-  </div>
-
-  <div class="log" id="log"></div>
-
-  <div class="actions">
-    <button class="btn-main" onclick="generate()">🚀 Generate Post HTML</button>
-    <button class="btn-sec" onclick="clearForm()">🗑️ Clear</button>
-    <span class="status" id="status"></span>
-  </div>
-
-  <div class="grid">
-    <div class="card">
-      <h2>1. Basic Info</h2>
-      <label>Page Title (H1)</label><input id="title">
-      <label>Primary Keyword</label><input id="primaryKw">
-      <label>Secondary Keywords</label><input id="secondaryKw">
-      <label>Session</label><input id="session">
-      <label>Program</label><input id="program">
-      <label>Type</label><input id="type">
-      <label>Meta Description (155 chars max)</label><textarea id="metaDesc"></textarea>
-      <label>URL Slug</label><input id="slug">
-
-      <h2 style="margin-top:20px;">2. Hero Images</h2>
-      <div id="imagesContainer"></div>
-      <button class="btn-add" onclick="addImageRow()">+ Add Image</button>
-
-      <h2 style="margin-top:20px;">3. Callout Text</h2>
-      <label>Info Box (green)</label><textarea id="infoText"></textarea>
-      <label>Note Box (yellow)</label><textarea id="noteText"></textarea>
-      <label>Tip Box (orange)</label><textarea id="tipText"></textarea>
-
-      <h2 style="margin-top:20px;">4. Courses</h2>
-      <div id="coursesContainer"></div>
-      <button class="btn-add" onclick="addCourseRow()">+ Add Course</button>
-
-      <h2 style="margin-top:20px;">5. Deadlines</h2>
-      <div id="deadlinesContainer"></div>
-      <button class="btn-add" onclick="addDeadlineRow()">+ Add Deadline</button>
-
-      <h2 style="margin-top:20px;">6. FAQs</h2>
-      <div id="faqsContainer"></div>
-      <button class="btn-add" onclick="addFaqRow()">+ Add FAQ</button>
-
-      <h2 style="margin-top:20px;">7. Internal Links</h2>
-      <div id="linksContainer"></div>
-      <button class="btn-add" onclick="addLinkRow()">+ Add Link</button>
-
-      <h2 style="margin-top:20px;">8. Contact & CTA</h2>
-      <label>WhatsApp Number (digits only)</label><input id="whatsapp">
-      <label>WhatsApp Message</label><input id="waMsg">
-      <label>Home URL</label><input id="homeUrl">
-      <label>Social Teaser</label><textarea id="socialTeaser"></textarea>
-    </div>
-
-    <div class="card">
-      <h2>9. Output (Blogger Ready)</h2>
-      <textarea id="output" readonly></textarea>
-      <div style="margin-top:10px;">
-        <button class="btn-sec" onclick="copyOut()">📋 Copy</button>
-        <button class="btn-sec" onclick="downloadOut()">💾 Download</button>
-      </div>
-    </div>
-  </div>
+<div class="g3">
+<div class="c ai"><h2>✨ A — Topic se Generate</h2>
+<label>Topic / Program / Session</label><textarea id="aiTopic" placeholder="AIOU MA Education Solved Assignments Spring 2026, courses 8601, 8602..."></textarea>
+<label>Extra Notes</label><textarea id="aiNotes" style="min-height:40px"></textarea>
+<button class="b p" id="bA" onclick="run('bA',()=>agent('topic'))">🚀 Generate Everything</button></div>
+<div class="c ai"><h2>📥 B — Raw Content Format</h2>
+<textarea id="aiContent" style="min-height:140px" placeholder="Raw notes paste karein..."></textarea>
+<button class="b p" id="bB" onclick="run('bB',()=>agent('content'))">🔄 Convert to Format</button></div>
+<div class="c ai"><h2>🕵️ C — OSINT Research</h2>
+<label>Topic / Keyword</label><textarea id="osTopic" placeholder="aiou ma education spring 2026 solved assignments"></textarea>
+<button class="b p" id="bC" onclick="run('bC',osint)">🔍 Run OSINT Analysis</button></div>
 </div>
 
-<script>
-/* ═══════════ CONFIG PERSISTENCE ═══════════ */
-function saveConfig(){
-  localStorage.setItem('aw_worker', document.getElementById('workerUrl').value.trim());
-  localStorage.setItem('aw_token',  document.getElementById('authToken').value.trim());
-  updateCfgStatus();
-}
-function updateCfgStatus(){
-  const w = localStorage.getItem('aw_worker');
-  const s = document.getElementById('cfgStatus');
-  if(w){
-    try {
-      s.textContent = '✅ Configured: ' + new URL(w).host;
-      s.className = 'pill';
-      s.style.background = '#dcfce7';
-      s.style.color = '#166534';
-    } catch {
-      s.textContent = '⚠️ Invalid URL'; s.className = 'pill warn';
-    }
-  } else {
-    s.textContent = '⚠️ Not configured'; s.className = 'pill warn';
-    s.style.background = '#fee2e2'; s.style.color = '#991b1b';
-  }
-}
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('workerUrl').value = localStorage.getItem('aw_worker') || '';
-  document.getElementById('authToken').value = localStorage.getItem('aw_token') || '';
-  updateCfgStatus();
-});
+<div class="c os" id="osCard" style="display:none"><h2>🕵️ OSINT Report</h2><div id="osOut"></div>
+<button class="b" onclick="applyOS()">✅ Apply Keywords/Title/Meta/FAQs to Form</button></div>
+<div class="c" style="margin-top:16px"><h2>🔎 OSINT Quick Links (live verify — naye tab me khulte hain)</h2><div class="chips" id="osl"></div></div>
+<pre class="log" id="log" style="margin-top:16px"></pre>
 
-/* ═══════════ AI AGENT ═══════════ */
-const logBox = document.getElementById('log');
-function log(msg){
-  logBox.classList.add('show');
-  logBox.textContent += (logBox.textContent ? '\n' : '') + msg;
-  logBox.scrollTop = logBox.scrollHeight;
-}
+<div class="act"><button class="main" onclick="gen()">🚀 Generate Post HTML</button>
+<button class="b o" onclick="exportJ()">⬇️ Export Project</button>
+<button class="b o" onclick="$('imp').click()">⬆️ Import</button><input type="file" id="imp" accept=".json" hidden onchange="importJ(this)">
+<button class="b o" onclick="clr()">🗑️ Clear</button><span id="st"></span></div>
 
-const SYSTEM_PROMPT = `You are an expert content formatter for "AssignmentWaly", a Pakistani education resource blog that provides AIOU (Allama Iqbal Open University) solved assignments.
-YOUR JOB: Return ONLY valid JSON (no markdown, no backticks, no explanation) matching this schema:
-{
-  "title": "SEO title",
-  "primaryKw": "main keyword",
-  "secondaryKw": "comma separated",
-  "session": "Spring 2026",
-  "program": "Full program name",
-  "type": "Solved Assignments",
-  "metaDesc": "155-char SEO description",
-  "slug": "url-slug",
-  "infoText": "Green callout in Roman Urdu",
-  "noteText": "Yellow callout in Roman Urdu",
-  "tipText": "Orange callout in Roman Urdu",
-  "courses": [{"code":"9201","book":"Soft Skills","a1":"","a2":""}],
-  "deadlines": [{"label":"Assignment 1","date":"30 June 2026"}],
-  "faqs": [{"q":"Question?","a":"Answer."}],
-  "links": [{"label":"📘 Books","url":"https://assignmentwaly.blogspot.com/p/aiou-ma-history-original-books-pdf.html"}],
-  "whatsapp": "923702388998",
-  "waMsg": "Assalamualaikum...",
-  "socialTeaser": "🎓 AIOU... Free PDF!"
-}`;
-
-async function callDeepSeek(userPrompt, forceJson = true){
-  const workerUrl = localStorage.getItem('aw_worker');
-  const token = localStorage.getItem('aw_token');
-  if(!workerUrl) throw new Error('Configure Worker URL first');
-
-  const res = await fetch(workerUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Auth-Token': token || '' },
-    body: JSON.stringify({
-      model: 'deepseek-chat',
-      messages: [{ role: 'system', content: SYSTEM_PROMPT },{ role: 'user', content: userPrompt }],
-      json: forceJson, temperature: 0.7, max_tokens: 8000
-    })
-  });
-
-  if(!res.ok){
-    const t = await res.text();
-    throw new Error('Worker error ' + res.status + ': ' + t.slice(0, 200));
-  }
-  const data = await res.json();
-  if(data.error) throw new Error(data.error);
-  const content = data.choices?.[0]?.message?.content;
-  if(!content) throw new Error('Empty AI response');
-  return content;
-}
-
-async function runAgent(mode){
-  logBox.textContent = ''; logBox.classList.add('show');
-  const btn = mode === 'topic' ? document.getElementById('btnA') : document.getElementById('btnB');
-  btn.disabled = true; const origText = btn.textContent; btn.textContent = '⏳ Thinking...';
-  try{
-    let userPrompt;
-    if(mode === 'topic'){
-      const topic = document.getElementById('aiTopic').value.trim();
-      if(!topic) throw new Error('Enter a topic first');
-      userPrompt = `Generate AssignmentWaly JSON for:\n${topic}\n\nNotes:\n${document.getElementById('aiNotes').value}\n\nReturn pure JSON only.`;
-    } else {
-      const content = document.getElementById('aiContent').value.trim();
-      if(!content) throw new Error('Paste some content first');
-      userPrompt = `Reformat this into AssignmentWaly JSON:\n\n"""\n${content.slice(0, 8000)}\n"""\n\nReturn pure JSON only.`;
-    }
-
-    log('📡 Calling DeepSeek via Worker...');
-    const raw = await callDeepSeek(userPrompt, true);
-    log('📥 Got response (' + raw.length + ' chars)');
-
-    let jsonStr = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/```$/, '').trim();
-    const first = jsonStr.indexOf('{'); const last = jsonStr.lastIndexOf('}');
-    if(first >= 0 && last > first) jsonStr = jsonStr.slice(first, last + 1);
-    const obj = JSON.parse(jsonStr);
-
-    log('✅ Parsed JSON. Populating form...');
-    populateForm(obj);
-    log('✅ Form filled! Click "Generate Post HTML".');
-    document.getElementById('status').textContent = '✅ AI fill complete';
-    document.getElementById('status').classList.remove('err');
-  } catch(e){
-    console.error(e); log('❌ Error: ' + e.message);
-    document.getElementById('status').textContent = '❌ ' + e.message;
-    document.getElementById('status').classList.add('err');
-  } finally {
-    btn.disabled = false; btn.textContent = origText;
-  }
-}
-
-function populateForm(o){
-  const set = (id, val) => { if(val != null) document.getElementById(id).value = val; };
-  set('title', o.title); set('primaryKw', o.primaryKw); set('secondaryKw', o.secondaryKw);
-  set('session', o.session); set('program', o.program); set('type', o.type);
-  set('metaDesc', o.metaDesc); set('slug', o.slug);
-  set('infoText', o.infoText); set('noteText', o.noteText); set('tipText', o.tipText);
-  set('whatsapp', o.whatsapp); set('waMsg', o.waMsg);
-  set('homeUrl', 'https://assignmentwaly.blogspot.com/'); set('socialTeaser', o.socialTeaser);
-  ['coursesContainer','deadlinesContainer','faqsContainer','linksContainer','imagesContainer'].forEach(id => document.getElementById(id).innerHTML = '');
-  (o.courses || []).forEach(c => addCourseRow(c.code, c.book, c.a1 || '', c.a2 || ''));
-  (o.deadlines || []).forEach(d => addDeadlineRow(d.label, d.date));
-  (o.faqs || []).forEach(f => addFaqRow(f.q, f.a));
-  (o.links || []).forEach(l => addLinkRow(l.label, l.url));
-  addImageRow();
-}
-
-/* ═══════════ DYNAMIC ROWS ═══════════ */
-function addImageRow(url='', alt=''){ const d=document.createElement('div'); d.className='row-item-img'; d.innerHTML=`<input placeholder="Image URL" value="${url}"><input placeholder="Alt" value="${alt}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`; document.getElementById('imagesContainer').appendChild(d); }
-function addCourseRow(code='', book='', a1='', a2=''){ const d=document.createElement('div'); d.className='row-item'; d.innerHTML=`<input placeholder="Code" value="${code}"><input placeholder="Book" value="${book}"><input placeholder="A1 URL" value="${a1}"><input placeholder="A2 URL" value="${a2}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`; document.getElementById('coursesContainer').appendChild(d); }
-function addDeadlineRow(label='', date=''){ const d=document.createElement('div'); d.className='row-item-2'; d.innerHTML=`<input placeholder="Label" value="${label}"><input placeholder="Date" value="${date}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`; document.getElementById('deadlinesContainer').appendChild(d); }
-function addFaqRow(q='', a=''){ const d=document.createElement('div'); d.className='row-item-faq'; d.innerHTML=`<input placeholder="Q" value="${q}"><input placeholder="A" value="${a}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`; document.getElementById('faqsContainer').appendChild(d); }
-function addLinkRow(label='', url=''){ const d=document.createElement('div'); d.className='row-item-2'; d.innerHTML=`<input placeholder="Label" value="${label}"><input placeholder="URL" value="${url}"><button class="btn-remove" onclick="this.parentNode.remove()">×</button>`; document.getElementById('linksContainer').appendChild(d); }
-
-/* ═══════════ HELPERS ═══════════ */
-const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const v = id => document.getElementById(id).value.trim();
-const chips = () => { const out=[]; document.querySelectorAll('#linksContainer .row-item-2').forEach(r => { const [l,u]=r.querySelectorAll('input'); if(l.value && u.value) out.push({label:l.value, url:u.value}); }); return out; };
-const images = () => { const out=[]; document.querySelectorAll('#imagesContainer .row-item-img').forEach(r => { const [u,a]=r.querySelectorAll('input'); if(u.value) out.push({url:u.value, alt:a.value || v('title')}); }); return out; };
-const courses = () => { const out=[]; document.querySelectorAll('#coursesContainer .row-item').forEach(r => { const i=r.querySelectorAll('input'); if(i[0].value) out.push({code:i[0].value, book:i[1].value, a1:i[2].value, a2:i[3].value}); }); return out; };
-const deadlines = () => { const out=[]; document.querySelectorAll('#deadlinesContainer .row-item-2').forEach(r => { const i=r.querySelectorAll('input'); if(i[0].value) out.push({label:i[0].value, date:i[1].value}); }); return out; };
-const faqs = () => { const out=[]; document.querySelectorAll('#faqsContainer .row-item-faq').forEach(r => { const i=r.querySelectorAll('input'); if(i[0].value) out.push({q:i[0].value, a:i[1].value}); }); return out; };
-
-/* ═══════════ BUILDERS ═══════════ */
-function buildChips(links){
-  return `<div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0px;">\n${links.map(l => `    <a href="${esc(l.url)}" rel="internal" style="background: rgb(226, 232, 240); border-radius: 40px; border: 1px solid rgb(226, 232, 240); font-size: 0.9rem; font-weight: 500; padding: 8px 16px; text-decoration: none;">${esc(l.label)}</a>`).join('\n')}\n</div>`;
-}
-
-function buildImages(imgs){
-  return imgs.map(i => `<div class="separator" style="clear: both;"><a href="${esc(i.url)}" style="display: block; padding: 1em 0px; text-align: center;"><img alt="${esc(i.alt)}" border="0" src="${esc(i.url)}" loading="lazy" /></a></div>`).join('\n');
-}
-
-function buildCoursesTable(rows){
-  const body = rows.map(r => `<tr>
-  <td style="border: 1px solid rgb(221, 221, 221); padding: 8px; text-align: center;">${esc(r.code)}</td>
-  <td style="border: 1px solid rgb(221, 221, 221); padding: 8px;">${esc(r.book)}</td>
-  <td style="border: 1px solid rgb(221, 221, 221); padding: 8px; text-align: center;">${r.a1 ? `<a href="${esc(r.a1)}" rel="noopener" target="_blank">PDF</a>` : '—'}</td>
-  <td style="border: 1px solid rgb(221, 221, 221); padding: 8px; text-align: center;">${r.a2 ? `<a href="${esc(r.a2)}" rel="noopener" target="_blank">PDF</a>` : '—'}</td>
-</tr>`).join('\n');
-  return `<div style="margin: 20px 0px; overflow-x: auto;">
-<table id="assignmentsTable" style="border-collapse: collapse; font-size: 14px; min-width: 600px; width: 100%;">
-<thead><tr style="background: rgb(30, 60, 114); color: white;">
-<th style="border: 1px solid rgb(221, 221, 221); padding: 12px 8px; text-align: center;">Code</th>
-<th style="border: 1px solid rgb(221, 221, 221); padding: 12px 8px; text-align: center;">Book Name</th>
-<th style="border: 1px solid rgb(221, 221, 221); padding: 12px 8px; text-align: center;">Assignment 1</th>
-<th style="border: 1px solid rgb(221, 221, 221); padding: 12px 8px; text-align: center;">Assignment 2</th>
-</tr></thead>
-<tbody>${body}</tbody></table></div>`;
-}
-
-function buildDeadlinesTable(rows){
-  const body = rows.map(r => `<tr>
-  <td style="border: 1px solid rgb(221, 221, 221); padding: 8px;"><strong>📝 ${esc(r.label)}</strong></td>
-  <td style="border: 1px solid rgb(221, 221, 221); padding: 8px; text-align: center;"><span style="color: #dc2626; font-weight: bold;">${esc(r.date)}</span></td>
-</tr>`).join('\n');
-  return `<div style="margin: 25px 0px; overflow-x: auto;">
-<table style="border-collapse: collapse; font-size: 14px; min-width: 600px; width: 100%;">
-<thead><tr style="background: rgb(30, 60, 114); color: white;">
-<th style="border: 1px solid rgb(221, 221, 221); padding: 12px 8px; text-align: center;">📌 Deadline</th>
-<th style="border: 1px solid rgb(221, 221, 221); padding: 12px 8px; text-align: center;">Due Date</th>
-</tr></thead>
-<tbody>${body}</tbody></table></div>`;
-}
-
-function buildFaqs(rows){
-  return rows.map(f => `<div style="border-left: 4px solid #1e6f3f; border-radius: 8px; border: 1px solid rgb(226, 232, 240); font-size: 0.95rem; margin: 15px 0px; padding: 15px 20px;">
-  <strong>${esc(f.q)}</strong><br />${esc(f.a)}
-</div>`).join('\n');
-}
-
-/* ═══════════ UPDATED JSON-LD @GRAPH ═══════════ */
-function buildJsonLd(title, metaDesc, slug, faqsArr, coursesArr, imagesArr){
-  const pageUrl = `https://assignmentwaly.blogspot.com/p/${slug}.html`;
-  const today = new Date().toISOString().split('T')[0];
-  
-  const graph = [];
-  
-  // 1. WebPage Schema
-  graph.push({
-    "@type": "WebPage",
-    "@id": pageUrl + "#webpage",
-    "url": pageUrl,
-    "name": title,
-    "description": metaDesc,
-    "datePublished": today,
-    "dateModified": today,
-    "isPartOf": { "@type": "WebSite", "@id": "https://assignmentwaly.blogspot.com/#website" }
-  });
-
-  // 2. WebSite Identity
-  graph.push({
-    "@type": "WebSite",
-    "@id": "https://assignmentwaly.blogspot.com/#website",
-    "url": "https://assignmentwaly.blogspot.com",
-    "name": "AssignmentWaly",
-    "publisher": {
-      "@type": "EducationalOrganization",
-      "name": "AssignmentWaly",
-      "url": "https://assignmentwaly.blogspot.com",
-      "sameAs": ["https://wa.me/" + v('whatsapp')]
-    }
-  });
-
-  // 3. Breadcrumbs
-  graph.push({
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://assignmentwaly.blogspot.com/" },
-      { "@type": "ListItem", "position": 2, "name": title, "item": pageUrl }
-    ]
-  });
-
-  // 4. Image Objects
-  if (imagesArr && imagesArr.length > 0) {
-    imagesArr.forEach((img, index) => {
-      graph.push({
-        "@type": "ImageObject",
-        "@id": pageUrl + "#image-" + (index + 1),
-        "url": img.url,
-        "caption": img.alt,
-        "representativeOfPage": index === 0
-      });
-    });
-  }
-
-  // 5. Course ItemList (Structured Data for Tables)
-  if (coursesArr && coursesArr.length > 0) {
-    graph.push({
-      "@type": "ItemList",
-      "name": "Course Assignments List",
-      "numberOfItems": coursesArr.length,
-      "itemListElement": coursesArr.map((c, i) => ({
-        "@type": "ListItem",
-        "position": i + 1,
-        "name": c.code + " - " + c.book,
-        "item": c.a1 || pageUrl
-      }))
-    });
-  }
-
-  // 6. HowTo Schema (AI Overviews favorite)
-  graph.push({
-    "@type": "HowTo",
-    "name": "How to Download AIOU Solved Assignments",
-    "description": "Step-by-step guide to download AIOU solved assignments for Spring 2026.",
-    "step": [
-      { "@type": "HowToStep", "name": "Find Your Course", "text": "Look for your course code in the table above.", "position": 1 },
-      { "@type": "HowToStep", "name": "Click PDF Link", "text": "Click on the Assignment 1 or Assignment 2 PDF link.", "position": 2 },
-      { "@type": "HowToStep", "name": "Download & Write", "text": "Download the reference PDF and write your own answers.", "position": 3 }
-    ]
-  });
-
-  // 7. FAQPage
-  if (faqsArr && faqsArr.length > 0) {
-    graph.push({
-      "@type": "FAQPage",
-      "mainEntity": faqsArr.map(f => ({
-        "@type": "Question",
-        "name": f.q,
-        "acceptedAnswer": { "@type": "Answer", "text": f.a }
-      }))
-    });
-  }
-
-  const fullLd = { "@context": "https://schema.org", "@graph": graph };
-  return `<script type="application/ld+json">\n${JSON.stringify(fullLd, null, 2)}\n<\/script>`;
-}
-
-/* ═══════════ MAIN GENERATOR ═══════════ */
-function generate(){
-  const title = v('title') || 'AIOU Solved Assignments';
-  const primaryKw = v('primaryKw'), secondaryKw = v('secondaryKw'), session = v('session'), program = v('program'), type = v('type');
-  const metaDesc = v('metaDesc'), slug = v('slug') || 'post';
-  const imgs = images(), coursesArr = courses(), deadlinesArr = deadlines(), faqsArr = faqs(), links = chips();
-  const whatsapp = v('whatsapp'), waMsg = v('waMsg'), homeUrl = v('homeUrl') || 'https://assignmentwaly.blogspot.com/';
-  const waLink = `https://wa.me/${whatsapp}?text=${encodeURIComponent(waMsg)}`;
-  const pageUrl = `https://assignmentwaly.blogspot.com/p/${slug}.html`;
-  const today = new Date().toISOString().split('T')[0];
-
-  const html = `<!-- SEO & GEO META TAGS (Paste in Blogger HTML View) -->
-<title>${esc(title)} | AssignmentWaly</title>
-<meta name="description" content="${esc(metaDesc)}">
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
-<link rel="canonical" href="${esc(pageUrl)}">
-<meta property="og:type" content="article">
-<meta property="og:title" content="${esc(title)}">
-<meta property="og:description" content="${esc(metaDesc)}">
-<meta property="og:url" content="${esc(pageUrl)}">
-${imgs[0] ? `<meta property="og:image" content="${esc(imgs[0].url)}">` : ''}
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${esc(title)}">
-<meta name="twitter:description" content="${esc(metaDesc)}">
-
-<!-- POST CONTENT START -->
-<div itemscope itemtype="https://schema.org/Article">
-  
-  <p><strong>Session:</strong> <span itemprop="temporalCoverage">${esc(session)}</span> &nbsp;|&nbsp; <strong>Program:</strong> ${esc(program)} &nbsp;|&nbsp; <strong>Type:</strong> ${esc(type)}</p>
-
-  <h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">📌 Explore More Resources on Assignmentwaly</h2>
-  ${buildChips(links)}
-
-  ${buildImages(imgs)}
-
-  <div style="background: rgb(233, 245, 236); border-left: 4px solid rgb(30, 111, 63); border-radius: 8px; color: #1a1a1a; font-size: 0.95rem; margin: 15px 0px; padding: 12px 18px;">
-  ⭐ ${esc(v('infoText'))}
-  </div>
-
-  <p>Har course ke liye <strong>2 assignments</strong> hote hain. PDF links Google Drive par hosted hain – bilkul safe aur fast.</p>
-
-  <div style="background: rgb(254, 243, 199); border-left: 4px solid rgb(245, 158, 11); border-radius: 16px; color: #1a1a1a; font-size: 0.9rem; margin: 15px 0px; padding: 15px 20px;">
-  <strong>📌 Note:</strong> ${esc(v('noteText'))}
-  </div>
-
-  <!--Search Filter Bar-->
-  <div style="margin: 20px 0px 25px;">
-    <div style="align-items: center; background: rgb(255, 255, 255); border-radius: 60px; border: 1px solid rgb(226, 232, 240); box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 15px; display: flex; gap: 12px; padding: 5px 20px;">
-      <svg fill="none" stroke="currentColor" style="color: #1e6f3f; height: 20px; width: 20px;" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-      <input autocomplete="off" id="codeSearch" placeholder="Search by course code or book name..." style="background: rgb(255, 255, 255); border: none; color: #334155; flex: 1 1 0%; font-size: 1rem; outline: none; padding: 10px 0px;" type="text" />
-      <svg fill="none" id="clearSearch" stroke="currentColor" style="color: #ef4444; cursor: pointer; display: none; height: 20px; width: 20px;" viewbox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-    </div>
-    <div id="searchResults" style="display: none; font-size: 0.9rem; font-weight: 500; margin-top: 10px;"></div>
-  </div>
-
-  ${buildCoursesTable(coursesArr)}
-
-  ${buildDeadlinesTable(deadlinesArr)}
-
-  <div style="border-left: 4px solid #f5b042; border-radius: 8px; border: 1px solid rgb(226, 232, 240); font-size: 0.9rem; margin: 15px 0px 0px; padding: 12px 15px;">
-    <strong>⚠️ Pro Tip:</strong> ${esc(v('tipText'))}
-  </div>
-
-  <h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">❓ Frequently Asked Questions (FAQs)</h2>
-  ${buildFaqs(faqsArr)}
-
-  <h2 style="border-left: 4px solid rgb(30, 111, 63); font-size: 1.4rem; font-weight: 700; margin: 30px 0px 15px; padding-left: 12px;">🔗 You Might Also Find Useful</h2>
-  ${buildChips(links)}
-
-  <div style="background: rgb(233, 245, 236); border-radius: 20px; border: 1px solid rgb(187, 247, 208); color: #1a1a1a; margin: 40px 0px 20px; padding: 25px 20px; text-align: center;">
-    <h3 style="font-size: 22px; margin: 0px 0px 8px;">💬 Need Solved Assignments or Guess Papers?</h3>
-    <p style="color: #1a1a1a; margin: 5px 0px;">📘 Handwritten Solved Assignments | 📝 Guess Papers | 🎓 Exam Coaching</p>
-    <a href="${esc(waLink)}" rel="noopener noreferrer" style="align-items: center; background: rgb(37, 211, 102); border-radius: 50px; color: #1a1a1a; display: inline-flex; font-size: 16px; font-weight: bold; gap: 10px; margin-top: 20px; padding: 14px 30px; text-decoration: none;" target="_blank">📱 Chat on WhatsApp</a>
-  </div>
-
-  <div style="margin: 30px 0px 20px; text-align: center;">
-    <a href="${esc(homeUrl)}" style="background: rgb(245, 158, 11); border-radius: 50px; color: white; display: inline-block; font-size: 1rem; font-weight: 700; padding: 14px 35px; text-decoration: none;">🏠 Back to Assignmentwaly</a>
-  </div>
+<div class="g">
+<div class="c">
+<h2>1. Basic Info</h2><div id="basic"></div>
+<h2>2. Hero Images</h2><div id="images"></div><button class="b" onclick="addRow('images')">+ Image</button>
+<h2>3. Callouts</h2><div id="callouts"></div>
+<h2>4. Courses</h2><div id="courses"></div><button class="b" onclick="addRow('courses')">+ Course</button>
+<label>Bulk add (har line: <code>9201 - Soft Skills</code>)</label><textarea id="bulk" style="min-height:40px"></textarea><button class="b o" onclick="bulk()">⚡ Bulk Add</button>
+<h2>5. Deadlines</h2><div id="deadlines"></div><button class="b" onclick="addRow('deadlines')">+ Deadline</button>
+<h2>6. FAQs</h2><div id="faqs"></div><button class="b" onclick="addRow('faqs')">+ FAQ</button>
+<h2>7. Internal Links</h2><div id="links"></div><button class="b" onclick="addRow('links')">+ Link</button>
+<h2>8. Contact & CTA</h2><div id="contact"></div>
 </div>
+<div class="c">
+<h2>📊 SEO Score</h2><div class="sc" id="sc">0</div><div class="ck" id="ck"></div>
+<h2>9. Output</h2>
+<select id="mode" onchange="show()"><option value="body">Post HTML (body + JSON-LD) — Blogger post me paste</option><option value="head">Head tags only — theme/search description ke liye</option><option value="full">Full (head + body)</option></select>
+<textarea id="out" readonly></textarea>
+<button class="b" onclick="copyO()">📋 Copy</button><button class="b" onclick="dl()">💾 Download</button><button class="b o" onclick="prev()">👁️ Preview</button>
+<iframe id="pv" sandbox="allow-scripts allow-popups" style="display:none"></iframe>
+</div></div></div>
 
 <script>
-(function(){
-  const s = document.getElementById('codeSearch');
-  const c = document.getElementById('clearSearch');
-  const r = document.getElementById('searchResults');
-  if(!s) return;
-  const rows = [];
-  document.querySelectorAll('table').forEach(t => t.querySelectorAll('tbody tr').forEach(x => rows.push(x)));
-  function f(){
-    const term = s.value.toLowerCase().trim();
-    let n = 0;
-    rows.forEach(row => {
-      const m = term === '' || row.textContent.toLowerCase().includes(term);
-      row.style.display = m ? '' : 'none';
-      if(m) n++;
-    });
-    if(term !== ''){
-      r.style.display = 'block';
-      r.innerHTML = '✅ Found ' + n + ' results for "' + term + '"';
-      c.style.display = 'inline-block';
-    } else {
-      r.style.display = 'none';
-      c.style.display = 'none';
-    }
-  }
-  s.addEventListener('input', f);
-  c.addEventListener('click', () => { s.value = ''; f(); });
-})();
+const $=id=>document.getElementById(id),v=id=>$(id).value.trim();
+const SITE='https://aioucoaching.blogspot.com',BRAND='AIOU Coaching';
+const DEF={w:'https://aiou-tools.httpsnationalistacademygithubioassignmentwaly-toolsgener.workers.dev/',t:'aw-2026-secret-xyz789'};
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const today=()=>new Date().toISOString().slice(0,10);
+const FL=[['basic','title','Page Title (H1) — 30-60 chars'],['basic','primaryKw','Primary Keyword'],['basic','secondaryKw','Secondary Keywords'],['basic','session','Session'],['basic','program','Program'],['basic','type','Type'],['basic','metaDesc','Meta Description (120-155)','t'],['basic','slug','URL Slug'],['basic','pubDate','Publish Date','date'],
+['callouts','infoText','Info Box (green)','t'],['callouts','noteText','Note Box (yellow)','t'],['callouts','tipText','Tip Box (orange)','t'],
+['contact','whatsapp','WhatsApp (digits only)'],['contact','waMsg','WhatsApp Message'],['contact','homeUrl','Home URL'],['contact','socialTeaser','Social Teaser','t']];
+FL.forEach(([c,id,l,k])=>{$(c).insertAdjacentHTML('beforeend',`<label>${l}</label>`+(k==='t'?`<textarea id="${id}"></textarea>`:`<input id="${id}"${k?` type="${k}"`:''}>`))});
+const F=FL.map(x=>x[1]);
+const R={images:['Image URL','Alt text'],courses:['Code','Book','A1 URL','A2 URL'],deadlines:['Label','Date'],faqs:['Question','Answer'],links:['Label','URL']};
+function addRow(k,vals=[]){const d=document.createElement('div');d.className='r';d.style.gridTemplateColumns=`repeat(${R[k].length},1fr) auto`;
+R[k].forEach((p,i)=>{const e=document.createElement('input');e.placeholder=p;e.value=vals[i]||'';d.appendChild(e)});
+const b=document.createElement('button');b.className='rm';b.textContent='×';b.onclick=()=>{d.remove();autosave()};d.appendChild(b);$(k).appendChild(d)}
+const rows=k=>[...$(k).children].map(d=>[...d.querySelectorAll('input')].map(i=>i.value.trim())).filter(r=>r[0]);
+const snap=()=>{const o={};F.forEach(f=>o[f]=$(f).value);Object.keys(R).forEach(k=>o[k]=[...$(k).children].map(d=>[...d.querySelectorAll('input')].map(i=>i.value)));return o};
+function load(o){F.forEach(f=>{if(o[f]!=null)$(f).value=o[f]});Object.keys(R).forEach(k=>{$(k).innerHTML='';(o[k]||[]).forEach(r=>addRow(k,r));if(!$(k).children.length)addRow(k)})}
+let tm;function autosave(){clearTimeout(tm);tm=setTimeout(()=>{try{localStorage.setItem('ac_draft',JSON.stringify(snap()))}catch{}score();links()},400)}
+document.addEventListener('input',autosave);
+$('title').addEventListener('blur',()=>{if(!v('slug'))$('slug').value=v('title').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')});
+
+/* CONFIG */
+function saveCfg(){localStorage.setItem('aw_worker',v('workerUrl'));localStorage.setItem('aw_token',v('authToken'));cfg()}
+function cfg(){const w=localStorage.getItem('aw_worker')||DEF.w,s=$('cfg');try{s.textContent='✅ '+new URL(w).host;s.className='pill'}catch{s.textContent='⚠️ Invalid URL';s.className='pill w'}}
+const log=m=>{$('log').classList.add('on');$('log').textContent+=(m+'\n')};
+const st=(m,e)=>{$('st').textContent=m;$('st').className=e?'e':''};
+
+/* AI */
+const SYS=`You are an expert content formatter for "${BRAND}", a Pakistani education blog (AIOU = Allama Iqbal Open University: solved assignments, guess papers, coaching).
+Return ONLY valid JSON (no markdown, no backticks) with this schema. Never invent URLs or dates you don't know; leave a1/a2 empty if unknown.
+{"title":"SEO title 30-60 chars","primaryKw":"","secondaryKw":"comma separated","session":"Spring 2026","program":"","type":"Solved Assignments","metaDesc":"120-155 chars incl. primary keyword","slug":"url-slug","infoText":"green callout Roman Urdu","noteText":"yellow callout Roman Urdu","tipText":"orange callout Roman Urdu","courses":[{"code":"","book":"","a1":"","a2":""}],"deadlines":[{"label":"Assignment 1","date":""}],"faqs":[{"q":"","a":""}],"links":[{"label":"📘 Books","url":"${SITE}/"}],"whatsapp":"923702388998","waMsg":"Assalamualaikum...","socialTeaser":"🎓 AIOU... Free PDF!"}`;
+const OSYS=`You are an OSINT & SEO research analyst for ${BRAND} (Pakistan, AIOU students). You have NO live web access: use only your knowledge, say when unsure, never invent URLs, statistics or dates. Return ONLY JSON:
+{"primaryKw":"","secondaryKw":["..."],"longTail":["..."],"intent":"search intent summary","titles":["3 options max 60 chars"],"metas":["2 options max 155 chars"],"faqs":[{"q":"","a":""}],"gaps":["angles competitors usually miss"],"entities":["AIOU terms, programs, course codes"],"risks":["accuracy/policy risks"],"verify":["items to check manually on aiou.edu.pk"]}`;
+let OS=null;
+function parseJ(s){s=s.trim().replace(/^```(?:json)?\s*/i,'').replace(/```$/,'').trim();const a=s.indexOf('{'),b=s.lastIndexOf('}');if(a>=0&&b>a)s=s.slice(a,b+1);try{return JSON.parse(s)}catch{return JSON.parse(s.replace(/,\s*([}\]])/g,'$1'))}}
+async function ai(sys,user){const w=localStorage.getItem('aw_worker')||DEF.w,t=localStorage.getItem('aw_token')||DEF.t;
+const r=await fetch(w,{method:'POST',headers:{'Content-Type':'application/json','X-Auth-Token':t},body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:sys},{role:'user',content:user}],json:true,temperature:.7,max_tokens:8000})});
+if(!r.ok)throw new Error('Worker '+r.status+': '+(await r.text()).slice(0,200));const d=await r.json();if(d.error)throw new Error(d.error);
+const c=d.choices?.[0]?.message?.content;if(!c)throw new Error('Empty AI response');return parseJ(c)}
+async function run(id,fn){const b=$(id),o=b.textContent;b.disabled=true;b.textContent='⏳ Thinking...';$('log').textContent='';try{await fn()}catch(e){console.error(e);log('❌ '+e.message);st('❌ '+e.message,1)}finally{b.disabled=false;b.textContent=o}}
+async function agent(mode){let u;
+if(mode==='topic'){const t=v('aiTopic');if(!t)throw new Error('Topic likhein');u=`Generate JSON for:\n${t}\n\nNotes:\n${v('aiNotes')}\n\n${OS?'OSINT research (keywords, questions, gaps use karo):\n'+JSON.stringify(OS)+'\n\n':''}Pure JSON only.`}
+else{const c=v('aiContent');if(!c)throw new Error('Content paste karein');u=`Reformat into JSON:\n"""\n${c.slice(0,8000)}\n"""\nPure JSON only.`}
+log('📡 DeepSeek call...');const o=await ai(SYS,u);log('✅ Parsed, form fill ho raha hai');fill(o);st('✅ AI fill complete')}
+function fill(o){load({...o,courses:(o.courses||[]).map(c=>[c.code,c.book,c.a1||'',c.a2||'']),deadlines:(o.deadlines||[]).map(d=>[d.label,d.date]),faqs:(o.faqs||[]).map(f=>[f.q,f.a]),links:(o.links||[]).map(l=>[l.label,l.url]),images:[['','']],homeUrl:SITE+'/',pubDate:v('pubDate')||today()});autosave()}
+async function osint(){const t=v('osTopic')||v('primaryKw');if(!t)throw new Error('OSINT topic likhein');log('🕵️ OSINT analysis...');
+OS=await ai(OSYS,`Research for: ${t}\nAudience: AIOU students in Pakistan. Pure JSON only.`);
+const L=(a)=>'<ul>'+(a||[]).map(x=>`<li>${esc(typeof x==='string'?x:x.q+' → '+x.a)}</li>`).join('')+'</ul>';
+$('osOut').innerHTML=`<p><b>Primary:</b> ${esc(OS.primaryKw)} · <b>Intent:</b> ${esc(OS.intent)}</p><b>Secondary</b>${L(OS.secondaryKw)}<b>Long-tail</b>${L(OS.longTail)}<b>Titles</b>${L(OS.titles)}<b>Metas</b>${L(OS.metas)}<b>FAQs</b>${L(OS.faqs)}<b>Content gaps</b>${L(OS.gaps)}<b>Entities</b>${L(OS.entities)}<b>⚠️ Risks</b>${L(OS.risks)}<b>🔎 Manually verify</b>${L(OS.verify)}`;
+$('osCard').style.display='block';if(!v('primaryKw'))$('primaryKw').value=OS.primaryKw||'';links();st('✅ OSINT done — ab Mode A chalayein, report use hogi')}
+function applyOS(){if(!OS)return;$('primaryKw').value=OS.primaryKw||v('primaryKw');$('secondaryKw').value=[...(OS.secondaryKw||[]),...(OS.longTail||[]).slice(0,4)].join(', ');
+if(OS.titles?.[0])$('title').value=OS.titles[0];if(OS.metas?.[0])$('metaDesc').value=OS.metas[0];
+if(OS.faqs?.length){$('faqs').innerHTML='';OS.faqs.forEach(f=>addRow('faqs',[f.q,f.a]))}autosave();st('✅ OSINT data form me apply ho gaya')}
+function links(){const k=encodeURIComponent(v('primaryKw')||v('osTopic')||'aiou solved assignments'),S=SITE.replace('https://','');
+const L=[['Google',`https://www.google.com/search?q=${k}&gl=pk&hl=en`],['Competitors (not mine)',`https://www.google.com/search?q=${k}+-site:${S}`],['Mera index',`https://www.google.com/search?q=site:${S}+${k}`],['AIOU official',`https://www.google.com/search?q=site:aiou.edu.pk+${k}`],['Trends PK',`https://trends.google.com/trends/explore?geo=PK&q=${k}`],['Images',`https://www.google.com/search?tbm=isch&q=${k}`],['Facebook groups',`https://www.google.com/search?q=${k}+site:facebook.com`],['YouTube',`https://www.youtube.com/results?search_query=${k}`],['Wayback',`https://web.archive.org/web/*/${S}*`],['Rich Results Test','https://search.google.com/test/rich-results'],['PageSpeed',`https://pagespeed.web.dev/analysis?url=${encodeURIComponent(SITE+'/p/'+v('slug')+'.html')}`]];
+$('osl').innerHTML=L.map(([n,u])=>`<a href="${u}" target="_blank" rel="noopener">${n}</a>`).join('')}
+
+/* SEO SCORE */
+function score(){const t=v('title'),m=v('metaDesc'),k=v('primaryKw').toLowerCase(),s=v('slug'),c=rows('courses');
+const C=[[t.length>=30&&t.length<=60,`Title 30–60 chars (${t.length})`,10],[m.length>=120&&m.length<=155,`Meta 120–155 chars (${m.length})`,10],[!!k&&t.toLowerCase().includes(k),'Keyword in title',15],[!!k&&m.toLowerCase().includes(k),'Keyword in meta',10],[!!k&&s.includes(k.replace(/\s+/g,'-')),'Keyword in slug',5],[c.length>0,'Courses added',10],[c.length>0&&c.every(r=>r[2]||r[3]),'Har course me PDF link',10],[rows('faqs').length>=3,'3+ FAQs',10],[rows('images').length>0,'Image added',5],[rows('links').length>=3,'3+ internal links',5],[rows('deadlines').length>0,'Deadlines',5],[!!v('pubDate'),'Date set',5]];
+const n=C.reduce((a,x)=>a+(x[0]?x[2]:0),0);$('sc').textContent=n+'/100';$('sc').style.color=n>=80?'#16a34a':n>=50?'#f59e0b':'#dc2626';
+$('ck').innerHTML=C.map(x=>`<div class="${x[0]?'ok':'no'}">${x[0]?'✔':'✘'} ${esc(x[1])}</div>`).join('')}
+
+/* BUILDERS */
+const H2='border-left:4px solid #1e6f3f;font-size:1.4rem;font-weight:700;margin:30px 0 15px;padding-left:12px';
+const TD='border:1px solid #ddd;padding:8px',TH='border:1px solid #ddd;padding:12px 8px;text-align:center';
+const chips=l=>l.length?`<div style="display:flex;flex-wrap:wrap;gap:10px;margin:20px 0">\n${l.map(x=>`<a href="${esc(x[1])}" style="background:#e2e8f0;border-radius:40px;border:1px solid #e2e8f0;color:#1a1a1a;font-size:.9rem;font-weight:500;padding:8px 16px;text-decoration:none">${esc(x[0])}</a>`).join('\n')}\n</div>`:'';
+const imgsH=l=>l.map(x=>`<div class="separator" style="clear:both"><a href="${esc(x[0])}" style="display:block;padding:1em 0;text-align:center"><img alt="${esc(x[1]||v('title'))}" border="0" src="${esc(x[0])}" loading="lazy" style="max-width:100%;height:auto" /></a></div>`).join('\n');
+const pdf=u=>u?`<a href="${esc(u)}" rel="noopener" target="_blank">PDF</a>`:'—';
+const tbl=(id,head,body,min)=>`<div style="margin:20px 0;overflow-x:auto"><table${id?` id="${id}"`:''} style="border-collapse:collapse;font-size:14px;min-width:${min}px;width:100%"><thead><tr style="background:#1e3c72;color:#fff">${head.map(h=>`<th style="${TH}">${h}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`;
+const faqH=l=>l.map(f=>`<div style="border-left:4px solid #1e6f3f;border-radius:8px;border:1px solid #e2e8f0;font-size:.95rem;margin:15px 0;padding:15px 20px"><strong>${esc(f[0])}</strong><br />${esc(f[1])}</div>`).join('\n');
+function ld(d){const u=`${SITE}/p/${d.slug}.html`,O={"@id":SITE+"/#org"};
+const g=[{"@type":"Organization","@id":SITE+"/#org","name":BRAND,"url":SITE,"sameAs":d.wa?["https://wa.me/"+d.wa]:[]},
+{"@type":"WebSite","@id":SITE+"/#website","url":SITE,"name":BRAND,"publisher":O,"potentialAction":{"@type":"SearchAction","target":SITE+"/search?q={search_term_string}","query-input":"required name=search_term_string"}},
+{"@type":"WebPage","@id":u+"#webpage","url":u,"name":d.title,"description":d.meta,"isPartOf":{"@id":SITE+"/#website"},"inLanguage":"en","datePublished":d.date,"dateModified":d.mod,"breadcrumb":{"@id":u+"#bc"},"primaryImageOfPage":d.imgs[0]?{"@id":u+"#image-1"}:undefined},
+{"@type":"BreadcrumbList","@id":u+"#bc","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE+"/"},{"@type":"ListItem","position":2,"name":d.title,"item":u}]},
+{"@type":"Article","@id":u+"#article","headline":d.title.slice(0,110),"description":d.meta,"keywords":[d.kw,d.sk].filter(Boolean).join(', '),"datePublished":d.date,"dateModified":d.mod,"author":O,"publisher":O,"mainEntityOfPage":{"@id":u+"#webpage"},"image":d.imgs.map(i=>i[0])}];
+d.imgs.forEach((i,n)=>g.push({"@type":"ImageObject","@id":u+"#image-"+(n+1),"url":i[0],"caption":i[1]||d.title}));
+if(d.c.length)g.push({"@type":"ItemList","name":`${d.program||'AIOU'} ${d.type} ${d.session}`.trim(),"numberOfItems":d.c.length,"itemListElement":d.c.map((c,i)=>({"@type":"ListItem","position":i+1,"name":c[0]+' - '+c[1],"item":c[2]||c[3]||u}))});
+g.push({"@type":"HowTo","name":`How to download ${d.program||'AIOU'} ${d.type} ${d.session}`.trim(),"step":["Table me apna course code dhoondein.","Assignment 1 ya 2 ka PDF link par click karein.","Reference PDF download karke apne alfaz me likhein."].map((t,i)=>({"@type":"HowToStep","position":i+1,"name":"Step "+(i+1),"text":t}))});
+if(d.fq.length)g.push({"@type":"FAQPage","mainEntity":d.fq.map(f=>({"@type":"Question","name":f[0],"acceptedAnswer":{"@type":"Answer","text":f[1]}}))});
+return `<script type="application/ld+json">\n${JSON.stringify({"@context":"https://schema.org","@graph":g},null,2)}\n<\/script>`}
+
+let HEAD='',BODY='';
+function gen(){const d={title:v('title')||'AIOU Solved Assignments',kw:v('primaryKw'),sk:v('secondaryKw'),session:v('session'),program:v('program'),type:v('type'),meta:v('metaDesc'),slug:v('slug')||'post',date:v('pubDate')||today(),mod:today(),imgs:rows('images'),c:rows('courses'),dl:rows('deadlines'),fq:rows('faqs'),lk:rows('links'),wa:v('whatsapp').replace(/\D/g,''),home:v('homeUrl')||SITE+'/'};
+const u=`${SITE}/p/${d.slug}.html`,wl=`https://wa.me/${d.wa}?text=${encodeURIComponent(v('waMsg'))}`;
+HEAD=`<title>${esc(d.title)} | ${BRAND}</title>\n<meta name="description" content="${esc(d.meta)}">\n<meta name="keywords" content="${esc([d.kw,d.sk].filter(Boolean).join(', '))}">\n<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">\n<link rel="canonical" href="${esc(u)}">\n<meta property="og:type" content="article">\n<meta property="og:site_name" content="${BRAND}">\n<meta property="og:title" content="${esc(d.title)}">\n<meta property="og:description" content="${esc(d.meta)}">\n<meta property="og:url" content="${esc(u)}">\n${d.imgs[0]?`<meta property="og:image" content="${esc(d.imgs[0][0])}">\n`:''}<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="${esc(d.title)}">\n<meta name="twitter:description" content="${esc(d.meta)}">`;
+BODY=`<div>
+<p><strong>Session:</strong> ${esc(d.session)} &nbsp;|&nbsp; <strong>Program:</strong> ${esc(d.program)} &nbsp;|&nbsp; <strong>Type:</strong> ${esc(d.type)} &nbsp;|&nbsp; <strong>Updated:</strong> ${d.mod}</p>
+<h2 style="${H2}">📌 Explore More Resources on ${BRAND}</h2>
+${chips(d.lk)}
+${imgsH(d.imgs)}
+<div style="background:#e9f5ec;border-left:4px solid #1e6f3f;border-radius:8px;color:#1a1a1a;font-size:.95rem;margin:15px 0;padding:12px 18px">⭐ ${esc(v('infoText'))}</div>
+<p>Har course ke liye <strong>2 assignments</strong> hote hain. PDF links Google Drive par hosted hain – safe aur fast.</p>
+<div style="background:#fef3c7;border-left:4px solid #f59e0b;border-radius:16px;color:#1a1a1a;font-size:.9rem;margin:15px 0;padding:15px 20px"><strong>📌 Note:</strong> ${esc(v('noteText'))}</div>
+<div style="margin:20px 0 25px"><div style="align-items:center;background:#fff;border-radius:60px;border:1px solid #e2e8f0;box-shadow:0 4px 15px rgba(0,0,0,.05);display:flex;gap:12px;padding:5px 20px"><span>🔍</span><input autocomplete="off" id="codeSearch" placeholder="Search by course code or book name..." style="background:#fff;border:none;color:#334155;flex:1;font-size:1rem;outline:none;padding:10px 0" type="text" /><span id="clearSearch" style="color:#ef4444;cursor:pointer;display:none">✖</span></div><div id="searchResults" style="display:none;font-size:.9rem;font-weight:500;margin-top:10px"></div></div>
+${tbl('assignmentsTable',['Code','Book Name','Assignment 1','Assignment 2'],d.c.map(r=>`<tr><td style="${TD};text-align:center">${esc(r[0])}</td><td style="${TD}">${esc(r[1])}</td><td style="${TD};text-align:center">${pdf(r[2])}</td><td style="${TD};text-align:center">${pdf(r[3])}</td></tr>`).join('\n'),600)}
+${d.dl.length?tbl('',['📌 Deadline','Due Date'],d.dl.map(r=>`<tr><td style="${TD}"><strong>📝 ${esc(r[0])}</strong></td><td style="${TD};text-align:center"><span style="color:#dc2626;font-weight:bold">${esc(r[1])}</span></td></tr>`).join('\n'),400):''}
+<div style="border-left:4px solid #f5b042;border-radius:8px;border:1px solid #e2e8f0;font-size:.9rem;margin:15px 0 0;padding:12px 15px"><strong>⚠️ Pro Tip:</strong> ${esc(v('tipText'))}</div>
+${d.fq.length?`<h2 style="${H2}">❓ Frequently Asked Questions (FAQs)</h2>\n${faqH(d.fq)}`:''}
+<h2 style="${H2}">🔗 You Might Also Find Useful</h2>
+${chips(d.lk)}
+<div style="background:#e9f5ec;border-radius:20px;border:1px solid #bbf7d0;color:#1a1a1a;margin:40px 0 20px;padding:25px 20px;text-align:center"><h3 style="font-size:22px;margin:0 0 8px">💬 Need Solved Assignments or Guess Papers?</h3><p style="margin:5px 0">📘 Handwritten Solved Assignments | 📝 Guess Papers | 🎓 Exam Coaching</p><a href="${esc(wl)}" rel="noopener noreferrer" style="background:#25d366;border-radius:50px;color:#1a1a1a;display:inline-block;font-size:16px;font-weight:bold;margin-top:20px;padding:14px 30px;text-decoration:none" target="_blank">📱 Chat on WhatsApp</a></div>
+<div style="margin:30px 0 20px;text-align:center"><a href="${esc(d.home)}" style="background:#f59e0b;border-radius:50px;color:#fff;display:inline-block;font-size:1rem;font-weight:700;padding:14px 35px;text-decoration:none">🏠 Back to ${BRAND}</a></div>
+</div>
+<script>
+(function(){var s=document.getElementById('codeSearch'),c=document.getElementById('clearSearch'),r=document.getElementById('searchResults'),t=document.getElementById('assignmentsTable');if(!s||!t)return;
+var rows=[].slice.call(t.querySelectorAll('tbody tr'));
+function f(){var q=s.value.toLowerCase().trim(),n=0;rows.forEach(function(x){var m=!q||x.textContent.toLowerCase().indexOf(q)>-1;x.style.display=m?'':'none';if(m)n++});
+r.style.display=q?'block':'none';c.style.display=q?'inline-block':'none';r.textContent=n?('✅ '+n+' result(s) mile'):'❌ Koi result nahi mila'}
+s.addEventListener('input',f);c.addEventListener('click',function(){s.value='';f()})})();
 <\/script>
+${ld(d)}
+<!-- Social Teaser: ${esc(v('socialTeaser'))} 👉 ${esc(u)} -->`;
+show();st('✅ Generated! '+BODY.length+' chars')}
+function show(){const m=$('mode').value;$('out').value=m==='head'?HEAD:m==='full'?HEAD+'\n\n'+BODY:BODY}
+const cur=()=>$('out').value;
+function copyO(){if(!cur())return alert('Pehle generate karein');navigator.clipboard.writeText(cur()).then(()=>st('📋 Copied!'))}
+function dl(){if(!cur())return alert('Pehle generate karein');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([cur()],{type:'text/html'}));a.download=(v('slug')||'post')+'.html';a.click()}
+function prev(){if(!BODY)gen();$('pv').style.display='block';$('pv').srcdoc='<base target="_blank"><body style="font-family:Segoe UI,Arial;max-width:900px;margin:auto;padding:12px">'+BODY}
+function bulk(){$('bulk').value.split('\n').forEach(l=>{const m=l.trim().match(/^(\d{3,5})\s*[-–|:,]\s*(.+)$/);if(m)addRow('courses',[m[1],m[2].trim(),'','']);});$('bulk').value='';autosave()}
+function exportJ(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(snap(),null,1)],{type:'application/json'}));a.download=(v('slug')||'project')+'.json';a.click()}
+function importJ(i){const f=i.files[0];if(!f)return;f.text().then(t=>{try{load(JSON.parse(t));autosave();st('✅ Imported')}catch{st('❌ Invalid JSON',1)}})}
+function clr(){if(!confirm('Sab fields clear karein?'))return;load({});F.forEach(f=>$(f).value='');$('out').value='';HEAD=BODY='';localStorage.removeItem('ac_draft');$('homeUrl').value=SITE+'/';autosave()}
 
-${buildJsonLd(title, metaDesc, slug, faqsArr, coursesArr, imgs)}
-
-<!--
-Social Teaser: ${esc(v('socialTeaser'))} 👉 ${esc(pageUrl)}
--->`;
-
-  document.getElementById('output').value = html;
-  document.getElementById('status').textContent = '✅ Generated! ' + html.length + ' chars';
-  document.getElementById('status').classList.remove('err');
-}
-
-function copyOut(){
-  const o = document.getElementById('output');
-  if(!o.value) return alert('Generate first');
-  navigator.clipboard.writeText(o.value).then(() => {
-    document.getElementById('status').textContent = '📋 Copied!';
-  });
-}
-
-function downloadOut(){
-  const o = document.getElementById('output');
-  if(!o.value) return alert('Generate first');
-  const blob = new Blob([o.value], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = (v('slug') || 'post') + '.html';
-  a.click();
-}
-
-function clearForm(){
-  if(!confirm('Clear all fields?')) return;
-  document.querySelectorAll('input,textarea').forEach(e => e.value = '');
-  ['imagesContainer','coursesContainer','deadlinesContainer','faqsContainer','linksContainer'].forEach(id => document.getElementById(id).innerHTML = '');
-  document.getElementById('output').value = '';
-}
-
-/* Init empty rows */
-addImageRow(); addCourseRow(); addDeadlineRow(); addFaqRow(); addLinkRow();
-</script>
-</body>
-</html>
+/* INIT */
+$('workerUrl').value=localStorage.getItem('aw_worker')||DEF.w;$('authToken').value=localStorage.getItem('aw_token')||DEF.t;cfg();
+try{load(JSON.parse(localStorage.getItem('ac_draft')||'{}'))}catch{load({})}
+if(!v('homeUrl'))$('homeUrl').value=SITE+'/';if(!v('pubDate'))$('pubDate').value=today();
+score();links();
+</script></body></html>
