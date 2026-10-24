@@ -1,495 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AssignmentWaly AI Studio - All-in-One</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-<!-- Mermaid for Diagrams -->
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<!-- Docx for Word Generation -->
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AssignmentWaly Study Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.0.2/docx.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
 <style>
-/* ================= VITAL & GLASSMORPHISM STYLE ================= */
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins','Segoe UI',Arial,sans-serif}
+body{background:#0b1120;color:#fff;min-height:100vh;overflow-x:hidden;position:relative}
+.blob{position:fixed;filter:blur(100px);z-index:-1;opacity:.4;border-radius:50%}
+.b1{top:-10%;left:-10%;width:500px;height:500px;background:#6366f1}.b2{bottom:-10%;right:-10%;width:450px;height:450px;background:#ec4899}
+.wrap{max-width:1400px;margin:auto;padding:18px}
+header{text-align:center;margin-bottom:20px}
+h1{font-size:2.2rem;background:linear-gradient(to right,#818cf8,#f472b6,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:#94a3b8;font-size:.9rem}
+.stepper{display:flex;justify-content:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.step{padding:9px 18px;border-radius:30px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#94a3b8;font-weight:600;font-size:.85rem;cursor:pointer}
+.step.active{background:rgba(99,102,241,.25);border-color:#6366f1;color:#fff}.step.done{border-color:#10b981;color:#34d399}
+.ws{display:grid;grid-template-columns:1fr 1.2fr;gap:18px}@media(max-width:1000px){.ws{grid-template-columns:1fr}}
+.gp{background:rgba(15,23,42,.65);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:22px}
+h2{font-size:1.1rem;margin-bottom:6px}p.n{font-size:.8rem;color:#94a3b8;margin:4px 0 8px;line-height:1.5}
+label{display:block;font-size:.78rem;font-weight:600;margin:12px 0 5px;color:#cbd5e1}
+input,textarea{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 13px;color:#fff;font-size:.9rem;outline:none}
+textarea{min-height:90px;resize:vertical;line-height:1.6}input:focus,textarea:focus{border-color:#6366f1}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.btn{width:100%;padding:11px 16px;border:0;border-radius:10px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:10px}
+.btn:hover{filter:brightness(1.1)}.btn:disabled{background:#334155;cursor:wait}
+.g{background:linear-gradient(135deg,#10b981,#059669)}.pk{background:linear-gradient(135deg,#ec4899,#be185d)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid2 .btn{margin-top:8px;font-size:.82rem}
+.hid{display:none!important}
+.stt{text-align:center;font-size:.82rem;font-weight:600;padding:8px;border-radius:8px;margin-top:10px}
+.stt.err{background:rgba(239,68,68,.2);color:#fca5a5}.stt.ok{background:rgba(34,197,94,.2);color:#86efac}.stt.ld{background:rgba(99,102,241,.2);color:#a5b4fc}
+.tabs{display:flex;gap:8px;margin-bottom:10px}.tab{flex:1;padding:9px;text-align:center;background:rgba(255,255,255,.05);border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600}.tab.active{background:#6366f1}
+.out{background:rgba(0,0,0,.4);border-radius:12px;padding:18px;height:460px;overflow-y:auto;font-size:.9rem;line-height:1.7;color:#e2e8f0;white-space:pre-wrap}
+#dArea{background:#fff;border-radius:12px;min-height:300px;padding:16px;display:flex;justify-content:center;align-items:center;overflow:auto;color:#64748b;text-align:center}
+.pill{display:inline-block;font-size:11px;padding:3px 10px;border-radius:12px;background:rgba(16,185,129,.2);color:#6ee7b7;margin-top:6px}
+.ib{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);color:#fcd34d;border-radius:10px;padding:10px 12px;font-size:.78rem;line-height:1.5;margin-top:12px}
+details{margin-top:14px}summary{cursor:pointer;font-size:.8rem;color:#94a3b8}
+</style></head>
+<body><div class="blob b1"></div><div class="blob b2"></div>
+<div class="wrap">
+<header><h1>AssignmentWaly Study Studio</h1><div class="sub">Samjho · Khud Likho · Feedback Lo · Diagram Banao · Word File Download Karo</div></header>
+<div class="stepper" id="nav"></div>
+<div class="ws">
+<div class="gp">
 
-body {
-    background: #0b1120;
-    color: #fff;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-}
+<div id="s1"><h2>📝 Student & Course Details</h2>
+<label>Student Name</label><input id="sName" placeholder="Ali Khan">
+<div class="row"><div><label>Roll Number</label><input id="sRoll" placeholder="AB123456"></div><div><label>Semester</label><input id="sSem" placeholder="Autumn 2026"></div></div>
+<div class="row"><div style="flex:2"><label>Course Name</label><input id="sCourse" placeholder="Business Mathematics"></div><div><label>Course Code</label><input id="sCode" placeholder="1429"></div></div>
+<label>Assignment Questions</label><textarea id="sQ" placeholder="AIOU portal se questions paste karein..."></textarea>
+<button class="btn" onclick="go(2)">Next: Study Helper ➔</button>
+<details><summary>⚙️ AI Worker Settings</summary>
+<label>Worker URL</label><input id="wUrl"><label>Auth Token</label><input id="wTok" type="password">
+<button class="btn" style="margin-top:8px" onclick="saveCfg()">💾 Save</button><span class="pill" id="cfg"></span></details></div>
 
-/* Animated Background Blobs */
-.blob { position: absolute; filter: blur(100px); z-index: -1; opacity: 0.5; animation: float 15s infinite ease-in-out alternate; }
-.blob-1 { top: -10%; left: -10%; width: 600px; height: 600px; background: #6366f1; border-radius: 50%; }
-.blob-2 { bottom: -10%; right: -10%; width: 500px; height: 500px; background: #ec4899; border-radius: 50%; animation-delay: -5s; }
-.blob-3 { top: 40%; left: 30%; width: 400px; height: 400px; background: #10b981; border-radius: 50%; animation-duration: 20s; }
+<div id="s2" class="hid"><h2>🧠 Study Helper</h2>
+<p class="n">AI aapko samjhane, outline banane aur aapke likhe hue draft par feedback dene me madad karta hai. Final answer aap khud likhte hain.</p>
+<div class="grid2"><button class="btn pk" id="b1" onclick="act('b1','outline')">🗂️ Outline & Key Points</button><button class="btn pk" id="b2" onclick="act('b2','explain')">💡 Concepts Samjhao</button></div>
+<label>✍️ Mera Draft (apne alfaz me likhein) — <span id="wc">0 words</span></label>
+<textarea id="sDraft" style="min-height:200px" placeholder="Yahan apna jawab likhein. Heading ke liye line ke shuru me # lagayein."></textarea>
+<div class="grid2"><button class="btn g" id="b3" onclick="act('b3','feedback')">🔎 Draft Par Feedback</button><button class="btn g" id="b4" onclick="act('b4','refs')">📚 Reference Ideas</button></div>
+<label>References (APA — khud verify karke likhein)</label><textarea id="sRefs" style="min-height:70px" placeholder="Author, A. (Year). Title. Publisher."></textarea>
+<div class="stt hid" id="st2"></div>
+<div class="ib">⚠️ AI ke diye hue references/facts ghalat ho sakte hain — submit karne se pehle book ya official source se check karein. Apni university ki academic integrity policy follow karein.</div>
+<button class="btn" onclick="go(3)">Next: Diagram ➔</button></div>
 
-@keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(80px, 80px) scale(1.1); } }
+<div id="s3" class="hid"><h2>🎨 Diagram Generator</h2>
+<p class="n">Flowchart banta hai aur Word file me asli image ke taur par lag jata hai.</p>
+<label>Diagram Topic</label><input id="dTopic" placeholder="Water cycle / Demand & Supply / Research process">
+<button class="btn pk" id="b5" onclick="act('b5','diagram')">🖌️ Generate Diagram</button>
+<div class="stt hid" id="st3"></div>
+<button class="btn" onclick="go(4)">Next: Download ➔</button></div>
 
-/* Layout */
-.container { max-width: 1400px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; min-height: 100vh; }
-header { text-align: center; margin-bottom: 30px; }
-h1 {
-    font-size: 2.5rem; font-weight: 700;
-    background: linear-gradient(to right, #818cf8, #f472b6, #34d399);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.sub { color: #94a3b8; font-size: 1rem; margin-top: 5px; }
-
-/* Stepper Navigation */
-.stepper { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
-.step {
-    display: flex; align-items: center; gap: 10px; padding: 10px 20px; border-radius: 30px;
-    background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #94a3b8; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.3s;
-}
-.step.active { background: rgba(99, 102, 241, 0.2); border-color: #6366f1; color: #fff; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); }
-.step.completed { background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #34d399; }
-.step-num { background: rgba(255, 255, 255, 0.1); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
-.step.active .step-num { background: #6366f1; }
-.step.completed .step-num { background: #10b981; }
-
-/* Main Workspace */
-.workspace { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; flex: 1; }
-@media(max-width: 1000px) { .workspace { grid-template-columns: 1fr; } }
-
-/* Glass Panels */
-.glass-panel {
-    background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 25px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; position: relative;
-}
-
-/* Inputs */
-label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; margin-top: 15px; }
-input, textarea, select {
-    width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px; padding: 12px 15px; color: #fff; font-size: 0.95rem; outline: none; transition: 0.3s;
-    font-family: inherit;
-}
-textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
-input:focus, textarea:focus { border-color: #6366f1; box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
-
-/* Buttons */
-.btn {
-    padding: 12px 20px; border: none; border-radius: 10px;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;
-    font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.3s;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); display: flex; justify-content: center; align-items: center; gap: 8px;
-    margin-top: 15px;
-}
-.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6); }
-.btn:disabled { background: #334155; box-shadow: none; cursor: not-allowed; transform: none; }
-.btn-green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
-.btn-pink { background: linear-gradient(135deg, #ec4899, #be185d); box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); }
-.btn-sm { padding: 8px 15px; font-size: 0.85rem; margin-top: 5px; }
-
-/* Output Area */
-.output-box {
-    background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px;
-    padding: 20px; height: 400px; overflow-y: auto; font-size: 0.95rem; line-height: 1.7; color: #e2e8f0;
-    white-space: pre-wrap; margin-top: 15px;
-}
-.output-box::-webkit-scrollbar { width: 6px; }
-.output-box::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
-
-/* Diagram Area */
-#diagramArea { background: #fff; border-radius: 12px; min-height: 200px; padding: 20px; display: flex; justify-content: center; align-items: center; margin-top: 15px; overflow: hidden; }
-
-/* Utilities */
-.hidden { display: none !important; }
-.status { text-align: center; font-size: 0.85rem; font-weight: 600; padding: 8px; border-radius: 8px; margin-top: 10px; }
-.status.err { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
-.status.ok { background: rgba(34, 197, 94, 0.2); color: #86efac; }
-.status.loading { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; }
-
-/* Tabs inside Step 2 */
-.tabs { display: flex; gap: 10px; margin-bottom: 10px; }
-.tab { flex: 1; padding: 10px; text-align: center; background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: 0.3s; }
-.tab.active { background: #6366f1; color: white; }
-</style>
-</head>
-<body>
-
-<div class="blob blob-1"></div>
-<div class="blob blob-2"></div>
-<div class="blob blob-3"></div>
-
-<div class="container">
-    <header>
-        <h1>AssignmentWaly AI Studio</h1>
-        <div class="sub">All-in-One Solution: Write, Humanize, Draw & Download</div>
-    </header>
-
-    <!-- Stepper -->
-    <div class="stepper">
-        <div class="step active" id="nav-step-1" onclick="switchStep(1)"><div class="step-num">1</div> Details</div>
-        <div class="step" id="nav-step-2" onclick="switchStep(2)"><div class="step-num">2</div> Write & Humanize</div>
-        <div class="step" id="nav-step-3" onclick="switchStep(3)"><div class="step-num">3</div> Diagram</div>
-        <div class="step" id="nav-step-4" onclick="switchStep(4)"><div class="step-num">4</div> Download</div>
-    </div>
-
-    <div class="workspace">
-        <!-- ================= LEFT PANEL (CONTROLS) ================= -->
-        <div class="glass-panel">
-            
-            <!-- STEP 1: DETAILS -->
-            <div id="step-1">
-                <h2>📝 Student & Course Details</h2>
-                <label>Student Name</label>
-                <input type="text" id="sName" placeholder="e.g. Ali Khan">
-                
-                <div style="display:flex; gap:10px;">
-                    <div style="flex:1;">
-                        <label>Roll Number</label>
-                        <input type="text" id="sRoll" placeholder="AB123456">
-                    </div>
-                    <div style="flex:1;">
-                        <label>Semester</label>
-                        <input type="text" id="sSemester" placeholder="Autumn 2026">
-                    </div>
-                </div>
-
-                <div style="display:flex; gap:10px;">
-                    <div style="flex:2;">
-                        <label>Course Name</label>
-                        <input type="text" id="sCourse" placeholder="e.g. Business Mathematics">
-                    </div>
-                    <div style="flex:1;">
-                        <label>Course Code</label>
-                        <input type="text" id="sCode" placeholder="e.g. 1429">
-                    </div>
-                </div>
-
-                <label>Paste Questions Here</label>
-                <textarea id="sQuestions" placeholder="Paste the assignment questions from AIOU portal..."></textarea>
-                
-                <button class="btn" onclick="switchStep(2)">Next: Generate Assignment ➔</button>
-            </div>
-
-            <!-- STEP 2: WRITER & HUMANIZER -->
-            <div id="step-2" class="hidden">
-                <h2>🧠 AI Writer & Humanizer</h2>
-                <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:15px;">AI will write the assignment first, then rewrite it to bypass Turnitin.</p>
-                
-                <button class="btn btn-pink" id="btnWrite" onclick="generateAssignment()">
-                    <span>✨</span> 1. Generate Assignment
-                </button>
-                <div id="writeStatus" class="status hidden"></div>
-
-                <hr style="border-color:rgba(255,255,255,0.1); margin: 20px 0;">
-
-                <button class="btn btn-green" id="btnHumanize" onclick="humanizeText()" disabled>
-                    <span>🪄</span> 2. Humanize (Bypass AI)
-                </button>
-                <div id="humanizeStatus" class="status hidden"></div>
-
-                <button class="btn" onclick="switchStep(3)" style="margin-top:20px;">Next: Generate Diagram ➔</button>
-            </div>
-
-            <!-- STEP 3: DIAGRAM -->
-            <div id="step-3" class="hidden">
-                <h2>🎨 AI Diagram Generator</h2>
-                <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:15px;">Enter a specific topic to draw a diagram (Optional).</p>
-                
-                <label>Diagram Topic (e.g. Water Cycle, Demand & Supply)</label>
-                <input type="text" id="diagramPrompt" placeholder="What should the diagram be about?">
-                
-                <button class="btn btn-pink" id="btnDraw" onclick="generateDiagram()">
-                    <span>🖌️</span> Generate Diagram
-                </button>
-                <div id="diagramStatus" class="status hidden"></div>
-
-                <button class="btn" onclick="switchStep(4)" style="margin-top:20px;">Next: Download ➔</button>
-            </div>
-
-            <!-- STEP 4: DOWNLOAD -->
-            <div id="step-4" class="hidden">
-                <h2>📥 Download Assignment</h2>
-                <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:15px;">Your Word file will include the Front Page, Text, and Diagrams.</p>
-                
-                <button class="btn btn-green" onclick="downloadWordFile()">
-                    <span>📄</span> Download as MS Word (.docx)
-                </button>
-                <div id="downloadStatus" class="status hidden"></div>
-            </div>
-
-        </div>
-
-        <!-- ================= RIGHT PANEL (PREVIEW) ================= -->
-        <div class="glass-panel" style="background: rgba(255,255,255,0.02);">
-            
-            <div class="tabs" id="previewTabs">
-                <div class="tab active" onclick="switchTab('text')">📝 Assignment Text</div>
-                <div class="tab" onclick="switchTab('diagram')">🖼️ Diagram</div>
-            </div>
-
-            <!-- Text Preview -->
-            <div id="preview-text">
-                <div class="output-box" id="textOutput">
-                    <div style="text-align: center; color: #64748b; margin-top: 100px;">
-                        <span style="font-size: 3rem;">🤖</span><br><br>
-                        Your assignment text will appear here.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Diagram Preview -->
-            <div id="preview-diagram" class="hidden">
-                <div id="diagramArea">
-                    <div style="text-align: center; color: #64748b;" id="diagramPlaceholder">
-                        <span style="font-size: 3rem;">📊</span><br><br>
-                        Your diagram will appear here.
-                    </div>
-                    <div class="mermaid" id="mermaidOutput" style="display: none;"></div>
-                </div>
-            </div>
-
-        </div>
-    </div>
+<div id="s4" class="hid"><h2>📥 Download Assignment</h2>
+<p class="n">Word file me front page, aapka draft, diagram, references aur page numbers shamil hote hain.</p>
+<button class="btn g" onclick="downloadDoc()">📄 Download as MS Word (.docx)</button>
+<div class="stt hid" id="st4"></div></div>
 </div>
 
+<div class="gp">
+<div class="tabs"><div class="tab active" onclick="tab(0)">🤖 AI Guidance</div><div class="tab" onclick="tab(1)">🖼️ Diagram</div></div>
+<div id="p0"><div class="out" id="guide">AI ki madad yahan dikhegi. Outline, concepts, feedback ya reference ideas chunein.</div></div>
+<div id="p1" class="hid"><div id="dArea">📊 Diagram yahan dikhega.</div></div>
+</div></div></div>
+
 <script>
-// ==========================================
-// 🔑 WORKER CONFIGURATION
-// ==========================================
-const WORKER_URL = "https://aiou-tools.pages.dev/"; 
-const AUTH_TOKEN = ""; 
+const $=id=>document.getElementById(id);
+const DEF={w:'https://aiou-tools.httpsnationalistacademygithubioassignmentwaly-toolsgener.workers.dev/',t:'aw-2026-secret-xyz789'};
+mermaid.initialize({startOnLoad:false,theme:'default',flowchart:{htmlLabels:false}});
+let dia=null;
 
-// Initialize Mermaid
-mermaid.initialize({ startOnLoad: false, theme: 'default' });
+/* NAV */
+const NAMES=['Details','Study Helper','Diagram','Download'];
+$('nav').innerHTML=NAMES.map((n,i)=>`<div class="step" id="n${i+1}" onclick="go(${i+1})">${i+1}. ${n}</div>`).join('');
+function go(n){for(let i=1;i<=4;i++){$('s'+i).classList.toggle('hid',i!==n);$('n'+i).className='step'+(i===n?' active':i<n?' done':'')}}
+function tab(i){[0,1].forEach(k=>{$('p'+k).classList.toggle('hid',k!==i);document.querySelectorAll('.tab')[k].classList.toggle('active',k===i)})}
+go(1);
 
-// Global State
-let currentText = "";
-let humanizedText = "";
-let mermaidCode = "";
+/* CONFIG */
+function saveCfg(){localStorage.setItem('aw_worker',$('wUrl').value.trim());localStorage.setItem('aw_token',$('wTok').value.trim());showCfg()}
+function showCfg(){try{$('cfg').textContent='✅ '+new URL(localStorage.getItem('aw_worker')||DEF.w).host}catch{$('cfg').textContent='⚠️ Invalid URL'}}
+$('wUrl').value=localStorage.getItem('aw_worker')||DEF.w;$('wTok').value=localStorage.getItem('aw_token')||DEF.t;showCfg();
+$('sDraft').addEventListener('input',()=>{const n=$('sDraft').value.trim().split(/\s+/).filter(Boolean).length;$('wc').textContent=n+' words'});
 
-// ==========================================
-// NAVIGATION LOGIC
-// ==========================================
-function switchStep(step) {
-    // Hide all steps
-    [1,2,3,4].forEach(i => {
-        document.getElementById(`step-${i}`).classList.add('hidden');
-        document.getElementById(`nav-step-${i}`).classList.remove('active', 'completed');
-    });
-    
-    // Show selected step
-    document.getElementById(`step-${step}`).classList.remove('hidden');
-    document.getElementById(`nav-step-${step}`).classList.add('active');
-    
-    // Mark previous as completed
-    for(let i=1; i<step; i++) document.getElementById(`nav-step-${i}`).classList.add('completed');
-}
+/* AI CALL (same worker format) */
+async function ai(sys,user,temp=.5,max=3500){
+  const w=localStorage.getItem('aw_worker')||DEF.w,t=localStorage.getItem('aw_token')||DEF.t;
+  const r=await fetch(w,{method:'POST',headers:{'Content-Type':'application/json','X-Auth-Token':t},
+    body:JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:sys},{role:'user',content:user}],json:false,temperature:temp,max_tokens:max})});
+  if(!r.ok)throw new Error('Worker '+r.status+': '+(await r.text()).slice(0,150));
+  const d=await r.json();if(d.error)throw new Error(typeof d.error==='string'?d.error:JSON.stringify(d.error));
+  const c=d.choices?.[0]?.message?.content;if(!c)throw new Error('AI ne khali jawab diya');return c.trim()}
+function setSt(id,m,c){const e=$(id);e.className='stt '+c;e.textContent=m}
+const ctx=()=>`Course: ${$('sCourse').value||'AIOU course'} (${$('sCode').value||'-'})\nQuestions:\n${$('sQ').value.trim()}`;
 
-function switchTab(tab) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('preview-text').classList.add('hidden');
-    document.getElementById('preview-diagram').classList.add('hidden');
-    
-    if(tab === 'text') {
-        document.getElementById('preview-text').classList.remove('hidden');
-        document.querySelectorAll('.tab')[0].classList.add('active');
-    } else {
-        document.getElementById('preview-diagram').classList.remove('hidden');
-        document.querySelectorAll('.tab')[1].classList.add('active');
-    }
-}
+/* STUDY ACTIONS */
+const TUTOR='You are a patient study tutor for AIOU (Allama Iqbal Open University, Pakistan) students. Use simple English; add a short Roman Urdu summary at the end. Never invent facts, statistics, quotes, page numbers or URLs; say "verify karein" when unsure. Do NOT write the final assignment answer as ready-to-submit prose: guide the student to write it themselves.';
+const ACTS={
+ outline:{need:'q',sys:TUTOR,p:()=>`For each question below give: 1) what the question is really asking, 2) key concepts to cover, 3) a suggested heading outline, 4) key points/examples to research, 5) common mistakes.\n\n${ctx()}`},
+ explain:{need:'q',sys:TUTOR,p:()=>`Explain the core concepts needed for these questions in simple language with everyday examples, short definitions and a quick self-check quiz (3 questions, no answers).\n\n${ctx()}`},
+ feedback:{need:'d',sys:TUTOR+' You are reviewing the STUDENT\'S OWN draft. Keep the student\'s ideas and voice.',p:()=>`${ctx()}\n\nStudent draft:\n"""\n${$('sDraft').value.trim().slice(0,9000)}\n"""\n\nGive: (a) strengths, (b) points missing compared to the questions, (c) structure advice, (d) grammar/clarity fixes as "original → improved" for the 8 most important sentences, (e) a score out of 10 with reasons. Do not rewrite the whole draft.`},
+ refs:{need:'q',sys:TUTOR,p:()=>`Suggest what kinds of sources to look for on these topics: search keywords, well-known textbook/author names ONLY if you are confident they exist, official AIOU/HEC resources, and an APA 7 format template. Mark every item "verify karein".\n\n${ctx()}`}
+};
+async function act(btn,key){
+  const a=ACTS[key];
+  if(key==='diagram')return drawDiagram(btn);
+  if(a.need==='q'&&!$('sQ').value.trim()){alert('Pehle Step 1 me questions paste karein');return go(1)}
+  if(a.need==='d'&&$('sDraft').value.trim().split(/\s+/).length<30){return alert('Feedback ke liye kam az kam 30 alfaz ka apna draft likhein')}
+  const b=$(btn),o=b.textContent;b.disabled=true;b.textContent='⏳ ...';setSt('st2','AI soch raha hai...','ld');tab(0);$('guide').textContent='Loading...';
+  try{const t=await ai(a.sys,a.p());$('guide').textContent=t;setSt('st2','✅ Tayar','ok')}
+  catch(e){$('guide').textContent='Error: '+e.message;setSt('st2','❌ '+e.message,'err')}
+  finally{b.disabled=false;b.textContent=o}}
 
-// ==========================================
-// STEP 2: AI WRITER
-// ==========================================
-async function generateAssignment() {
-    const btn = document.getElementById('btnWrite');
-    const status = document.getElementById('writeStatus');
-    const output = document.getElementById('textOutput');
-    
-    const name = document.getElementById('sName').value || "Student";
-    const course = document.getElementById('sCourse').value || "AIOU Course";
-    const questions = document.getElementById('sQuestions').value.trim();
+/* DIAGRAM */
+const DSYS='Return ONLY valid Mermaid flowchart code starting with "graph TD". Use 6-12 nodes. Node labels: short plain words, letters/numbers/spaces only, NO brackets, quotes, parentheses or special characters inside labels. Node syntax: A[Label]. No markdown fences.';
+async function drawDiagram(btn){
+  const t=$('dTopic').value.trim();if(!t)return alert('Diagram ka topic likhein');
+  const b=$(btn),o=b.textContent;b.disabled=true;b.textContent='⏳ Drawing...';setSt('st3','Diagram ban raha hai...','ld');tab(1);
+  try{
+    let code=(await ai(DSYS,'Topic: '+t,.1,900)).replace(/```(?:mermaid)?/g,'').trim();
+    let svg;try{svg=(await mermaid.render('m'+Date.now(),code)).svg}
+    catch{code=(await ai(DSYS,'Topic: '+t+'\nPrevious code had a syntax error; use only very simple labels.',.1,900)).replace(/```(?:mermaid)?/g,'').trim();svg=(await mermaid.render('m'+Date.now(),code)).svg}
+    $('dArea').innerHTML=svg;dia=await svgToPng(svg);setSt('st3','✅ Diagram tayar — Word file me lag jayega','ok')}
+  catch(e){dia=null;setSt('st3','❌ '+e.message,'err')}
+  finally{b.disabled=false;b.textContent=o}}
+function svgToPng(svg){return new Promise((res,rej)=>{
+  const m=svg.match(/viewBox="([\d.\-\s]+)"/);const [,,w,h]=m?m[1].trim().split(/\s+/).map(Number):[0,0,800,600];
+  const s=svg.replace(/<svg([^>]*)>/,(a,b)=>'<svg'+b.replace(/\s(width|height)="[^"]*"/g,'')+` width="${w}" height="${h}">`);
+  const img=new Image();
+  img.onload=()=>{const k=2,c=document.createElement('canvas');c.width=w*k;c.height=h*k;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(img,0,0,c.width,c.height);
+    c.toBlob(bl=>bl.arrayBuffer().then(buf=>res({data:new Uint8Array(buf),w,h})),'image/png')};
+  img.onerror=()=>rej(new Error('Diagram ko image me convert nahi kar saka'));
+  img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s)})}
 
-    if(!questions) { alert("Please paste questions in Step 1!"); return; }
-
-    btn.disabled = true;
-    btn.innerHTML = `<span>⏳</span> Writing...`;
-    status.className = "status loading"; status.classList.remove('hidden');
-    status.textContent = "AI is writing your assignment...";
-    output.innerHTML = "Generating content...";
-
-    const prompt = `Write a complete, A-Grade AIOU assignment for Course: ${course}. Student Name: ${name}.\n\nQuestions:\n${questions}\n\nWrite in academic English. Use APA format headings.`;
-
-    try {
-        const res = await fetch(WORKER_URL, {
-            method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Auth-Token': AUTH_TOKEN },
-            body: JSON.stringify({
-                model: 'deepseek-chat',
-                messages: [{ role: 'user', content: prompt }],
-                temperature: 0.7, max_tokens: 6000
-            })
-        });
-        
-        const data = await res.json();
-        currentText = data.choices[0].message.content;
-        
-        output.innerText = currentText;
-        status.className = "status ok"; status.textContent = "✅ Assignment Generated!";
-        document.getElementById('btnHumanize').disabled = false;
-    } catch(e) {
-        status.className = "status err"; status.textContent = "❌ Error: " + e.message;
-        output.innerText = "Error generating text.";
-    } finally {
-        btn.disabled = false; btn.innerHTML = `<span>✨</span> 1. Generate Assignment`;
-    }
-}
-
-// ==========================================
-// STEP 2: AI HUMANIZER
-// ==========================================
-async function humanizeText() {
-    const btn = document.getElementById('btnHumanize');
-    const status = document.getElementById('humanizeStatus');
-    const output = document.getElementById('textOutput');
-
-    btn.disabled = true;
-    btn.innerHTML = `<span>⏳</span> Humanizing...`;
-    status.className = "status loading"; status.classList.remove('hidden');
-    status.textContent = "Bypassing AI detectors...";
-    output.innerText = "Rewriting text to sound human...";
-
-    const prompt = `Rewrite the following text so it sounds 100% human-written. Change sentence structures, add natural transitions, and remove all AI patterns. Keep the meaning intact.\n\nTEXT:\n${currentText}`;
-
-    try {
-        const res = await fetch(WORKER_URL, {
-            method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Auth-Token': AUTH_TOKEN },
-            body: JSON.stringify({
-                model: 'deepseek-chat',
-                messages: [{ role: 'user', content: prompt }],
-                temperature: 0.9, max_tokens: 6000
-            })
-        });
-        
-        const data = await res.json();
-        humanizedText = data.choices[0].message.content;
-        
-        output.innerText = humanizedText;
-        status.className = "status ok"; status.textContent = "✅ Humanized! Turnitin will not catch this.";
-    } catch(e) {
-        status.className = "status err"; status.textContent = "❌ Error: " + e.message;
-    } finally {
-        btn.disabled = false; btn.innerHTML = `<span>🪄</span> 2. Humanize (Bypass AI)`;
-    }
-}
-
-// ==========================================
-// STEP 3: DIAGRAM GENERATOR
-// ==========================================
-async function generateDiagram() {
-    const btn = document.getElementById('btnDraw');
-    const status = document.getElementById('diagramStatus');
-    const promptInput = document.getElementById('diagramPrompt').value.trim();
-    
-    if(!promptInput) { alert("Please enter a topic for the diagram!"); return; }
-
-    btn.disabled = true;
-    btn.innerHTML = `<span>⏳</span> Drawing...`;
-    status.className = "status loading"; status.classList.remove('hidden');
-    status.textContent = "AI is drawing the diagram...";
-    switchTab('diagram');
-
-    const prompt = `Create a Mermaid.js flowchart (graph TD) for: "${promptInput}". Return ONLY raw mermaid code, no markdown.`;
-
-    try {
-        const res = await fetch(WORKER_URL, {
-            method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Auth-Token': AUTH_TOKEN },
-            body: JSON.stringify({
-                model: 'deepseek-chat',
-                messages: [{ role: 'user', content: prompt }],
-                temperature: 0.1, max_tokens: 1000
-            })
-        });
-        
-        const data = await res.json();
-        mermaidCode = data.choices[0].message.content.replace(/```mermaid/g,'').replace(/```/g,'').trim();
-        
-        document.getElementById('diagramPlaceholder').style.display = 'none';
-        const mermaidDiv = document.getElementById('mermaidOutput');
-        mermaidDiv.style.display = 'block';
-        mermaidDiv.innerHTML = mermaidCode;
-        mermaid.init(undefined, mermaidDiv);
-        
-        status.className = "status ok"; status.textContent = "✅ Diagram Generated!";
-    } catch(e) {
-        status.className = "status err"; status.textContent = "❌ Error: " + e.message;
-    } finally {
-        btn.disabled = false; btn.innerHTML = `<span>🖌️</span> Generate Diagram`;
-    }
-}
-
-// ==========================================
-// STEP 4: WORD FILE GENERATOR
-// ==========================================
-async function downloadWordFile() {
-    const btn = document.getElementById('btnDraw');
-    const status = document.getElementById('downloadStatus');
-    const { Document, Packer, Paragraph, TextRun, HeadingLevel, ImageRun } = docx;
-
-    status.className = "status loading"; status.classList.remove('hidden');
-    status.textContent = "Creating Word File (with Front Page)...";
-
-    try {
-        const name = document.getElementById('sName').value || "Student";
-        const roll = document.getElementById('sRoll').value || "N/A";
-        const course = document.getElementById('sCourse').value || "Course";
-        const code = document.getElementById('sCode').value || "Code";
-        const sem = document.getElementById('sSemester').value || "Semester";
-        
-        const finalText = humanizedText || currentText;
-
-        // Build Document
-        const doc = new Document({
-            sections: [{
-                properties: {},
-                children: [
-                    // === FRONT PAGE ===
-                    new Paragraph({ text: "ALLAMA IQBAL OPEN UNIVERSITY", heading: HeadingLevel.HEADING_1, alignment: "center", spacing: { after: 400 } }),
-                    new Paragraph({ text: `Course Name: ${course}`, alignment: "center", spacing: { after: 200 } }),
-                    new Paragraph({ text: `Course Code: ${code}`, alignment: "center", spacing: { after: 600 } }),
-                    new Paragraph({ text: `ASSIGNMENT`, heading: HeadingLevel.HEADING_2, alignment: "center", spacing: { after: 600 } }),
-                    new Paragraph({ text: `Name: ${name}`, alignment: "center" }),
-                    new Paragraph({ text: `Roll No: ${roll}`, alignment: "center" }),
-                    new Paragraph({ text: `Semester: ${sem}`, alignment: "center", spacing: { after: 1000 } }),
-                    new Paragraph({ text: "SUBMITTED TO: ALLAMA IQBAL OPEN UNIVERSITY", alignment: "center" }),
-                    
-                    // Page Break
-                    new Paragraph({ text: "", pageBreakBefore: true }),
-
-                    // === ASSIGNMENT TEXT ===
-                    ...finalText.split('\n').map(line => new Paragraph({
-                        children: [new TextRun({ text: line, size: 24 })], // Size 12 font
-                        spacing: { after: 200, line: 360 } // 1.5 line spacing
-                    })),
-
-                    // === DIAGRAM NOTE ===
-                    new Paragraph({ text: "\n\nNote: Please insert the generated Diagram image here in MS Word.", italics: true, color: "ff0000" })
-                ],
-            }],
-        });
-
-        const blob = await Packer.toBlob(doc);
-        saveAs(blob, `${name}_Assignment.docx`);
-
-        status.className = "status ok";
-        status.textContent = "✅ Downloaded Successfully!";
-    } catch(e) {
-        console.error(e);
-        status.className = "status err"; status.textContent = "❌ Error creating Word file.";
-    }
-}
-</script>
-</body>
-</html>
+/* WORD FILE */
+async function downloadDoc(){
+  const {Document,Packer,Paragraph,TextRun,HeadingLevel,ImageRun,AlignmentType,Footer,PageNumber}=docx;
+  try{
+    setSt('st4','Word file ban rahi hai...','ld');
+    const name=$('sName').value||'Student',roll=$('sRoll').value||'N/A',course=$('sCourse').value||'Course',code=$('sCode').value||'-',sem=$('sSem').value||'-';
+    const draft=$('sDraft').value.trim();if(!draft)throw new Error('Pehle Step 2 me apna draft likhein');
+    const C=AlignmentType.CENTER;
+    const P=(t,o={})=>new Paragraph({alignment:o.a,spacing:{after:o.after??200,line:360},indent:o.ind,children:[new TextRun({text:t,size:o.sz||24,bold:o.b})]});
+    const kids=[
+      P('ALLAMA IQBAL OPEN UNIVERSITY',{a:C,b:true,sz:36,after:500}),
+      P('ASSIGNMENT',{a:C,b:true,sz:32,after:500}),
+      P('Course Name: '+course,{a:C}),P('Course Code: '+code,{a:C,after:500}),
+      P('Name: '+name,{a:C}),P('Roll No: '+roll,{a:C}),P('Semester: '+sem,{a:C}),
+      new Paragraph({text:'Answers',heading:HeadingLevel.HEADING_1,pageBreakBefore:true,spacing:{after:200}})];
+    draft.split('\n').map(l=>l.trim()).filter(Boolean).forEach(l=>{
+      kids.push(l.startsWith('#')?new Paragraph({text:l.replace(/^#+\s*/,''),heading:HeadingLevel.HEADING_2,spacing:{before:200,after:150}}):P(l,{a:AlignmentType.JUSTIFIED}))});
+    if(dia){const w=Math.min(dia.w,500),h=Math.round(dia.h*w/dia.w);
+      kids.push(P('Diagram: '+($('dTopic').value||''),{a:C,b:true,after:100}),
+        new Paragraph({alignment:C,children:[new ImageRun({data:dia.data,type:'png',transformation:{width:w,height:h}})]}))}
+    const refs=$('sRefs').value.split('\n').map(l=>l.trim()).filter(Boolean);
+    if(refs.length){kids.push(new Paragraph({text:'References',heading:HeadingLevel.HEADING_2,spacing:{before:300,after:150}}));refs.forEach(r=>kids.push(P(r,{ind:{left:720,hanging:720}})))}
+    const doc=new Document({sections:[{properties:{},footers:{default:new Footer({children:[new Paragraph({alignment:C,children:[new TextRun({children:[PageNumber.CURRENT]})]})]})},children:kids}]});
+    saveAs(await Packer.toBlob(doc),`${name.replace(/\s+/g,'_')}_${code}_Assignment.docx`);
+    setSt('st4','✅ Download ho gayi'+(dia?'':' (diagram nahi lagi — Step 3 me bana lein)'),'ok')}
+  catch(e){console.error(e);setSt('st4','❌ '+e.message,'err')}}
+</script></body></html>
