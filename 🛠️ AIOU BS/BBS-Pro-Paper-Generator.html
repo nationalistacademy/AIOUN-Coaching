@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIOU Ultimate AI Paper Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Times+New+Roman&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #eef2f5; padding: 10px; color: #333; }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        /* UI Panels */
+        .panel { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .panel h3 { color: #0056b3; margin-bottom: 10px; font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+        
+        .form-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        .form-row input, .form-row select, .form-row textarea { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; min-width: 150px; }
+        
+        .btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; font-size: 14px; }
+        .btn-primary { background: #28a745; }
+        .btn-ai { background: #6f42c1; }
+        .btn-del { background: #dc3545; padding: 5px 10px; font-size: 12px; }
+        
+        /* Watermark Section */
+        .wm-section { background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 5px; margin-bottom: 15px; }
+        
+        /* Preview Wrapper (Fixes Mobile Issue) */
+        .preview-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            background: #555;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* A4 Paper Setup - Real Size */
+        #paper-preview {
+            background: #fff;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            position: relative;
+            transform-origin: top center;
+            flex-shrink: 0;
+        }
+
+        /* Only scale for display on mobile, export uses hidden clone */
+        @media (max-width: 800px) {
+            #paper-preview { transform: scale(0.4); margin-bottom: -180mm; }
+        }
+        @media (max-width: 500px) {
+            #paper-preview { transform: scale(0.3); margin-bottom: -220mm; }
+        }
+
+        /* Paper Typography */
+        #paper-preview { font-family: 'Times New Roman', serif; direction: ltr; text-align: left; color: #000; }
+        .paper-header { text-align: center; margin-bottom: 20px; }
+        .paper-header img.logo { max-height: 80px; margin-bottom: 10px; }
+        .paper-header h1 { font-size: 24px; margin-bottom: 5px; text-transform: uppercase; }
+        .paper-header h2 { font-size: 18px; margin-bottom: 15px; }
+        
+        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-weight: bold; font-size: 14px; }
+        .info-table td { border: 1px solid #000; padding: 8px; text-align: center; }
+
+        .section-title { font-weight: bold; font-size: 16px; margin: 20px 0 10px 0; text-decoration: underline; }
+
+        /* 3 Column Grid for MCQs */
+        .mcq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        .mcq-item { font-size: 13px; page-break-inside: avoid; }
+        .mcq-q { font-weight: bold; margin-bottom: 4px; }
+        .mcq-opt { margin-left: 15px; margin-bottom: 2px; }
+
+        .subjective-item { margin-bottom: 15px; font-size: 14px; }
+        .subjective-q { margin-bottom: 5px; line-height: 1.5; }
+        .marks { float: right; font-weight: bold; font-size: 13px; }
+
+        /* Action Buttons */
+        .export-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; background: #fff; padding: 20px; border-radius: 8px; }
+        .btn-pdf { background: #dc3545; }
+        .btn-word { background: #007bff; }
+        .btn-img { background: #17a2b8; }
+        .btn-embed { background: #ff9800; color: #000; }
+        
+        .remove-btn { color: red; cursor: pointer; font-size: 12px; float: right; font-weight: bold; }
+        
+        /* Loading Overlay */
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); color: white; justify-content: center; align-items: center; font-size: 24px; z-index: 9999; flex-direction: column; }
+    </style>
+</head>
+<body>
+
+<div id="loader">⏳ Processing, Please Wait...</div>
+
+<div class="container">
+    <!-- AI Agent Section -->
+    <div class="panel" style="border-left: 5px solid #6f42c1;">
+        <h3>🤖 AI Agent (Auto-Generate Questions)</h3>
+        <div class="form-row">
+            <input type="password" id="api-key" placeholder="Enter OpenAI API Key (sk-...)" style="flex: 2;">
+            <input type="text" id="ai-prompt" placeholder="Course Name (e.g. Principles of Economics)" style="flex: 2;">
+            <button class="btn btn-ai" onclick="generateWithAI()">Generate & Embed</button>
+        </div>
+    </div>
+
+    <!-- Manual Entry Section -->
+    <div class="panel">
+        <h3>🛠️ Manual Entry & Info</h3>
+        <div class="form-row">
+            <input type="text" id="course-name" placeholder="Course Name" value="PRINCIPLES OF MICROECONOMICS">
+            <input type="text" id="course-code" placeholder="Course Code" value="AIOU-9301">
+            <input type="text" id="date" placeholder="Date" value="26/10/2026">
+        </div>
+        <div class="form-row">
+            <input type="text" id="logo-url" placeholder="Logo Image URL (Direct Link)" value="https://i.ibb.co/6P9Zk4y/logo.png">
+            <button class="btn btn-primary" onclick="updateMeta()">Update Header</button>
+        </div>
+        
+        <hr style="margin: 10px 0; border:0; border-top:1px solid #ddd;">
+        
+        <div class="form-row">
+            <input type="text" id="mcq-q" placeholder="MCQ Question" style="flex: 3;">
+            <input type="text" id="mcq-a" placeholder="Option A">
+            <input type="text" id="mcq-b" placeholder="Option B">
+            <input type="text" id="mcq-c" placeholder="Option C">
+            <input type="text" id="mcq-d" placeholder="Option D">
+            <button class="btn btn-primary" onclick="addMCQ()">Add MCQ</button>
+        </div>
+
+        <div class="form-row">
+            <input type="text" id="sub-q" placeholder="Subjective Question" style="flex: 3;">
+            <input type="number" id="sub-marks" placeholder="Marks" style="flex: 1;" value="10">
+            <select id="sub-part">
+                <option value="Part II">Part II (Restricted)</option>
+                <option value="Part III">Part III (Extended)</option>
+            </select>
+            <button class="btn btn-primary" onclick="addSubjective()">Add Q</button>
+        </div>
+    </div>
+
+    <!-- Watermark Section -->
+    <div class="wm-section">
+        <h3>💧 Watermark Settings (Header/Footer/Image)</h3>
+        <div class="form-row">
+            <label><input type="radio" name="wm-type" value="none" checked> None</label>
+            <label><input type="radio" name="wm-type" value="text"> Text Watermark</label>
+            <label><input type="radio" name="wm-type" value="image"> Image Watermark</label>
+        </div>
+        <div class="form-row" id="wm-text-settings" style="display:none;">
+            <input type="text" id="wm-text" placeholder="Enter Text" value="AIOU COACHING" style="flex:1;">
+            <label>Opacity:</label>
+            <input type="range" id="wm-opacity" min="0.1" max="1.0" step="0.1" value="0.2">
+        </div>
+        <div class="form-row" id="wm-img-settings" style="display:none;">
+            <input type="text" id="wm-img-url" placeholder="Watermark Image URL (Must allow CORS)" value="https://i.ibb.co/6P9Zk4y/logo.png" style="flex:1;">
+            <label>Opacity:</label>
+            <input type="range" id="wm-img-opacity" min="0.1" max="1.0" step="0.1" value="0.2">
+        </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-wrapper">
+        <div id="paper-preview">
+            <div class="paper-header">
+                <img id="preview-logo" src="https://i.ibb.co/6P9Zk4y/logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
+                <h1>Allama Iqbal Open University</h1>
+                <h2><span id="prev-course">PRINCIPLES OF MICROECONOMICS</span> - (<span id="prev-code">AIOU-9301</span>)</h2>
+            </div>
+            
+            <table class="info-table">
+                <tr>
+                    <td>SEMESTER: ODL SPRING 2026</td>
+                    <td>TIME ALLOWED: 3 Hours</td>
+                    <td>DATE: <span id="prev-date">26/10/2026</span></td>
+                </tr>
+                <tr>
+                    <td>Course Title: <span id="prev-course-2">PRINCIPLES OF MICROECONOMICS</span></td>
+                    <td>Version: 1</td>
+                    <td>Max Marks: 100</td>
+                </tr>
+            </table>
+
+            <div class="section-title">Part I — Multiple Choice Questions</div>
+            <div class="mcq-grid" id="mcq-container"></div>
+
+            <div class="section-title">Part II — Restricted Response Questions</div>
+            <div id="part2-container"></div>
+
+            <div class="section-title">Part III — Extended Response Questions</div>
+            <div id="part3-container"></div>
+        </div>
+    </div>
+
+    <!-- Export Buttons -->
+    <div class="export-btns">
+        <button class="btn btn-pdf" onclick="exportPDF()">📄 PDF (High Quality)</button>
+        <button class="btn btn-word" onclick="exportWord()">📝 Word (Editable)</button>
+        <button class="btn btn-img" onclick="exportImage('jpeg')">🖼️ JPEG</button>
+        <button class="btn btn-img" onclick="exportImage('png')">🖼️ PNG</button>
+    </div>
+</div>
+
+<script>
+    // --- Utility: Show/Hide Loader ---
+    const loader = document.getElementById('loader');
+    function toggleLoader(show) { loader.style.display = show ? 'flex' : 'none'; }
+
+    // --- AI Agent Integration ---
+    async function generateWithAI() {
+        const apiKey = document.getElementById('api-key').value;
+        const courseName = document.getElementById('ai-prompt').value;
+        
+        if(!apiKey || !apiKey.startsWith('sk-')) { alert("Please enter a valid OpenAI API Key."); return; }
+        if(!courseName) { alert("Please enter a course name."); return; }
+
+        toggleLoader(true);
+
+        try {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo",
+                    messages: [{
+                        role: "user",
+                        content: `Generate exactly 6 Multiple Choice Questions (with 4 options A, B, C, D) and 2 Subjective questions for the course "${courseName}". Format the output strictly as a JSON array of objects. 
+                        For MCQs use: {"type": "mcq", "q": "question", "a": "opt", "b": "opt", "c": "opt", "d": "opt"}
+                        For Subjective use: {"type": "sub", "q": "question", "marks": 10, "part": "Part II"}`
+                    }]
+                })
+            });
+
+            const data = await response.json();
+            let text = data.choices[0].message.content;
+            
+            // Clean JSON string (sometimes AI wraps it in ```json)
+            text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            const questions = JSON.parse(text);
+
+            // Clear existing
+            document.getElementById('mcq-container').innerHTML = '';
+            document.getElementById('part2-container').innerHTML = '';
+            document.getElementById('part3-container').innerHTML = '';
+
+            questions.forEach(item => {
+                if(item.type === 'mcq') {
+                    document.getElementById('mcq-q').value = item.q;
+                    document.getElementById('mcq-a').value = item.a;
+                    document.getElementById('mcq-b').value = item.b;
+                    document.getElementById('mcq-c').value = item.c;
+                    document.getElementById('mcq-d').value = item.d;
+                    addMCQ();
+                } else {
+                    document.getElementById('sub-q').value = item.q;
+                    document.getElementById('sub-marks').value = item.marks;
+                    document.getElementById('sub-part').value = item.part || "Part II";
+                    addSubjective();
+                }
+            });
+
+            alert("AI Agent successfully generated and embedded questions!");
+
+        } catch (error) {
+            console.error(error);
+            alert("Error communicating with AI. Check console or API Key.");
+        }
+        toggleLoader(false);
+    }
+
+    // --- Helper: Load Image with Promise ---
+    function loadImage(url) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = "Anonymous"; // Crucial for CORS
+            img.onload = () => resolve(img);
+            img.onerror = (e) => reject(e);
+            // Convert Google Drive links to direct
+            if(url.includes('drive.google.com')) {
+                const idMatch = url.match(/\/d\/(.+?)\//) || url.match(/id=(.+?)(&|$)/);
+                if(idMatch) url = `https://drive.google.com/uc?export=download&id=${idMatch[1]}`;
+            }
+            img.src = url;
+        });
+    }
+
+    // --- UI Logic ---
+    function updateMeta() {
+        document.getElementById('prev-course').innerText = document.getElementById('course-name').value;
+        document.getElementById('prev-course-2').innerText = document.getElementById('course-name').value;
+        document.getElementById('prev-code').innerText = document.getElementById('course-code').value;
+        document.getElementById('prev-date').innerText = document.getElementById('date').value;
+        
+        let logoUrl = document.getElementById('logo-url').value;
+        if(logoUrl.includes('drive.google.com')) {
+            const idMatch = logoUrl.match(/\/d\/(.+?)\//) || logoUrl.match(/id=(.+?)(&|$)/);
+            if(idMatch) logoUrl = `https://drive.google.com/uc?export=download&id=${idMatch[1]}`;
+        }
+        document.getElementById('preview-logo').src = logoUrl;
+        document.getElementById('preview-logo').style.display = 'inline-block';
+    }
+
+    function addMCQ() {
+        const q = document.getElementById('mcq-q').value;
+        if(!q) return;
+        const container = document.getElementById('mcq-container');
+        const count = container.children.length + 1;
+        const div = document.createElement('div');
+        div.className = 'mcq-item';
+        div.innerHTML = `
+            <div class="mcq-q">Q${count}. ${q} <span class="remove-btn" onclick="this.parentNode.parentNode.remove(); renumber()">[x]</span></div>
+            <div class="mcq-opt">(A) ${document.getElementById('mcq-a').value}</div>
+            <div class="mcq-opt">(B) ${document.getElementById('mcq-b').value}</div>
+            <div class="mcq-opt">(C) ${document.getElementById('mcq-c').value}</div>
+            <div class="mcq-opt">(D) ${document.getElementById('mcq-d').value}</div>
+        `;
+        container.appendChild(div);
+        ['mcq-q', 'mcq-a', 'mcq-b', 'mcq-c', 'mcq-d'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    function addSubjective() {
+        const q = document.getElementById('sub-q').value;
+        if(!q) return;
+        const marks = document.getElementById('sub-marks').value;
+        const part = document.getElementById('sub-part').value;
+        
+        let containerId = part.includes("Part II") ? "part2-container" : "part3-container";
+        let container = document.getElementById(containerId);
+        
+        let totalMCQs = document.getElementById('mcq-container').children.length;
+        let nextNum = totalMCQs + document.getElementById('part2-container').children.length + document.getElementById('part3-container').children.length + 1;
+
+        const div = document.createElement('div');
+        div.className = 'subjective-item';
+        div.innerHTML = `
+            <div class="subjective-q">Q${nextNum}. ${q} <span class="remove-btn" onclick="this.parentNode.remove()">[x]</span></div>
+            <div class="marks">(${marks} marks)</div>
+        `;
+        container.appendChild(div);
+        document.getElementById('sub-q').value = '';
+    }
+
+    function renumber() {
+        document.querySelectorAll('.mcq-item').forEach((mcq, i) => {
+            mcq.querySelector('.mcq-q').innerHTML = mcq.querySelector('.mcq-q').innerHTML.replace(/Q\d+\./, `Q${i + 1}.`);
+        });
+    }
+
+    document.querySelectorAll('input[name="wm-type"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.getElementById('wm-text-settings').style.display = this.value === 'text' ? 'flex' : 'none';
+            document.getElementById('wm-img-settings').style.display = this.value === 'image' ? 'flex' : 'none';
+        });
+    });
+
+    // --- CORE EXPORT LOGIC (Fixes Quality & Blank PDFs) ---
+    
+    // Creates a hidden, high-resolution clone of the paper
+    async function generateHighResCanvas() {
+        const original = document.getElementById('paper-preview');
+        
+        // 1. Create a hidden wrapper
+        const cloneWrapper = document.createElement('div');
+        cloneWrapper.style.position = 'absolute';
+        cloneWrapper.style.left = '-9999px';
+        cloneWrapper.style.top = '0';
+        cloneWrapper.style.background = '#fff';
+        
+        // 2. Clone the element and force A4 size (Remove mobile scaling)
+        const clone = original.cloneNode(true);
+        clone.style.transform = 'none'; // Reset mobile scale
+        clone.style.margin = '0';
+        clone.style.boxShadow = 'none';
+        
+        // Hide delete buttons in clone
+        clone.querySelectorAll('.remove-btn').forEach(btn => btn.style.display = 'none');
+        
+        cloneWrapper.appendChild(clone);
+        document.body.appendChild(cloneWrapper);
+
+        // 3. Render to canvas (Scale 3 for 300DPI High Quality)
+        const canvas = await html2canvas(cloneWrapper, { 
+            scale: 3, 
+            useCORS: true, 
+            backgroundColor: "#ffffff",
+            width: 210 * 3.78, // A4 width in pixels approx
+            height: 297 * 3.78 // A4 height in pixels approx
+        });
+
+        // 4. Apply Watermark
+        await applyWatermark(canvas);
+
+        // 5. Cleanup
+        document.body.removeChild(cloneWrapper);
+        
+        return canvas;
+    }
+
+    async function applyWatermark(canvas) {
+        const type = document.querySelector('input[name="wm-type"]:checked').value;
+        if(type === 'none') return;
+
+        const ctx = canvas.getContext('2d');
+        ctx.save();
+
+        if(type === 'text') {
+            const text = document.getElementById('wm-text').value;
+            const opacity = document.getElementById('wm-opacity').value;
+            ctx.globalAlpha = opacity;
+            ctx.font = "bold 120px Arial";
+            ctx.fillStyle = "#000000";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate(-Math.PI / 4);
+            // Draw multiple times for banner effect
+            ctx.fillText(text, 0, 0);
+            ctx.fillText(text, 0, 400);
+            ctx.fillText(text, 0, -400);
+            ctx.fillText(text, 0, 800);
+            ctx.fillText(text, 0, -800);
+        } 
+        else if(type === 'image') {
+            const url = document.getElementById('wm-img-url').value;
+            const opacity = document.getElementById('wm-img-opacity').value;
+            try {
+                const img = await loadImage(url);
+                ctx.globalAlpha = opacity;
+                
+                // Draw as a large centered background watermark
+                const w = canvas.width * 0.7;
+                const h = (img.height / img.width) * w;
+                ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+                
+            } catch(e) {
+                console.error("Watermark image error", e);
+                alert("Watermark image could not be loaded. Ensure it's a direct CORS-enabled link (Imgur/ImgBB).");
+            }
+        }
+        ctx.restore();
+    }
+
+    // --- EXPORT BUTTONS ---
+    
+    async function exportPDF() {
+        toggleLoader(true);
+        try {
+            const canvas = await generateHighResCanvas();
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save('AIOU_Paper.pdf');
+        } catch(e) { console.error(e); alert("PDF Generation failed."); }
+        toggleLoader(false);
+    }
+
+    async function exportImage(format) {
+        toggleLoader(true);
+        try {
+            const canvas = await generateHighResCanvas();
+            const link = document.createElement('a');
+            link.download = `AIOU_Paper.${format}`;
+            link.href = canvas.toDataURL(`image/${format}`, 1.0);
+            link.click();
+        } catch(e) { console.error(e); alert("Image Generation failed."); }
+        toggleLoader(false);
+    }
+
+    // Fixed Word Export (No more corruption)
+    function exportWord() {
+        const clone = document.getElementById('paper-preview').cloneNode(true);
+        clone.querySelectorAll('.remove-btn').forEach(el => el.remove());
+        clone.style.transform = 'none'; // remove mobile scale
+        clone.style.boxShadow = 'none';
+        clone.style.border = '1px solid #000';
+
+        // Clean HTML for MS Word
+        const header = `
+            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+            <head><meta charset='utf-8'><title>Export HTML To Doc</title>
+            <style>
+                body { font-family: 'Times New Roman', serif; direction: ltr; }
+                .paper-header { text-align: center; }
+                .info-table { width: 100%; border-collapse: collapse; }
+                .info-table td { border: 1px solid black; padding: 8px; text-align: center; }
+                .mcq-grid { display: block; } /* Word doesn't like CSS Grid, fallback to block */
+                .mcq-item { margin-bottom: 15px; }
+                .section-title { font-weight: bold; text-decoration: underline; margin-top: 20px; }
+            </style>
+            </head><body>`;
+        const footer = `</body></html>`;
+        
+        // Replace Grid with simple layout for Word
+        const innerHTML = clone.innerHTML.replace(/display:\s*grid/g, 'display: block').replace(/grid-template-columns:[^;]+;/g, '');
+
+        const sourceHTML = header + innerHTML + footer;
+        const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword' });
+        
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'AIOU_Paper.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+</script>
+
+</body>
+</html>
