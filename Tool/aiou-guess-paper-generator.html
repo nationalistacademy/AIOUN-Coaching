@@ -1,454 +1,280 @@
-<!DOCTYPE html>
-<html lang="ur" dir="rtl">
-<head>
-    <!-- Yeh line sab se zaroori hai encoding fix karne ke liye -->
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIOU Guess Paper Generator</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Times+New+Roman&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-    <style>
-        .aiou-tool-wrapper * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        .aiou-tool-wrapper { max-width: 1100px; margin: 20px auto; background: #f4f7f6; padding: 20px; border-radius: 10px; transition: all 0.3s ease; }
-        
-        .aiou-tool-wrapper.ur { direction: rtl; }
-        .aiou-tool-wrapper.en { direction: ltr; }
-        
-        .aiou-controls { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd; }
-        .aiou-controls h3 { color: #0056b3; margin-bottom: 10px; font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 5px; }
-        
-        .lang-toggle { display: flex; gap: 15px; margin-bottom: 15px; background: #e9ecef; padding: 10px; border-radius: 5px; align-items: center; }
-        .lang-toggle label { font-weight: bold; cursor: pointer; font-size: 16px; margin-left: 10px; margin-right: 10px; }
-        
-        .input-group { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
-        .input-group input[type="text"], .input-group input[type="number"] { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; min-width: 120px; }
-        
-        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; font-size: 14px; }
-        .btn-add { background: #28a745; }
-        .btn-add:hover { background: #218838; }
-        
-        .upload-box { background: #fff3cd; border: 1px dashed #ffeeba; padding: 10px; border-radius: 5px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 15px; }
-        .preview-img { height: 40px; display: none; border: 1px solid #ccc; background: #fff; }
-
-        .paper-container { width: 100%; overflow-x: auto; background: #555; padding: 20px; border-radius: 8px; display: flex; justify-content: center; }
-        
-        #aiou-paper-preview {
-            background: #fff;
-            width: 210mm;
-            min-height: 297mm;
-            padding: 15mm;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-            transform-origin: top center;
-            flex-shrink: 0;
-            position: relative;
-            color: #000;
-        }
-        
-        @media (max-width: 800px) { #aiou-paper-preview { transform: scale(0.45); margin-bottom: -160mm; } }
-        @media (max-width: 500px) { #aiou-paper-preview { transform: scale(0.3); margin-bottom: -210mm; } }
-
-        #aiou-paper-preview.en { direction: ltr; text-align: left; font-family: 'Times New Roman', serif; }
-        #aiou-paper-preview.ur { direction: rtl; text-align: right; font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif; }
-        
-        .paper-header { text-align: center; margin-bottom: 15px; }
-        .paper-header img.logo { max-height: 60px; margin-bottom: 5px; display: none; margin: 0 auto; }
-        .paper-header h1 { font-size: 24px; margin-bottom: 5px; }
-        
-        .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-family: Arial, sans-serif; font-size: 14px; }
-        .meta-table td { border: 1px solid #000; padding: 8px 12px; font-weight: bold; }
-
-        .note-text { font-weight: bold; margin-bottom: 15px; text-align: center; font-size: 15px; font-family: Arial, sans-serif; }
-
-        .questions-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; }
-        .questions-table th, .questions-table td { border: 1px solid #000; padding: 10px; vertical-align: top; }
-        .questions-table th { text-align: center; font-weight: bold; background: #f2f2f2; }
-        .questions-table .col-num { width: 12%; text-align: center; vertical-align: middle; }
-        .questions-table .col-marks { width: 12%; text-align: center; vertical-align: middle; font-weight: bold; }
-        
-        #aiou-paper-preview.ur .questions-table td.q-text { font-family: 'Noto Nastaliq Urdu', serif; font-size: 16px; line-height: 2; }
-        #aiou-paper-preview.en .questions-table td.q-text { font-family: 'Times New Roman', serif; font-size: 15px; }
-
-        .remove-btn { color: red; cursor: pointer; font-size: 12px; float: right; font-weight: bold; }
-        #aiou-paper-preview.ur .remove-btn { float: left; }
-
-        .export-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; background: #fff; padding: 15px; border-radius: 8px; margin-top: 15px; }
-        .btn-pdf { background: #dc3545; }
-        .btn-word { background: #007bff; }
-        .btn-img { background: #17a2b8; }
-
-        #aiou-loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); color: #fff; justify-content: center; align-items: center; font-size: 20px; z-index: 10000; font-weight: bold; flex-direction: column; gap: 10px; }
-    </style>
-</head>
-<body>
-
-<div class="aiou-tool-wrapper" id="aiou-main-wrapper">
-    <div id="aiou-loader">⏳ Generating File... Please Wait...</div>
-    
-    <div class="aiou-controls">
-        <div class="lang-toggle">
-            <strong id="lbl-select-lang">زبان منتخب کریں:</strong>
-            <label><input type="radio" name="aiou-lang" value="ur" checked onchange="aiouToggleLang('ur')"> اردو (Urdu)</label>
-            <label><input type="radio" name="aiou-lang" value="en" onchange="aiouToggleLang('en')"> English</label>
-        </div>
-
-        <div class="input-group">
-            <input type="text" id="aiou-level" placeholder="سطح (مثلاً: بی اے)" value="بی اے">
-            <input type="text" id="aiou-semester" placeholder="سیمسٹر" value="بہار 2025">
-            <input type="text" id="aiou-course" placeholder="پرچہ / مضمون" value="معاشیات (402)">
-            <input type="text" id="aiou-total-marks" placeholder="کل نمبر" value="100">
-            <input type="text" id="aiou-passing-marks" placeholder="کامیابی کے نمبر" value="40">
-            <input type="text" id="aiou-time" placeholder="وقت" value="تین گھنٹے">
-        </div>
-        
-        <div class="upload-box">
-            <strong id="lbl-logo">🖼️ ہیڈر لوگو:</strong>
-            <input type="file" id="aiou-logo-upload" accept="image/*" onchange="aiouHandleLogo(event)">
-            <img id="aiou-logo-preview" class="preview-img" alt="Logo">
-        </div>
-
-        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ddd;">
-        
-        <h3 id="lbl-add-q">➕ سوال شامل کریں</h3>
-        <div class="input-group">
-            <textarea id="aiou-q-text" placeholder="یہاں سوال لکھیں..." style="flex: 3; padding: 8px; border: 1px solid #ccc; border-radius: 4px; height: 50px; font-size: 14px;"></textarea>
-            <input type="number" id="aiou-q-marks" placeholder="نمبر" style="flex: 1;" value="20">
-            <button class="btn btn-add" id="btn-add-q" onclick="aiouAddQuestion()">شامل کریں</button>
-        </div>
-    </div>
-
-    <div class="aiou-controls">
-        <h3 id="lbl-wm-title">💧 واٹر مارک سیٹنگز</h3>
-        <div class="input-group" id="wm-radios">
-            <label><input type="radio" name="aiou-wm-type" value="none" checked onchange="aiouToggleWM()"> <span id="lbl-wm-none">کوئی نہیں</span></label>
-            <label><input type="radio" name="aiou-wm-type" value="text" onchange="aiouToggleWM()"> <span id="lbl-wm-text">ٹیکسٹ</span></label>
-            <label><input type="radio" name="aiou-wm-type" value="image" onchange="aiouToggleWM()"> <span id="lbl-wm-img">تصویر</span></label>
-        </div>
-        
-        <div id="aiou-wm-text-settings" style="display:none;" class="input-group">
-            <input type="text" id="aiou-wm-text" placeholder="واٹر مارک ٹیکسٹ" value="AIOU COACHING" style="flex:2;">
-            <label id="lbl-opacity-1">دھندلاپن:</label>
-            <input type="range" id="aiou-wm-opacity" min="0.1" max="1.0" step="0.1" value="0.2" style="flex: 1;">
-        </div>
-
-        <div id="aiou-wm-img-settings" style="display:none;" class="upload-box">
-            <strong id="lbl-wm-upload">🖼️ واٹر مارک تصویر اپلوڈ کریں:</strong>
-            <input type="file" id="aiou-wm-file" accept="image/*" onchange="aiouHandleWM(event)">
-            <label id="lbl-opacity-2">دھندلاپن:</label>
-            <input type="range" id="aiou-wm-img-opacity" min="0.1" max="1.0" step="0.1" value="0.2">
-        </div>
-    </div>
-
-    <div class="paper-container">
-        <div id="aiou-paper-preview" class="ur">
-            <div class="paper-header">
-                <img id="aiou-preview-logo" class="logo" alt="Logo">
-                <h1 id="aiou-preview-univ">علامہ اقبال اوپن یونیورسٹی اسلام آباد</h1>
-            </div>
-            
-            <table class="meta-table">
-                <tr>
-                    <td width="50%" id="lbl-level">سطح: <span id="prev-level">بی اے</span></td>
-                    <td width="50%" id="lbl-sem">سیمسٹر: <span id="prev-sem">بہار 2025</span></td>
-                </tr>
-                <tr>
-                    <td id="lbl-course">پرچہ: <span id="prev-course">معاشیات (402)</span></td>
-                    <td id="lbl-total">کل نمبر: <span id="prev-total">100</span></td>
-                </tr>
-                <tr>
-                    <td id="lbl-time">وقت: <span id="prev-time">تین گھنٹے</span></td>
-                    <td id="lbl-pass">کامیابی کے نمبر: <span id="prev-pass">40</span></td>
-                </tr>
-            </table>
-
-            <div class="note-text" id="aiou-note">نوٹ: کوئی سے پانچ سوالات حل کریں۔ تمام سوالوں کے نمبر یکساں ہیں۔</div>
-
-            <table class="questions-table">
-                <thead>
-                    <tr>
-                        <th class="col-num" id="th-qnum">سوال نمبر</th>
-                        <th id="th-qtext">سوالات</th>
-                        <th class="col-marks" id="th-marks">نمبر</th>
-                    </tr>
-                </thead>
-                <tbody id="aiou-questions-body">
-                    <tr>
-                        <td class="col-num">1</td>
-                        <td class="q-text">مکمل مقابلہ سے کیا مراد ہے؟ مکمل مقابلہ کے تحت فرم کا مختصر عرصہ میں توازن کا نقشہ فرضی اعداد و شمار کی مدد سے واضح کریں۔ <span class="remove-btn" onclick="aiouDeleteRow(this)">[x]</span></td>
-                        <td class="col-marks">20</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="export-actions">
-        <button class="btn btn-pdf" id="btn-pdf" onclick="aiouExportPDF()">📄 PDF ڈاؤن لوڈ کریں</button>
-        <button class="btn btn-word" id="btn-word" onclick="aiouExportWord()">📝 ورڈ ڈاؤن لوڈ کریں</button>
-        <button class="btn btn-img" id="btn-img" onclick="aiouExportImage('jpeg')">🖼️ تصویر (JPEG)</button>
-    </div>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+.ag-wrap{--ag-p:var(--jt-primary,#f67938);--ag-ph:var(--jt-btn-primary-hover,#f46013);--ag-glass:rgba(255,255,255,.55);--ag-soft:rgba(255,255,255,.4);--ag-bd:rgba(255,255,255,.7);--ag-sh:0 8px 32px rgba(0,0,0,.1);max-width:1100px;margin:0 auto 24px;color:inherit;font-size:14px;line-height:1.5}
+.dark-mode .ag-wrap{--ag-glass:rgba(30,30,35,.55);--ag-soft:rgba(30,30,35,.4);--ag-bd:rgba(255,255,255,.1);--ag-sh:0 8px 32px rgba(0,0,0,.4)}
+.ag-wrap *{box-sizing:border-box}
+.ag-wrap.ur{direction:rtl}.ag-wrap.en{direction:ltr}
+.ag-box{background:var(--ag-glass);-webkit-backdrop-filter:blur(15px) saturate(180%);backdrop-filter:blur(15px) saturate(180%);border:1px solid var(--ag-bd);border-radius:20px;box-shadow:var(--ag-sh);padding:18px;margin-bottom:16px}
+.ag-box h3{font-size:16px!important;font-weight:700;margin:0 0 12px!important;padding:0 0 6px!important;border-bottom:3px solid var(--ag-p);display:inline-block}
+.ag-row{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.ag-wrap input[type=text],.ag-wrap input[type=number],.ag-wrap textarea{flex:1;min-width:130px;padding:9px 12px;border:1px solid var(--ag-bd);border-radius:14px;background:var(--ag-soft);color:inherit;font:inherit;margin:0}
+.ag-wrap input:focus,.ag-wrap textarea:focus{outline:2px solid var(--ag-p);outline-offset:1px}
+.ag-wrap input[type=range]{accent-color:var(--ag-p);vertical-align:middle}
+.ag-wrap input[type=radio]{accent-color:var(--ag-p)}
+.ag-wrap label{cursor:pointer;margin:0}
+.ag-btn{border:1px solid transparent;border-radius:999px;padding:8px 20px;font-weight:700;font-size:14px;cursor:pointer;color:#fff;background:var(--ag-p);box-shadow:0 6px 18px rgba(246,121,56,.3);transition:transform .2s,background-color .2s}
+.ag-btn:hover{background:var(--ag-ph);transform:translateY(-1px)}
+.ag-btn:focus-visible{outline:3px solid var(--ag-p);outline-offset:2px}
+.ag-btn.s{background:var(--ag-soft);color:inherit;border-color:var(--ag-bd);box-shadow:none}
+.ag-btn.s:hover{background:var(--ag-p);color:#fff}
+.ag-up{background:var(--ag-soft);border:1px dashed var(--ag-p);padding:10px;border-radius:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.ag-up img{height:40px;width:auto;display:none;border:1px solid var(--ag-bd);background:#fff;border-radius:6px}
+.ag-pc{width:100%;overflow:auto;background:rgba(0,0,0,.07);padding:20px;border-radius:20px;display:flex;justify-content:center;margin-bottom:16px}
+#ag-paper{background:#fff;width:210mm;min-height:297mm;padding:15mm;box-shadow:0 4px 20px rgba(0,0,0,.35);flex-shrink:0;position:relative;color:#000;direction:rtl;text-align:right;font-family:'Noto Nastaliq Urdu','Jameel Noori Nastaleeq',serif;font-size:16px;line-height:1.5}
+#ag-paper.en{direction:ltr;text-align:left;font-family:'Times New Roman',serif}
+#ag-paper>*{position:relative;z-index:1}
+#ag-paper #ag-wm{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;display:flex;align-items:center;justify-content:center}
+#ag-wm .t{font:bold 90px Arial,sans-serif;white-space:nowrap;transform:rotate(-45deg);color:#000}
+#ag-wm img{width:70%;height:auto;max-width:none}
+#ag-paper .ag-hd{text-align:center;margin-bottom:15px}
+#ag-paper .ag-hd img{max-height:70px;width:auto;display:none;margin:0 auto 6px;border-radius:0}
+#ag-paper h1{font:700 24px/1.8 'Noto Nastaliq Urdu',serif!important;color:#000!important;margin:0!important;padding:0!important}
+#ag-paper.en h1{font-family:'Times New Roman',serif!important;line-height:1.3!important}
+#ag-paper table{display:table!important;width:100%;border-collapse:collapse!important;border:0!important;border-radius:0!important;background:none!important;font-family:Arial,sans-serif;margin:0}
+#ag-paper .ag-meta{margin-bottom:15px;font-size:14px}
+#ag-paper td,#ag-paper th{border:1px solid #000!important;padding:8px 12px;color:#000;background:none;vertical-align:top}
+#ag-paper .ag-meta td{font-weight:700;width:50%}
+#ag-paper th{text-align:center;background:#f2f2f2!important;font-weight:700}
+#ag-paper .cn{width:12%;text-align:center;vertical-align:middle}
+#ag-paper .cm{width:12%;text-align:center;vertical-align:middle;font-weight:700}
+#ag-paper .ag-note{font-weight:700;margin-bottom:15px;text-align:center;font-size:15px;font-family:Arial,sans-serif;white-space:pre-line}
+#ag-paper.ur .qx{font-family:'Noto Nastaliq Urdu',serif;line-height:2}
+#ag-paper.en .qx{font-family:'Times New Roman',serif}
+#ag-paper .qx{font-size:var(--fs,16px)}
+#ag-paper tr{page-break-inside:avoid}
+#ag-paper .ctl{display:block;margin-top:6px;font-family:Arial,sans-serif;font-size:12px}
+#ag-paper .ctl button{border:1px solid #bbb;background:#f8f9fa;color:#222;border-radius:999px;cursor:pointer;padding:1px 10px;margin:0 2px;font-size:12px}
+#ag-paper .ctl button:hover{background:var(--ag-p);color:#fff}
+#ag-paper .ag-empty{text-align:center;color:#888;padding:20px}
+.ag-export{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+#ag-loader{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);color:#fff;justify-content:center;align-items:center;font-size:20px;z-index:100000;font-weight:700}
+#ag-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 20px;border-radius:999px;display:none;z-index:100001;font-size:14px}
+@media(max-width:800px){#ag-paper{zoom:.45}}
+@media(max-width:500px){#ag-paper{zoom:.32}}
+@media print{body *{visibility:hidden}#ag-paper,#ag-paper *{visibility:visible}#ag-paper{position:absolute;left:0;top:0;box-shadow:none;zoom:1!important}#ag-paper .ctl{display:none}}
+</style>
+<div class="ag-wrap ur" id="ag-main">
+<div id="ag-loader"></div><div id="ag-toast"></div>
+<div class="ag-box">
+ <div class="ag-row">
+  <strong data-t="selLang"></strong>
+  <label><input type="radio" name="ag-lang" value="ur" checked> اردو (Urdu)</label>
+  <label><input type="radio" name="ag-lang" value="en"> English</label>
+ </div>
+ <div class="ag-row">
+  <input type="text" id="ag-univ" data-p="univ"><input type="text" id="ag-level" data-p="level"><input type="text" id="ag-sem" data-p="sem"><input type="text" id="ag-course" data-p="course">
+ </div>
+ <div class="ag-row">
+  <input type="text" id="ag-total" data-p="total"><input type="text" id="ag-pass" data-p="pass"><input type="text" id="ag-time" data-p="time">
+  <button type="button" class="ag-btn s" id="ag-autoTotal" data-t="autoTotal"></button>
+ </div>
+ <div class="ag-row"><textarea id="ag-noteIn" style="height:54px" data-p="note"></textarea></div>
+ <div class="ag-row"><label><span data-t="fsize"></span> <input type="range" id="ag-fs" min="12" max="24" value="16"></label></div>
+ <div class="ag-up">
+  <strong data-t="logo"></strong><input type="file" id="ag-logoFile" accept="image/*"><img id="ag-logoThumb" alt="">
+  <button type="button" class="ag-btn s" id="ag-logoClear" data-t="remove" style="display:none"></button>
+ </div>
+ <h3 id="ag-addTitle"></h3>
+ <div class="ag-row">
+  <textarea id="ag-qText" style="flex:3;height:76px" data-p="qText"></textarea>
+  <input type="number" id="ag-qMarks" value="20" style="flex:1" data-p="marks">
+  <button type="button" class="ag-btn" id="ag-addBtn"></button>
+  <button type="button" class="ag-btn s" id="ag-cancelEdit" data-t="cancel" style="display:none"></button>
+ </div>
 </div>
-
+<div class="ag-box">
+ <h3 data-t="wmTitle"></h3>
+ <div class="ag-row">
+  <label><input type="radio" name="ag-wm" value="none" checked> <span data-t="none"></span></label>
+  <label><input type="radio" name="ag-wm" value="text"> <span data-t="text"></span></label>
+  <label><input type="radio" name="ag-wm" value="image"> <span data-t="image"></span></label>
+ </div>
+ <div id="ag-wmText" class="ag-row" style="display:none"><input type="text" id="ag-wmTxt" value="AIOU COACHING"></div>
+ <div id="ag-wmImg" class="ag-up" style="display:none"><strong data-t="wmUp"></strong><input type="file" id="ag-wmFile" accept="image/*"></div>
+ <div id="ag-wmOp" class="ag-row" style="display:none"><label><span data-t="opacity"></span> <input type="range" id="ag-wmOpacity" min="0.05" max="0.6" step="0.05" value="0.15"></label></div>
+</div>
+<div class="ag-box">
+ <div class="ag-row" style="margin:0">
+  <button type="button" class="ag-btn s" id="ag-saveBtn" data-t="save"></button>
+  <button type="button" class="ag-btn s" id="ag-loadBtn" data-t="load"></button>
+  <button type="button" class="ag-btn s" id="ag-clearBtn" data-t="clear"></button>
+  <span id="ag-saveInfo" style="font-size:12px;opacity:.7"></span>
+ </div>
+</div>
+<div class="ag-pc">
+ <div id="ag-paper" class="ur">
+  <div id="ag-wm"></div>
+  <div class="ag-hd"><img id="ag-pLogo" alt=""><h1 id="ag-pUniv"></h1></div>
+  <table class="ag-meta">
+   <tr><td><span data-t="level"></span>: <span id="ag-pLevel"></span></td><td><span data-t="sem"></span>: <span id="ag-pSem"></span></td></tr>
+   <tr><td><span data-t="course"></span>: <span id="ag-pCourse"></span></td><td><span data-t="total"></span>: <span id="ag-pTotal"></span></td></tr>
+   <tr><td><span data-t="time"></span>: <span id="ag-pTime"></span></td><td><span data-t="pass"></span>: <span id="ag-pPass"></span></td></tr>
+  </table>
+  <div class="ag-note" id="ag-pNote"></div>
+  <table class="ag-qt"><thead><tr><th class="cn" data-t="qno"></th><th data-t="qs"></th><th class="cm" data-t="marks"></th></tr></thead><tbody id="ag-qBody"></tbody></table>
+ </div>
+</div>
+<div class="ag-box ag-export">
+ <button type="button" class="ag-btn" id="ag-bPdf" data-t="pdf"></button>
+ <button type="button" class="ag-btn" id="ag-bWord" data-t="word"></button>
+ <button type="button" class="ag-btn" id="ag-bJpg" data-t="jpg"></button>
+ <button type="button" class="ag-btn" id="ag-bPng" data-t="png"></button>
+ <button type="button" class="ag-btn s" id="ag-bPrint" data-t="print"></button>
+</div>
+</div>
 <script>
-    let aiouLogoUrl = null;
-    let aiouWmUrl = null;
-    const aiouLoader = document.getElementById('aiou-loader');
-    function aiouShowLoader(s) { aiouLoader.style.display = s ? 'flex' : 'none'; }
-
-    const fields = ['level', 'semester', 'course', 'total-marks', 'passing-marks', 'time'];
-    fields.forEach(f => {
-        document.getElementById(`aiou-${f}`).addEventListener('input', function(e) {
-            const idMap = { 'level':'prev-level', 'semester':'prev-sem', 'course':'prev-course', 'total-marks':'prev-total', 'passing-marks':'prev-pass', 'time':'prev-time' };
-            document.getElementById(idMap[f]).innerText = e.target.value;
-        });
-    });
-
-    function aiouToggleLang(lang) {
-        const wrapper = document.getElementById('aiou-main-wrapper');
-        wrapper.className = `aiou-tool-wrapper ${lang}`; 
-        const preview = document.getElementById('aiou-paper-preview');
-        preview.className = lang;
-        
-        if(lang === 'ur') {
-            document.getElementById('lbl-select-lang').innerText = "زبان منتخب کریں:";
-            document.getElementById('aiou-level').placeholder = "سطح (مثلاً: بی اے)";
-            document.getElementById('aiou-semester').placeholder = "سیمسٹر";
-            document.getElementById('aiou-course').placeholder = "پرچہ / مضمون";
-            document.getElementById('aiou-total-marks').placeholder = "کل نمبر";
-            document.getElementById('aiou-passing-marks').placeholder = "کامیابی کے نمبر";
-            document.getElementById('aiou-time').placeholder = "وقت";
-            document.getElementById('lbl-logo').innerText = "🖼️ ہیڈر لوگو:";
-            document.getElementById('lbl-add-q').innerText = "➕ سوال شامل کریں";
-            document.getElementById('aiou-q-text').placeholder = "یہاں سوال لکھیں...";
-            document.getElementById('aiou-q-marks').placeholder = "نمبر";
-            document.getElementById('btn-add-q').innerText = "شامل کریں";
-            document.getElementById('lbl-wm-title').innerText = "💧 واٹر مارک سیٹنگز";
-            document.getElementById('lbl-wm-none').innerText = "کوئی نہیں";
-            document.getElementById('lbl-wm-text').innerText = "ٹیکسٹ";
-            document.getElementById('lbl-wm-img').innerText = "تصویر";
-            document.getElementById('lbl-opacity-1').innerText = "دھندلاپن:";
-            document.getElementById('lbl-opacity-2').innerText = "دھندلاپن:";
-            document.getElementById('lbl-wm-upload').innerText = "🖼️ واٹر مارک تصویر اپلوڈ کریں:";
-            document.getElementById('btn-pdf').innerText = "📄 PDF ڈاؤن لوڈ کریں";
-            document.getElementById('btn-word').innerText = "📝 ورڈ ڈاؤن لوڈ کریں";
-            document.getElementById('btn-img').innerText = "🖼️ تصویر (JPEG)";
-            document.getElementById('aiou-preview-univ').innerText = "علامہ اقبال اوپن یونیورسٹی اسلام آباد";
-            document.getElementById('lbl-level').innerHTML = `سطح: <span id="prev-level">${document.getElementById('aiou-level').value}</span>`;
-            document.getElementById('lbl-sem').innerHTML = `سیمسٹر: <span id="prev-sem">${document.getElementById('aiou-semester').value}</span>`;
-            document.getElementById('lbl-course').innerHTML = `پرچہ: <span id="prev-course">${document.getElementById('aiou-course').value}</span>`;
-            document.getElementById('lbl-total').innerHTML = `کل نمبر: <span id="prev-total">${document.getElementById('aiou-total-marks').value}</span>`;
-            document.getElementById('lbl-time').innerHTML = `وقت: <span id="prev-time">${document.getElementById('aiou-time').value}</span>`;
-            document.getElementById('lbl-pass').innerHTML = `کامیابی کے نمبر: <span id="prev-pass">${document.getElementById('aiou-passing-marks').value}</span>`;
-            document.getElementById('aiou-note').innerText = "نوٹ: کوئی سے پانچ سوالات حل کریں۔ تمام سوالوں کے نمبر یکساں ہیں۔";
-            document.getElementById('th-qnum').innerText = "سوال نمبر";
-            document.getElementById('th-qtext').innerText = "سوالات";
-            document.getElementById('th-marks').innerText = "نمبر";
-        } else {
-            document.getElementById('lbl-select-lang').innerText = "Select Medium:";
-            document.getElementById('aiou-level').placeholder = "Level (e.g. BA)";
-            document.getElementById('aiou-semester').placeholder = "Semester";
-            document.getElementById('aiou-course').placeholder = "Paper / Subject";
-            document.getElementById('aiou-total-marks').placeholder = "Total Marks";
-            document.getElementById('aiou-passing-marks').placeholder = "Passing Marks";
-            document.getElementById('aiou-time').placeholder = "Time Allowed";
-            document.getElementById('lbl-logo').innerText = "🖼️ Header Logo:";
-            document.getElementById('lbl-add-q').innerText = "➕ Add Question";
-            document.getElementById('aiou-q-text').placeholder = "Type your question here...";
-            document.getElementById('aiou-q-marks').placeholder = "Marks";
-            document.getElementById('btn-add-q').innerText = "Add to Paper";
-            document.getElementById('lbl-wm-title').innerText = "💧 Watermark Settings";
-            document.getElementById('lbl-wm-none').innerText = "None";
-            document.getElementById('lbl-wm-text').innerText = "Text";
-            document.getElementById('lbl-wm-img').innerText = "Image";
-            document.getElementById('lbl-opacity-1').innerText = "Opacity:";
-            document.getElementById('lbl-opacity-2').innerText = "Opacity:";
-            document.getElementById('lbl-wm-upload').innerText = "🖼️ Upload Watermark Image:";
-            document.getElementById('btn-pdf').innerText = "📄 Download PDF";
-            document.getElementById('btn-word').innerText = "📝 Download Word";
-            document.getElementById('btn-img').innerText = "🖼️ Download JPEG";
-            document.getElementById('aiou-preview-univ').innerText = "Allama Iqbal Open University Islamabad";
-            document.getElementById('lbl-level').innerHTML = `Level: <span id="prev-level">${document.getElementById('aiou-level').value}</span>`;
-            document.getElementById('lbl-sem').innerHTML = `Semester: <span id="prev-sem">${document.getElementById('aiou-semester').value}</span>`;
-            document.getElementById('lbl-course').innerHTML = `Paper: <span id="prev-course">${document.getElementById('aiou-course').value}</span>`;
-            document.getElementById('lbl-total').innerHTML = `Total Marks: <span id="prev-total">${document.getElementById('aiou-total-marks').value}</span>`;
-            document.getElementById('lbl-time').innerHTML = `Time: <span id="prev-time">${document.getElementById('aiou-time').value}</span>`;
-            document.getElementById('lbl-pass').innerHTML = `Passing Marks: <span id="prev-pass">${document.getElementById('aiou-passing-marks').value}</span>`;
-            document.getElementById('aiou-note').innerText = "Note: Attempt any five questions. All questions carry equal marks.";
-            document.getElementById('th-qnum').innerText = "Q. No.";
-            document.getElementById('th-qtext').innerText = "Questions";
-            document.getElementById('th-marks').innerText = "Marks";
-        }
-    }
-
-    function aiouHandleLogo(e) {
-        const file = e.target.files[0];
-        if(file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                aiouLogoUrl = event.target.result;
-                document.getElementById('aiou-preview-logo').src = aiouLogoUrl;
-                document.getElementById('aiou-preview-logo').style.display = 'block'; 
-                document.getElementById('aiou-logo-preview').src = aiouLogoUrl;
-                document.getElementById('aiou-logo-preview').style.display = 'inline-block';
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function aiouHandleWM(e) {
-        const file = e.target.files[0];
-        if(file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                aiouWmUrl = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function aiouToggleWM() {
-        const type = document.querySelector('input[name="aiou-wm-type"]:checked').value;
-        document.getElementById('aiou-wm-text-settings').style.display = type === 'text' ? 'flex' : 'none';
-        document.getElementById('aiou-wm-img-settings').style.display = type === 'image' ? 'flex' : 'none';
-    }
-
-    function aiouAddQuestion() {
-        const qText = document.getElementById('aiou-q-text').value;
-        const qMarks = document.getElementById('aiou-q-marks').value;
-        if(!qText.trim()) { alert("برائے مہربانی سوال لکھیں!"); return; }
-
-        const tbody = document.getElementById('aiou-questions-body');
-        const count = tbody.children.length + 1;
-        
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td class="col-num">${count}</td>
-            <td class="q-text">${qText} <span class="remove-btn" onclick="aiouDeleteRow(this)">[x]</span></td>
-            <td class="col-marks">${qMarks}</td>
-        `;
-        tbody.appendChild(tr);
-        document.getElementById('aiou-q-text').value = '';
-    }
-
-    function aiouDeleteRow(btn) {
-        btn.parentNode.parentNode.remove();
-        const rows = document.querySelectorAll('#aiou-questions-body tr');
-        rows.forEach((row, i) => { row.cells[0].innerText = i + 1; });
-    }
-
-    async function aiouGenerateCanvas() {
-        const original = document.getElementById('aiou-paper-preview');
-        const wrapper = document.createElement('div');
-        wrapper.style.position = 'absolute'; wrapper.style.left = '-9999px'; wrapper.style.top = '0'; wrapper.style.background = '#fff';
-        const clone = original.cloneNode(true);
-        clone.style.transform = 'none'; clone.style.boxShadow = 'none'; clone.style.margin = '0';
-        clone.querySelectorAll('.remove-btn').forEach(btn => btn.style.display = 'none');
-        wrapper.appendChild(clone);
-        document.body.appendChild(wrapper);
-        const canvas = await html2canvas(clone, { scale: 3, useCORS: true, backgroundColor: "#ffffff", width: 794, height: 1123 });
-        await aiouApplyWatermark(canvas);
-        document.body.removeChild(wrapper);
-        return canvas;
-    }
-
-    async function aiouApplyWatermark(canvas) {
-        const type = document.querySelector('input[name="aiou-wm-type"]:checked').value;
-        if(type === 'none') return;
-        const ctx = canvas.getContext('2d');
-        ctx.save();
-        if(type === 'text') {
-            const text = document.getElementById('aiou-wm-text').value;
-            const opacity = document.getElementById('aiou-wm-opacity').value;
-            ctx.globalAlpha = opacity; ctx.font = "bold 100px Arial"; ctx.fillStyle = "#000000"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-            ctx.translate(canvas.width / 2, canvas.height / 2); ctx.rotate(-Math.PI / 4);
-            for(let i = -2; i <= 2; i++) { ctx.fillText(text, 0, i * 300); }
-        } else if(type === 'image') {
-            if(!aiouWmUrl) { alert("Please upload a watermark image first."); return; }
-            const opacity = document.getElementById('aiou-wm-img-opacity').value;
-            try {
-                const img = await aiouLoadImage(aiouWmUrl);
-                ctx.globalAlpha = opacity;
-                const w = canvas.width * 0.7;
-                const h = (img.height / img.width) * w;
-                ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
-            } catch(e) { console.error("Watermark error", e); }
-        }
-        ctx.restore();
-    }
-
-    function aiouLoadImage(url) {
-        return new Promise((resolve, reject) => { const img = new Image(); img.onload = () => resolve(img); img.onerror = reject; img.src = url; });
-    }
-
-    async function aiouExportPDF() {
-        aiouShowLoader(true);
-        try {
-            const canvas = await aiouGenerateCanvas();
-            const imgData = canvas.toDataURL('image/jpeg', 1.0);
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-            pdf.save('AIOU_Paper.pdf');
-        } catch(e) { alert("PDF Error: " + e); }
-        aiouShowLoader(false);
-    }
-
-    async function aiouExportImage(format) {
-        aiouShowLoader(true);
-        try {
-            const canvas = await aiouGenerateCanvas();
-            const link = document.createElement('a');
-            link.download = `AIOU_Paper.${format}`;
-            link.href = canvas.toDataURL(`image/${format}`, 1.0);
-            link.click();
-        } catch(e) { alert("Image Error: " + e); }
-        aiouShowLoader(false);
-    }
-
-    function aiouExportWord() {
-        const clone = document.getElementById('aiou-paper-preview').cloneNode(true);
-        clone.querySelectorAll('.remove-btn').forEach(el => el.remove());
-        clone.style.transform = 'none'; clone.style.boxShadow = 'none'; clone.style.width = '100%'; clone.style.padding = '10px';
-        
-        const isUrdu = clone.classList.contains('ur');
-
-        // Yahan encoding fix kiya gaya hai
-        const header = `
-            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-            <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                <meta charset="utf-8">
-                <title>Export HTML To Doc</title>
-                <style>
-                    body { font-family: 'Times New Roman', serif; direction: ${isUrdu ? 'rtl' : 'ltr'}; text-align: ${isUrdu ? 'right' : 'left'}; }
-                    .paper-header { text-align: center; }
-                    .meta-table, .questions-table { width: 100%; border-collapse: collapse; }
-                    .meta-table td, .questions-table th, .questions-table td { border: 1px solid black; padding: 8px; }
-                    .questions-table th { background-color: #f2f2f2; }
-                    .col-num, .col-marks { text-align: center; }
-                    .q-text { font-family: ${isUrdu ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', Arial, sans-serif; font-size: 15px;" : "'Times New Roman', serif; font-size: 15px;"} }
-                </style>
-            </head><body>`;
-        const footer = `</body></html>`;
-
-        const sourceHTML = header + clone.innerHTML + footer;
-        
-        // Blob with \ufeff (BOM) for UTF-8 Word
-        const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword;charset=utf-8' });
-        
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'AIOU_Paper.doc';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+//<![CDATA[
+(function(){
+var $=function(id){return document.getElementById('ag-'+id)};
+var T={
+ur:{selLang:'زبان منتخب کریں:',autoTotal:'نمبروں کا مجموعہ',fsize:'سوال کا سائز:',logo:'ہیڈر لوگو:',remove:'ہٹائیں',cancel:'منسوخ',wmTitle:'واٹر مارک',none:'کوئی نہیں',text:'ٹیکسٹ',image:'تصویر',wmUp:'واٹر مارک تصویر:',opacity:'دھندلاپن:',save:'محفوظ کریں',load:'محفوظ شدہ کھولیں',clear:'سب صاف کریں',level:'سطح',sem:'سیمسٹر',course:'پرچہ',total:'کل نمبر',time:'وقت',pass:'کامیابی کے نمبر',qno:'سوال نمبر',qs:'سوالات',marks:'نمبر',pdf:'PDF ڈاؤن لوڈ',word:'ورڈ ڈاؤن لوڈ',jpg:'JPEG ڈاؤن لوڈ',png:'PNG ڈاؤن لوڈ',print:'پرنٹ',addQ:'سوال شامل کریں',add:'شامل کریں',upd:'اپڈیٹ کریں',editQ:'سوال میں ترمیم',empty:'ابھی کوئی سوال شامل نہیں کیا گیا۔',needQ:'برائے مہربانی سوال لکھیں!',confirmClear:'کیا آپ تمام سوالات حذف کرنا چاہتے ہیں؟',saved:'محفوظ ہو گیا',noSave:'کوئی محفوظ شدہ پرچہ نہیں ملا۔',loaded:'پرچہ کھل گیا',wait:'براہ کرم انتظار کریں...',up:'اوپر',dn:'نیچے',ed:'ترمیم',rm:'حذف',
+ ph:{univ:'یونیورسٹی کا نام',level:'سطح (مثلاً: بی اے)',sem:'سیمسٹر',course:'پرچہ / مضمون',total:'کل نمبر',pass:'کامیابی کے نمبر',time:'وقت',note:'ہدایات (نوٹ)',qText:'یہاں سوال لکھیں...',marks:'نمبر'},
+ d:{univ:'علامہ اقبال اوپن یونیورسٹی اسلام آباد',level:'بی اے',sem:'بہار 2025',course:'معاشیات (402)',total:'100',pass:'40',time:'تین گھنٹے',note:'نوٹ: کوئی سے پانچ سوالات حل کریں۔ تمام سوالوں کے نمبر یکساں ہیں۔'}},
+en:{selLang:'Select Medium:',autoTotal:'Sum of marks',fsize:'Question size:',logo:'Header Logo:',remove:'Remove',cancel:'Cancel',wmTitle:'Watermark',none:'None',text:'Text',image:'Image',wmUp:'Watermark image:',opacity:'Opacity:',save:'Save',load:'Load saved',clear:'Clear all',level:'Level',sem:'Semester',course:'Paper',total:'Total Marks',time:'Time',pass:'Passing Marks',qno:'Q. No.',qs:'Questions',marks:'Marks',pdf:'Download PDF',word:'Download Word',jpg:'Download JPEG',png:'Download PNG',print:'Print',addQ:'Add Question',add:'Add to Paper',upd:'Update',editQ:'Edit Question',empty:'No questions added yet.',needQ:'Please type a question!',confirmClear:'Delete all questions?',saved:'Saved',noSave:'No saved paper found.',loaded:'Paper loaded',wait:'Please wait...',up:'Up',dn:'Down',ed:'Edit',rm:'Delete',
+ ph:{univ:'University name',level:'Level (e.g. BA)',sem:'Semester',course:'Paper / Subject',total:'Total Marks',pass:'Passing Marks',time:'Time Allowed',note:'Instructions (note)',qText:'Type your question here...',marks:'Marks'},
+ d:{univ:'Allama Iqbal Open University Islamabad',level:'BA',sem:'Spring 2025',course:'Economics (402)',total:'100',pass:'40',time:'3 Hours',note:'Note: Attempt any five questions. All questions carry equal marks.'}}
+};
+var FIELDS={univ:'pUniv',level:'pLevel',sem:'pSem',course:'pCourse',total:'pTotal',pass:'pPass',time:'pTime'};
+var IDS=['univ','level','sem','course','total','pass','time','noteIn','fs','wmTxt','wmOpacity'];
+var lang='ur',logo=null,wmData=null,editIdx=-1;
+var qs=[{t:'مکمل مقابلہ سے کیا مراد ہے؟ مکمل مقابلہ کے تحت فرم کا مختصر عرصہ میں توازن کا نقشہ فرضی اعداد و شمار کی مدد سے واضح کریں۔',m:'20'}];
+var KEY='aiou_paper_v3';
+function q1(s){return document.querySelector(s)}
+function qa(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function toast(m){var t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none'},2000)}
+function loader(s){var l=$('loader');l.textContent=T[lang].wait;l.style.display=s?'flex':'none'}
+function mk(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e}
+function applyLang(l,keep){
+  var prev=T[lang].d,L=T[l];lang=l;
+  $('main').className='ag-wrap '+l;$('paper').className=l;
+  qa('#ag-main [data-t]').forEach(function(e){e.textContent=L[e.getAttribute('data-t')]});
+  qa('#ag-main [data-p]').forEach(function(e){e.placeholder=L.ph[e.getAttribute('data-p')]});
+  Object.keys(L.d).forEach(function(k){var el=$(k==='note'?'noteIn':k);if(!keep&&(el.value===''||el.value===prev[k]))el.value=L.d[k]});
+  refresh();
+}
+function refresh(){
+  Object.keys(FIELDS).forEach(function(k){$(FIELDS[k]).textContent=$(k).value});
+  $('pNote').textContent=$('noteIn').value;
+  $('paper').style.setProperty('--fs',$('fs').value+'px');
+  $('addTitle').textContent=editIdx>=0?T[lang].editQ:T[lang].addQ;
+  $('addBtn').textContent=editIdx>=0?T[lang].upd:T[lang].add;
+  $('cancelEdit').style.display=editIdx>=0?'':'none';
+  renderQs();renderWM();
+}
+function renderQs(){
+  var L=T[lang],b=$('qBody');b.textContent='';
+  if(!qs.length){var r=mk('tr'),c=mk('td','ag-empty',L.empty);c.colSpan=3;r.appendChild(c);b.appendChild(r);return}
+  qs.forEach(function(q,i){
+    var tr=mk('tr'),td=mk('td','qx');
+    tr.appendChild(mk('td','cn',String(i+1)));
+    String(q.t).split('\n').forEach(function(line,j){if(j)td.appendChild(document.createElement('br'));td.appendChild(document.createTextNode(line))});
+    var ctl=mk('span','ctl');
+    [['up',L.up],['dn',L.dn],['ed',L.ed],['rm',L.rm]].forEach(function(a){var bt=mk('button','',a[1]);bt.type='button';bt.setAttribute('data-a',a[0]);bt.setAttribute('data-i',i);ctl.appendChild(bt)});
+    td.appendChild(ctl);tr.appendChild(td);tr.appendChild(mk('td','cm',String(q.m)));b.appendChild(tr);
+  });
+}
+$('qBody').addEventListener('click',function(e){
+  var b=e.target.closest?e.target.closest('button'):null;if(!b)return;
+  var i=parseInt(b.getAttribute('data-i'),10),a=b.getAttribute('data-a');
+  if(a==='rm'){qs.splice(i,1);if(editIdx===i)editIdx=-1}
+  else if(a==='up'){if(i>0){var t=qs[i-1];qs[i-1]=qs[i];qs[i]=t}}
+  else if(a==='dn'){if(i<qs.length-1){var u=qs[i+1];qs[i+1]=qs[i];qs[i]=u}}
+  else if(a==='ed'){editIdx=i;$('qText').value=qs[i].t;$('qMarks').value=qs[i].m;$('qText').focus()}
+  refresh();
+});
+$('addBtn').onclick=function(){
+  var t=$('qText').value.trim();if(!t){alert(T[lang].needQ);return}
+  var q={t:t,m:$('qMarks').value};
+  if(editIdx>=0){qs[editIdx]=q;editIdx=-1}else qs.push(q);
+  $('qText').value='';refresh();
+};
+$('cancelEdit').onclick=function(){editIdx=-1;$('qText').value='';refresh()};
+$('autoTotal').onclick=function(){$('total').value=qs.reduce(function(s,q){return s+(parseFloat(q.m)||0)},0);refresh()};
+function readImg(f,cb){if(!f)return;var r=new FileReader();r.onload=function(e){cb(e.target.result)};r.readAsDataURL(f)}
+$('logoFile').onchange=function(e){readImg(e.target.files[0],function(d){logo=d;setLogo()})};
+$('logoClear').onclick=function(){logo=null;$('logoFile').value='';setLogo()};
+function setLogo(){
+  $('pLogo').src=logo||'';$('pLogo').style.display=logo?'block':'none';
+  $('logoThumb').src=logo||'';$('logoThumb').style.display=logo?'inline-block':'none';
+  $('logoClear').style.display=logo?'':'none';
+}
+$('wmFile').onchange=function(e){readImg(e.target.files[0],function(d){wmData=d;renderWM()})};
+function renderWM(){
+  var type=q1('input[name="ag-wm"]:checked').value,w=$('wm');
+  $('wmText').style.display=type==='text'?'flex':'none';
+  $('wmImg').style.display=type==='image'?'flex':'none';
+  $('wmOp').style.display=type==='none'?'none':'flex';
+  w.style.opacity=$('wmOpacity').value;w.textContent='';
+  if(type==='text'){w.appendChild(mk('div','t',$('wmTxt').value))}
+  else if(type==='image'&&wmData){var im=document.createElement('img');im.src=wmData;im.alt='';w.appendChild(im)}
+}
+IDS.forEach(function(id){$(id).addEventListener('input',refresh)});
+qa('input[name="ag-wm"]').forEach(function(r){r.onchange=refresh});
+qa('input[name="ag-lang"]').forEach(function(r){r.onchange=function(){applyLang(r.value)}});
+function save(silent){
+  try{
+    var v={};IDS.forEach(function(k){v[k]=$(k).value});
+    localStorage.setItem(KEY,JSON.stringify({lang:lang,logo:logo,wmData:wmData,qs:qs,v:v,wm:q1('input[name="ag-wm"]:checked').value}));
+    if(!silent)toast(T[lang].saved);$('saveInfo').textContent=new Date().toLocaleTimeString();
+  }catch(e){if(!silent)toast('Storage error')}
+}
+function load(silent){
+  var s=null;try{s=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+  if(!s){if(!silent)toast(T[lang].noSave);return false}
+  logo=s.logo;wmData=s.wmData;qs=s.qs||[];
+  Object.keys(s.v).forEach(function(k){$(k).value=s.v[k]});
+  q1('input[name="ag-wm"][value="'+s.wm+'"]').checked=true;
+  q1('input[name="ag-lang"][value="'+s.lang+'"]').checked=true;
+  setLogo();applyLang(s.lang,true);if(!silent)toast(T[lang].loaded);return true;
+}
+$('saveBtn').onclick=function(){save()};$('loadBtn').onclick=function(){load()};
+$('clearBtn').onclick=function(){if(confirm(T[lang].confirmClear)){qs=[];editIdx=-1;refresh();save(true)}};
+setInterval(function(){save(true)},15000);
+function makeCanvas(){
+  var ready=(document.fonts&&document.fonts.ready)?document.fonts.ready:Promise.resolve();
+  return ready.then(function(){
+    var wrap=document.createElement('div');
+    wrap.style.cssText='position:absolute;left:-9999px;top:0;background:#fff';
+    var c=$('paper').cloneNode(true);
+    c.removeAttribute('id');c.style.cssText='zoom:1;box-shadow:none;margin:0;width:794px;min-height:1123px;padding:57px';
+    qa('.ctl').length;c.querySelectorAll('.ctl').forEach(function(e){e.parentNode.removeChild(e)});
+    wrap.appendChild(c);document.body.appendChild(wrap);
+    return html2canvas(c,{scale:2,useCORS:true,backgroundColor:'#fff',windowWidth:794}).then(function(cv){document.body.removeChild(wrap);return cv},function(err){document.body.removeChild(wrap);throw err});
+  });
+}
+function run(fn){loader(true);Promise.resolve().then(fn).catch(function(e){alert('Error: '+(e&&e.message?e.message:e))}).then(function(){loader(false)})}
+$('bPdf').onclick=function(){run(function(){return makeCanvas().then(function(cv){
+  var pdf=new window.jspdf.jsPDF('p','mm','a4'),pw=210,ph=297,pagePx=Math.floor(cv.width*ph/pw),pages=Math.max(1,Math.ceil(cv.height/pagePx));
+  for(var i=0;i<pages;i++){
+    var h=Math.min(pagePx,cv.height-i*pagePx),s=document.createElement('canvas');
+    s.width=cv.width;s.height=h;var x=s.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,s.width,h);
+    x.drawImage(cv,0,i*pagePx,cv.width,h,0,0,cv.width,h);
+    if(i)pdf.addPage();
+    pdf.addImage(s.toDataURL('image/jpeg',0.95),'JPEG',0,0,pw,h*pw/cv.width);
+  }
+  pdf.save('AIOU_Paper.pdf');
+})})};
+function img(fmt){run(function(){return makeCanvas().then(function(cv){
+  var a=document.createElement('a');a.download='AIOU_Paper.'+(fmt==='jpeg'?'jpg':'png');a.href=cv.toDataURL('image/'+fmt,0.95);a.click();
+})})}
+$('bJpg').onclick=function(){img('jpeg')};$('bPng').onclick=function(){img('png')};
+$('bPrint').onclick=function(){window.print()};
+$('bWord').onclick=function(){
+  var c=$('paper').cloneNode(true),ur=lang==='ur';
+  c.querySelectorAll('.ctl,#ag-wm').forEach(function(e){e.parentNode.removeChild(e)});
+  var qf=ur?"'Jameel Noori Nastaleeq','Noto Nastaliq Urdu',Arial,serif":"'Times New Roman',serif";
+  var html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>AIOU Paper</title><style>'
+  +'body{font-family:Times New Roman,serif;direction:'+(ur?'rtl':'ltr')+';text-align:'+(ur?'right':'left')+'}'
+  +'.ag-hd{text-align:center}table{width:100%;border-collapse:collapse}td,th{border:1px solid black;padding:8px}th{background:#f2f2f2}'
+  +'.cn,.cm{text-align:center}.ag-note{text-align:center;font-weight:bold}.qx{font-family:'+qf+';font-size:15pt}</style></head><body>'+c.innerHTML+'</body></html>';
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\ufeff',html],{type:'application/msword;charset=utf-8'}));
+  a.download='AIOU_Paper.doc';document.body.appendChild(a);a.click();document.body.removeChild(a);
+};
+applyLang('ur');
+load(true);
+})();
+//]]>
 </script>
-</body>
-</html>
