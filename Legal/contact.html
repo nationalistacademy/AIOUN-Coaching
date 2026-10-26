@@ -1,0 +1,991 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&display=swap">
+
+<style>
+/* Hide Blogger default chrome */
+.post-title, .post-header, .entry-header, .post-footer, .post-meta, .breadcrumb { display: none !important; }
+.post-body { font-size: 16px !important; background: transparent !important; }
+
+/* ==========================================
+   ROOT
+   ========================================== */
+.ct {
+  --ac: #f67938;
+  --ac2: #b8470f;
+  --ink: var(--bs-body-color, #686868);
+  --head: var(--jt-heading-color, #000000);
+  --mut: var(--bs-body-color, #686868);
+  --soft: var(--jt-bg-light, #f3f7f9);
+  --line: var(--jt-border-light, #efefef);
+  --bg: var(--bs-body-bg, #ffffff);
+  --card: var(--jt-archive-bg, #ffffff);
+  --mut-alpha: rgba(104, 104, 104, .82);
+
+  width: 100%;
+  position: relative;
+  color: var(--ink);
+  background: transparent;
+  line-height: 1.65;
+  font-family: inherit;
+  box-sizing: border-box;
+  text-align: left;
+  transition: color .3s ease;
+}
+.dark-mode .ct,
+:root.dark-mode .ct,
+html.dark-mode .ct,
+body.dark-mode .ct {
+  --mut-alpha: rgba(184, 184, 184, .88);
+}
+
+.ct *, .ct *:before, .ct *:after { box-sizing: border-box; }
+.ct a { color: var(--head); text-decoration: none; transition: color .25s; }
+.ct a:hover { color: var(--ac); }
+.ct h1, .ct h2, .ct h3 {
+  font-family: 'Bricolage Grotesque', Arial, sans-serif !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  letter-spacing: -.01em;
+  color: var(--head);
+  line-height: 1.2;
+  transition: color .3s ease;
+}
+.ct p { margin: 0; }
+.ct ul, .ct ol { margin: 0; padding: 0; list-style: none; }
+.ct li { margin: 0 !important; }
+
+.ct-wrap { max-width: 1160px; margin: 0 auto; padding: 0 32px; }
+.ct-sec { padding-top: 40px; }
+
+/* Hero */
+.ct-hero { padding: 48px 0 24px; text-align: center; }
+.ct-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--mut-alpha);
+  margin-bottom: 16px;
+}
+.ct-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ac);
+  display: inline-block;
+  flex: none;
+  animation: ct-pulse 2s infinite;
+}
+@keyframes ct-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(246,121,56,.6); }
+  50% { box-shadow: 0 0 0 14px rgba(246,121,56,0); }
+}
+.ct-hero h1 {
+  font-size: clamp(32px, 5vw, 52px) !important;
+  margin-bottom: 16px !important;
+  max-width: 720px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.ct-lead {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--mut-alpha);
+  max-width: 620px;
+  margin: 0 auto !important;
+}
+
+/* ==========================================
+   QUICK CONTACT CARDS
+   ========================================== */
+.ct-quick {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 40px;
+}
+.ct-quick-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 22px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  transition: all .3s ease;
+  text-decoration: none;
+  color: var(--ink);
+}
+.ct-quick-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--ac);
+  box-shadow: 0 18px 34px -18px rgba(246,121,56,.3);
+}
+.ct-quick-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ac) 12%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ct-quick-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--ac);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ct-quick-body {
+  flex: 1;
+  min-width: 0;
+}
+.ct-quick-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--mut-alpha);
+  margin-bottom: 4px;
+  display: block;
+}
+.ct-quick-value {
+  font-family: 'Bricolage Grotesque', Arial, sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--head);
+  line-height: 1.3;
+  word-break: break-word;
+  display: block;
+}
+.ct-quick-note {
+  font-size: 12px;
+  color: var(--mut-alpha);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ==========================================
+   MAIN GRID — Form + Info
+   ========================================== */
+.ct-main {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 32px;
+  margin-top: 48px;
+  align-items: start;
+}
+
+/* Contact Form */
+.ct-form-wrap {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 36px 32px;
+  transition: background .3s ease, border-color .3s ease;
+}
+.ct-form-head {
+  margin-bottom: 26px;
+}
+.ct-form-head h2 {
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  color: var(--head);
+  margin-bottom: 6px !important;
+}
+.ct-form-head p {
+  font-size: 14px;
+  color: var(--mut-alpha);
+  line-height: 1.6;
+}
+
+.ct-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.ct-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ct-field label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--head);
+  letter-spacing: .02em;
+}
+.ct-field label::after {
+  content: ' *';
+  color: var(--ac);
+  font-weight: 800;
+}
+.ct-field.optional label::after {
+  display: none;
+}
+.ct-field input,
+.ct-field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: inherit;
+  background: var(--bg);
+  color: var(--ink);
+  transition: all .25s ease;
+  outline: none;
+  resize: vertical;
+}
+.ct-field textarea {
+  min-height: 120px;
+  max-height: 300px;
+}
+.ct-field input::placeholder,
+.ct-field textarea::placeholder {
+  color: var(--mut-alpha);
+  opacity: .55;
+}
+.ct-field input:focus,
+.ct-field textarea:focus {
+  border-color: var(--ac);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ac) 12%, transparent);
+}
+.ct-field input:invalid:not(:placeholder-shown),
+.ct-field textarea:invalid:not(:placeholder-shown) {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239,68,68,.1);
+}
+
+/* Select */
+.ct-field select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: inherit;
+  background: var(--bg);
+  color: var(--ink);
+  cursor: pointer;
+  outline: none;
+  transition: all .25s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f67938' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 18px;
+  padding-right: 44px;
+}
+.ct-field select:focus {
+  border-color: var(--ac);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ac) 12%, transparent);
+}
+
+/* Submit Button */
+.ct-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 28px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  background: var(--ac);
+  color: #fff !important;
+  border: 2px solid var(--ac);
+  cursor: pointer;
+  transition: all .25s ease;
+  margin-top: 6px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.ct-submit:hover {
+  background: var(--ac2);
+  border-color: var(--ac2);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px -14px rgba(246,121,56,.5);
+}
+.ct-submit:disabled {
+  opacity: .7;
+  cursor: not-allowed;
+  transform: none;
+}
+.ct-submit::after {
+  content: '→';
+  font-weight: 800;
+  transition: transform .25s ease;
+}
+.ct-submit:hover::after { transform: translateX(4px); }
+
+/* Feedback */
+.ct-feedback {
+  display: none;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  align-items: center;
+  gap: 10px;
+}
+.ct-feedback.show { display: flex; }
+.ct-feedback.success {
+  background: rgba(34,197,94,.1);
+  color: #16a34a;
+  border: 1px solid rgba(34,197,94,.3);
+}
+.ct-feedback.error {
+  background: rgba(239,68,68,.1);
+  color: #dc2626;
+  border: 1px solid rgba(239,68,68,.3);
+}
+.ct-feedback::before {
+  content: '';
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.ct-feedback.success::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2316a34a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/%3E%3Cpolyline points='22 4 12 14.01 9 11.01'/%3E%3C/svg%3E");
+}
+.ct-feedback.error::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dc2626' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E");
+}
+
+/* Sidebar info */
+.ct-side {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: sticky;
+  top: 90px;
+}
+.ct-info-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 26px;
+  transition: background .3s ease, border-color .3s ease;
+}
+.ct-info-card h3 {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: var(--head);
+  margin-bottom: 16px !important;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ct-info-card h3 svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--ac);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ct-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ct-info-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.ct-info-ic {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--ac) 10%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ct-info-ic svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--ac);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ct-info-text {
+  flex: 1;
+  min-width: 0;
+}
+.ct-info-text b {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--mut-alpha);
+  margin-bottom: 3px;
+}
+.ct-info-text a,
+.ct-info-text span {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--head);
+  line-height: 1.5;
+  word-break: break-word;
+}
+.ct-info-text a:hover { color: var(--ac); }
+.ct-info-text small {
+  display: block;
+  font-size: 12px;
+  color: var(--mut-alpha);
+  margin-top: 2px;
+}
+
+/* WhatsApp card — featured */
+.ct-wa-card {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  border-radius: 20px;
+  padding: 26px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 16px 32px -16px rgba(37,211,102,.5);
+}
+.ct-wa-card h3 {
+  color: #fff !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  margin-bottom: 8px !important;
+  padding: 0 !important;
+  border: none !important;
+  justify-content: center;
+}
+.ct-wa-card h3 svg {
+  stroke: #fff;
+  width: 20px;
+  height: 20px;
+}
+.ct-wa-card p {
+  font-size: 13.5px;
+  color: rgba(255,255,255,.92);
+  margin-bottom: 18px !important;
+  line-height: 1.55;
+}
+.ct-wa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 26px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  background: #fff;
+  color: #128c7e !important;
+  border: 2px solid #fff;
+  transition: all .25s ease;
+  width: 100%;
+  text-decoration: none;
+}
+.ct-wa-btn:hover {
+  background: #f5f5f5;
+  color: #128c7e !important;
+  transform: translateY(-2px);
+}
+
+/* Business hours */
+.ct-hours {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ct-hour-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 13.5px;
+}
+.ct-hour-row:last-child { border-bottom: none; }
+.ct-hour-row span:first-child {
+  color: var(--mut-alpha);
+  font-weight: 600;
+}
+.ct-hour-row span:last-child {
+  color: var(--head);
+  font-weight: 700;
+}
+.ct-hour-row .open {
+  color: #22c55e;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ct-hour-row .open::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: ct-pulse 1.5s infinite;
+}
+
+/* ==========================================
+   MAP / LOCATION BLOCK
+   ========================================== */
+.ct-location {
+  margin-top: 56px;
+  padding: 36px 32px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  transition: background .3s ease, border-color .3s ease;
+  text-align: center;
+}
+.dark-mode .ct-location { background: rgba(255,255,255,.03); }
+.ct-location h2 {
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  margin-bottom: 12px !important;
+}
+.ct-location p {
+  font-size: 15px;
+  color: var(--mut-alpha);
+  line-height: 1.65;
+  max-width: 560px;
+  margin: 0 auto 24px !important;
+}
+.ct-location-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.ct-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--head);
+}
+.ct-badge svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--ac);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 900px) {
+  .ct-main { grid-template-columns: 1fr; gap: 24px; }
+  .ct-side { position: static; }
+}
+@media (max-width: 768px) {
+  .ct-wrap { padding: 0 20px; }
+  .ct-hero { padding: 32px 0 16px; }
+  .ct-hero h1 { font-size: clamp(26px, 7vw, 38px) !important; }
+  .ct-lead { font-size: 15px; }
+  .ct-quick { grid-template-columns: 1fr; gap: 12px; margin-top: 32px; }
+  .ct-form-wrap { padding: 24px 20px; border-radius: 18px; }
+  .ct-form-head h2 { font-size: 20px !important; }
+  .ct-info-card { padding: 22px; border-radius: 16px; }
+  .ct-wa-card { padding: 22px; border-radius: 16px; }
+  .ct-location { padding: 28px 20px; border-radius: 18px; margin-top: 40px; }
+  .ct-location h2 { font-size: 20px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ct * { transition: none !important; animation: none !important; }
+}
+</style>
+
+<div class="ct" id="ct-top">
+
+  <!-- HERO -->
+  <section class="ct-hero">
+    <div class="ct-wrap">
+      <span class="ct-eyebrow" style="justify-content:center;display:inline-flex;">
+        <span class="ct-dot"></span>
+        Get in touch
+      </span>
+      <h1>Contact Taleemwaly — hum aapki madad ke liye hain.</h1>
+      <p class="ct-lead">
+        Assignments, books, guess papers ya koi bhi sawal — WhatsApp par message karein ya neeche form bhar dein. Hum usually 1-2 ghante mein reply karte hain.
+      </p>
+    </div>
+  </section>
+
+  <!-- QUICK CONTACT CARDS -->
+  <section class="ct-wrap">
+    <div class="ct-quick">
+
+      <a class="ct-quick-card" href="https://wa.me/923702388998?text=Assalam-o-Alaikum!%20Help%20chahiye" target="_blank" rel="noopener">
+        <div class="ct-quick-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <div class="ct-quick-body">
+          <span class="ct-quick-label">WhatsApp</span>
+          <b class="ct-quick-value">+92 370 2388998</b>
+          <span class="ct-quick-note">Fastest reply · 24/7</span>
+        </div>
+      </a>
+
+      <a class="ct-quick-card" href="mailto:faiezhafeez@gmail.com">
+        <div class="ct-quick-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="ct-quick-body">
+          <span class="ct-quick-label">Email</span>
+          <b class="ct-quick-value">faiezhafeez@gmail.com</b>
+          <span class="ct-quick-note">Within 24 hours</span>
+        </div>
+      </a>
+
+      <a class="ct-quick-card" href="/p/aiou-programs.html">
+        <div class="ct-quick-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div class="ct-quick-body">
+          <span class="ct-quick-label">Browse</span>
+          <b class="ct-quick-value">AIOU Programs</b>
+          <span class="ct-quick-note">Matric se Master tak</span>
+        </div>
+      </a>
+
+      <a class="ct-quick-card" href="/p/faqs.html">
+        <div class="ct-quick-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="ct-quick-body">
+          <span class="ct-quick-label">Help</span>
+          <b class="ct-quick-value">FAQs</b>
+          <span class="ct-quick-note">Common questions</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- MAIN GRID -->
+  <section class="ct-wrap ct-sec">
+    <div class="ct-main">
+
+      <!-- CONTACT FORM -->
+      <div class="ct-form-wrap">
+        <div class="ct-form-head">
+          <h2>Send us a message</h2>
+          <p>Neeche form bharein aur hum aapko 24 ghante ke andar reply karenge. Urgent hai to WhatsApp use karein.</p>
+        </div>
+
+        <form class="ct-form" id="contactForm" action="https://formspree.io/f/mvzyozvr" method="POST">
+          <div class="ct-field">
+            <label for="ct-name">Your Name</label>
+            <input type="text" id="ct-name" name="name" placeholder="Ahmad Khan" required autocomplete="name">
+          </div>
+
+          <div class="ct-field">
+            <label for="ct-email">Email Address</label>
+            <input type="email" id="ct-email" name="email" placeholder="you@example.com" required autocomplete="email">
+          </div>
+
+          <div class="ct-field optional">
+            <label for="ct-phone">WhatsApp Number (optional)</label>
+            <input type="tel" id="ct-phone" name="phone" placeholder="+92 300 0000000" autocomplete="tel">
+          </div>
+
+          <div class="ct-field">
+            <label for="ct-topic">What is this about?</label>
+            <select id="ct-topic" name="topic" required>
+              <option value="">— Select a topic —</option>
+              <option value="assignments">Solved Assignments</option>
+              <option value="books">Original Books PDF</option>
+              <option value="guess-papers">Guess Papers 2026</option>
+              <option value="past-papers">Past Papers</option>
+              <option value="coaching">1-on-1 Coaching</option>
+              <option value="payment">Payment / Refund</option>
+              <option value="technical">Technical Issue</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="ct-field">
+            <label for="ct-message">Your Message</label>
+            <textarea id="ct-message" name="message" placeholder="Apna program, semester, aur course codes likhein taake hum behtar help kar sakein..." required></textarea>
+          </div>
+
+          <button type="submit" class="ct-submit" id="ctSubmit">
+            Send Message
+          </button>
+
+          <div class="ct-feedback" id="ctFeedback"></div>
+        </form>
+      </div>
+
+      <!-- SIDEBAR INFO -->
+      <aside class="ct-side">
+
+        <!-- WhatsApp CTA -->
+        <div class="ct-wa-card">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor"/></svg>
+            Fastest way to reach us
+          </h3>
+          <p>WhatsApp par direct message karein — real tutor, turant reply, aur personalized guidance.</p>
+          <a class="ct-wa-btn" href="https://wa.me/923702388998?text=Assalam-o-Alaikum!%20Help%20chahiye" target="_blank" rel="noopener">
+            Open WhatsApp →
+          </a>
+        </div>
+
+        <!-- Contact info -->
+        <div class="ct-info-card">
+          <h3>
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Contact Info
+          </h3>
+          <ul class="ct-info-list">
+
+            <li class="ct-info-item">
+              <div class="ct-info-ic">
+                <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              </div>
+              <div class="ct-info-text">
+                <b>WhatsApp</b>
+                <a href="https://wa.me/923702388998" target="_blank" rel="noopener">+92 370 2388998</a>
+                <small>Best for quick answers</small>
+              </div>
+            </li>
+
+            <li class="ct-info-item">
+              <div class="ct-info-ic">
+                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="ct-info-text">
+                <b>Email</b>
+                <a href="mailto:faiezhafeez@gmail.com">faiezhafeez@gmail.com</a>
+                <small>Detailed queries ke liye</small>
+              </div>
+            </li>
+
+            <li class="ct-info-item">
+              <div class="ct-info-ic">
+                <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="ct-info-text">
+                <b>Location</b>
+                <span>Pakistan — Serving nationwide</span>
+                <small>Online services only</small>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+
+        <!-- Business hours -->
+        <div class="ct-info-card">
+          <h3>
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Response Times
+          </h3>
+          <div class="ct-hours">
+            <div class="ct-hour-row">
+              <span>WhatsApp</span>
+              <span class="open">1-2 hours</span>
+            </div>
+            <div class="ct-hour-row">
+              <span>Email</span>
+              <span>Within 24 hours</span>
+            </div>
+            <div class="ct-hour-row">
+              <span>Contact Form</span>
+              <span>Within 24 hours</span>
+            </div>
+            <div class="ct-hour-row">
+              <span>Emergency (exam/deadline)</span>
+              <span class="open">Instant</span>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- LOCATION / SERVICE AREA -->
+  <section class="ct-wrap ct-sec">
+    <div class="ct-location">
+      <h2>We serve students across Pakistan.</h2>
+      <p>Chahe aap Lahore mein hon, Karachi mein, Peshawar mein, Quetta mein — ya kisi chhote sheher mein. Hamari saari services 100% online hain. Aap kahin se bhi order kar sakte hain.</p>
+      <div class="ct-location-badges">
+        <span class="ct-badge">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Punjab
+        </span>
+        <span class="ct-badge">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Sindh
+        </span>
+        <span class="ct-badge">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Khyber Pakhtunkhwa
+        </span>
+        <span class="ct-badge">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Balochistan
+        </span>
+        <span class="ct-badge">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Federal (Islamabad)
+        </span>
+        <span class="ct-badge">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Azad Kashmir
+        </span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ==========================================
+     SCHEMA — ContactPage
+     ========================================== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Contact Taleemwaly",
+  "description": "Get in touch with Taleemwaly — WhatsApp, email, or contact form for AIOU study material and coaching support.",
+  "url": "https://taleemwaly.blogspot.com/p/contact.html",
+  "inLanguage": "en-PK",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Taleemwaly",
+    "url": "https://taleemwaly.blogspot.com"
+  },
+  "publisher": {
+    "@type": "EducationalOrganization",
+    "name": "Taleemwaly",
+    "url": "https://taleemwaly.blogspot.com",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+92-370-2388998",
+      "contactType": "customer service",
+      "availableLanguage": ["English", "Urdu"],
+      "areaServed": "PK"
+    }
+  }
+}
+</script>
+
+<!-- ==========================================
+     FORM HANDLING + DARK MODE WATCHER
+     ========================================== -->
+<script>
+(function(){
+  var d = document;
+  var form = d.getElementById('contactForm');
+  var submitBtn = d.getElementById('ctSubmit');
+  var feedback = d.getElementById('ctFeedback');
+
+  if(form){
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+
+      // Reset feedback
+      feedback.className = 'ct-feedback';
+
+      // Validate
+      var name = form.querySelector('[name="name"]').value.trim();
+      var email = form.querySelector('[name="email"]').value.trim();
+      var topic = form.querySelector('[name="topic"]').value;
+      var message = form.querySelector('[name="message"]').value.trim();
+
+      if(!name || !email || !topic || !message){
+        feedback.className = 'ct-feedback error show';
+        feedback.textContent = 'Please fill all required fields.';
+        return;
+      }
+
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        feedback.className = 'ct-feedback error show';
+        feedback.textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+      // Disable button
+      submitBtn.disabled = true;
+      var originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        var formData = new FormData(form);
+        var response = await fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if(response.ok){
+          feedback.className = 'ct-feedback success show';
+          feedback.textContent = 'Shukriya! Aapka message bhej diya gaya. Hum 24 ghante mein reply karenge.';
+          form.reset();
+        } else {
+          throw new Error('Form submission failed');
+        }
+      } catch(err){
+        feedback.className = 'ct-feedback error show';
+        feedback.textContent = 'Kuch masla ho gaya. Please WhatsApp par direct message karein: +92 370 2388998';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+  }
+
+  // Dark mode watcher
+  function applyDarkFix(){
+    var isDark = d.documentElement.classList.contains('dark-mode') ||
+                 d.body.classList.contains('dark-mode');
+    if(isDark) d.documentElement.classList.add('dark-mode');
+  }
+  applyDarkFix();
+  if(typeof MutationObserver !== 'undefined'){
+    var obs = new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        if(m.attributeName === 'class') applyDarkFix();
+      });
+    });
+    obs.observe(d.documentElement, { attributes: true });
+    obs.observe(d.body, { attributes: true });
+  }
+})();
+</script>
