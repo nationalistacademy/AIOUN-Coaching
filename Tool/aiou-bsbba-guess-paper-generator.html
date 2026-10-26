@@ -1,0 +1,536 @@
+<!-- ===== AIOU BS/BBA Guess Paper Generator (Blogger ready, multi-page) ===== -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- UI ---------- */
+.apg-ui{max-width:1000px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;color:#222;direction:ltr;text-align:left}
+.apg-ui *{box-sizing:border-box}
+.apg-card{background:#fff;border:1px solid #d9dde3;border-radius:10px;padding:14px;margin-bottom:14px}
+.apg-card h3{margin:0 0 10px;font-size:16px;color:#0b4f9c;border-bottom:2px solid #eef1f5;padding-bottom:6px}
+.apg-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.apg-row .w2{grid-column:span 2}
+@media(max-width:560px){.apg-row .w2{grid-column:span 1}}
+.apg-ui label{display:block;font-size:12px;font-weight:bold;color:#555;margin-bottom:3px}
+.apg-ui input[type=text],.apg-ui input[type=number],.apg-ui select,.apg-ui textarea{width:100%;padding:8px;border:1px solid #c7ccd4;border-radius:5px;font-size:14px;background:#fff;font-family:inherit}
+.apg-ui textarea{min-height:58px;resize:vertical}
+.apg-btn{padding:9px 16px;border:0;border-radius:6px;color:#fff;font-weight:bold;font-size:14px;cursor:pointer;background:#2f9e5a}
+.apg-btn.red{background:#d93a49}.apg-btn.blue{background:#1d6fd6}.apg-btn.teal{background:#1a8fa6}.apg-btn.purple{background:#6f42c1}.apg-btn.gray{background:#6b7280}
+.apg-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.apg-wmbox{margin-top:10px}
+.apg-list{max-height:260px;overflow:auto;border:1px solid #e3e6ea;border-radius:6px}
+.apg-li{display:flex;gap:8px;align-items:flex-start;padding:7px 9px;border-bottom:1px solid #eef0f3;font-size:13px}
+.apg-li:last-child{border-bottom:0}
+.apg-li b{color:#0b4f9c;white-space:nowrap}
+.apg-li span.t{flex:1;word-break:break-word}
+.apg-li button{border:0;background:#fde8ea;color:#c0202f;border-radius:4px;cursor:pointer;font-weight:bold;padding:2px 8px}
+.apg-empty{padding:12px;color:#888;font-size:13px;text-align:center}
+.apg-stage{background:#6b7280;border-radius:10px;padding:14px 8px;overflow:hidden}
+.apg-holder{margin:0 auto;position:relative}
+.apg-host{transform-origin:top left;width:794px}
+#apg-busy{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);color:#fff;font:bold 20px Arial;align-items:center;justify-content:center;z-index:99999}
+
+/* ---------- Paper pages (A4 794x1123) ---------- */
+.apg-pg{width:794px;height:1123px;background:#fff;position:relative;overflow:hidden;color:#000;margin-bottom:18px;
+  font-family:'Times New Roman',Times,serif;direction:ltr;text-align:left;padding:46px 54px 64px}
+.apg-pg *{box-sizing:border-box;margin:0;padding:0}
+.apg-pg.ur{direction:rtl;text-align:right;font-family:'Noto Nastaliq Urdu','Jameel Noori Nastaleeq',serif}
+.apg-body{position:relative;z-index:2;height:1013px;overflow:hidden}
+.apg-wm{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.apg-wm span{font:bold 100px Arial,Helvetica,sans-serif;color:#000;white-space:nowrap;transform:rotate(-35deg)}
+.apg-wm img{width:62%;height:auto;max-width:none}
+.apg-pn{position:absolute;bottom:24px;left:0;width:100%;text-align:center;font:12px Arial,sans-serif;color:#444;z-index:3;direction:ltr}
+.apg-hd{text-align:center;margin-bottom:12px}
+.apg-hd img{height:70px;width:auto;max-width:none;margin-bottom:6px}
+.apg-hd h1{font-size:23px;line-height:1.3;text-transform:uppercase;margin-bottom:4px}
+.ur .apg-hd h1{text-transform:none;line-height:1.9;font-size:21px}
+.apg-hd h2{font-size:16px;line-height:1.4;margin-bottom:8px}
+.ur .apg-hd h2{line-height:2}
+.apg-it{width:100%;border-collapse:collapse;margin-bottom:10px;font-weight:bold;font-size:13px}
+.apg-it td{border:1px solid #000;padding:6px 6px;text-align:center;width:33.33%;background:#fff}
+.ur .apg-it td{line-height:1.9}
+.apg-stt{font-weight:bold;font-size:15.5px;margin:14px 0 8px;text-decoration:underline;line-height:1.4}
+.ur .apg-stt{line-height:2}
+.apg-mg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 14px;margin-bottom:8px;align-items:start}
+.apg-mi{font-size:12.5px;line-height:1.35}
+.ur .apg-mi{line-height:1.9;font-size:12px}
+.apg-mq{font-weight:bold;margin-bottom:3px}
+.apg-mo{margin-left:12px}
+.ur .apg-mo{margin-left:0;margin-right:12px}
+.apg-si{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;margin-bottom:11px;font-size:14px;line-height:1.45}
+.ur .apg-si{line-height:2}
+.apg-sq{flex:1;word-break:break-word}
+.apg-sm{font-weight:bold;font-size:12.5px;white-space:nowrap}
+</style>
+
+<div class="apg-ui">
+  <div id="apg-busy">Please wait...</div>
+
+  <div class="apg-card">
+    <h3>Guess Paper Settings</h3>
+    <div class="apg-row">
+      <div class="w2"><label>University Name (khali = default)</label><input type="text" id="m-uni" placeholder="Allama Iqbal Open University"></div>
+      <div class="w2"><label>Course Name</label><input type="text" id="m-course" value="PRINCIPLES OF MICROECONOMICS"></div>
+      <div><label>Course Code</label><input type="text" id="m-code" value="AIOU-9301"></div>
+      <div><label>Semester</label><input type="text" id="m-sem" value="ODL AUTUMN 2026"></div>
+      <div><label>Time Allowed</label><input type="text" id="m-time" value="3 Hours"></div>
+      <div><label>Date</label><input type="text" id="m-date" value="26/10/2026"></div>
+      <div><label>Version</label><input type="text" id="m-ver" value="1"></div>
+      <div><label>Max Marks</label><input type="text" id="m-max" value="100"></div>
+      <div><label>Paper Language</label>
+        <select id="m-lang"><option value="en">English</option><option value="ur">اردو (Urdu)</option></select></div>
+      <div><label>Logo</label><input type="file" id="m-logo" accept="image/*"></div>
+    </div>
+    <div class="apg-btns"><button class="apg-btn gray" id="b-nologo">Remove Logo</button></div>
+  </div>
+
+  <div class="apg-card">
+    <h3>Add MCQ</h3>
+    <div class="apg-row">
+      <div class="w2" style="grid-column:1/-1"><label>Question</label><input type="text" id="q-text"></div>
+      <div><label>Option A</label><input type="text" id="q-a"></div>
+      <div><label>Option B</label><input type="text" id="q-b"></div>
+      <div><label>Option C</label><input type="text" id="q-c"></div>
+      <div><label>Option D</label><input type="text" id="q-d"></div>
+    </div>
+    <div class="apg-btns"><button class="apg-btn" id="b-addmcq">Add MCQ</button></div>
+
+    <h3 style="margin-top:16px">Add Subjective Question</h3>
+    <div class="apg-row">
+      <div style="grid-column:1/-1"><label>Question</label><textarea id="s-text"></textarea></div>
+      <div><label>Marks</label><input type="number" id="s-marks" value="10" min="0"></div>
+      <div><label>Part</label><select id="s-part"><option value="2">Part II (Short)</option><option value="3">Part III (Long)</option></select></div>
+    </div>
+    <div class="apg-btns">
+      <button class="apg-btn" id="b-addsub">Add Question</button>
+      <button class="apg-btn gray" id="b-sample">Load Sample</button>
+      <button class="apg-btn red" id="b-clear">Clear All</button>
+    </div>
+  </div>
+
+  <div class="apg-card">
+    <h3>Added Questions <span id="l-count" style="font-weight:normal;color:#777;font-size:13px"></span></h3>
+    <div class="apg-list" id="l-list"></div>
+  </div>
+
+  <div class="apg-card">
+    <h3>Watermark</h3>
+    <div class="apg-row">
+      <div><label>Type</label><select id="w-type"><option value="none">None</option><option value="text">Text</option><option value="image">Image</option></select></div>
+      <div><label>Opacity: <span id="w-ov">15</span>%</label><input type="range" id="w-op" min="3" max="60" value="15" style="width:100%"></div>
+    </div>
+    <div class="apg-wmbox" id="w-textbox" style="display:none"><label>Watermark Text</label><input type="text" id="w-text" value="AIOU COACHING"></div>
+    <div class="apg-wmbox" id="w-imgbox" style="display:none"><label>Watermark Image</label><input type="file" id="w-file" accept="image/*"></div>
+  </div>
+
+  <div class="apg-card">
+    <h3>Download</h3>
+    <div class="apg-btns" style="margin-top:0">
+      <button class="apg-btn red" id="e-pdf">PDF</button>
+      <button class="apg-btn teal" id="e-jpg">JPEG</button>
+      <button class="apg-btn teal" id="e-png">PNG</button>
+      <button class="apg-btn blue" id="e-doc">Word</button>
+      <button class="apg-btn purple" id="e-svg">SVG</button>
+    </div>
+    <p style="font-size:12px;color:#777;margin-top:8px">Pages zyada hon to JPEG/PNG/SVG ek ZIP mein aate hain. Word mein logo aur watermark nahi aata (sirf text, editable).</p>
+  </div>
+
+  <div class="apg-stage" id="apg-stage">
+    <div class="apg-holder" id="apg-holder"><div class="apg-host" id="apg-host"></div></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var W = 794, H = 1123, KEY = 'apg_state_v1';
+  var state = { mcqs: [], subs: [] };
+  var logoUrl = '', wmUrl = '', pages = [], timer = null;
+
+  var T = {
+    en: { uni: 'Allama Iqbal Open University', sem: 'SEMESTER', time: 'TIME ALLOWED', date: 'DATE', course: 'Course Title',
+          ver: 'Version', max: 'Max Marks', p1: 'Part I — Multiple Choice Questions', p2: 'Part II — Restricted Response Questions',
+          p3: 'Part III — Extended Response Questions', marks: 'marks', page: 'Page' },
+    ur: { uni: 'علامہ اقبال اوپن یونیورسٹی', sem: 'سمسٹر', time: 'وقت', date: 'تاریخ', course: 'کورس',
+          ver: 'ورژن', max: 'کل نمبر', p1: 'حصہ اول — کثیر الانتخابی سوالات', p2: 'حصہ دوم — مختصر جوابی سوالات',
+          p3: 'حصہ سوم — تفصیلی جوابی سوالات', marks: 'نمبر', page: 'صفحہ' }
+  };
+
+  function mk(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) { e.className = cls; }
+    if (text !== undefined) { e.textContent = text; }
+    return e;
+  }
+  function val(id) { return $(id).value.trim(); }
+  function busy(on) { $('apg-busy').style.display = on ? 'flex' : 'none'; }
+
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function load() {
+    try {
+      var s = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (s) { state.mcqs = s.mcqs || []; state.subs = s.subs || []; }
+    } catch (e) {}
+  }
+
+  function renderList() {
+    var box = $('l-list');
+    box.innerHTML = '';
+    var n = 0;
+    function item(label, text, kind, idx) {
+      var r = mk('div', 'apg-li');
+      r.appendChild(mk('b', '', label));
+      r.appendChild(mk('span', 't', text));
+      var b = mk('button', '', 'X');
+      b.title = 'Delete';
+      b.addEventListener('click', function () {
+        if (kind === 'm') { state.mcqs.splice(idx, 1); } else { state.subs.splice(idx, 1); }
+        save(); renderList(); schedule();
+      });
+      r.appendChild(b);
+      box.appendChild(r);
+    }
+    state.mcqs.forEach(function (m, i) { n++; item('Q' + n + ' (MCQ)', m.q, 'm', i); });
+    var order = [];
+    [2, 3].forEach(function (p) {
+      state.subs.forEach(function (s, i) { if (s.part === p) { order.push(i); } });
+    });
+    order.forEach(function (i) {
+      n++;
+      var s = state.subs[i];
+      item('Q' + n + ' (P' + (s.part === 2 ? 'II' : 'III') + ', ' + s.marks + ')', s.q, 's', i);
+    });
+    if (n === 0) { box.appendChild(mk('div', 'apg-empty', 'Abhi koi sawal nahi hai.')); }
+    $('l-count').textContent = n ? '(' + n + ')' : '';
+  }
+
+  function render() {
+    var host = $('apg-host');
+    host.innerHTML = '';
+    pages = [];
+    var lang = $('m-lang').value;
+    var L = T[lang];
+    var page, body, grid = null;
+
+    function wmEl() {
+      var type = $('w-type').value;
+      if (type === 'none') { return null; }
+      var d = mk('div', 'apg-wm');
+      d.style.opacity = String(parseInt($('w-op').value, 10) / 100);
+      if (type === 'text') {
+        var t = val('w-text');
+        if (!t) { return null; }
+        var sp = mk('span', '', t);
+        sp.style.fontSize = Math.max(34, Math.min(120, Math.round(780 / (t.length * 0.68)))) + 'px';
+        d.appendChild(sp);
+      } else {
+        if (!wmUrl) { return null; }
+        var im = mk('img'); im.src = wmUrl; d.appendChild(im);
+      }
+      return d;
+    }
+    function newPage() {
+      page = mk('div', 'apg-pg' + (lang === 'ur' ? ' ur' : ''));
+      var w = wmEl();
+      if (w) { page.appendChild(w); }
+      body = mk('div', 'apg-body');
+      page.appendChild(body);
+      page.appendChild(mk('div', 'apg-pn'));
+      host.appendChild(page);
+      pages.push(page);
+      grid = null;
+    }
+    function fits() { return body.scrollHeight <= body.clientHeight + 1; }
+    function breakPage() {
+      var carry = null, last = body.lastElementChild;
+      if (last) { if (last.classList.contains('apg-stt')) { body.removeChild(last); carry = last; } }
+      newPage();
+      if (carry) { body.appendChild(carry); }
+    }
+    function place(el) {
+      body.appendChild(el);
+      if (!fits()) { body.removeChild(el); breakPage(); body.appendChild(el); }
+    }
+    function placeMcq(el) {
+      if (!grid) { grid = mk('div', 'apg-mg'); body.appendChild(grid); }
+      else if (grid.parentNode !== body) { grid = mk('div', 'apg-mg'); body.appendChild(grid); }
+      grid.appendChild(el);
+      if (!fits()) {
+        grid.removeChild(el);
+        if (!grid.firstChild) { body.removeChild(grid); }
+        breakPage();
+        grid = mk('div', 'apg-mg'); body.appendChild(grid);
+        grid.appendChild(el);
+      }
+    }
+
+    newPage();
+
+    var hd = mk('div', 'apg-hd');
+    if (logoUrl) { var lg = mk('img'); lg.src = logoUrl; hd.appendChild(lg); }
+    hd.appendChild(mk('h1', '', val('m-uni') || L.uni));
+    hd.appendChild(mk('h2', '', val('m-course') + ' - (' + val('m-code') + ')'));
+    var tb = mk('table', 'apg-it');
+    var tbody = mk('tbody');
+    function tr(a, b, c) {
+      var r = mk('tr');
+      [a, b, c].forEach(function (x) { r.appendChild(mk('td', '', x)); });
+      tbody.appendChild(r);
+    }
+    tr(L.sem + ': ' + val('m-sem'), L.time + ': ' + val('m-time'), L.date + ': ' + val('m-date'));
+    tr(L.course + ': ' + val('m-course'), L.ver + ': ' + val('m-ver'), L.max + ': ' + val('m-max'));
+    tb.appendChild(tbody);
+    hd.appendChild(tb);
+    place(hd);
+
+    var n = 0;
+    if (state.mcqs.length) {
+      place(mk('div', 'apg-stt', L.p1));
+      grid = null;
+      state.mcqs.forEach(function (m) {
+        n++;
+        var it = mk('div', 'apg-mi');
+        it.appendChild(mk('div', 'apg-mq', 'Q' + n + '. ' + m.q));
+        ['A', 'B', 'C', 'D'].forEach(function (k, i) {
+          if (m.o[i]) { it.appendChild(mk('div', 'apg-mo', '(' + k + ') ' + m.o[i])); }
+        });
+        placeMcq(it);
+      });
+    }
+    [2, 3].forEach(function (p) {
+      var list = state.subs.filter(function (s) { return s.part === p; });
+      if (!list.length) { return; }
+      place(mk('div', 'apg-stt', p === 2 ? L.p2 : L.p3));
+      list.forEach(function (s) {
+        n++;
+        var it = mk('div', 'apg-si');
+        it.appendChild(mk('div', 'apg-sq', 'Q' + n + '. ' + s.q));
+        it.appendChild(mk('div', 'apg-sm', '(' + s.marks + ' ' + L.marks + ')'));
+        place(it);
+      });
+    });
+
+    pages.forEach(function (pg, i) {
+      pg.querySelector('.apg-pn').textContent = L.page + ' ' + (i + 1) + ' / ' + pages.length;
+    });
+    fit();
+  }
+
+  function schedule() { clearTimeout(timer); timer = setTimeout(render, 120); }
+
+  function fit() {
+    var host = $('apg-host'), holder = $('apg-holder');
+    var s = Math.min(1, ($('apg-stage').clientWidth - 16) / W);
+    if (s <= 0) { s = 1; }
+    host.style.transform = 'scale(' + s + ')';
+    holder.style.width = (W * s) + 'px';
+    holder.style.height = (host.offsetHeight * s - 18 * s) + 'px';
+  }
+
+  function addMcq() {
+    var q = val('q-text');
+    var o = [val('q-a'), val('q-b'), val('q-c'), val('q-d')];
+    var cnt = o.filter(function (x) { return x; }).length;
+    if (!q) { alert('Pehle sawal likhein.'); return; }
+    if (cnt < 2) { alert('Kam az kam 2 options likhein.'); return; }
+    state.mcqs.push({ q: q, o: o });
+    ['q-text', 'q-a', 'q-b', 'q-c', 'q-d'].forEach(function (id) { $(id).value = ''; });
+    save(); renderList(); schedule();
+  }
+  function addSub() {
+    var q = val('s-text');
+    if (!q) { alert('Pehle sawal likhein.'); return; }
+    state.subs.push({ q: q, marks: val('s-marks') || '0', part: parseInt($('s-part').value, 10) });
+    $('s-text').value = '';
+    save(); renderList(); schedule();
+  }
+  function sample() {
+    state.mcqs = [
+      { q: 'Which of the following is a scarce resource?', o: ['Air', 'Land', 'Sunlight', 'Sea water'] },
+      { q: 'Opportunity cost is the', o: ['Money cost', 'Next best alternative forgone', 'Total cost', 'Fixed cost'] },
+      { q: 'Demand curve normally slopes', o: ['Upward', 'Downward', 'Vertical', 'Horizontal'] }
+    ];
+    state.subs = [
+      { q: 'Define economics and explain its scope.', marks: '10', part: 2 },
+      { q: 'Explain the law of demand with the help of a diagram.', marks: '10', part: 2 },
+      { q: 'Discuss the factors affecting elasticity of demand in detail.', marks: '20', part: 3 }
+    ];
+    save(); renderList(); schedule();
+  }
+
+  function readFile(inp, cb) {
+    var f = inp.files[0];
+    if (!f) { return; }
+    var r = new FileReader();
+    r.onload = function (e) { cb(e.target.result); };
+    r.readAsDataURL(f);
+  }
+
+  function snapPage(pg) {
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;left:0;top:0;z-index:-9999;pointer-events:none;background:#fff;width:' + W + 'px;height:' + H + 'px';
+    var c = pg.cloneNode(true);
+    c.style.margin = '0'; c.style.transform = 'none';
+    wrap.appendChild(c);
+    document.body.appendChild(wrap);
+    return html2canvas(c, { scale: 3, useCORS: true, backgroundColor: '#ffffff', width: W, height: H, scrollX: 0, scrollY: 0 })
+      .then(function (cv) { document.body.removeChild(wrap); return cv; },
+            function (e) { document.body.removeChild(wrap); throw e; });
+  }
+  function allCanvases() {
+    var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    return ready.then(function () {
+      var out = [], p = Promise.resolve();
+      pages.forEach(function (pg) {
+        p = p.then(function () { return snapPage(pg); }).then(function (cv) { out.push(cv); });
+      });
+      return p.then(function () { return out; });
+    });
+  }
+  function baseName() { return 'AIOU_' + (val('m-code') || 'Paper').replace(/[^\w\-]+/g, '_'); }
+  function download(blob, name) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }
+  function dataToBlob(url) {
+    var parts = url.split(','), mime = parts[0].match(/:(.*?);/)[1], bin = atob(parts[1]), n = bin.length, u = new Uint8Array(n);
+    while (n--) { u[n] = bin.charCodeAt(n); }
+    return new Blob([u], { type: mime });
+  }
+
+  function exportPdf() {
+    busy(true);
+    allCanvases().then(function (cvs) {
+      var pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+      cvs.forEach(function (cv, i) {
+        if (i > 0) { pdf.addPage(); }
+        pdf.addImage(cv.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 210, 297);
+      });
+      pdf.save(baseName() + '.pdf');
+      busy(false);
+    }).catch(function (e) { busy(false); alert('PDF Error: ' + e); });
+  }
+  function exportImg(ext) {
+    busy(true);
+    var mime = ext === 'png' ? 'image/png' : 'image/jpeg';
+    allCanvases().then(function (cvs) {
+      if (cvs.length === 1) {
+        download(dataToBlob(cvs[0].toDataURL(mime, 0.95)), baseName() + '.' + ext);
+        busy(false); return;
+      }
+      var zip = new JSZip();
+      cvs.forEach(function (cv, i) {
+        zip.file(baseName() + '_page' + (i + 1) + '.' + ext, dataToBlob(cv.toDataURL(mime, 0.95)));
+      });
+      return zip.generateAsync({ type: 'blob' }).then(function (b) { download(b, baseName() + '_' + ext + '.zip'); busy(false); });
+    }).catch(function (e) { busy(false); alert('Image Error: ' + e); });
+  }
+  function exportSvg() {
+    busy(true);
+    var zip = new JSZip(), p = Promise.resolve();
+    pages.forEach(function (pg, i) {
+      p = p.then(function () {
+        var c = pg.cloneNode(true);
+        c.style.margin = '0';
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'position:fixed;left:0;top:0;z-index:-9999;pointer-events:none;width:' + W + 'px;height:' + H + 'px';
+        wrap.appendChild(c); document.body.appendChild(wrap);
+        return domtoimage.toSvg(c, { bgcolor: '#ffffff', width: W, height: H }).then(function (url) {
+          document.body.removeChild(wrap);
+          var txt = decodeURIComponent(url.split(',').slice(1).join(','));
+          zip.file(baseName() + '_page' + (i + 1) + '.svg', txt);
+        }, function (e) { document.body.removeChild(wrap); throw e; });
+      });
+    });
+    p.then(function () {
+      if (pages.length === 1) {
+        var f = Object.keys(zip.files)[0];
+        return zip.files[f].async('blob').then(function (b) { download(b, f); busy(false); });
+      }
+      return zip.generateAsync({ type: 'blob' }).then(function (b) { download(b, baseName() + '_svg.zip'); busy(false); });
+    }).catch(function (e) { busy(false); alert('SVG Error: ' + e); });
+  }
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function exportDoc() {
+    var lang = $('m-lang').value, L = T[lang], rtl = lang === 'ur';
+    var h = '<h2 style="text-align:center;margin:0">' + esc(val('m-uni') || L.uni) + '</h2>';
+    h += '<h3 style="text-align:center;margin:4px 0 10px">' + esc(val('m-course')) + ' - (' + esc(val('m-code')) + ')</h3>';
+    h += '<table style="width:100%;border-collapse:collapse" border="1" cellpadding="5"><tr>' +
+      '<td align="center"><b>' + L.sem + ': ' + esc(val('m-sem')) + '</b></td><td align="center"><b>' + L.time + ': ' + esc(val('m-time')) +
+      '</b></td><td align="center"><b>' + L.date + ': ' + esc(val('m-date')) + '</b></td></tr><tr>' +
+      '<td align="center"><b>' + L.course + ': ' + esc(val('m-course')) + '</b></td><td align="center"><b>' + L.ver + ': ' + esc(val('m-ver')) +
+      '</b></td><td align="center"><b>' + L.max + ': ' + esc(val('m-max')) + '</b></td></tr></table>';
+    var n = 0;
+    if (state.mcqs.length) {
+      h += '<p><b><u>' + L.p1 + '</u></b></p><table style="width:100%;border-collapse:collapse" cellpadding="6">';
+      for (var i = 0; i !== state.mcqs.length; i += 2) {
+        h += '<tr>';
+        for (var j = i; j !== i + 2; j++) {
+          h += '<td valign="top" style="width:50%">';
+          if (state.mcqs[j]) {
+            var m = state.mcqs[j]; n++;
+            h += '<b>Q' + n + '. ' + esc(m.q) + '</b><br>';
+            ['A', 'B', 'C', 'D'].forEach(function (k, x) { if (m.o[x]) { h += '&nbsp;&nbsp;(' + k + ') ' + esc(m.o[x]) + '<br>'; } });
+          }
+          h += '</td>';
+        }
+        h += '</tr>';
+      }
+      h += '</table>';
+    }
+    [2, 3].forEach(function (p) {
+      var list = state.subs.filter(function (s) { return s.part === p; });
+      if (!list.length) { return; }
+      h += '<p><b><u>' + (p === 2 ? L.p2 : L.p3) + '</u></b></p>';
+      list.forEach(function (s) {
+        n++;
+        h += '<table style="width:100%"><tr><td>Q' + n + '. ' + esc(s.q) + '</td><td align="' + (rtl ? 'left' : 'right') +
+          '" style="width:90px"><b>(' + esc(s.marks) + ' ' + L.marks + ')</b></td></tr></table><br>';
+      });
+    });
+    var doc = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">' +
+      '<head><meta charset="utf-8"><title>Paper</title><style>body{font-family:' + (rtl ? "'Jameel Noori Nastaleeq','Noto Nastaliq Urdu'," : '') +
+      "'Times New Roman',serif;font-size:12pt}</style></head><body dir=\"" + (rtl ? 'rtl' : 'ltr') + '">' + h + '</body></html>';
+    download(new Blob(['\ufeff', doc], { type: 'application/msword;charset=utf-8' }), baseName() + '.doc');
+  }
+
+  function init() {
+    load();
+    ['m-uni','m-course','m-code','m-sem','m-time','m-date','m-ver','m-max','m-lang','w-text'].forEach(function (id) {
+      $(id).addEventListener('input', schedule);
+      $(id).addEventListener('change', schedule);
+    });
+    $('m-logo').addEventListener('change', function (e) { readFile(e.target, function (u) { logoUrl = u; schedule(); }); });
+    $('b-nologo').addEventListener('click', function () { logoUrl = ''; $('m-logo').value = ''; schedule(); });
+    $('w-file').addEventListener('change', function (e) { readFile(e.target, function (u) { wmUrl = u; schedule(); }); });
+    $('w-type').addEventListener('change', function () {
+      var t = $('w-type').value;
+      $('w-textbox').style.display = t === 'text' ? 'block' : 'none';
+      $('w-imgbox').style.display = t === 'image' ? 'block' : 'none';
+      schedule();
+    });
+    $('w-op').addEventListener('input', function () { $('w-ov').textContent = $('w-op').value; schedule(); });
+    $('b-addmcq').addEventListener('click', addMcq);
+    $('b-addsub').addEventListener('click', addSub);
+    $('b-sample').addEventListener('click', sample);
+    $('b-clear').addEventListener('click', function () {
+      if (confirm('Saray sawalat delete kar dein?')) { state.mcqs = []; state.subs = []; save(); renderList(); schedule(); }
+    });
+    $('e-pdf').addEventListener('click', exportPdf);
+    $('e-jpg').addEventListener('click', function () { exportImg('jpeg'); });
+    $('e-png').addEventListener('click', function () { exportImg('png'); });
+    $('e-doc').addEventListener('click', exportDoc);
+    $('e-svg').addEventListener('click', exportSvg);
+    window.addEventListener('resize', fit);
+    renderList(); render();
+    setTimeout(render, 600);
+  }
+  if (document.readyState === 'complete') { init(); } else { window.addEventListener('load', init); }
+})();
+</script>
