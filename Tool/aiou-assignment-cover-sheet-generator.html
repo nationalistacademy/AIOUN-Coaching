@@ -1,49 +1,43 @@
-<!-- ===== AIOU Mashqi Form Generator (Blogger ready) ===== -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* ---------- Controls ---------- */
-.aiou-ui{max-width:900px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;color:#222;direction:ltr}
+.aiou-ui{--ag-p:var(--jt-primary,#f67938);--ag-ph:var(--jt-btn-primary-hover,#f46013);--ag-glass:rgba(255,255,255,.55);--ag-soft:rgba(255,255,255,.4);--ag-bd:rgba(255,255,255,.7);--ag-sh:0 8px 32px rgba(0,0,0,.1);max-width:900px;margin:0 auto 24px;font-size:14px;line-height:1.5;color:inherit;direction:ltr}
+.dark-mode .aiou-ui{--ag-glass:rgba(30,30,35,.55);--ag-soft:rgba(30,30,35,.4);--ag-bd:rgba(255,255,255,.1);--ag-sh:0 8px 32px rgba(0,0,0,.4)}
 .aiou-ui *{box-sizing:border-box}
-.aiou-card{background:#fff;border:1px solid #d9dde3;border-radius:10px;padding:16px;margin-bottom:16px}
-.aiou-card h3{margin:0 0 12px;font-size:17px;color:#0b4f9c;border-bottom:2px solid #eef1f5;padding-bottom:6px}
+.aiou-card{background:var(--ag-glass);-webkit-backdrop-filter:blur(15px) saturate(180%);backdrop-filter:blur(15px) saturate(180%);border:1px solid var(--ag-bd);border-radius:20px;box-shadow:var(--ag-sh);padding:18px;margin-bottom:16px}
+.aiou-card h3{margin:0 0 14px!important;padding:0 0 6px!important;font-size:16px!important;font-weight:700;border-bottom:3px solid var(--ag-p);display:inline-block}
 .aiou-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
 .aiou-grid .full{grid-column:1/-1}
-.aiou-grid label{display:block;font-size:12.5px;font-weight:bold;color:#555;margin-bottom:3px}
-.aiou-grid input,.aiou-grid select{width:100%;padding:8px;border:1px solid #c7ccd4;border-radius:5px;font-size:14px;background:#fff}
+.aiou-grid label{display:block;font-size:12.5px;font-weight:700;opacity:.8;margin:0 0 3px;cursor:pointer}
+.aiou-grid input,.aiou-grid select{width:100%;padding:9px 12px;border:1px solid var(--ag-bd);border-radius:14px;font:inherit;background:var(--ag-soft);color:inherit;margin:0}
+.aiou-grid input:focus,.aiou-grid select:focus{outline:2px solid var(--ag-p);outline-offset:1px}
+.aiou-grid select option{color:#222}
 @media(max-width:600px){.aiou-grid{grid-template-columns:1fr}}
 .aiou-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.aiou-btn{padding:11px 22px;border:0;border-radius:6px;color:#fff;font-weight:bold;font-size:15px;cursor:pointer}
-.aiou-btn.pdf{background:#d93a49}.aiou-btn.jpg{background:#1a8fa6}.aiou-btn.png{background:#2f9e5a}.aiou-btn.print{background:#ff9800}
-.aiou-stage{width:100%;background:#6b7280;padding:14px 8px;border-radius:10px;overflow:hidden}
+.aiou-btn{padding:10px 24px;border:1px solid transparent;border-radius:999px;color:#fff;background:var(--ag-p);font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 6px 18px rgba(246,121,56,.3);transition:transform .2s,background-color .2s}
+.aiou-btn:hover{background:var(--ag-ph);transform:translateY(-1px)}
+.aiou-btn:focus-visible{outline:3px solid var(--ag-p);outline-offset:2px}
+.aiou-btn.print{background:var(--ag-soft);color:inherit;border-color:var(--ag-bd);box-shadow:none}
+.aiou-btn.print:hover{background:var(--ag-p);color:#fff}
+.aiou-stage{width:100%;background:rgba(0,0,0,.1);padding:14px 8px;border-radius:20px;overflow:hidden}
 .aiou-holder{margin:0 auto;position:relative}
 #aiou-busy{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);color:#fff;font:bold 20px Arial;align-items:center;justify-content:center;z-index:99999}
-
-/* ---------- Paper (A4 = 794 x 1123 px) ---------- */
-.aiou-paper{width:794px;height:1123px;background:#fff;position:relative;overflow:hidden;color:#000;direction:rtl;
-  font-family:'Jameel Noori Nastaleeq','Noto Nastaliq Urdu',serif;transform-origin:top left;text-align:right}
+.aiou-paper{width:794px;height:1123px;background:#fff;position:relative;overflow:hidden;color:#000;direction:rtl;font-family:'Jameel Noori Nastaleeq','Noto Nastaliq Urdu',serif;transform-origin:top left;text-align:right;line-height:normal;box-shadow:0 4px 20px rgba(0,0,0,.3)}
 .aiou-paper *{box-sizing:border-box;margin:0;padding:0}
-.aiou-paper img{max-width:none;border:0}
+.aiou-paper img{max-width:none;border:0;border-radius:0;object-fit:fill}
 .aiou-logo{position:absolute;right:92px;top:54px;width:125px;height:auto}
 .aiou-t1{position:absolute;left:0;width:712px;top:58px;text-align:center;font-size:34px;line-height:62px;font-weight:700}
 .aiou-t2{position:absolute;left:0;width:794px;top:114px;text-align:center;font-size:28px;line-height:52px;font-weight:700;padding-right:8px}
-.aiou-ins{position:absolute;left:97px;top:181px;width:600px;height:45px;border:1.6px solid #000;border-radius:15px;
-  display:flex;align-items:center;justify-content:center;font-size:17px;line-height:30px;text-align:center}
+.aiou-ins{position:absolute;left:97px;top:181px;width:600px;height:45px;border:1.6px solid #000;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:17px;line-height:30px;text-align:center}
 .aiou-ph{position:absolute;top:236px;font:700 14.5px/20px Arial,Helvetica,sans-serif;direction:ltr}
 .aiou-phL{left:120px}.aiou-phR{right:115px}
 .aiou-box{position:absolute;left:53px;width:688px;border:2px solid #000}
 .aiou-b1{top:262px;height:396px}
 .aiou-b2{top:692px;height:341px}
-.aiou-leg{position:absolute;top:-19px;left:50%;transform:translateX(-50%);background:#fff;padding:0 14px;
-  font-size:20px;line-height:36px;font-weight:700;white-space:nowrap}
-
-/* rows */
+.aiou-leg{position:absolute;top:-19px;left:50%;transform:translateX(-50%);background:#fff;padding:0 14px;font-size:20px;line-height:36px;font-weight:700;white-space:nowrap}
 .aiou-f{display:flex;align-items:flex-end;height:34px}
 .aiou-l{font-size:19px;line-height:34px;height:34px;white-space:nowrap;margin-left:6px;position:relative;top:8px;font-weight:700}
-.aiou-v{flex:1;min-width:0;height:27px;border-bottom:1px solid #000;font:700 14px/26px Arial,Helvetica,sans-serif;
-  text-align:center;direction:ltr;overflow:hidden;white-space:nowrap}
+.aiou-v{flex:1;min-width:0;height:27px;border-bottom:1px solid #000;font:700 14px/26px Arial,Helvetica,sans-serif;text-align:center;direction:ltr;overflow:hidden;white-space:nowrap}
 .aiou-vl{text-align:left;padding-left:4px}
-
-/* student column */
 .aiou-sc{position:absolute;right:22px;top:15px;width:326px}
 .aiou-idl{margin-top:8px;height:22px;font-size:14.5px;line-height:22px;white-space:nowrap}
 .aiou-idl span{font-family:'Times New Roman',serif;font-size:15px}
@@ -60,9 +54,7 @@
 .aiou-f3 .aiou-v:nth-child(2){flex:.9}.aiou-f3 .aiou-v:nth-child(4){flex:1}
 .aiou-f3 .aiou-l:nth-child(3){margin-left:6px;margin-right:8px}
 .aiou-note{margin-top:16px;height:22px;text-align:center;font-size:14.5px;line-height:22px}
-.aiou-paper sup{font-size:.6em;vertical-align:super;line-height:0}
-
-/* tutor column */
+.aiou-paper sup{font-size:.6em;vertical-align:super;line-height:0;position:static}
 .aiou-tc{position:absolute;left:26px;top:15px;width:292px}
 .aiou-sem{position:absolute;left:31px;top:209px;width:168px}
 .aiou-sr{display:flex;align-items:flex-end;height:28px;direction:rtl}
@@ -71,99 +63,81 @@
 .aiou-sv{flex:1;text-align:center;font:700 15px/22px Arial,Helvetica,sans-serif;direction:ltr;white-space:nowrap}
 .aiou-sy{font-size:15px;line-height:22px;width:14px;text-align:left}
 .aiou-semL{position:absolute;right:34px;top:229px;font-size:21px;line-height:34px;font-weight:700}
-
-/* dates */
 .aiou-dates{position:absolute;left:26px;right:22px;top:347px;display:flex;align-items:flex-end;height:34px}
 .aiou-dates .aiou-v{margin-left:8px}
 .aiou-dates .aiou-v.dv{flex:0 0 118px}
 .aiou-dates .aiou-v.sg{margin-left:0}
-
-/* tutor box */
 .aiou-r1{position:absolute;left:26px;right:22px;top:26px;display:flex;gap:26px}
 .aiou-r1 .aiou-f{flex:1}.aiou-r1 .aiou-f:first-child{flex:0 0 320px}
 .aiou-r2{position:absolute;left:26px;right:318px;top:63px}
-.aiou-mt{position:absolute;left:26px;right:24px;top:108px;height:93px;display:grid;direction:rtl;
-  grid-template-columns:59px repeat(12,1fr);grid-template-rows:31px 62px;border-top:1px solid #000;border-right:1px solid #000}
-.aiou-mt div{border-left:1px solid #000;border-bottom:1px solid #000;display:flex;align-items:center;justify-content:center;
-  font:700 15px Arial,Helvetica,sans-serif;text-align:center}
+.aiou-mt{position:absolute;left:26px;right:24px;top:108px;height:93px;display:grid;direction:rtl;grid-template-columns:59px repeat(12,1fr);grid-template-rows:31px 62px;border-top:1px solid #000;border-right:1px solid #000}
+.aiou-mt div{border-left:1px solid #000;border-bottom:1px solid #000;display:flex;align-items:center;justify-content:center;font:700 15px Arial,Helvetica,sans-serif;text-align:center}
 .aiou-mt div.u{font:700 14px/1.9 'Jameel Noori Nastaleeq','Noto Nastaliq Urdu',serif}
-.aiou-sb{position:absolute;left:26px;top:211px;width:118px;height:116px;display:grid;direction:rtl;
-  grid-template-columns:48px 70px;grid-template-rows:1fr 1fr;border:1px solid #000}
+.aiou-sb{position:absolute;left:26px;top:211px;width:118px;height:116px;display:grid;direction:rtl;grid-template-columns:48px 70px;grid-template-rows:1fr 1fr;border:1px solid #000}
 .aiou-sb div{display:flex;align-items:center;justify-content:center;text-align:center;font:700 14px/1.9 'Jameel Noori Nastaleeq','Noto Nastaliq Urdu',serif}
 .aiou-sb .lb{border-left:1px solid #000}
 .aiou-sb .r1{border-bottom:1px solid #000}
 .aiou-rm{position:absolute;right:22px;left:172px;top:195px}
-.aiou-rm .row{height:31px;display:flex;align-items:flex-end;border-bottom:1px solid #000}
+.aiou-rm .row{height:31px;display:flex;align-items:flex-end;border-bottom:1px solid #000;margin:0}
 .aiou-rm .row.nl{border-bottom:0}
 .aiou-rm .ln{flex:1;height:31px;border-bottom:1px solid #000}
 .aiou-rm .row.nl .ln{height:30px}
 .aiou-rm .row .l2{font-size:19px;line-height:34px;height:34px;white-space:nowrap;position:relative;top:8px;font-weight:700;margin-left:6px}
 .aiou-rm .gap{width:14px}
 .aiou-foot{position:absolute;left:0;width:794px;top:1036px;text-align:center;font-size:18px;line-height:34px;padding-right:2px}
-
-/* ============ FONT SHRINK OVERRIDES ============ */
-.aiou-l { font-size: 16px !important; top: 5px !important; }
-.aiou-sw { font-size: 15px !important; }
-.aiou-sv { font-size: 13px !important; }
-.aiou-fli { font-size: 15px !important; top: 10px !important; }
-.aiou-rm .row .l2 { font-size: 15px !important; top: 5px !important; }
-.aiou-mt div.u { font-size: 12px !important; line-height: 1.4 !important; }
-.aiou-sb div { font-size: 12px !important; line-height: 1.4 !important; }
-.aiou-idl { font-size: 13px !important; }
-.aiou-f3 .aiou-l { font-size: 15px !important; }
-.aiou-dates .aiou-l { font-size: 15px !important; }
-.aiou-note { font-size: 13px !important; }
+.aiou-l{font-size:16px!important;top:5px!important}
+.aiou-sw{font-size:15px!important}
+.aiou-sv{font-size:13px!important}
+.aiou-fli{font-size:15px!important;top:10px!important}
+.aiou-rm .row .l2{font-size:15px!important;top:5px!important}
+.aiou-mt div.u{font-size:12px!important;line-height:1.4!important}
+.aiou-sb div{font-size:12px!important;line-height:1.4!important}
+.aiou-idl{font-size:13px!important}
+.aiou-f3 .aiou-l{font-size:15px!important}
+.aiou-dates .aiou-l{font-size:15px!important}
+.aiou-note{font-size:13px!important}
+@media print{body *{visibility:hidden}#aiou-paper,#aiou-paper *{visibility:visible}#aiou-paper{position:fixed;left:0;top:0;transform:none!important;box-shadow:none}@page{size:A4;margin:0}}
 </style>
-
 <div class="aiou-ui">
-  <div id="aiou-busy">⏳ File ban rahi hai...</div>
-
+  <div id="aiou-busy">File ban rahi hai...</div>
   <div class="aiou-card">
-    <h3>🛠️ Form Details / فارم کی تفصیل</h3>
+    <h3>Form Details / فارم کی تفصیل</h3>
     <div class="aiou-grid">
-      <!-- DEMO DETAILS ADDED HERE -->
-      <div><label>Tutor Name / نام ٹیوٹر</label><input id="i-tname" value="SYED MAJID ALI"></div>
-      <div><label>Tutor Phone / ٹیوٹر فون</label><input id="i-tphone" value="0321-3692827"></div>
-      <div class="full"><label>Tutor Address / ٹیوٹر کا پتہ</label><input id="i-tadd" maxlength="90" value="FLAT C.4, 2ND FLOOR, STREET 4, PHASE 1, DEFENCE VIEW, KARACHI SOUTH."></div>
-
-      <div><label>Student Name / نام طالب علم</label><input id="i-sname" value="MUHAMMAD WASEEM MIR"></div>
-      <div><label>Student Phone / طالب علم فون</label><input id="i-sphone" value="+92345-3318493"></div>
-      <div><label>Student ID / رجسٹریشن نمبر (10 digits)</label><input id="i-sid" maxlength="10" inputmode="numeric" value="0001189718"></div>
-      <div><label>Course Name / کورس کا نام</label><input id="i-course" value="BCOM"></div>
-      <div class="full"><label>Student Address / طالب علم کا پتہ</label><input id="i-sadd" maxlength="70" value="HIJRAT COLONY SECTOR D2 HOUSE 1493 STREET 24, KARACHI SOUTH."></div>
-
-      <div><label>Course Code / کوڈ نمبر</label><input id="i-code" value="AIOU1423"></div>
-      <div><label>Semester / سمسٹر</label>
-        <select id="i-sem"><option value="spring">Spring / بہار</option><option value="autumn">Autumn / خزاں</option></select></div>
-      <div><label>Year / سال</label><input id="i-year" maxlength="4" inputmode="numeric" value="2026"></div>
-      <div><label>Due Date / مقررہ تاریخ</label><input type="date" id="i-due" value="2026-08-20"></div>
-      <div><label>Dispatch Date / روانگی کی تاریخ</label><input type="date" id="i-disp" value="2026-06-27"></div>
-      <div><label>Logo (optional) / لوگو تبدیل کریں</label><input type="file" id="i-logo" accept="image/*"></div>
+      <div><label for="i-tname">Tutor Name / نام ٹیوٹر</label><input id="i-tname" value="SYED MAJID ALI"></div>
+      <div><label for="i-tphone">Tutor Phone / ٹیوٹر فون</label><input id="i-tphone" value="0321-3692827"></div>
+      <div class="full"><label for="i-tadd">Tutor Address / ٹیوٹر کا پتہ</label><input id="i-tadd" maxlength="90" value="FLAT C.4, 2ND FLOOR, STREET 4, PHASE 1, DEFENCE VIEW, KARACHI SOUTH."></div>
+      <div><label for="i-sname">Student Name / نام طالب علم</label><input id="i-sname" value="MUHAMMAD WASEEM MIR"></div>
+      <div><label for="i-sphone">Student Phone / طالب علم فون</label><input id="i-sphone" value="+92345-3318493"></div>
+      <div><label for="i-sid">Student ID / رجسٹریشن نمبر (10 digits)</label><input id="i-sid" maxlength="10" inputmode="numeric" value="0001189718"></div>
+      <div><label for="i-course">Course Name / کورس کا نام</label><input id="i-course" value="BCOM"></div>
+      <div class="full"><label for="i-sadd">Student Address / طالب علم کا پتہ</label><input id="i-sadd" maxlength="70" value="HIJRAT COLONY SECTOR D2 HOUSE 1493 STREET 24, KARACHI SOUTH."></div>
+      <div><label for="i-code">Course Code / کوڈ نمبر</label><input id="i-code" value="AIOU1423"></div>
+      <div><label for="i-sem">Semester / سمسٹر</label><select id="i-sem"><option value="spring">Spring / بہار</option><option value="autumn">Autumn / خزاں</option></select></div>
+      <div><label for="i-year">Year / سال</label><input id="i-year" maxlength="4" inputmode="numeric" value="2026"></div>
+      <div><label for="i-due">Due Date / مقررہ تاریخ</label><input type="date" id="i-due" value="2026-08-20"></div>
+      <div><label for="i-disp">Dispatch Date / روانگی کی تاریخ</label><input type="date" id="i-disp" value="2026-06-27"></div>
+      <div><label for="i-logo">Logo (optional) / لوگو تبدیل کریں</label><input type="file" id="i-logo" accept="image/*"></div>
     </div>
   </div>
-
   <div class="aiou-card">
     <div class="aiou-btns">
-      <button class="aiou-btn pdf" id="b-pdf">📄 Download PDF</button>
-      <button class="aiou-btn jpg" id="b-jpg">🖼️ Download JPG</button>
-      <button class="aiou-btn png" id="b-png">🖼️ Download PNG</button>
-      <button class="aiou-btn print" id="b-print" onclick="window.print()">🖨️ Print</button>
+      <button type="button" class="aiou-btn" id="b-pdf">Download PDF</button>
+      <button type="button" class="aiou-btn" id="b-jpg">Download JPG</button>
+      <button type="button" class="aiou-btn" id="b-png">Download PNG</button>
+      <button type="button" class="aiou-btn print" id="b-print">Print</button>
     </div>
   </div>
-
   <div class="aiou-stage" id="aiou-stage">
     <div class="aiou-holder" id="aiou-holder">
       <div class="aiou-paper" id="aiou-paper">
-        <img class="aiou-logo" id="o-logo" src="data:image/png;base64,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", alt="">
+        <img class="aiou-logo" id="o-logo" src="PASTE_YOUR_LOGO_DATA_URI_HERE" alt="">
         <div class="aiou-t1">علامہ اقبال اوپن یونیورسٹی، اسلام آباد</div>
         <div class="aiou-t2">مشقی فارم</div>
         <div class="aiou-ins">حل شدہ مشق کے ساتھ مقررہ تاریخ سے پہلے اس فارم کے 3 پرت اپنے ٹیوٹر کو ارسال کریں۔</div>
         <div class="aiou-ph aiou-phL" id="o-tphone"></div>
         <div class="aiou-ph aiou-phR" id="o-sphone"></div>
-
         <div class="aiou-box aiou-b1">
           <div class="aiou-leg">یہ حصہ طالب علم پُر کریں</div>
-
           <div class="aiou-sc">
             <div class="aiou-f"><span class="aiou-l">نام طالب علم</span><span class="aiou-v aiou-vl" id="o-sname"></span></div>
             <div class="aiou-idl">طالب علم کا شناختی نمبر <span>(Student ID)</span> / رجسٹریشن نمبر</div>
@@ -174,7 +148,6 @@
             <div class="aiou-f aiou-f3"><span class="aiou-l">کوڈ نمبر</span><span class="aiou-v" id="o-code"></span><span class="aiou-l">مشق نمبر</span><span class="aiou-v"></span></div>
             <div class="aiou-note">( نیچے دونوں تاریخیں طالب علم ضرور پُر کریں)</div>
           </div>
-
           <div class="aiou-tc">
             <div class="aiou-f"><span class="aiou-l">نام ٹیوٹر</span><span class="aiou-v" id="o-tname"></span></div>
             <div class="aiou-ruled aiou-r41"><span class="aiou-fl"><span class="aiou-fli">مکمل پتہ (ٹیوٹر)</span></span><span id="o-tadd"></span></div>
@@ -184,14 +157,12 @@
               <div class="aiou-sr"><span class="aiou-sw">خزاں</span><span class="aiou-sv" id="o-autumn"></span><span class="aiou-sy">ء</span></div>
             </div>
           </div>
-
           <div class="aiou-dates">
             <span class="aiou-l">مقررہ تاریخ</span><span class="aiou-v dv" id="o-due"></span>
             <span class="aiou-l">روانگی کی تاریخ</span><span class="aiou-v dv" id="o-disp"></span>
             <span class="aiou-l">طالب علم کے دستخط</span><span class="aiou-v sg"></span>
           </div>
         </div>
-
         <div class="aiou-box aiou-b2">
           <div class="aiou-leg">یہ حصہ ٹیوٹر پُر کریں گے</div>
           <div class="aiou-r1">
@@ -199,31 +170,26 @@
             <div class="aiou-f"><span class="aiou-l">ضلع</span><span class="aiou-v"></span></div>
           </div>
           <div class="aiou-f aiou-r2"><span class="aiou-l">مشق وصول کرنے کی تاریخ</span><span class="aiou-v"></span></div>
-
           <div class="aiou-mt">
             <div class="u">سوال نمبر</div><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div>
             <div class="u">حاصل<br>کردہ نمبر</div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
           </div>
-
           <div class="aiou-sb">
             <div class="lb r1">حاصل<br>کردہ نمبر</div><div class="r1"></div>
             <div class="lb">کل نمبر</div><div></div>
           </div>
-
           <div class="aiou-rm">
-            <div class="row"><span class="l2">ٹیوٹر کی رائے</span><span class="ln" style="border:0;border-bottom:0"></span></div>
+            <div class="row"><span class="l2">ٹیوٹر کی رائے</span><span class="ln" style="border:0"></span></div>
             <div class="row"></div>
             <div class="row"></div>
             <div class="row nl"><span class="l2">دستخط</span><span class="ln" style="flex:0 0 238px"></span><span class="gap"></span><span class="l2">تاریخ واپسی</span><span class="ln"></span></div>
           </div>
         </div>
-
         <div class="aiou-foot">نوٹ: اس فارم کی فوٹو کاپی بھی استعمال ہو سکتی ہے۔</div>
       </div>
     </div>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
@@ -232,12 +198,18 @@
   var $ = function (id) { return document.getElementById(id); };
   var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   var W = 794, H = 1123;
-
-  function esc(s) {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-  function addr(s) {
-    return esc(s.toUpperCase()).replace(/(\d)(ST|ND|RD|TH)\b/g, '$1<sup>$2</sup>');
+  function setAddr(el, s) {
+    el.textContent = '';
+    s = s.toUpperCase();
+    var re = /(\d)(ST|ND|RD|TH)\b/g, last = 0, m;
+    while ((m = re.exec(s)) !== null) {
+      el.appendChild(document.createTextNode(s.substring(last, m.index) + m[1]));
+      var sp = document.createElement('sup');
+      sp.textContent = m[2];
+      el.appendChild(sp);
+      last = m.index + m[0].length;
+    }
+    el.appendChild(document.createTextNode(s.substring(last)));
   }
   function fmtDate(v) {
     if (!v) { return ''; }
@@ -245,36 +217,33 @@
     return MONTHS[parseInt(p[1], 10) - 1] + ' ' + parseInt(p[2], 10) + ', ' + p[0];
   }
   function up(id) { return $(id).value.trim().toUpperCase(); }
-
   function update() {
     $('o-tname').textContent = up('i-tname');
-    $('o-tadd').innerHTML = addr($('i-tadd').value.trim());
+    setAddr($('o-tadd'), $('i-tadd').value.trim());
     var tp = $('i-tphone').value.trim(), sp = $('i-sphone').value.trim();
     $('o-tphone').textContent = tp ? '(' + tp + ')' : '';
     $('o-sphone').textContent = sp ? '(' + sp + ')' : '';
     $('o-sname').textContent = up('i-sname');
-    $('o-sadd').innerHTML = addr($('i-sadd').value.trim());
+    setAddr($('o-sadd'), $('i-sadd').value.trim());
     $('o-course').textContent = up('i-course');
     $('o-code').textContent = up('i-code');
     $('o-due').textContent = fmtDate($('i-due').value);
     $('o-disp').textContent = fmtDate($('i-disp').value);
-
     var year = $('i-year').value.trim();
     var isSpring = $('i-sem').value === 'spring';
     $('o-spring').textContent = isSpring ? year + ' SPRING' : '20';
     $('o-autumn').textContent = isSpring ? '20' : year + ' AUTUMN';
-
     var id = $('i-sid').value.replace(/\D/g, '');
-    if (id.length > 0) { while (id.length !== 10) { if (id.length > 10) { id = id.substring(0, 10); } else { id = '0' + id; } } }
+    if (id.length > 10) { id = id.substring(0, 10); }
+    while (id.length > 0 && id.length < 10) { id = '0' + id; }
     var box = $('o-sid');
-    box.innerHTML = '';
-    for (var i = 0; i !== 10; i++) {
+    box.textContent = '';
+    for (var i = 0; i < 10; i++) {
       var d = document.createElement('div');
       d.textContent = id.charAt(i);
       box.appendChild(d);
     }
   }
-
   function fit() {
     var stage = $('aiou-stage');
     var s = Math.min(1, (stage.clientWidth - 16) / W);
@@ -283,7 +252,6 @@
     $('aiou-holder').style.width = (W * s) + 'px';
     $('aiou-holder').style.height = (H * s) + 'px';
   }
-
   function snap() {
     var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
     return ready.then(function () {
@@ -292,6 +260,7 @@
       var c = $('aiou-paper').cloneNode(true);
       c.removeAttribute('id');
       c.style.transform = 'none';
+      c.style.boxShadow = 'none';
       wrap.appendChild(c);
       document.body.appendChild(wrap);
       return html2canvas(c, { scale: 3, useCORS: true, backgroundColor: '#ffffff', width: W, height: H, scrollX: 0, scrollY: 0 })
@@ -299,28 +268,24 @@
               function (e) { document.body.removeChild(wrap); throw e; });
     });
   }
-
   function fname(ext) {
     var n = $('i-sname').value.trim().replace(/\s+/g, '_') || 'Student';
     var c = $('i-code').value.trim() || 'Form';
     return 'AIOU_' + n + '_' + c + '.' + ext;
   }
   function busy(on) { $('aiou-busy').style.display = on ? 'flex' : 'none'; }
-
   function exportImg(type) {
     busy(true);
     snap().then(function (cv) {
-      var mime = type === 'png' ? 'image/png' : 'image/jpeg';
       cv.toBlob(function (blob) {
         var a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = fname(type);
+        a.download = fname(type === 'png' ? 'png' : 'jpg');
         document.body.appendChild(a); a.click(); document.body.removeChild(a);
         busy(false);
-      }, mime, 0.95);
+      }, type === 'png' ? 'image/png' : 'image/jpeg', 0.95);
     }).catch(function (e) { busy(false); alert('Error: ' + e); });
   }
-
   function exportPdf() {
     busy(true);
     snap().then(function (cv) {
@@ -330,28 +295,29 @@
       busy(false);
     }).catch(function (e) { busy(false); alert('Error: ' + e); });
   }
-
   function init() {
     var ids = ['i-tname','i-tphone','i-tadd','i-sname','i-sphone','i-sid','i-course','i-sadd','i-code','i-sem','i-year','i-due','i-disp'];
-    for (var k = 0; k !== ids.length; k++) {
+    for (var k = 0; k < ids.length; k++) {
       $(ids[k]).addEventListener('input', update);
       $(ids[k]).addEventListener('change', update);
     }
+    var logo = $('o-logo');
+    if (logo.getAttribute('src').indexOf('data:') !== 0) { logo.style.visibility = 'hidden'; }
     $('i-logo').addEventListener('change', function (e) {
       var f = e.target.files[0];
       if (!f) { return; }
       var r = new FileReader();
-      r.onload = function (ev) { $('o-logo').src = ev.target.result; };
+      r.onload = function (ev) { logo.src = ev.target.result; logo.style.visibility = 'visible'; };
       r.readAsDataURL(f);
     });
     $('b-pdf').addEventListener('click', exportPdf);
     $('b-jpg').addEventListener('click', function () { exportImg('jpeg'); });
     $('b-png').addEventListener('click', function () { exportImg('png'); });
+    $('b-print').addEventListener('click', function () { window.print(); });
     window.addEventListener('resize', fit);
     update(); fit();
     setTimeout(fit, 400);
   }
-
   if (document.readyState === 'complete') { init(); } else { window.addEventListener('load', init); }
 })();
 //]]>
