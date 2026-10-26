@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <!-- Yeh line sab se zaroori hai encoding fix karne ke liye -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIOU Guess Paper Generator</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Times+New+Roman&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        .aiou-tool-wrapper * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        .aiou-tool-wrapper { max-width: 1100px; margin: 20px auto; background: #f4f7f6; padding: 20px; border-radius: 10px; transition: all 0.3s ease; }
+        
+        .aiou-tool-wrapper.ur { direction: rtl; }
+        .aiou-tool-wrapper.en { direction: ltr; }
+        
+        .aiou-controls { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd; }
+        .aiou-controls h3 { color: #0056b3; margin-bottom: 10px; font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+        
+        .lang-toggle { display: flex; gap: 15px; margin-bottom: 15px; background: #e9ecef; padding: 10px; border-radius: 5px; align-items: center; }
+        .lang-toggle label { font-weight: bold; cursor: pointer; font-size: 16px; margin-left: 10px; margin-right: 10px; }
+        
+        .input-group { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+        .input-group input[type="text"], .input-group input[type="number"] { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; min-width: 120px; }
+        
+        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; font-size: 14px; }
+        .btn-add { background: #28a745; }
+        .btn-add:hover { background: #218838; }
+        
+        .upload-box { background: #fff3cd; border: 1px dashed #ffeeba; padding: 10px; border-radius: 5px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 15px; }
+        .preview-img { height: 40px; display: none; border: 1px solid #ccc; background: #fff; }
+
+        .paper-container { width: 100%; overflow-x: auto; background: #555; padding: 20px; border-radius: 8px; display: flex; justify-content: center; }
+        
+        #aiou-paper-preview {
+            background: #fff;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            transform-origin: top center;
+            flex-shrink: 0;
+            position: relative;
+            color: #000;
+        }
+        
+        @media (max-width: 800px) { #aiou-paper-preview { transform: scale(0.45); margin-bottom: -160mm; } }
+        @media (max-width: 500px) { #aiou-paper-preview { transform: scale(0.3); margin-bottom: -210mm; } }
+
+        #aiou-paper-preview.en { direction: ltr; text-align: left; font-family: 'Times New Roman', serif; }
+        #aiou-paper-preview.ur { direction: rtl; text-align: right; font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif; }
+        
+        .paper-header { text-align: center; margin-bottom: 15px; }
+        .paper-header img.logo { max-height: 60px; margin-bottom: 5px; display: none; margin: 0 auto; }
+        .paper-header h1 { font-size: 24px; margin-bottom: 5px; }
+        
+        .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-family: Arial, sans-serif; font-size: 14px; }
+        .meta-table td { border: 1px solid #000; padding: 8px 12px; font-weight: bold; }
+
+        .note-text { font-weight: bold; margin-bottom: 15px; text-align: center; font-size: 15px; font-family: Arial, sans-serif; }
+
+        .questions-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; }
+        .questions-table th, .questions-table td { border: 1px solid #000; padding: 10px; vertical-align: top; }
+        .questions-table th { text-align: center; font-weight: bold; background: #f2f2f2; }
+        .questions-table .col-num { width: 12%; text-align: center; vertical-align: middle; }
+        .questions-table .col-marks { width: 12%; text-align: center; vertical-align: middle; font-weight: bold; }
+        
+        #aiou-paper-preview.ur .questions-table td.q-text { font-family: 'Noto Nastaliq Urdu', serif; font-size: 16px; line-height: 2; }
+        #aiou-paper-preview.en .questions-table td.q-text { font-family: 'Times New Roman', serif; font-size: 15px; }
+
+        .remove-btn { color: red; cursor: pointer; font-size: 12px; float: right; font-weight: bold; }
+        #aiou-paper-preview.ur .remove-btn { float: left; }
+
+        .export-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; background: #fff; padding: 15px; border-radius: 8px; margin-top: 15px; }
+        .btn-pdf { background: #dc3545; }
+        .btn-word { background: #007bff; }
+        .btn-img { background: #17a2b8; }
+
+        #aiou-loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); color: #fff; justify-content: center; align-items: center; font-size: 20px; z-index: 10000; font-weight: bold; flex-direction: column; gap: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="aiou-tool-wrapper" id="aiou-main-wrapper">
+    <div id="aiou-loader">⏳ Generating File... Please Wait...</div>
+    
+    <div class="aiou-controls">
+        <div class="lang-toggle">
+            <strong id="lbl-select-lang">زبان منتخب کریں:</strong>
+            <label><input type="radio" name="aiou-lang" value="ur" checked onchange="aiouToggleLang('ur')"> اردو (Urdu)</label>
+            <label><input type="radio" name="aiou-lang" value="en" onchange="aiouToggleLang('en')"> English</label>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="aiou-level" placeholder="سطح (مثلاً: بی اے)" value="بی اے">
+            <input type="text" id="aiou-semester" placeholder="سیمسٹر" value="بہار 2025">
+            <input type="text" id="aiou-course" placeholder="پرچہ / مضمون" value="معاشیات (402)">
+            <input type="text" id="aiou-total-marks" placeholder="کل نمبر" value="100">
+            <input type="text" id="aiou-passing-marks" placeholder="کامیابی کے نمبر" value="40">
+            <input type="text" id="aiou-time" placeholder="وقت" value="تین گھنٹے">
+        </div>
+        
+        <div class="upload-box">
+            <strong id="lbl-logo">🖼️ ہیڈر لوگو:</strong>
+            <input type="file" id="aiou-logo-upload" accept="image/*" onchange="aiouHandleLogo(event)">
+            <img id="aiou-logo-preview" class="preview-img" alt="Logo">
+        </div>
+
+        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ddd;">
+        
+        <h3 id="lbl-add-q">➕ سوال شامل کریں</h3>
+        <div class="input-group">
+            <textarea id="aiou-q-text" placeholder="یہاں سوال لکھیں..." style="flex: 3; padding: 8px; border: 1px solid #ccc; border-radius: 4px; height: 50px; font-size: 14px;"></textarea>
+            <input type="number" id="aiou-q-marks" placeholder="نمبر" style="flex: 1;" value="20">
+            <button class="btn btn-add" id="btn-add-q" onclick="aiouAddQuestion()">شامل کریں</button>
+        </div>
+    </div>
+
+    <div class="aiou-controls">
+        <h3 id="lbl-wm-title">💧 واٹر مارک سیٹنگز</h3>
+        <div class="input-group" id="wm-radios">
+            <label><input type="radio" name="aiou-wm-type" value="none" checked onchange="aiouToggleWM()"> <span id="lbl-wm-none">کوئی نہیں</span></label>
+            <label><input type="radio" name="aiou-wm-type" value="text" onchange="aiouToggleWM()"> <span id="lbl-wm-text">ٹیکسٹ</span></label>
+            <label><input type="radio" name="aiou-wm-type" value="image" onchange="aiouToggleWM()"> <span id="lbl-wm-img">تصویر</span></label>
+        </div>
+        
+        <div id="aiou-wm-text-settings" style="display:none;" class="input-group">
+            <input type="text" id="aiou-wm-text" placeholder="واٹر مارک ٹیکسٹ" value="AIOU COACHING" style="flex:2;">
+            <label id="lbl-opacity-1">دھندلاپن:</label>
+            <input type="range" id="aiou-wm-opacity" min="0.1" max="1.0" step="0.1" value="0.2" style="flex: 1;">
+        </div>
+
+        <div id="aiou-wm-img-settings" style="display:none;" class="upload-box">
+            <strong id="lbl-wm-upload">🖼️ واٹر مارک تصویر اپلوڈ کریں:</strong>
+            <input type="file" id="aiou-wm-file" accept="image/*" onchange="aiouHandleWM(event)">
+            <label id="lbl-opacity-2">دھندلاپن:</label>
+            <input type="range" id="aiou-wm-img-opacity" min="0.1" max="1.0" step="0.1" value="0.2">
+        </div>
+    </div>
+
+    <div class="paper-container">
+        <div id="aiou-paper-preview" class="ur">
+            <div class="paper-header">
+                <img id="aiou-preview-logo" class="logo" alt="Logo">
+                <h1 id="aiou-preview-univ">علامہ اقبال اوپن یونیورسٹی اسلام آباد</h1>
+            </div>
+            
+            <table class="meta-table">
+                <tr>
+                    <td width="50%" id="lbl-level">سطح: <span id="prev-level">بی اے</span></td>
+                    <td width="50%" id="lbl-sem">سیمسٹر: <span id="prev-sem">بہار 2025</span></td>
+                </tr>
+                <tr>
+                    <td id="lbl-course">پرچہ: <span id="prev-course">معاشیات (402)</span></td>
+                    <td id="lbl-total">کل نمبر: <span id="prev-total">100</span></td>
+                </tr>
+                <tr>
+                    <td id="lbl-time">وقت: <span id="prev-time">تین گھنٹے</span></td>
+                    <td id="lbl-pass">کامیابی کے نمبر: <span id="prev-pass">40</span></td>
+                </tr>
+            </table>
+
+            <div class="note-text" id="aiou-note">نوٹ: کوئی سے پانچ سوالات حل کریں۔ تمام سوالوں کے نمبر یکساں ہیں۔</div>
+
+            <table class="questions-table">
+                <thead>
+                    <tr>
+                        <th class="col-num" id="th-qnum">سوال نمبر</th>
+                        <th id="th-qtext">سوالات</th>
+                        <th class="col-marks" id="th-marks">نمبر</th>
+                    </tr>
+                </thead>
+                <tbody id="aiou-questions-body">
+                    <tr>
+                        <td class="col-num">1</td>
+                        <td class="q-text">مکمل مقابلہ سے کیا مراد ہے؟ مکمل مقابلہ کے تحت فرم کا مختصر عرصہ میں توازن کا نقشہ فرضی اعداد و شمار کی مدد سے واضح کریں۔ <span class="remove-btn" onclick="aiouDeleteRow(this)">[x]</span></td>
+                        <td class="col-marks">20</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="export-actions">
+        <button class="btn btn-pdf" id="btn-pdf" onclick="aiouExportPDF()">📄 PDF ڈاؤن لوڈ کریں</button>
+        <button class="btn btn-word" id="btn-word" onclick="aiouExportWord()">📝 ورڈ ڈاؤن لوڈ کریں</button>
+        <button class="btn btn-img" id="btn-img" onclick="aiouExportImage('jpeg')">🖼️ تصویر (JPEG)</button>
+    </div>
+</div>
+
+<script>
+    let aiouLogoUrl = null;
+    let aiouWmUrl = null;
+    const aiouLoader = document.getElementById('aiou-loader');
+    function aiouShowLoader(s) { aiouLoader.style.display = s ? 'flex' : 'none'; }
+
+    const fields = ['level', 'semester', 'course', 'total-marks', 'passing-marks', 'time'];
+    fields.forEach(f => {
+        document.getElementById(`aiou-${f}`).addEventListener('input', function(e) {
+            const idMap = { 'level':'prev-level', 'semester':'prev-sem', 'course':'prev-course', 'total-marks':'prev-total', 'passing-marks':'prev-pass', 'time':'prev-time' };
+            document.getElementById(idMap[f]).innerText = e.target.value;
+        });
+    });
+
+    function aiouToggleLang(lang) {
+        const wrapper = document.getElementById('aiou-main-wrapper');
+        wrapper.className = `aiou-tool-wrapper ${lang}`; 
+        const preview = document.getElementById('aiou-paper-preview');
+        preview.className = lang;
+        
+        if(lang === 'ur') {
+            document.getElementById('lbl-select-lang').innerText = "زبان منتخب کریں:";
+            document.getElementById('aiou-level').placeholder = "سطح (مثلاً: بی اے)";
+            document.getElementById('aiou-semester').placeholder = "سیمسٹر";
+            document.getElementById('aiou-course').placeholder = "پرچہ / مضمون";
+            document.getElementById('aiou-total-marks').placeholder = "کل نمبر";
+            document.getElementById('aiou-passing-marks').placeholder = "کامیابی کے نمبر";
+            document.getElementById('aiou-time').placeholder = "وقت";
+            document.getElementById('lbl-logo').innerText = "🖼️ ہیڈر لوگو:";
+            document.getElementById('lbl-add-q').innerText = "➕ سوال شامل کریں";
+            document.getElementById('aiou-q-text').placeholder = "یہاں سوال لکھیں...";
+            document.getElementById('aiou-q-marks').placeholder = "نمبر";
+            document.getElementById('btn-add-q').innerText = "شامل کریں";
+            document.getElementById('lbl-wm-title').innerText = "💧 واٹر مارک سیٹنگز";
+            document.getElementById('lbl-wm-none').innerText = "کوئی نہیں";
+            document.getElementById('lbl-wm-text').innerText = "ٹیکسٹ";
+            document.getElementById('lbl-wm-img').innerText = "تصویر";
+            document.getElementById('lbl-opacity-1').innerText = "دھندلاپن:";
+            document.getElementById('lbl-opacity-2').innerText = "دھندلاپن:";
+            document.getElementById('lbl-wm-upload').innerText = "🖼️ واٹر مارک تصویر اپلوڈ کریں:";
+            document.getElementById('btn-pdf').innerText = "📄 PDF ڈاؤن لوڈ کریں";
+            document.getElementById('btn-word').innerText = "📝 ورڈ ڈاؤن لوڈ کریں";
+            document.getElementById('btn-img').innerText = "🖼️ تصویر (JPEG)";
+            document.getElementById('aiou-preview-univ').innerText = "علامہ اقبال اوپن یونیورسٹی اسلام آباد";
+            document.getElementById('lbl-level').innerHTML = `سطح: <span id="prev-level">${document.getElementById('aiou-level').value}</span>`;
+            document.getElementById('lbl-sem').innerHTML = `سیمسٹر: <span id="prev-sem">${document.getElementById('aiou-semester').value}</span>`;
+            document.getElementById('lbl-course').innerHTML = `پرچہ: <span id="prev-course">${document.getElementById('aiou-course').value}</span>`;
+            document.getElementById('lbl-total').innerHTML = `کل نمبر: <span id="prev-total">${document.getElementById('aiou-total-marks').value}</span>`;
+            document.getElementById('lbl-time').innerHTML = `وقت: <span id="prev-time">${document.getElementById('aiou-time').value}</span>`;
+            document.getElementById('lbl-pass').innerHTML = `کامیابی کے نمبر: <span id="prev-pass">${document.getElementById('aiou-passing-marks').value}</span>`;
+            document.getElementById('aiou-note').innerText = "نوٹ: کوئی سے پانچ سوالات حل کریں۔ تمام سوالوں کے نمبر یکساں ہیں۔";
+            document.getElementById('th-qnum').innerText = "سوال نمبر";
+            document.getElementById('th-qtext').innerText = "سوالات";
+            document.getElementById('th-marks').innerText = "نمبر";
+        } else {
+            document.getElementById('lbl-select-lang').innerText = "Select Medium:";
+            document.getElementById('aiou-level').placeholder = "Level (e.g. BA)";
+            document.getElementById('aiou-semester').placeholder = "Semester";
+            document.getElementById('aiou-course').placeholder = "Paper / Subject";
+            document.getElementById('aiou-total-marks').placeholder = "Total Marks";
+            document.getElementById('aiou-passing-marks').placeholder = "Passing Marks";
+            document.getElementById('aiou-time').placeholder = "Time Allowed";
+            document.getElementById('lbl-logo').innerText = "🖼️ Header Logo:";
+            document.getElementById('lbl-add-q').innerText = "➕ Add Question";
+            document.getElementById('aiou-q-text').placeholder = "Type your question here...";
+            document.getElementById('aiou-q-marks').placeholder = "Marks";
+            document.getElementById('btn-add-q').innerText = "Add to Paper";
+            document.getElementById('lbl-wm-title').innerText = "💧 Watermark Settings";
+            document.getElementById('lbl-wm-none').innerText = "None";
+            document.getElementById('lbl-wm-text').innerText = "Text";
+            document.getElementById('lbl-wm-img').innerText = "Image";
+            document.getElementById('lbl-opacity-1').innerText = "Opacity:";
+            document.getElementById('lbl-opacity-2').innerText = "Opacity:";
+            document.getElementById('lbl-wm-upload').innerText = "🖼️ Upload Watermark Image:";
+            document.getElementById('btn-pdf').innerText = "📄 Download PDF";
+            document.getElementById('btn-word').innerText = "📝 Download Word";
+            document.getElementById('btn-img').innerText = "🖼️ Download JPEG";
+            document.getElementById('aiou-preview-univ').innerText = "Allama Iqbal Open University Islamabad";
+            document.getElementById('lbl-level').innerHTML = `Level: <span id="prev-level">${document.getElementById('aiou-level').value}</span>`;
+            document.getElementById('lbl-sem').innerHTML = `Semester: <span id="prev-sem">${document.getElementById('aiou-semester').value}</span>`;
+            document.getElementById('lbl-course').innerHTML = `Paper: <span id="prev-course">${document.getElementById('aiou-course').value}</span>`;
+            document.getElementById('lbl-total').innerHTML = `Total Marks: <span id="prev-total">${document.getElementById('aiou-total-marks').value}</span>`;
+            document.getElementById('lbl-time').innerHTML = `Time: <span id="prev-time">${document.getElementById('aiou-time').value}</span>`;
+            document.getElementById('lbl-pass').innerHTML = `Passing Marks: <span id="prev-pass">${document.getElementById('aiou-passing-marks').value}</span>`;
+            document.getElementById('aiou-note').innerText = "Note: Attempt any five questions. All questions carry equal marks.";
+            document.getElementById('th-qnum').innerText = "Q. No.";
+            document.getElementById('th-qtext').innerText = "Questions";
+            document.getElementById('th-marks').innerText = "Marks";
+        }
+    }
+
+    function aiouHandleLogo(e) {
+        const file = e.target.files[0];
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                aiouLogoUrl = event.target.result;
+                document.getElementById('aiou-preview-logo').src = aiouLogoUrl;
+                document.getElementById('aiou-preview-logo').style.display = 'block'; 
+                document.getElementById('aiou-logo-preview').src = aiouLogoUrl;
+                document.getElementById('aiou-logo-preview').style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function aiouHandleWM(e) {
+        const file = e.target.files[0];
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                aiouWmUrl = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function aiouToggleWM() {
+        const type = document.querySelector('input[name="aiou-wm-type"]:checked').value;
+        document.getElementById('aiou-wm-text-settings').style.display = type === 'text' ? 'flex' : 'none';
+        document.getElementById('aiou-wm-img-settings').style.display = type === 'image' ? 'flex' : 'none';
+    }
+
+    function aiouAddQuestion() {
+        const qText = document.getElementById('aiou-q-text').value;
+        const qMarks = document.getElementById('aiou-q-marks').value;
+        if(!qText.trim()) { alert("برائے مہربانی سوال لکھیں!"); return; }
+
+        const tbody = document.getElementById('aiou-questions-body');
+        const count = tbody.children.length + 1;
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="col-num">${count}</td>
+            <td class="q-text">${qText} <span class="remove-btn" onclick="aiouDeleteRow(this)">[x]</span></td>
+            <td class="col-marks">${qMarks}</td>
+        `;
+        tbody.appendChild(tr);
+        document.getElementById('aiou-q-text').value = '';
+    }
+
+    function aiouDeleteRow(btn) {
+        btn.parentNode.parentNode.remove();
+        const rows = document.querySelectorAll('#aiou-questions-body tr');
+        rows.forEach((row, i) => { row.cells[0].innerText = i + 1; });
+    }
+
+    async function aiouGenerateCanvas() {
+        const original = document.getElementById('aiou-paper-preview');
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'absolute'; wrapper.style.left = '-9999px'; wrapper.style.top = '0'; wrapper.style.background = '#fff';
+        const clone = original.cloneNode(true);
+        clone.style.transform = 'none'; clone.style.boxShadow = 'none'; clone.style.margin = '0';
+        clone.querySelectorAll('.remove-btn').forEach(btn => btn.style.display = 'none');
+        wrapper.appendChild(clone);
+        document.body.appendChild(wrapper);
+        const canvas = await html2canvas(clone, { scale: 3, useCORS: true, backgroundColor: "#ffffff", width: 794, height: 1123 });
+        await aiouApplyWatermark(canvas);
+        document.body.removeChild(wrapper);
+        return canvas;
+    }
+
+    async function aiouApplyWatermark(canvas) {
+        const type = document.querySelector('input[name="aiou-wm-type"]:checked').value;
+        if(type === 'none') return;
+        const ctx = canvas.getContext('2d');
+        ctx.save();
+        if(type === 'text') {
+            const text = document.getElementById('aiou-wm-text').value;
+            const opacity = document.getElementById('aiou-wm-opacity').value;
+            ctx.globalAlpha = opacity; ctx.font = "bold 100px Arial"; ctx.fillStyle = "#000000"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+            ctx.translate(canvas.width / 2, canvas.height / 2); ctx.rotate(-Math.PI / 4);
+            for(let i = -2; i <= 2; i++) { ctx.fillText(text, 0, i * 300); }
+        } else if(type === 'image') {
+            if(!aiouWmUrl) { alert("Please upload a watermark image first."); return; }
+            const opacity = document.getElementById('aiou-wm-img-opacity').value;
+            try {
+                const img = await aiouLoadImage(aiouWmUrl);
+                ctx.globalAlpha = opacity;
+                const w = canvas.width * 0.7;
+                const h = (img.height / img.width) * w;
+                ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+            } catch(e) { console.error("Watermark error", e); }
+        }
+        ctx.restore();
+    }
+
+    function aiouLoadImage(url) {
+        return new Promise((resolve, reject) => { const img = new Image(); img.onload = () => resolve(img); img.onerror = reject; img.src = url; });
+    }
+
+    async function aiouExportPDF() {
+        aiouShowLoader(true);
+        try {
+            const canvas = await aiouGenerateCanvas();
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save('AIOU_Paper.pdf');
+        } catch(e) { alert("PDF Error: " + e); }
+        aiouShowLoader(false);
+    }
+
+    async function aiouExportImage(format) {
+        aiouShowLoader(true);
+        try {
+            const canvas = await aiouGenerateCanvas();
+            const link = document.createElement('a');
+            link.download = `AIOU_Paper.${format}`;
+            link.href = canvas.toDataURL(`image/${format}`, 1.0);
+            link.click();
+        } catch(e) { alert("Image Error: " + e); }
+        aiouShowLoader(false);
+    }
+
+    function aiouExportWord() {
+        const clone = document.getElementById('aiou-paper-preview').cloneNode(true);
+        clone.querySelectorAll('.remove-btn').forEach(el => el.remove());
+        clone.style.transform = 'none'; clone.style.boxShadow = 'none'; clone.style.width = '100%'; clone.style.padding = '10px';
+        
+        const isUrdu = clone.classList.contains('ur');
+
+        // Yahan encoding fix kiya gaya hai
+        const header = `
+            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                <meta charset="utf-8">
+                <title>Export HTML To Doc</title>
+                <style>
+                    body { font-family: 'Times New Roman', serif; direction: ${isUrdu ? 'rtl' : 'ltr'}; text-align: ${isUrdu ? 'right' : 'left'}; }
+                    .paper-header { text-align: center; }
+                    .meta-table, .questions-table { width: 100%; border-collapse: collapse; }
+                    .meta-table td, .questions-table th, .questions-table td { border: 1px solid black; padding: 8px; }
+                    .questions-table th { background-color: #f2f2f2; }
+                    .col-num, .col-marks { text-align: center; }
+                    .q-text { font-family: ${isUrdu ? "'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', Arial, sans-serif; font-size: 15px;" : "'Times New Roman', serif; font-size: 15px;"} }
+                </style>
+            </head><body>`;
+        const footer = `</body></html>`;
+
+        const sourceHTML = header + clone.innerHTML + footer;
+        
+        // Blob with \ufeff (BOM) for UTF-8 Word
+        const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword;charset=utf-8' });
+        
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'AIOU_Paper.doc';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+</body>
+</html>
