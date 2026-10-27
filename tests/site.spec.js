@@ -65,6 +65,24 @@ test('homepage renders on desktop and mobile without horizontal overflow', async
   }
 });
 
+
+test('mobile navigation and site search are interactive', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/ui/index.html');
+  const menu = page.locator('.menu');
+  await menu.click();
+  await expect(menu).toHaveAttribute('aria-expanded', 'true');
+  await page.locator('.mobile-nav a[href="#assignments"]').click();
+  await expect(menu).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('#assignments')).toBeVisible();
+
+  const search = page.getByRole('button', { name: 'Search this site' });
+  await search.click();
+  await page.getByRole('searchbox', { name: 'Search AIOU Coaching' }).fill('Assignment Writer');
+  await page.getByRole('button', { name: 'Search', exact: true }).click();
+  await expect(page.locator('.search-status')).toContainText('matching section');
+});
+
 test('report engine supports mobile layout and report generation flow', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/tools/aiou-report-engine.html');
