@@ -14,7 +14,7 @@
 ## Firebase features
 1. Select/create the intended Firebase project and register the actual Web App.
 2. Add the exact production origin(s) under Authentication → Settings → Authorized domains.
-3. Copy `firebase/config.example.js` to `firebase/config.js` locally and fill real values from Firebase Console, including the FCM Web Push VAPID public key. `config.js` is ignored by Git.
+3. In GitHub → Settings → Secrets and variables → Actions → Variables, add `AIOU_FIREBASE_API_KEY`, `AIOU_FIREBASE_AUTH_DOMAIN`, `AIOU_FIREBASE_PROJECT_ID`, `AIOU_FIREBASE_STORAGE_BUCKET`, `AIOU_FIREBASE_MESSAGING_SENDER_ID`, `AIOU_FIREBASE_APP_ID`, and `AIOU_FIREBASE_VAPID_KEY` using the real Firebase Web App settings. These are client-side web config values, not Admin SDK secrets; the Pages workflow writes `firebase/config.js` into the build artifact only when required values exist. Never put service-account credentials in variables or client code.
 4. Enable Email/Password, create Firestore and Storage, then review/deploy root `firestore.rules` and `storage.rules`.
 5. Visit `/firebase/` on the deployed companion app to test account creation, sign-in, password reset, private file upload and push-token registration.
 6. Test with two users in a non-production project before real users.
