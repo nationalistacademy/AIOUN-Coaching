@@ -3178,6 +3178,68 @@ function jtCallback(){
 })();
 ]]></script>
 
+
+<!-- PWA + Firebase area exposed in Blogger Layout. Edit/remove this gadget from Layout. -->
+<b:section id='pwa-firebase-layout' class='pwa-firebase-layout' maxwidgets='1' name='PWA Install and Firebase' showaddelement='yes'>
+  <b:widget id='HTML26' locked='false' title='PWA Install / Firebase Setup' type='HTML' visible='true'>
+    <b:widget-settings>
+      <b:widget-setting name='content'><![CDATA[
+<section class="aio-pwa-layout-card" aria-labelledby="aio-pwa-layout-title">
+  <div class="aio-pwa-layout-copy">
+    <span class="aio-pwa-layout-eyebrow">AIOU COACHING · STUDY APP</span>
+    <h2 id="aio-pwa-layout-title">Take your study tools with you</h2>
+    <p>Open the installable study app for a mobile-friendly experience. Offline access applies to pages already cached by the app.</p>
+    <div class="aio-pwa-layout-actions">
+      <a class="aio-pwa-layout-button" href="https://nationalistacademy.github.io/AIOUN-Coaching/">Open Study App</a>
+      <button class="aio-pwa-layout-button aio-pwa-install" type="button" hidden>Install App</button>
+    </div>
+    <p class="aio-pwa-layout-status" role="status" aria-live="polite">Install option depends on your browser and device.</p>
+  </div>
+  <details class="aio-firebase-setup">
+    <summary>Firebase connection status / setup</summary>
+    <p class="aio-firebase-status" role="status">Firebase is not connected yet. Add your Firebase Web App configuration in the template only after creating a Firebase project.</p>
+    <p class="aio-firebase-help">Do not paste service-account keys, private keys, Admin SDK credentials, or Cloudflare API tokens here. Firebase web config is intended for client apps, but access must still be protected by Firebase Security Rules and authorized domains.</p>
+  </details>
+</section>
+<script>
+(function(){
+  var card=document.querySelector('.aio-pwa-layout-card');
+  if(!card || card.dataset.ready==='1') return;
+  card.dataset.ready='1';
+  var install=card.querySelector('.aio-pwa-install');
+  var status=card.querySelector('.aio-pwa-layout-status');
+  var promptEvent=null;
+  window.addEventListener('beforeinstallprompt',function(event){
+    event.preventDefault();promptEvent=event;if(install)install.hidden=false;
+  });
+  if(install) install.addEventListener('click',async function(){
+    if(!promptEvent){status.textContent='Install is not offered by this browser. Use the browser menu → Add to Home screen.';return;}
+    promptEvent.prompt();await promptEvent.userChoice;promptEvent=null;install.hidden=true;
+  });
+  window.addEventListener('appinstalled',function(){if(install)install.hidden=true;status.textContent='Study app installed successfully.';});
+  var fbStatus=card.querySelector('.aio-firebase-status');
+  var cfg=window.AIOU_FIREBASE_CONFIG;
+  if(cfg && cfg.apiKey && cfg.authDomain && cfg.projectId && cfg.appId){
+    fbStatus.textContent='Firebase config found in this page. Firebase service initialization and security rules must be verified separately.';
+    if(window.firebase && !window.firebase.apps.length){try{window.firebase.initializeApp(cfg);fbStatus.textContent='Firebase app initialized. No authentication or database access has been enabled by this widget.';}catch(e){fbStatus.textContent='Firebase initialization failed. Check the web app configuration.';}}
+  }
+})();
+</script>
+      ]]></b:widget-setting>
+    </b:widget-settings>
+    <b:includable id='main'>
+      <b:include name='JetHtml'/>
+    </b:includable>
+  </b:widget>
+</b:section>
+<style type='text/css'><![CDATA[
+.pwa-firebase-layout{max-width:1180px;margin:24px auto;padding:0 18px}
+.aio-pwa-layout-card{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:22px;align-items:center;padding:clamp(18px,3vw,30px);border:1px solid #f1d8c8;border-radius:24px;background:linear-gradient(135deg,#fff 0%,#fff5ed 100%);box-shadow:0 12px 32px rgba(24,23,22,.06);color:#181716;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+.aio-pwa-layout-card *{box-sizing:border-box}.aio-pwa-layout-eyebrow{font-size:11px;font-weight:850;letter-spacing:.12em;color:#a54513}.aio-pwa-layout-card h2{margin:8px 0;font-size:clamp(22px,3vw,32px);line-height:1.15;color:#181716}.aio-pwa-layout-card p{margin:8px 0;color:#6d6a67;font-size:14px;line-height:1.6}.aio-pwa-layout-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.aio-pwa-layout-button{display:inline-flex;align-items:center;justify-content:center;border:1px solid #f67938;border-radius:999px;background:#f67938;color:#fff!important;text-decoration:none;font:800 13px/1.3 system-ui,sans-serif;padding:11px 16px;cursor:pointer}.aio-pwa-layout-button:hover{background:#b8470f;border-color:#b8470f}.aio-pwa-layout-button[hidden]{display:none!important}.aio-pwa-layout-status{font-size:12px!important}.aio-firebase-setup{border:1px solid #e9e5e1;background:#fff;border-radius:16px;padding:15px}.aio-firebase-setup summary{font-weight:800;cursor:pointer;color:#181716}.aio-firebase-status{margin-top:12px!important}.aio-firebase-help{font-size:12px!important}
+@media(max-width:680px){.pwa-firebase-layout{padding:0 12px}.aio-pwa-layout-card{grid-template-columns:1fr;gap:14px;border-radius:18px}.aio-pwa-layout-actions{display:grid;grid-template-columns:1fr}.aio-pwa-layout-button{width:100%}}
+]]></style>
+<!-- Firebase web config hook: add a window.AIOU_FIREBASE_CONFIG object here only when the actual project config is available. Firebase SDK is intentionally not loaded until the needed services are selected. -->
+
 <!-- Blogger theme app entry point ends here. -->
 
 <b:if cond='!data:view.isPreview'>&lt;textarea disabled readonly id=&quot;element-b&quot; style=&quot;display:none&quot;&gt;&lt;style&gt;/*</b:if></body><b:if cond='!data:view.isPreview'>*/&lt;/style&gt;&lt;/textarea&gt;<script>/*<![CDATA[*/const _eh=document.getElementById("element-h"),_eb=document.getElementById("element-b"),_WidgetManager={_PopupConfig:function(){}};null!==_eh&&(_eh.outerHTML=""),null!==_eb&&(_eb.outerHTML="");/*]]>*/</script>
