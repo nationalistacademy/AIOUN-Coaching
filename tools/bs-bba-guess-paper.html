@@ -482,7 +482,13 @@
     });
     var doc = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">' +
       '<head><meta charset="utf-8"><title>Paper</title><style>body{font-family:' + (rtl ? "'Jameel Noori Nastaleeq','Noto Nastaliq Urdu'," : '') +
-      "'Times New Roman',serif;font-size:12pt}</style></head><body dir=\"" + (rtl ? 'rtl' : 'ltr') + '">' + h + '</body></html>';
+      "'Times New Roman',serif;font-size:12pt}</style><meta name="theme-color" content="#f67938">
+<meta name="application-name" content="AIOU Coaching">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/brand.css">
+</head><body dir=\"" + (rtl ? 'rtl' : 'ltr') + '">' + h + '<script src="../js/pwa.js" defer></script>
+</body></html>';
     download(new Blob(['\ufeff', doc], { type: 'application/msword;charset=utf-8' }), baseName() + '.doc');
   }
   function init() {
