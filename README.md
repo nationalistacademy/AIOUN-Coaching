@@ -23,6 +23,7 @@ AIOU Coaching is an independent study-support project for Allama Iqbal Open Univ
 - Browse Blogger page and post source in [pages/](pages/README.md) and [posts/](posts/README.md).
 - Read the [LMS setup and security guide](lms/README.md) before configuring authentication or using the learning platform.
 - Review the [SEO guide](seo/README.md), [GEO guide](geo/README.md), and [Google Search guide](google-search/README.md) for Blogger publishing.
+- Configure the [Blogger PWA, Cloudflare and Firebase layout](docs/BLOGGER-PWA-CLOUDFLARE-FIREBASE.md) and use the [Firebase web config starter](firebase-config.example.js) when your Firebase project is ready.
 
 Most study tools are standalone HTML pages. Tools that call an AI model require a configured Worker endpoint and token; the AI service is not automatically available just because the page loads.
 
