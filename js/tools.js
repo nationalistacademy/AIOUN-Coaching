@@ -2,20 +2,16 @@
 (function (w) {
   'use strict';
   var GROUPS = [
-    { id: 'all', label: 'All Tools' },
-    { id: 'ai', label: 'AI Tools' },
-    { id: 'academic', label: 'Capstone / Internship / Thesis' },
-    { id: 'paper', label: 'Guess Papers' },
-    { id: 'cover', label: 'Cover Pages' },
-    { id: 'files', label: 'Image / PDF / Downloads' },
-    { id: 'site', label: 'Pages' }
+    { id:'all',label:'All Tools' },{ id:'ai',label:'AI Tools' },{ id:'academic',label:'Capstone / Internship / Thesis' },
+    { id:'paper',label:'Guess Papers' },{ id:'cover',label:'Cover Pages' },{ id:'files',label:'Image / PDF / Downloads' },{ id:'site',label:'Pages' }
   ];
   var LIST = [
     {id:'studio',icon:'🤖',group:'ai',name:'Multi-ID AI Studio',file:'studio.html',badges:['DeepSeek','Multiple IDs','Compare'],desc:'Ek prompt kai Worker IDs ko bhejein, jawab compare karein aur Word draft banayein.'},
     {id:'humanizer',icon:'✍️',group:'ai',name:'AI Text Humanizer',file:'humanizer.html',badges:['Rewrite'],desc:'Apne draft ko natural aur clear banane ke liye rewriting help.'},
     {id:'diagram',icon:'🎨',group:'ai',name:'AI Diagram Generator',file:'diagram-generator.html',badges:['Mermaid','PNG'],desc:'Topic se flowchart/diagram generate karein.'},
     {id:'writer',icon:'📝',group:'ai',name:'AI Assignment Writer',file:'assignment-writer.html',badges:['Draft','Word'],desc:'Assignment structure aur draft assistance.'},
-    {id:'report-builder',icon:'📚',group:'academic',name:'AIOU Capstone / Internship / Thesis Builder',file:'report-builder.html',badges:['AIOU structure','AI','Word','PDF'],desc:'Programme, topic aur genuine notes ke basis par report outline, section drafts aur downloads.'},
+    {id:'report-builder',icon:'📚',group:'academic',name:'AIOU Capstone / Internship / Thesis Builder',file:'report-builder.html',badges:['AI','Word','PDF'],desc:'Quick section-based report builder.'},
+    {id:'academic-report',icon:'🎓',group:'academic',name:'Complete Academic Report Generator',file:'academic-report-generator.html',badges:['Capstone','Internship','Thesis','Word','PDF'],desc:'Complete workspace: setup, structure, chapters, AI assistance and final document export.'},
     {id:'guess-paper',icon:'📄',group:'paper',name:'Guess Paper Generator',file:'guess-paper.html',badges:['PDF','Word','JPG','PNG'],desc:'Revision ke liye guess papers banayein.'},
     {id:'bs-bba',icon:'✅',group:'paper',name:'BS & BBA Guess Paper',file:'bs-bba-guess-paper.html',badges:['MCQ','PDF','Word'],desc:'MCQs aur subjective paper builder.'},
     {id:'cover-page',icon:'📕',group:'cover',name:'Assignment Cover Page',file:'assignment-cover-page.html',badges:['Templates','PDF','JPG'],desc:'Assignment cover designs.'},
