@@ -3,6 +3,7 @@
 .env.local
 *.key
 secrets.json
+.firebaserc
 firebase/config.js
 firebase/config.local.js
 firebase-adminsdk*.json
@@ -21,6 +22,8 @@ Thumbs.db
 # Dependencies
 node_modules/
 package-lock.json
+functions/node_modules/
+functions/package-lock.json
 
 # Build output
 dist/
