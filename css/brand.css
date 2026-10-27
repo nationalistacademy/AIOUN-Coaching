@@ -46,3 +46,12 @@ footer.site{text-align:center;color:var(--mut);font-size:.82rem;padding:28px 10p
 .offline-page{display:grid;place-items:center;padding:24px}.offline-card{width:min(620px,100%);padding:clamp(24px,6vw,48px);border:1px solid var(--line);border-radius:28px;background:#fff;box-shadow:0 20px 60px rgba(24,23,22,.08)}.offline-mark{width:58px;height:58px;display:grid;place-items:center;border-radius:18px;background:var(--ac);color:#fff;font-size:28px;font-weight:900;margin-bottom:24px}.offline-card h1{font-size:clamp(2rem,6vw,3.5rem);margin-bottom:14px}.offline-card p{color:var(--mut);margin:12px 0}.offline-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:24px}.offline-note{font-size:.8rem!important;border-top:1px solid var(--line);padding-top:16px}
 @media(max-width:650px){.wrap{padding:12px}.topnav{align-items:flex-start}.topnav-links{width:100%}.topnav-links a.txt{padding:7px 9px}.pwa-promo{align-items:stretch;flex-direction:column}.pwa-promo .btn{width:100%}.grid2{grid-template-columns:1fr}.panel{padding:17px}.tgrid{grid-template-columns:1fr}.offline-card{border-radius:20px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Consistent light cards across standalone tools; preserve dark code/output surfaces. */
+.panel,.card,.tool-card,.section-card,.section-box,.workspace-card,.template,.surface,.app-card,.result-card,.form-card,.res-card,.idrow,.step{
+  background-color:#fff!important;color:var(--ink)!important;border-color:var(--line)!important;
+  box-shadow:0 8px 26px rgba(24,23,22,.055)!important
+}
+.step.active{background:#f67938!important;color:#fff!important;border-color:#f67938!important}
+.step.done{background:#e8f7ed!important;color:#176b3b!important;border-color:#b9e4c8!important}
+.res-body,.out,pre,code{overflow-wrap:anywhere}
