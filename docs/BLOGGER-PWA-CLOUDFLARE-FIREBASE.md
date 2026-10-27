@@ -19,7 +19,7 @@
 5. Visit `/firebase/` on the deployed companion app to test account creation, sign-in, password reset, private file upload and push-token registration.
 6. Test with two users in a non-production project before real users.
 
-The starter supports Auth, Firestore profile/notification reads, Storage uploads, and FCM token registration. It does not send notifications to groups; that requires a trusted Cloud Function/server using Admin SDK. Never put Admin SDK credentials or Cloudflare API tokens in browser code.
+The starter supports Auth, Firestore profile/notification reads, Storage uploads, FCM token registration, and a callable Cloud Function that sends to one target user only when the caller has a trusted `admin: true` custom claim. The function writes the in-app notification and sends to that user's registered browser tokens. It is not a bulk campaign system. Never put Admin SDK credentials or Cloudflare API tokens in browser code.
 
 ## Cloudflare custom domain and same-origin PWA
 You confirmed a custom domain is connected through Cloudflare, but its exact hostname and current origin/route settings were not supplied or verified in this repository. No DNS, proxy, Worker route, or production hosting settings were changed.
