@@ -70,3 +70,26 @@ If the final GitHub Pages URL differs, use the exact URL shown by the deployment
 ### LMS readiness warning
 
 Static hosting only serves the LMS files; it does not configure Supabase Auth URLs or OAuth provider credentials. The LMS tables and core RLS policies are present and the security hardening migration is applied. Before production use, finish end-to-end tests with separate student and staff accounts, verify Auth redirect/provider settings, and confirm staff roles are assigned only through a trusted process.
+
+## Real-account LMS security E2E test
+
+A dedicated Playwright/API test suite is available at `tests/lms-security.spec.js`, with a manual GitHub Actions workflow at `.github/workflows/lms-security-e2e.yml`. It signs in with separate student A, student B, and trusted staff accounts using the real Supabase Auth endpoint, then checks row isolation, student self-enrollment, forged quiz attempts, direct score/answer tampering, and staff visibility.
+
+### One-time test setup
+
+Use a **non-production test project** if possible. Never use a service-role key for these tests; the suite only needs the public publishable/anon key and each account's own password.
+
+1. Create three dedicated test users in Supabase Auth: Student A, Student B, and Staff. Confirm both student accounts can sign in. Do not share real user passwords in chat or commit them.
+2. Give the staff test user a trusted `app_metadata.role` of `admin` or `teacher` from the Supabase dashboard/admin process. Do not set this through user-editable metadata.
+3. Create a dedicated published test course and published quiz. Enroll both test students in that course and submit the quiz as each student at least once, so each has a quiz attempt. Create a second course that Student A is **not** enrolled in.
+4. In GitHub repository **Settings → Secrets and variables → Actions → New repository secret**, set these secrets:
+   - `LMS_TEST_SUPABASE_URL` — test project's Supabase URL
+   - `LMS_TEST_SUPABASE_ANON_KEY` — public publishable/anon key only
+   - `LMS_TEST_STUDENT_A_EMAIL` and `LMS_TEST_STUDENT_A_PASSWORD`
+   - `LMS_TEST_STUDENT_B_EMAIL` and `LMS_TEST_STUDENT_B_PASSWORD`
+   - `LMS_TEST_STAFF_EMAIL` and `LMS_TEST_STAFF_PASSWORD`
+5. Open **Actions → LMS Security E2E → Run workflow** and enter the UUIDs of the shared test course, quiz, and the second course Student A is not enrolled in.
+
+The workflow must pass all tests to establish the real-account result. It fails when credentials or fixtures are missing, and test accounts/passwords are not written to logs intentionally. The suite checks that direct enrollment/attempt creation cannot create a row and that direct score/answer updates either fail or affect zero rows. Tests do not create persistent data.
+
+**Current status:** the test harness is committed, but a real-account run is still pending until the dedicated test accounts, fixture IDs, and GitHub Actions secrets are configured. Do not treat the suite as passed merely because the workflow file exists.
