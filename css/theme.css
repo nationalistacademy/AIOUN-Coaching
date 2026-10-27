@@ -1,0 +1,121 @@
+/* ==========================================================================
+   AIOU Coaching — shared theme (dark glass)
+   Used by: index.html, tools/studio.html and any other page served from repo.
+   Keep tool-specific layout in css/studio.css.
+   ========================================================================== */
+
+:root{
+  --ac:#f67938;              /* brand */
+  --ac2:#f46013;             /* brand hover */
+  --ink:#f8fafc;
+  --mut:#cbd5e1;
+  --glass:rgba(30,30,35,.62);
+  --soft:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.14);
+  --ok:#22c55e;
+  --err:#ef4444;
+  --warn:#f59e0b;
+  --r:20px;
+  --r-sm:12px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+*{margin:0;padding:0;font-family:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+
+body{background:#121216;color:var(--ink);min-height:100vh;overflow-x:hidden;position:relative;line-height:1.6}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(42rem 28rem at 8% -8%, rgba(246,121,56,.32), transparent 60%),
+  radial-gradient(36rem 24rem at 100% 8%, rgba(246,121,56,.16), transparent 55%),
+  radial-gradient(30rem 22rem at 50% 112%, rgba(255,176,110,.14), transparent 60%);
+  background-attachment:fixed}
+.blob{position:fixed;filter:blur(90px);z-index:-1;opacity:.35;border-radius:50%;pointer-events:none}
+.b1{top:-12%;left:-8%;width:420px;height:420px;background:#f67938}
+.b2{bottom:-14%;right:-8%;width:380px;height:380px;background:#f46013}
+
+.wrap{max-width:1400px;margin:0 auto;padding:18px}
+header.site{text-align:center;margin-bottom:18px}
+h1{font-size:2.1rem;font-weight:800;letter-spacing:-.03em;color:#fff}
+h1 span{color:var(--ac)}
+h2{font-size:1.1rem;margin-bottom:6px}
+h3{font-size:1rem}
+.sub{color:var(--mut);font-size:.92rem;margin-top:4px}
+.muted{color:var(--mut);font-size:.8rem}
+.note{display:inline-block;margin-top:8px;font-size:.75rem;color:#ffd7bf;background:rgba(246,121,56,.14);
+  border:1px solid rgba(246,121,56,.35);border-radius:999px;padding:4px 12px}
+
+/* panels ------------------------------------------------------------------ */
+.panel{background:var(--glass);backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid var(--line);
+  border-radius:var(--r);padding:22px;box-shadow:0 8px 32px rgba(0,0,0,.28)}
+.panel + .panel{margin-top:18px}
+
+/* forms ------------------------------------------------------------------- */
+label.lab{display:block;font-size:.78rem;font-weight:600;margin:12px 0 5px;color:#e2e8f0}
+input,textarea,select{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:10px 13px;color:#fff;font-size:.9rem;outline:none}
+textarea{min-height:90px;resize:vertical;line-height:1.6}
+select{cursor:pointer}
+input:focus,textarea:focus,select:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(246,121,56,.2)}
+input[type=checkbox]{width:auto;accent-color:var(--ac)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>div{flex:1;min-width:140px}
+
+/* buttons ----------------------------------------------------------------- */
+.btn{display:inline-block;width:100%;padding:11px 16px;border:1px solid rgba(255,255,255,.25);
+  border-radius:999px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;
+  font-size:.95rem;font-weight:700;cursor:pointer;margin-top:10px;text-align:center;
+  text-decoration:none;box-shadow:0 6px 18px rgba(246,121,56,.32);transition:filter .15s,transform .15s}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn:disabled{background:#3f3f46;border-color:transparent;box-shadow:none;cursor:wait;transform:none}
+.btn.g{background:linear-gradient(135deg,#16a34a,#15803d);box-shadow:0 6px 18px rgba(22,163,74,.25)}
+.btn.pk{background:linear-gradient(135deg,#fb923c,var(--ac));box-shadow:0 6px 18px rgba(246,121,56,.28)}
+.btn.ghost{background:var(--soft);border-color:var(--line);box-shadow:none;font-weight:600}
+.btn.sm{width:auto;padding:7px 14px;font-size:.8rem;margin-top:6px}
+.btn.xs{width:auto;padding:4px 10px;font-size:.72rem;margin-top:0;box-shadow:none}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid2 .btn{margin-top:8px;font-size:.82rem}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+
+/* status ------------------------------------------------------------------ */
+.stt{text-align:center;font-size:.82rem;font-weight:600;padding:8px;border-radius:10px;margin-top:10px}
+.stt.err{background:rgba(239,68,68,.18);color:#fecaca}
+.stt.ok{background:rgba(34,197,94,.18);color:#bbf7d0}
+.stt.ld{background:rgba(246,121,56,.18);color:#fed7aa}
+.pill{display:inline-block;font-size:11px;padding:3px 10px;border-radius:999px;
+  background:rgba(246,121,56,.18);color:#fed7aa;margin-top:6px}
+.pill.w{background:rgba(239,68,68,.18);color:#fecaca}
+.badge{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;
+  background:var(--soft);border:1px solid var(--line);color:var(--mut)}
+.hid{display:none!important}
+.ib{background:rgba(246,121,56,.1);border:1px solid rgba(246,121,56,.35);color:#ffedd5;
+  border-radius:var(--r-sm);padding:10px 12px;font-size:.78rem;line-height:1.55;margin-top:12px}
+.ib.ok{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.35);color:#dcfce7}
+details{margin-top:14px}
+summary{cursor:pointer;font-size:.8rem;color:var(--mut)}
+
+/* tabs / chips ------------------------------------------------------------ */
+.tabs{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tab{flex:1;padding:9px;text-align:center;background:var(--soft);border:1px solid var(--line);
+  border-radius:999px;cursor:pointer;font-size:.85rem;font-weight:600}
+.tab.active{background:var(--ac);border-color:var(--ac);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.chip{border:1px solid var(--line);background:var(--soft);color:var(--mut);border-radius:999px;
+  padding:6px 16px;font-weight:700;font-size:.8rem;cursor:pointer}
+.chip:hover,.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+
+/* tool hub grid ----------------------------------------------------------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:14px}
+.tcard{display:flex;flex-direction:column;background:var(--glass);backdrop-filter:blur(15px) saturate(170%);
+  -webkit-backdrop-filter:blur(15px) saturate(170%);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px;box-shadow:0 8px 32px rgba(0,0,0,.22);transition:transform .25s,box-shadow .25s}
+.tcard:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(246,121,56,.25)}
+.tcard .tic{width:44px;height:44px;border-radius:14px;background:rgba(246,121,56,.16);
+  display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:10px}
+.tcard h3{margin-bottom:4px}
+.tcard p{font-size:.84rem;color:var(--mut);margin-bottom:10px}
+.tcard .tb{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tcard .go{margin-top:auto}
+
+footer.site{text-align:center;color:var(--mut);font-size:.78rem;padding:26px 10px 10px}
+footer.site a{color:var(--ac);text-decoration:none}

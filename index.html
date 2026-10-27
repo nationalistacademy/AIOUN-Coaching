@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AIOU Coaching — Free Study Tools for AIOU Students</title>
+<meta name="description" content="AIOU Coaching ke free tools: multi-ID AI studio, guess paper, cover page, assignment builder, diagram generator aur bulk Word downloader.">
+<link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="wrap">
+<header class="site">
+  <h1>AIOU <span>Coaching</span></h1>
+  <div class="sub">Samjho · Khud likho · Guess paper banao · Cover page lagao · Word file download karo</div>
+  <div class="note">Independent study help. Not affiliated with AIOU.</div>
+</header>
+
+<div class="panel">
+  <h2>🤖 Multi-ID AI Studio</h2>
+  <p class="muted">Ye studio ek hi sawal kai DeepSeek Worker IDs (URL + token) ko bhejta hai, saare jawab side by side
+    dikhata hai, best jawab chunne deta hai aur assignment ki Word file bana deta hai. Ek ID fail ho to baqi IDs se kaam chalta rehta hai.</p>
+  <a class="btn" href="tools/studio.html">Studio kholein →</a>
+  <div class="ib">DeepSeek API key sirf Cloudflare Worker ke secret me rehti hai — browser me kabhi nahi.</div>
+</div>
+
+<div class="panel">
+  <h2>🧰 Tamam Tools</h2>
+  <p class="muted">Har tool ek alag HTML file hai — jo chahiye wo khol lein, baqi ki zarurat nahi.</p>
+  <div id="hub"></div>
+</div>
+
+<div class="panel">
+  <h2>⚙️ Worker kaise setup karein</h2>
+  <p class="muted">AI wale tools <code>worker/</code> folder ka Cloudflare Worker use karte hain. Wrangler se:</p>
+  <pre style="background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:12px;padding:14px;overflow:auto;font-size:.82rem"><code>cd worker
+npx wrangler secret put DEEPSEEK_API_KEY
+npx wrangler secret put AUTH_TOKEN      # ek ya kai tokens, comma se alag
+npx wrangler deploy</code></pre>
+  <div class="ib ok">Deploy ke baad Worker URL aur token studio ke "Multi-ID Response" section me save karein — chahein to
+    kai IDs (apni + backup) rakh lein.</div>
+</div>
+
+<footer class="site">
+  <p>AIOU Coaching · <a href="pages/privacy.html">Privacy</a> · <a href="pages/terms.html">Terms</a> ·
+     <a href="pages/disclaimer.html">Disclaimer</a> · <a href="pages/contact.html">Contact</a></p>
+  <p class="muted">AIOU ka official tool nahi. Fees, dates aur results university website se confirm karein.</p>
+</footer>
+</div>
+
+<script src="js/ui.js"></script>
+<script src="js/tools.js"></script>
+<script src="js/hub.js"></script>
+<script>
+  AIOU.hub.render(document.getElementById('hub'), { base: 'tools/' });
+</script>
+</body>
+</html>

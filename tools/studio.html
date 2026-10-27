@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AIOU Coaching — Multi-ID AI Studio</title>
+<meta name="description" content="Ek sawal kai DeepSeek Worker IDs ko bhejein, sab ke jawab sath dekhein, best jawab chunein aur Word file download karein.">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/studio.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.0.2/docx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="wrap">
+<header class="site">
+  <h1>AIOU <span>Coaching</span> · Multi-ID Studio</h1>
+  <div class="sub">Ek prompt · Kai Worker IDs · Sab jawab sath · Best jawab chunein · Word file banayein</div>
+  <div class="note">Independent study help. Not affiliated with AIOU.</div>
+</header>
+
+<div class="stepper" id="nav"></div>
+
+<!-- ======================= 1. MULTI-ID RESPONSE ======================= -->
+<section id="s1">
+  <div class="panel">
+    <div class="sec-head">
+      <h2>🔀 Worker IDs (multiple IDs)</h2>
+      <span class="pill" id="idSummary">Koi ID nahi</span>
+    </div>
+    <p class="muted">Har ID = ek Cloudflare Worker URL + uska Auth token + model. Aap kai IDs rakh sakte hain:
+      apne, dost ke, ya backup keys. Ek prompt sab ko jayega aur jawab sath dikhega.</p>
+    <div id="idList"></div>
+    <div class="row">
+      <div><button class="btn pk" id="btnAddId" type="button">➕ Naya ID add karein</button></div>
+      <div><button class="btn ghost" id="btnPingAll" type="button">🔌 Sab IDs test karein</button></div>
+    </div>
+    <div class="row">
+      <div><button class="btn ghost sm" id="btnExportIds" type="button">⬇️ IDs export (JSON)</button></div>
+      <div><button class="btn ghost sm" id="btnImportIds" type="button">⬆️ IDs import</button></div>
+      <div><button class="btn ghost sm" id="btnClearIds" type="button">🗑️ List khaali karein</button></div>
+    </div>
+    <input type="file" id="importFile" accept=".json,application/json" class="hid">
+    <div class="ib">🔐 Token sirf aap ke browser (localStorage) me rehta hai aur seedha aap ke Worker ko jata hai.
+      DeepSeek API key kabhi page par nahi aati — wo Cloudflare Worker ke secret me hoti hai.</div>
+  </div>
+
+  <div class="panel">
+    <h2>✉️ Prompt — sab IDs ko bhejein</h2>
+    <label class="lab" for="userPrompt">Aap ka sawal / task</label>
+    <textarea id="userPrompt" style="min-height:150px" placeholder="Assignment ka sawal, topic ya instruction yahan likhein..."></textarea>
+    <div class="row">
+      <div><label class="lab" for="temp">Temperature — <span id="tempOut">0.7</span></label>
+        <input id="temp" type="number" min="0" max="2" step="0.1" value="0.7"></div>
+      <div><label class="lab" for="maxTok">Max tokens</label>
+        <input id="maxTok" type="number" min="64" max="8192" step="64" value="4000"></div>
+      <div><label class="lab" for="jsonMode">JSON mode</label>
+        <div style="padding-top:9px"><input id="jsonMode" type="checkbox"> <span class="muted">valid JSON mangwayein</span></div></div>
+    </div>
+    <details>
+      <summary>⚙️ System prompt (AI ka behaviour)</summary>
+      <textarea id="sysPrompt" style="min-height:120px"></textarea>
+    </details>
+    <div class="grid2">
+      <button class="btn" id="btnRunAll" type="button">🚀 Sab IDs ko bhejein</button>
+      <button class="btn g" id="btnRunFirst" type="button">🛟 Fallback (pehla kaam wala)</button>
+    </div>
+    <div class="stt hid" id="runStatus"></div>
+  </div>
+
+  <div class="panel">
+    <div class="sec-head"><h2>📊 Jawab (side by side)</h2><span class="count" id="resultCount"></span></div>
+    <div class="res-grid" id="results">
+      <div class="empty">"Sab IDs ko bhejein" dabayein — har ID ka jawab apne card me yahan aayega. ⭐ se best jawab mark karein aur ⤵ se draft me daal dein.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 2-4. WORKSPACE ======================= -->
+<div class="ws hid" id="ws">
+  <div class="panel">
+    <!-- 2. study helper -->
+    <section id="s2">
+      <h2>🧠 Study Helper</h2>
+      <p class="muted">AI aap ko samjhata hai, outline banata hai aur aap ke apne draft par feedback deta hai.
+        Final answer aap khud likhte hain.</p>
+      <div class="grid2">
+        <button class="btn pk" id="bOutline" type="button">🗂️ Outline &amp; Key Points</button>
+        <button class="btn pk" id="bExplain" type="button">💡 Concepts Samjhao</button>
+      </div>
+      <div class="grid2">
+        <button class="btn g" id="bFeedback" type="button">🔎 Draft Par Feedback</button>
+        <button class="btn g" id="bRefs" type="button">📚 Reference Ideas</button>
+      </div>
+      <div class="stt hid" id="st2"></div>
+      <div class="ib">⚠️ AI ke diye hue references/facts ghalat ho sakte hain — submit karne se pehle book ya official
+        source se check karein. Apni university ki academic integrity policy follow karein.</div>
+      <button class="btn ghost" type="button" onclick="AIOU_STUDIO_GO(4)">Assignment section ➔</button>
+    </section>
+
+    <!-- 3. diagram -->
+    <section id="s3" class="hid">
+      <h2>🎨 Diagram Generator</h2>
+      <p class="muted">Topic likhein — AI Mermaid flowchart banata hai, jo Word file me asli image ban kar lagta hai.</p>
+      <label class="lab" for="dTopic">Diagram topic</label>
+      <input id="dTopic" placeholder="Water cycle / Demand &amp; Supply / Research process">
+      <button class="btn pk" id="btnDiag" type="button">🖌️ Diagram banayein</button>
+      <div class="stt hid" id="st3"></div>
+    </section>
+
+    <!-- 4. assignment -->
+    <section id="s4" class="hid">
+      <h2>📥 Assignment Builder</h2>
+      <p class="muted">Details bharein, apna draft likhein aur Word file (front page + answers + diagram + references) download karein.</p>
+      <label class="lab" for="sName">Student name</label>
+      <input id="sName" placeholder="Ali Khan">
+      <div class="row">
+        <div><label class="lab" for="sRoll">Roll number</label><input id="sRoll" placeholder="AB123456"></div>
+        <div><label class="lab" for="sSem">Semester</label><input id="sSem" placeholder="Autumn 2026"></div>
+      </div>
+      <div class="row">
+        <div style="flex:2"><label class="lab" for="sCourse">Course name</label><input id="sCourse" placeholder="Business Mathematics"></div>
+        <div><label class="lab" for="sCode">Code</label><input id="sCode" placeholder="1429"></div>
+      </div>
+      <label class="lab" for="sQ">Assignment questions</label>
+      <textarea id="sQ" placeholder="AIOU portal se questions paste karein..."></textarea>
+      <label class="lab" for="sDraft">✍️ Mera draft (apne alfaz me) — <span id="wc">0 words</span></label>
+      <textarea id="sDraft" style="min-height:190px" placeholder="Yahan apna jawab likhein. Heading ke liye line ke shuru me # lagayein."></textarea>
+      <label class="lab" for="sRefs">References (APA — khud verify karein)</label>
+      <textarea id="sRefs" style="min-height:70px" placeholder="Author, A. (Year). Title. Publisher."></textarea>
+      <button class="btn g" id="btnDoc" type="button">📄 Download as MS Word (.docx)</button>
+      <div class="stt hid" id="st4"></div>
+    </section>
+  </div>
+
+  <div class="panel">
+    <div class="tabs">
+      <div class="tab active">🤖 AI Guidance</div>
+      <div class="tab">🖼️ Diagram</div>
+    </div>
+    <div id="p0">
+      <div class="out" id="guide">AI ki madad yahan dikhegi. Outline, concepts, feedback ya reference ideas chunein.</div>
+      <div class="count" id="guideMeta" style="margin-top:6px"></div>
+      <div class="grid2">
+        <button class="btn ghost sm" id="btnGuideCopy" type="button">📋 Copy</button>
+        <button class="btn ghost sm" id="btnGuideDraft" type="button">⤵ Draft me daalein</button>
+      </div>
+    </div>
+    <div id="p1" class="hid"><div id="dArea">📊 Diagram yahan dikhega.</div></div>
+  </div>
+</div>
+
+<!-- ======================= 5. ALL TOOLS ======================= -->
+<section id="s5" class="hid">
+  <div class="panel">
+    <h2>🧰 Saare Tools (isi repo se)</h2>
+    <p class="muted">Neeche diya har tool is repository me mojood hai — filter se apna tool chunein aur khol lein.</p>
+    <div id="hub"></div>
+  </div>
+</section>
+
+<footer class="site">
+  <p>AIOU Coaching — independent study help. <a href="../index.html">Home</a> ·
+     <a href="../pages/privacy.html">Privacy</a> · <a href="../pages/disclaimer.html">Disclaimer</a></p>
+  <p class="muted">Guess papers sirf revision ke liye hain, asli imtehan ke sawal nahi.</p>
+</footer>
+</div>
+
+<script>
+  // small bridge so inline buttons can jump between sections
+  function AIOU_STUDIO_GO(n) { document.querySelector('#nav .step[data-n="' + n + '"]').click(); }
+</script>
+<script src="../js/store.js"></script>
+<script src="../js/ai.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/tools.js"></script>
+<script src="../js/hub.js"></script>
+<script src="../js/studio.js"></script>
+</body>
+</html>
