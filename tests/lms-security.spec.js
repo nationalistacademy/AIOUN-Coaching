@@ -15,7 +15,9 @@ const cfg = {
 };
 
 const missing = Object.entries(cfg).filter(([, value]) => !value).map(([key]) => key);
-test.skip(missing.length > 0, `Real-account LMS security E2E is not configured; missing: ${missing.join(', ')}`);
+test.beforeAll(() => {
+  test.skip(missing.length > 0, `Real-account LMS security E2E is not configured; missing: ${missing.join(', ')}`);
+});
 
 async function api(path, token, options = {}) {
   const response = await fetch(`${cfg.url.replace(/\/$/, '')}/rest/v1/${path}`, {
