@@ -36,3 +36,35 @@ Google and Facebook credentials are configured in the provider consoles and Supa
 - `dashboard.html` — authenticated dashboard and logout
 - `reset-password.html` — password recovery completion
 - `supabase-config.js` — public Supabase project URL and publishable key
+
+
+## Free static deployment (GitHub Pages)
+
+A deployment workflow is included at `.github/workflows/deploy-pages.yml`. It publishes this repository as a static site on pushes to `main` and on manual runs.
+
+Expected project-site base URL (confirm the actual URL from the successful workflow run):
+`https://nationalistacademy.github.io/AIOUN-Coaching/`
+
+LMS sign-in page:
+`https://nationalistacademy.github.io/AIOUN-Coaching/lms/signin-signup.html`
+
+### One-time GitHub setup
+
+1. Open the repository's **Settings → Pages**.
+2. Set the publishing source to **GitHub Actions**, if GitHub asks you to choose a source.
+3. Open **Actions → Deploy AIOU Coaching to GitHub Pages** and check the latest run. The site is not live until this workflow succeeds.
+
+### Required Supabase Auth URLs
+
+After GitHub Pages is live, open the Supabase dashboard linked above → **Authentication → URL Configuration** and set:
+
+- **Site URL**: `https://nationalistacademy.github.io/AIOUN-Coaching/`
+- **Redirect URLs**:
+  - `https://nationalistacademy.github.io/AIOUN-Coaching/lms/dashboard.html`
+  - `https://nationalistacademy.github.io/AIOUN-Coaching/lms/reset-password.html`
+
+If the final GitHub Pages URL differs, use the exact URL shown by the deployment workflow and update these settings accordingly. Google/Facebook sign-in still requires configuring each provider's credentials in Supabase.
+
+### LMS readiness warning
+
+Static hosting only serves the LMS files; it does not create its database tables or security policies. Before treating the LMS as production-ready, verify the required `courses`, `enrollments`, `lesson_progress`, and `course_announcements` tables exist and have correct Row Level Security policies. Do not store private student records until those policies have been reviewed.
