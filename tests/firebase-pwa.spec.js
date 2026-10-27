@@ -1,4 +1,7 @@
 const { test, expect } = require('@playwright/test');
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.resolve(__dirname, '..');
 
 test('Firebase workspace stays disconnected without real config and fits mobile/desktop', async ({ page }) => {
   for (const viewport of [{ width: 1365, height: 900 }, { width: 390, height: 844 }]) {
@@ -23,4 +26,19 @@ test('public PWA service worker excludes both LMS and Firebase account routes', 
   expect(sw).toContain('isFirebase');
   expect(sw).toContain('isLms(url) || isFirebase(url)');
   expect(sw).toContain('aiou-coaching-pwa-v2');
+});
+
+test('Firebase security scaffolding denies public private-data access and protects notification sender', async () => {
+  const firestore = fs.readFileSync(path.join(root, 'firestore.rules'), 'utf8');
+  const storage = fs.readFileSync(path.join(root, 'storage.rules'), 'utf8');
+  const sender = fs.readFileSync(path.join(root, 'functions/index.js'), 'utf8');
+  expect(firestore).toContain("request.auth.uid == uid");
+  expect(firestore).toContain("request.auth.token.admin == true");
+  expect(firestore).toContain("allow read, write: if false");
+  expect(storage).toContain("request.auth.uid == uid");
+  expect(storage).toContain("request.resource.size < 10 * 1024 * 1024");
+  expect(storage).toContain("allow read, write: if false");
+  expect(sender).toContain('request.auth.token.admin !== true');
+  expect(sender).toContain('exports.sendUserNotification');
+  expect(sender).toContain('sendEachForMulticast');
 });
