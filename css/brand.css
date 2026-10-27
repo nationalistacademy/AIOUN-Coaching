@@ -1,4 +1,5 @@
-/* Cross-tool brand system matching theme/aioucoahing.xml and theme/home.html. */\n/* AIOU Coaching shared brand layer — aligned with Blogger JetTheme palette. */
+/* Cross-tool brand system matching theme/aioucoahing.xml and theme/home.html. */
+/* AIOU Coaching shared brand layer — aligned with Blogger JetTheme palette. */
 :root{--ac:#f67938;--ac2:#b8470f;--ink:#181716;--mut:#6d6a67;--soft:#f7f4f1;--paper:#fff;--line:#e9e5e1;--glass:rgba(255,255,255,.94);--ok:#16834b;--err:#b42318;--warn:#925400;--r:22px;--r-sm:12px;color-scheme:light}
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
