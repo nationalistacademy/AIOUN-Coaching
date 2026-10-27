@@ -67,7 +67,7 @@ AI-enabled tools that use the Cloudflare Worker follow this general flow:
 Browser tool → Cloudflare Worker → AI provider API
 ```
 
-Keep provider API keys in Worker secrets, never in HTML, JavaScript, Blogger posts, or public repository files. The Worker requires an `AUTH_TOKEN`; configure it as a Worker secret and keep the matching token private. See the [Worker configuration in this README's history/source](worker/) and the Cloudflare Workers documentation before deploying changes.
+Keep provider API keys in Worker secrets, never in HTML, JavaScript, Blogger posts, or public repository files. The Worker requires an `AUTH_TOKEN`; configure it as a Worker secret and keep the matching token private. See the [worker/ source directory](worker/) and the [Cloudflare Workers documentation](https://developers.cloudflare.com/workers/) before deploying changes.
 
 Example secret setup from the `worker/` directory:
 
