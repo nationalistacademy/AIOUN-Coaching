@@ -1,39 +1,59 @@
-# `pages/` — Blogger **Page** body
+# Blogger Pages — source and publishing guide
 
-Har `.html` file yahan Blogger ke **Page** me paste hone ke liye tayyar hai:
+The HTML files in this folder are **page-body snippets** intended for Blogger Pages.
 
-> Blogger dashboard → **Pages** → New page → right side **HTML view** → poora file paste → Publish
+## Publish or update a page
 
-## Rules
+1. Open the Blogger dashboard for [AIOU Coaching](https://aioucoaching.blogspot.com/).
+2. Go to **Pages** and open an existing page or create a new one.
+3. Switch to the HTML editor.
+4. Paste the relevant file's body markup; do not paste the repository README.
+5. Preview desktop and mobile layouts, publish, then open the public URL and test links.
+6. Editing a repository file does not automatically update the live Blogger page; publish the updated markup in Blogger separately.
 
-1. **Body-only markup.** `<html>`, `<head>`, `<body>` nahi. File seedha `<style>`, `<div>` ya `<h2>` se shuru hoti hai.
-2. **Theme same rehti hai.** `theme/AIOUCOACHING.XML` ko chhue bina sirf page ka content badalta hai.
-3. **Theme ki classes use karein**, apni nayi CSS sirf tab likhein jab theme me na ho — is se light/dark dono themes me design match karta hai.
-4. Content ke `href` Blogger ke page URL par le jaayein (`/p/about.html` style), poore domain par nahi.
+## Markup rules
 
-## Theme se free milne wale hooks
+1. These files are intended as body content. Do not paste a full document with `<html>`, `<head>`, or `<body>` unless a particular file explicitly says otherwise.
+2. The shared Blogger theme is [theme/AIOUCOACHING.XML](../theme/AIOUCOACHING.XML). Avoid unnecessary theme overrides in page snippets.
+3. Prefer semantic headings, readable contrast, keyboard-accessible controls, and responsive tables.
+4. Use valid public Blogger URLs for internal links. A path such as `/p/about.html` is only correct if that is the actual published page URL; verify slugs in Blogger.
+5. Keep contact information and privacy statements accurate and current.
+6. Do not paste API keys, access tokens, student information, or other secrets into page HTML.
+7. If a snippet contains JavaScript or structured data, test the rendered published page because Blogger may sanitize or alter markup.
 
-| Hook | Kis liye | Theme me |
-| --- | --- | --- |
-| `.entry-text` | page/post ka asli content area | styled (B6) |
-| `#page-content` | page wrapper (glass card milta hai) | styled (B2 + B6) |
-| `.key-takeaways` | **GEO** “Quick answer” box | glass surface (B2) |
-| `.ad-slot` / `.ad-header` / `.ad-in-article` | AdSense zone jo jagah reserve karta hai | B11 |
-| `.accordion-item` + `.accordion-header` | FAQs / sitemap accordion | glass surface (B2) |
-| `table`, `blockquote`, `pre`, `img` | auto glass/border radius | B6 |
+## Page source directory
 
-## Is folder ki files
+| File | Intended content |
+| --- | --- |
+| `about.html` | Project purpose, independence, and editorial context |
+| `contact.html` | Contact options and contact form area |
+| `faqs.html` | Frequently asked questions |
+| `how-it-works.html` | How the service and tools work |
+| `privacy.html` | Privacy information |
+| `terms.html` | Terms of use |
+| `disclaimer.html` | Independence and accuracy disclaimer |
+| `dmca.html` | Copyright/DMCA contact process |
+| `aiou-tool-kit.html` | Tool directory page |
 
-| File | Blogger page | Kya hai |
-| --- | --- | --- |
-| `about.html` | `/p/about.html` | About + E-E-A-T |
-| `contact.html` | `/p/contact.html` | Contact + form area (theme me `contact-area` section isi URL par chalta hai) |
-| `faqs.html` | `/p/faqs.html` | FAQs |
-| `how-it-works.html` | `/p/how-it-works.html` | Process + pricing cards |
-| `privacy.html` | `/p/privacy.html` | Privacy (AdSense required) |
-| `terms.html` | `/p/terms.html` | Terms |
-| `disclaimer.html` | `/p/disclaimer.html` | Independence disclaimer |
-| `dmca.html` | `/p/dmca.html` | DMCA |
-| `aiou-tool-kit.html` | `/p/aiou-tool-kit.html` | **AIOU Tool Kit** — saare tools ek page par |
+Always compare this list against the current repository tree before relying on a path; file names and live Blogger slugs can differ.
 
-Post body files ka ghar [../posts](../posts) hai; SEO / GEO / Google Search kits alag folders me hain.
+## Shared theme hooks
+
+The theme may provide styles for the following selectors. Confirm they still exist in the current theme before depending on them.
+
+| Selector | Intended use |
+| --- | --- |
+| `.entry-text` | Main entry text |
+| `#page-content` | Page content wrapper |
+| `.key-takeaways` | Quick-answer / key-points block |
+| `.ad-slot`, `.ad-header`, `.ad-in-article` | Reserved ad layout zones |
+| `.accordion-item`, `.accordion-header` | Accordion content |
+| `table`, `blockquote`, `pre`, `img` | Common content elements |
+
+## Related guides
+
+- [Post body guide](../posts/README.md)
+- [SEO checklist](../seo/README.md)
+- [GEO content guide](../geo/README.md)
+- [Google Search setup](../google-search/README.md)
+- [LMS deployment and security](../lms/README.md)
