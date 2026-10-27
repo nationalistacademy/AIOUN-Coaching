@@ -12,6 +12,7 @@
     {id:'writer',icon:'📝',group:'ai',name:'AI Assignment Writer',file:'assignment-writer.html',badges:['Draft','Word'],desc:'Assignment structure aur draft assistance.'},
     {id:'report-builder',icon:'📚',group:'academic',name:'AIOU Capstone / Internship / Thesis Builder',file:'report-builder.html',badges:['AI','Word','PDF'],desc:'Quick section-based report builder.'},
     {id:'academic-report',icon:'🎓',group:'academic',name:'Complete Academic Report Generator',file:'academic-report-generator.html',badges:['Capstone','Internship','Thesis','Word','PDF'],desc:'Complete workspace: setup, structure, chapters, AI assistance and final document export.'},
+    {id:'report-engine',icon:'🏛️',group:'academic',name:'AIOU Policy-Aware Complete Report Engine',file:'aiou-report-engine.html',badges:['Programme','Capstone','Internship','Thesis','Word','PDF'],desc:'Programme profile → report type → topic → student details → complete document sections → Word/PDF.'},
     {id:'guess-paper',icon:'📄',group:'paper',name:'Guess Paper Generator',file:'guess-paper.html',badges:['PDF','Word','JPG','PNG'],desc:'Revision ke liye guess papers banayein.'},
     {id:'bs-bba',icon:'✅',group:'paper',name:'BS & BBA Guess Paper',file:'bs-bba-guess-paper.html',badges:['MCQ','PDF','Word'],desc:'MCQs aur subjective paper builder.'},
     {id:'cover-page',icon:'📕',group:'cover',name:'Assignment Cover Page',file:'assignment-cover-page.html',badges:['Templates','PDF','JPG'],desc:'Assignment cover designs.'},
