@@ -1,6 +1,5 @@
 /* Firebase Cloud Messaging background worker for the non-LMS PWA.
- * This is deliberately scoped to /firebase/ so it does not replace the app's
- * root service worker or alter its offline cache.
+ * Its /firebase/ scope does not replace the root offline service worker.
  */
 importScripts("https://www.gstatic.com/firebasejs/12.5.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/12.5.0/firebase-messaging-compat.js");
@@ -16,7 +15,7 @@ if (cfg.apiKey && cfg.projectId && cfg.appId && cfg.messagingSenderId) {
       body: payload.notification?.body || "You have a new update.",
       icon: "../icon.svg",
       badge: "../icon.svg",
-      data: { url: payload.fcmOptions?.link || payload.data?.url || "../" }
+      data: { url: payload.data?.url || payload.fcmOptions?.link || "../" }
     };
     self.registration.showNotification(title, options);
   });
@@ -24,14 +23,16 @@ if (cfg.apiKey && cfg.projectId && cfg.appId && cfg.messagingSenderId) {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const target = new URL(event.notification.data?.url || "../", self.location.origin).href;
+  const raw = event.notification.data?.url || "../";
+  const target = new URL(raw, self.location.href);
+  if (target.origin !== self.location.origin) return;
   event.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
     for (const client of clients) {
       if (client.url.startsWith(self.location.origin) && "focus" in client) {
-        client.navigate(target);
+        client.navigate(target.href);
         return client.focus();
       }
     }
-    return self.clients.openWindow(target);
+    return self.clients.openWindow(target.href);
   }));
 });
