@@ -19,10 +19,11 @@ async function sdk() {
       import(SDK + "/firebase-auth.js"),
       import(SDK + "/firebase-firestore.js"),
       import(SDK + "/firebase-storage.js"),
-      import(SDK + "/firebase-messaging.js")
-    ]).then(([appApi, authApi, firestore, storage, messaging]) => {
+      import(SDK + "/firebase-messaging.js"),
+      import(SDK + "/firebase-functions.js")
+    ]).then(([appApi, authApi, firestore, storage, messaging, functionsApi]) => {
       const app = appApi.getApps().length ? appApi.getApp() : appApi.initializeApp(config);
-      return { app, authApi, auth: authApi.getAuth(app), firestore, storage, messaging };
+      return { app, authApi, auth: authApi.getAuth(app), firestore, storage, messaging, functionsApi };
     });
   }
   return sdkPromise;
@@ -79,7 +80,7 @@ export async function uploadOwnFile(file, onProgress = () => {}) {
   const s = await sdk(), user = s.auth.currentUser;
   if (!user) throw new Error("Please sign in first.");
   if (!(file instanceof File)) throw new Error("Choose a file to upload.");
-  if (file.size > 10 * 1024 * 1024) throw new Error("Maximum file size is 10 MB.");
+  if (file.size >= 10 * 1024 * 1024) throw new Error("Maximum file size is 10 MB.");
   const allowed = /^(application\/(pdf|msword|vnd\.openxmlformats-officedocument\.(wordprocessingml\.document|spreadsheetml\.sheet|presentationml\.presentation))|image\/(png|jpeg|webp)|text\/plain)$/i;
   if (!allowed.test(file.type)) throw new Error("File type not allowed. Use PDF, Office document, PNG/JPEG/WebP, or plain text.");
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-100) || "upload";
@@ -125,4 +126,16 @@ export async function firebaseStatus() {
   if (missing.length) return { configured: false, missing };
   try { const s = await sdk(); return { configured: true, authenticated: !!s.auth.currentUser }; }
   catch (error) { return { configured: false, error: error.message }; }
+}
+
+export async function isTrustedAdmin() {
+  const s = await sdk(), user = s.auth.currentUser;
+  if (!user) return false;
+  const result = await s.authApi.getIdTokenResult(user, true);
+  return result.claims.admin === true;
+}
+export async function sendUserNotification(targetUid, title, body, url = "../") {
+  const s = await sdk();
+  const callable = s.functionsApi.httpsCallable(s.functionsApi.getFunctions(s.app), "sendUserNotification");
+  return (await callable({ targetUid, title, body, url })).data;
 }
