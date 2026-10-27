@@ -1,60 +1,88 @@
-# `seo/` — SEO kit (audit + paste-in snippets)
+# SEO guide — audit and publishing checklist
 
-Theme (`theme/AIOUCOACHING.XML`) me SEO layer pehle se mojood hai. Ye folder batata hai
-**kya pehle se kaam kar raha hai**, **kya aap ko karna hai**, aur jo chhota hissa Blogger me
-paste karna ho wo snippet.
+This guide supports the Blogger site at [aioucoaching.blogspot.com](https://aioucoaching.blogspot.com/). Theme code can provide technical SEO features, but a feature is not verified until the rendered public page is checked.
 
-## 1. Theme me pehle se kya hai (audit)
+Search engines control crawling, indexing, and ranking. These recommendations do not guarantee any particular result.
 
-| Cheez | Theme me | Line* |
-| --- | --- | --- |
-| robots directives | search/archive par `noindex, follow`; posts/pages par `index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1` | ~1500-1504 |
-| Organization schema | `EducationalOrganization` JSON-LD (name, url, description, areaServed, knowsAbout) | ~1585 |
-| Twitter/OG meta | `JetAll-head-content` includable (title, description, cover image) | ~1293 |
-| Sitemap page template | `sitemap_temp`, `sitemap_list_temp`, `sitemap_cb` (accordion sitemap) | ~3262+ |
-| Canonical | Blogger apna canonical tag khud lagata hai | — |
+## 1. Inspect the live site and theme
 
-\* line numbers badalte rehte hain; `grep -n` se confirm kar lein.
+Review [theme/AIOUCOACHING.XML](../theme/AIOUCOACHING.XML), then confirm the rendered page in a browser. Theme line numbers and implementations can change.
 
-**Nateeja:** theme ke andar SEO ka technical kaam mukammal hai. Aap ka kaam **content** ka hai.
+| Item | What to verify |
+| --- | --- |
+| Robots directives | Important public pages are indexable; duplicate search/archive pages have appropriate directives |
+| Canonical URL | Points to the preferred live URL |
+| Page title | Unique, descriptive, and aligned with the page content |
+| Search description | Accurate, readable, and distinct for important pages |
+| Open Graph/social metadata | Title, description, and image render as expected |
+| Structured data | Valid and consistent with visible page content |
+| Internal links | Important pages are reachable and no links are broken |
+| Images | Useful alt text, suitable dimensions, and efficient loading |
+| Mobile layout | Text, navigation, tables, and controls work at narrow widths |
+| Sitemap | Blogger sitemap loads and is submitted in Search Console |
 
-## 2. Aap ka checklist
+## 2. On-page checklist
 
-- [ ] Har post/page par **ek** clear topic aur ek `h1` (Blogger title se aata hai).
-- [ ] Title 30-60 chars, meta description 120-155 chars — `tools/generator.html` in dono ko check karta hai.
-- [ ] Har image par `alt` text, `loading='lazy'` (theme images ke liye already karti hai).
-- [ ] Internal links: har post se kam az kam 2 page (tool kit, FAQs) aur 1 related post.
-- [ ] `search description` bharein — Blogger ka post/page search description hi meta description banta hai.
-- [ ] Search Console me submit karein — dekhein [../google-search/README.md](../google-search/README.md).
-- [ ] Sitemap page publish karein (theme ka sitemap template) aur usay menu me daalein.
+- [ ] One clear search intent per page or post.
+- [ ] A descriptive title and accurate search description are configured in Blogger.
+- [ ] The first paragraph answers the reader's main question.
+- [ ] Headings are nested logically and not used only for visual styling.
+- [ ] Images have meaningful alternative text; decorative images use appropriate empty alt text.
+- [ ] Internal links point to relevant published pages, posts, and tools.
+- [ ] External claims link to reliable primary sources, especially official AIOU information.
+- [ ] Dates, fees, deadlines, and eligibility details are current and verified.
+- [ ] No keyword stuffing, fabricated reviews, or misleading guarantees.
+- [ ] The final live page is checked after publishing.
 
-## 3. Post/page ki SEO structure (paste karein)
+A title length or description length is a guideline, not a strict ranking rule. Write for clarity first and check how the result is displayed in search.
+
+## 3. Content starter
+
+Adapt this structure where appropriate. Replace the placeholder text and links before publishing.
 
 ```html
 <div class="key-takeaways" role="note">
   <strong>Quick answer</strong>
-  <p>Ek seedha jawab 2-3 line me — jo sawal log Google par likhte hain.</p>
+  <p>Write a concise, accurate answer to the page's main question.</p>
 </div>
 
-<h2>Sawal ke hisaab se heading</h2>
-<p>Short paragraph. Har paragraph ek hi baat.</p>
+<h2>What you need to know</h2>
+<p>Explain the key point and link to a reliable source.</p>
 
-<h2>Steps / tafseel</h2>
-<ol><li>Pehla step.</li><li>Dusra step.</li></ol>
+<h2>Steps</h2>
+<ol>
+  <li>First step.</li>
+  <li>Second step.</li>
+</ol>
 
-<h2>Aksar pooche jane wale sawalat</h2>
-<details><summary>Sawal?</summary><p>Jawab.</p></details>
-
-<!-- INTERNAL LINKS: har post me 2-3 -->
-<p>Ye bhi dekhein: <a href="/p/aiou-tool-kit.html">AIOU Tool Kit</a> · <a href="/p/faqs.html">FAQs</a></p>
+<h2>Frequently asked questions</h2>
+<details>
+  <summary>Write a genuine reader question</summary>
+  <p>Give a direct answer that matches the rest of the page.</p>
+</details>
 ```
 
-Blogger me additional `<script type='application/ld+json'>` tags page/post body me bhi chalte
-hain (Blogger unhein hata nahi deta) — FAQ aur Article schema ke ready snippets
-[google-search/README.md](../google-search/README.md) me hain.
+Add internal links only when they are relevant and the destination URL has been verified in Blogger.
 
-## 4. Ye na karein
+## 4. Structured data
 
-- Ek page par do `h1` (Blogger ka post title + content ka `h1` = duplicate).
-- Keywords ka dher (keyword stuffing) — AI search is se site ko downrank karta hai.
-- Copy-paste jawab; students ki language me apna content likhein.
+The [Google Search guide](../google-search/README.md) has example JSON-LD snippets. Structured data must accurately describe visible page content and comply with the search engine's current policies. Valid markup does not guarantee a rich result.
+
+Do not add review/rating markup, fake author credentials, made-up dates, or FAQ schema for content that is not visible to users.
+
+## 5. Indexing and measurement
+
+1. Verify the preferred site URL in [Google Search Console](https://search.google.com/search-console).
+2. Submit the Blogger sitemap, usually `sitemap.xml`.
+3. Inspect important published URLs and request indexing when available.
+4. Review indexing reports and fix errors that affect useful pages.
+5. Monitor search impressions and clicks over time rather than judging SEO from a single search.
+
+For current instructions, use [Google Search Central](https://developers.google.com/search/docs) and [Google's structured data policies](https://developers.google.com/search/docs/appearance/structured-data/sd-policies).
+
+## Related guides
+
+- [Google Search setup](../google-search/README.md)
+- [GEO guide](../geo/README.md)
+- [Blogger Pages guide](../pages/README.md)
+- [Blogger Posts guide](../posts/README.md)
