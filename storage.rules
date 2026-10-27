@@ -1,0 +1,31 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() { return request.auth != null; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function allowedType() {
+      return request.resource.contentType.matches('application/pdf')
+        || request.resource.contentType.matches('application/msword')
+        || request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        || request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        || request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.presentationml.presentation')
+        || request.resource.contentType.matches('image/png')
+        || request.resource.contentType.matches('image/jpeg')
+        || request.resource.contentType.matches('image/webp')
+        || request.resource.contentType.matches('text/plain');
+    }
+
+    match /users/{uid}/uploads/{fileName} {
+      allow read: if isOwner(uid);
+      allow create, update: if isOwner(uid)
+        && request.resource.size < 10 * 1024 * 1024
+        && allowedType();
+      allow delete: if isOwner(uid);
+    }
+
+    // All other object paths are denied.
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}
