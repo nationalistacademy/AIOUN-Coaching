@@ -37,6 +37,7 @@ jobs:
             slug="$(printf '%s' "$topic" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g; s/--*/-/g; s/^-//; s/-$//')"
             [ -n "$slug" ] || slug="study-note-$index"
             output="posts/$slug.json"
+            if [ -e "$output" ]; then output="posts/$slug-$index.json"; fi
             request_file="$(mktemp)"
             response_file="$(mktemp)"
             trap 'rm -f "$request_file" "$response_file"' EXIT
