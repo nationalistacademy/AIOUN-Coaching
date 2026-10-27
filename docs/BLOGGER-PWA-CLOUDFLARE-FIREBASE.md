@@ -1,50 +1,35 @@
 # Blogger PWA, Cloudflare and Firebase setup
 
-## What is in the repository
+## Repository changes
+- `theme/aioucoahing.xml` has a responsive PWA/Firebase gadget for Blogger Layout.
+- `firebase/` contains a separate Firebase account/files/notifications starter.
+- Root `firestore.rules` and `storage.rules` are deny-by-default starter rules.
+- `firebase/config.example.js` has empty placeholders. No Firebase project credentials were found or invented.
 
-- `theme/aioucoahing.xml` includes a **PWA Install / Firebase Setup** gadget in Blogger Layout.
-- The gadget is responsive, offers an install button when supported, and displays a Firebase setup status.
-- `firebase-config.example.js` is a safe starter template with empty values.
-- The installable companion app remains hosted on GitHub Pages. The Blogger blog itself is **not yet a full offline PWA** just because the layout gadget is present.
+## Blogger layout
+1. Back up Blogger Theme, then upload `theme/aioucoahing.xml` through Blogger → Theme → Restore/Upload.
+2. Open Blogger → Layout and locate **PWA Install and Firebase**.
+3. Save and check mobile/desktop. Repository changes do not automatically update Blogger.
 
-## 1. Customize the PWA section in Blogger Layout
+## Firebase features
+1. Select/create the intended Firebase project and register the actual Web App.
+2. Add the exact production origin(s) under Authentication → Settings → Authorized domains.
+3. Copy `firebase/config.example.js` to `firebase/config.js` locally and fill real values from Firebase Console, including the FCM Web Push VAPID public key. `config.js` is ignored by Git.
+4. Enable Email/Password, create Firestore and Storage, then review/deploy root `firestore.rules` and `storage.rules`.
+5. Visit `/firebase/` on the deployed companion app to test account creation, sign-in, password reset, private file upload and push-token registration.
+6. Test with two users in a non-production project before real users.
 
-1. Back up your current Blogger theme.
-2. Open **Blogger → Theme → Restore/Upload** and upload `theme/aioucoahing.xml`.
-3. Open **Blogger → Layout**.
-4. Find **PWA Install and Firebase** / **PWA Install / Firebase Setup**.
-5. Edit the gadget's content or move it where you want. Keep the install link pointing to the published app.
-6. Check mobile and desktop views.
+The starter supports Auth, Firestore profile/notification reads, Storage uploads, and FCM token registration. It does not send notifications to groups; that requires a trusted Cloud Function/server using Admin SDK. Never put Admin SDK credentials or Cloudflare API tokens in browser code.
 
-Repository changes do not automatically upload the theme to Blogger.
+## Cloudflare custom domain and same-origin PWA
+You confirmed a custom domain is connected through Cloudflare, but its exact hostname and current origin/route settings were not supplied or verified in this repository. No DNS, proxy, Worker route, or production hosting settings were changed.
 
-## 2. Firebase configuration
+Before configuring a root-scoped service worker for Blogger, verify the exact hostname in Blogger and Cloudflare, DNS records/proxy mode/TLS, whether it points at Blogger or Pages, the intended Worker route, and a rollback procedure. A service worker must be served from the same origin it controls. Do not route the whole Blogger site through a new Worker until origin routing, caching exclusions, redirects and rollback are tested.
 
-No Firebase project configuration was found in the repository, so Firebase is deliberately shown as **not connected**. Do not invent project IDs or keys.
+The companion app's root PWA worker continues to exclude LMS routes/auth paths from caching. Firebase push uses its own worker and does not replace the root worker.
 
-1. Open the Firebase Console and select/create the intended project.
-2. Add a **Web app** under Project settings → Your apps.
-3. Copy the web app configuration (`apiKey`, `authDomain`, `projectId`, `appId`, and optional fields) into a copy of `firebase-config.example.js`.
-4. Decide which Firebase feature is needed before adding its SDK: Authentication, Firestore, Storage, or Cloud Messaging each needs separate implementation and security rules.
-5. Load only the SDKs for the selected feature, and load the config script before the PWA widget initializer. Never put service-account JSON, Admin SDK private keys, private server credentials, or Cloudflare API tokens into Blogger HTML.
-6. Configure Firebase Authentication authorized domains and strict Firestore/Storage Security Rules before collecting user data.
-
-The current Blogger gadget does not enable login, database access, file uploads, push notifications, or LMS functionality. It only reports whether a compatible config/SDK is available. LMS remains excluded from the PWA changes.
-
-## 3. Cloudflare and same-origin service worker
-
-A service worker must be served from the **same origin** it controls. The Blogger `blogspot.com` host cannot serve a root-level `/sw.js` from this repository. Cloudflare cannot attach a Worker route to the shared `blogspot.com` domain.
-
-For a full offline PWA on the blog itself, you need a domain you control, added to Blogger as its custom domain and managed/proxied through Cloudflare. Then deploy a Worker that safely serves the blog and the root-scoped service worker on that same custom domain. Do not switch DNS or route all traffic through a Worker until the origin mapping and rollback path are tested.
-
-No Cloudflare account, zone, custom domain, Worker route, or API credentials were available in this repository inspection, so this change does not claim that Cloudflare is deployed or modify any DNS.
-
-## 4. Validation checklist
-
-- [ ] Upload XML to Blogger and confirm the theme saves without XML errors.
-- [ ] Confirm the PWA gadget appears under Blogger Layout.
-- [ ] Confirm the install button appears only when supported by the browser.
-- [ ] Confirm Firebase remains “not connected” until a real Web App config and SDK are provided.
-- [ ] Confirm no service-account keys or private tokens are in GitHub.
-- [ ] Keep LMS/authenticated routes out of public PWA caches.
-- [ ] For full blog offline support, verify a custom domain and same-origin Worker/service-worker design first.
+## Security boundaries
+- Never commit service-account JSON, Admin SDK private keys, server secrets or Cloudflare API tokens.
+- Firebase web config is client-visible; protect data with Auth and Security Rules.
+- Admin access must use trusted server-side custom claims, never user-editable profile fields.
+- LMS enrollment, quizzes, scores, staff roles and authenticated LMS routes remain outside this Firebase implementation and excluded from PWA caching/redesign.
