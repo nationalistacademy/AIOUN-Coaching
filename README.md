@@ -144,8 +144,7 @@ whole list in your browser only (`localStorage`, key `aiou_ids_v2`) — nothing 
 - **Export / import** — back the ID list up as JSON (`AIOU ids` never leave the browser).
 - **Test** — `🔌 Sab IDs test karein` sends a one-word prompt to each ID to check which ones work.
 
-The Worker accepts **one token or many**: set `AUTH_TOKEN` to a comma separated list
-(`tokenA,tokenB`) and any of them will be accepted. That is how one deployment serves several IDs.
+The Worker **requires `AUTH_TOKEN`** for every AI request; without it, POST requests fail closed instead of exposing an unauthenticated, billable AI proxy. Set one strong random token or a comma separated list (`tokenA,tokenB`); any configured token will be accepted. Keep tokens private and do not publish them in screenshots or public code.
 
 ### Worker setup
 
@@ -155,7 +154,7 @@ The Worker accepts **one token or many**: set `AUTH_TOKEN` to a comma separated 
 ```bash
 cd worker
 npx wrangler secret put DEEPSEEK_API_KEY
-npx wrangler secret put AUTH_TOKEN          # tokenA,tokenB — one or many
+npx wrangler secret put AUTH_TOKEN          # required: strong token or tokenA,tokenB
 npx wrangler deploy
 ```
 
