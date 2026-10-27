@@ -32,6 +32,8 @@
 
     function card(item) {
       var c = ui.el('article', 'tcard');
+      var sheen = ui.el('span', 'sheen', null, { 'aria-hidden': 'true' }); // crystal highlight on hover
+      ui.add(c, sheen);
       ui.add(c, ui.el('div', 'tic', item.icon));
       ui.add(c, ui.el('h3', '', item.name));
       ui.add(c, ui.el('p', '', item.desc));

@@ -81,6 +81,11 @@
       desc: 'Blogger tools page ka HTML — filter chips, cards aur FAQ schema ke saath.'
     },
     {
+      id: 'aiou-tool-kit', icon: '🎒', group: 'site', name: 'AIOU Tool Kit (Blogger page body)',
+      file: '../pages/aiou-tool-kit.html', badges: ['Blogger page', 'All tools', 'ItemList schema'],
+      desc: 'Page body me paste karne wala AIOU Tool Kit — saare tools, filter, FAQ aur schema ke saath.'
+    },
+    {
       id: 'home', icon: '🏠', group: 'site', name: 'Blogger Homepage Markup',
       file: '../theme/home.html', badges: ['Blogger'],
       desc: 'Blog ka homepage section markup (theme/home.html).'

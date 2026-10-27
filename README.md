@@ -58,7 +58,12 @@ No account is required. Anthromes that call DeepSeek go through the Cloudflare W
 │   ├── bulk-downloader.html
 │   ├── generator.html         # blog post generator (SEO + JSON-LD)
 │   └── tools.html             # Blogger widget markup for the tools page
-├── pages/                     # about, contact, faqs, how-it-works, privacy, terms, disclaimer, dmca
+├── pages/                     # PAGE body (Blogger Pages): about, contact, faqs, how-it-works,
+│                              #   privacy, terms, disclaimer, dmca, aiou-tool-kit
+├── posts/                     # POST body (Blogger Posts): post-template.html
+├── seo/                       # SEO kit — theme audit + checklist + paste-in snippets
+├── geo/                       # GEO kit — quick-answer block for AI search
+├── google-search/             # Google Search kit — Search Console, schema, indexing
 ├── theme/
 │   ├── AIOUCOACHING.XML       # Blogger theme
 │   └── home.html              # Blogger homepage markup
@@ -171,6 +176,55 @@ After deploy, open the studio, add one ID per Worker URL + token, and press
 - The `js/` files are plain classic scripts exposing `window.AIOU.*`, so the tools also work when
   opened straight from disk. Pages load them with relative paths (`../js/…`), so keep the folder
   structure when you paste a page into Blogger — or host the files and use their full URLs.
+
+---
+
+## Where each HTML goes in Blogger
+
+The theme is unchanged (`theme/AIOUCOACHING.XML`) — instead every file here is labelled by the
+place you paste it.
+
+| Folder | Paste target | Body only? |
+| --- | --- | --- |
+| [`pages/`](pages/README.md) | Blogger → **Pages** → HTML view | yes, no `<html>`/`<head>` |
+| [`posts/`](posts/README.md) | Blogger → **Posts** → HTML view | yes |
+| [`tools/`](tools) | standalone apps (served from this repo, or used as Page content) | full documents |
+| [`theme/`](theme) | Blogger → **Theme** → Edit HTML | the theme itself |
+| `tools/tools.html` | HTML widget content (tools page / sidebar) | body only |
+
+Ready kits for the four areas:
+
+- **SEO** → [seo/README.md](seo/README.md) — what the theme already handles (robots directives,
+  canonical, Organization JSON-LD, sitemap template) plus the content checklist.
+- **GEO** → [geo/README.md](geo/README.md) and [geo/quick-answer.html](geo/quick-answer.html) —
+  the `.key-takeaways` quick-answer block that AI answers pick up.
+- **Google Search** → [google-search/README.md](google-search/README.md) — Search Console setup,
+  sitemap submission, and FAQ / Article / SoftwareApplication schema snippets.
+- **AIOU Tool Kit** → [pages/aiou-tool-kit.html](pages/aiou-tool-kit.html) — every tool as one
+  Blogger page (filter chips, crystal glass cards, FAQ + ItemList schema).
+
+New post ka starter: [posts/post-template.html](posts/post-template.html).
+
+---
+
+## Blogger theme
+
+`theme/AIOUCOACHING.XML` is the live Blogger theme (JetTheme core + the glassmorphism
+layer). Two things changed to it:
+
+- **Fixed:** it used `xlink:href` for the SVG icon sprite without declaring the `xlink`
+  namespace, so the file was **not well-formed XML** (45 uses). `xmlns:xlink='http://www.w3.org/1999/xlink'`
+  is now declared on `<html>`.
+- **Fixed:** two icon-sprite attributes used a double prefix, `expr:xlink:href`, which strict XML
+  parsers reject; they now use `expr:href`, matching the 64 other `expr:href` attributes already in
+  the theme. The file now parses as well-formed XML end to end.
+- **Added:** a crystal-glassmorphism hover layer (section `B15`) on cards, widgets, nav
+  links and buttons, plus a glass shop-cart icon button in the navbar. The cart points at
+  `/p/get-solved-assignments.html` — change that one `href` if your shop lives elsewhere.
+
+The same crystal treatment is in [css/theme.css](css/theme.css) (for pages served from
+this repo) and in the tools widget [tools/tools.html](tools/tools.html). Theme and pages
+share the `--glass-*` tokens, so the blog and the studio look like one product.
 
 ---
 

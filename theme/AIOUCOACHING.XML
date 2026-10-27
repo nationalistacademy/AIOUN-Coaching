@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html>
-<html b:css='false' b:defaultwidgetversion='2' b:js='true' b:layoutsVersion='3' b:render='true' b:responsive='true' b:templateUrl='https://www.jettheme.com' b:templateVersion='2.9' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'><b:attr name='xmlns' value=''/><b:attr name='xmlns:b' value=''/><b:attr name='xmlns:expr' value=''/><b:attr name='xmlns:data' value=''/><head>
+<html b:css='false' b:defaultwidgetversion='2' b:js='true' b:layoutsVersion='3' b:render='true' b:responsive='true' b:templateUrl='https://www.jettheme.com' b:templateVersion='2.9' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr' xmlns:xlink='http://www.w3.org/1999/xlink'><b:attr name='xmlns' value=''/><b:attr name='xmlns:b' value=''/><b:attr name='xmlns:expr' value=''/><b:attr name='xmlns:data' value=''/><head>
 <b:include data='blog' name='JetAll-head-content'/>
 <b:if cond='!data:view.isLayoutMode'>
 <b:skin><![CDATA[/*
@@ -1198,6 +1198,201 @@ body { background: #fff !important; }
 
 /*Your custom CSS is here*/
 
+/* ======================================================
+   B15. CRYSTAL GLASSMORPHISM — hover / specular layer
+   Brighter rim + inset top highlight + sheen sweep on hover.
+   Reuses the existing --glass-* tokens, changes no brand colour.
+   ====================================================== */
+:root {
+--crystal-rim: rgba(255,255,255,.88);
+--crystal-inset: inset 0 1px 0 rgba(255,255,255,.78);
+--crystal-inset-bottom: inset 0 -1px 0 rgba(255,255,255,.06);
+--crystal-lift: 0 20px 48px rgba(0,0,0,.18), 0 8px 26px rgba(246,121,56,.26);
+--crystal-filter: blur(22px) saturate(185%);
+--crystal-sheen: linear-gradient(115deg, rgba(255,255,255,.44) 0%, rgba(255,255,255,.12) 24%, rgba(255,255,255,0) 46%);
+}
+.dark-mode {
+--crystal-rim: rgba(255,255,255,.26);
+--crystal-inset: inset 0 1px 0 rgba(255,255,255,.18);
+--crystal-lift: 0 22px 50px rgba(0,0,0,.55), 0 8px 26px rgba(246,121,56,.34);
+--crystal-sheen: linear-gradient(115deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.07) 24%, rgba(255,255,255,0) 46%);
+}
+.glass,
+.glass-box,
+.bg-archive,
+#sidebar .widget,
+#single-content,
+#page-content,
+#toc-post,
+.comments,
+.post-author,
+.accordion-item,
+.key-takeaways,
+.tp-card,
+.tp-steps li {
+position: relative;
+border-color: var(--crystal-rim) !important;
+box-shadow: var(--crystal-inset), var(--crystal-inset-bottom), var(--glass-shadow);
+-webkit-backdrop-filter: var(--crystal-filter);
+backdrop-filter: var(--crystal-filter);
+transition: transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease, border-color .3s ease, background-color .3s ease;
+}
+.bg-archive::after,
+#sidebar .widget::after,
+.glass::after,
+.glass-box::after,
+.tp-card::after {
+content: "";
+position: absolute;
+inset: -1px;
+border-radius: inherit;
+pointer-events: none;
+opacity: 0;
+background: var(--crystal-sheen);
+transition: opacity .35s ease;
+}
+.bg-archive:hover::after,
+#sidebar .widget:hover::after,
+.glass:hover::after,
+.glass-box:hover::after,
+.tp-card:hover::after {
+opacity: 1;
+}
+.bg-archive:hover,
+.tp-card:hover,
+.glass:hover,
+.glass-box:hover {
+transform: translateY(-5px) scale(1.012);
+border-color: var(--crystal-rim) !important;
+box-shadow: var(--crystal-inset), var(--crystal-lift);
+}
+#sidebar .widget:hover {
+transform: translateY(-3px);
+border-color: var(--crystal-rim) !important;
+box-shadow: var(--crystal-inset), var(--glass-shadow-hover);
+}
+.bg-archive:hover .item-thumbnail img {
+transform: scale(1.05);
+}
+#navbar .menu-item > .nav-link {
+transition: background-color .25s ease, color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+#navbar .navbar-nav > .menu-item > .nav-link:hover {
+background: var(--glass-bg-soft);
+box-shadow: var(--crystal-inset);
+border-radius: 999px;
+transform: translateY(-1px);
+}
+.btn,
+.tp-go,
+.tp-chip {
+transition: transform .2s ease, box-shadow .2s ease, filter .2s ease, border-color .2s ease;
+}
+.btn:hover,
+.tp-go:hover {
+transform: translateY(-2px);
+filter: brightness(1.05);
+border-color: var(--crystal-rim) !important;
+box-shadow: var(--crystal-inset), 0 12px 30px rgba(246,121,56,.34) !important;
+}
+/* B15.1 Shop cart icon (glass) */
+.icobtn,
+.cart-btn {
+position: relative;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+width: 42px;
+height: 42px;
+margin-left: .35rem;
+border-radius: 14px;
+text-decoration: none !important;
+color: var(--jt-header-color);
+background: linear-gradient(150deg, rgba(255,255,255,.34), rgba(255,255,255,.08));
+border: 1px solid var(--crystal-rim);
+-webkit-backdrop-filter: var(--crystal-filter);
+backdrop-filter: var(--crystal-filter);
+box-shadow: var(--crystal-inset), 0 6px 18px rgba(0,0,0,.12);
+transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, color .2s ease;
+}
+.dark-mode .icobtn,
+.dark-mode .cart-btn {
+background: linear-gradient(150deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
+}
+.icobtn svg,
+.cart-btn svg {
+width: 20px;
+height: 20px;
+fill: none;
+stroke: currentColor;
+stroke-width: 1.8;
+stroke-linecap: round;
+stroke-linejoin: round;
+}
+.icobtn:hover,
+.cart-btn:hover {
+transform: translateY(-3px) scale(1.05);
+color: var(--jt-primary);
+border-color: var(--jt-primary);
+box-shadow: var(--crystal-inset), 0 12px 28px rgba(246,121,56,.34);
+}
+.cart-badge {
+position: absolute;
+top: -6px;
+right: -6px;
+min-width: 18px;
+height: 18px;
+padding: 0 4px;
+border-radius: 999px;
+background: var(--jt-primary);
+color: #fff !important;
+font-size: 10.5px;
+font-weight: 800;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+box-shadow: 0 3px 10px rgba(246,121,56,.5);
+}
+@media (max-width: 575px) {
+.icobtn,
+.cart-btn {
+width: 38px;
+height: 38px;
+}
+}
+@media (prefers-reduced-motion: reduce) {
+.bg-archive,
+.tp-card,
+.glass,
+.glass-box,
+#sidebar .widget,
+.btn,
+.tp-go,
+.tp-chip,
+.icobtn,
+.cart-btn,
+#navbar .menu-item > .nav-link {
+transition: none !important;
+}
+.bg-archive:hover,
+.tp-card:hover,
+.glass:hover,
+.glass-box:hover,
+#sidebar .widget:hover,
+.btn:hover,
+.tp-go:hover,
+.icobtn:hover,
+.cart-btn:hover {
+transform: none !important;
+}
+.bg-archive::after,
+#sidebar .widget::after,
+.glass::after,
+.glass-box::after,
+.tp-card::after {
+display: none;
+}
+}
 ]]></b:skin>
 </b:if>
 <b:if cond='data:view.isLayoutMode'>
@@ -1503,6 +1698,13 @@ width: 50%;
     <b:includable id='content'/>
   </b:widget>
 </b:section>
+<!-- ============ SHOP CART ICON (crystal glass) ============
+     Points at the Solved Assignments / order page. Change this one href to
+     point at your own shop or cart page. -->
+<a aria-label='Shop cart - order page' class='icobtn cart-btn' href='/p/get-solved-assignments.html' title='Shop / Cart'>
+<svg aria-hidden='true' viewBox='0 0 24 24'><circle cx='9.5' cy='20' r='1.5'/><circle cx='18' cy='20' r='1.5'/><path d='M2.5 3h2.1l2.3 11.2h11.6L21 7.2H5.4'/></svg>
+<span class='cart-badge'>0</span>
+</a>
 </header>
 
 <!-- ============ MAIN CONTENT (semantic <main>) ============ -->
@@ -2126,7 +2328,7 @@ width: 50%;
     <b:includable id='JetSocial'>
       <b:include name='JetWidgetTitle'/>
       <div class='widget-content social-media mb-3'>
-          <b:loop index='i' values='data:links' var='link'><a expr:aria-label='data:link.name' expr:class='&quot;mb-2 btn btn-sm jt-btn-light hover-btn-primary rounded-pill jt-icon-center i-&quot; + data:link.name' expr:href='data:link.target' rel='noopener' target='_blank'><b:class cond='data:i != data:links.size - 1' name='me-2'/><svg aria-hidden='true' class='jt-icon'><use expr:xlink:href='&quot;#i-&quot; + data:link.name'/></svg></a></b:loop>
+          <b:loop index='i' values='data:links' var='link'><a expr:aria-label='data:link.name' expr:class='&quot;mb-2 btn btn-sm jt-btn-light hover-btn-primary rounded-pill jt-icon-center i-&quot; + data:link.name' expr:href='data:link.target' rel='noopener' target='_blank'><b:class cond='data:i != data:links.size - 1' name='me-2'/><svg aria-hidden='true' class='jt-icon'><use expr:href='&quot;#i-&quot; + data:link.name'/></svg></a></b:loop>
       </div>
     </b:includable>
     <b:includable id='JetPopularPosts'>
@@ -2244,7 +2446,7 @@ width: 50%;
     <b:includable id='JetSearch'>
       <b:class name='d-flex align-self-stretch align-items-center order-lg-1 ms-auto'/>
       <b:if cond='data:title not contains &quot;#Icons&quot;'>
-      <div class='header-social d-flex pe-1'><b:loop values='data:links' var='link'><a expr:aria-label='data:link.name' expr:class='&quot;px-2 text-reset jt-icon-center i-&quot; + data:link.name' expr:href='data:link.target' rel='noopener' target='_blank'><svg aria-hidden='true' class='jt-icon'><use expr:xlink:href='&quot;#i-&quot; + data:link.name'/></svg></a></b:loop></div>
+      <div class='header-social d-flex pe-1'><b:loop values='data:links' var='link'><a expr:aria-label='data:link.name' expr:class='&quot;px-2 text-reset jt-icon-center i-&quot; + data:link.name' expr:href='data:link.target' rel='noopener' target='_blank'><svg aria-hidden='true' class='jt-icon'><use expr:href='&quot;#i-&quot; + data:link.name'/></svg></a></b:loop></div>
       </b:if>
       <b:if cond='data:title not contains &quot;#Dark&quot;'>
       <div class='d-flex align-self-stretch align-items-center ps-1' id='dark-header'>

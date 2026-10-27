@@ -117,5 +117,78 @@ summary{cursor:pointer;font-size:.8rem;color:var(--mut)}
 .tcard .tb{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .tcard .go{margin-top:auto}
 
+/* ==========================================================================
+   CRYSTAL GLASSMORPHISM — hover layer
+   Frosted, layered, specular. Cards/buttons grow a sheen on hover instead of
+   just changing colour. Motion is opt-out for users who ask for less.
+   ========================================================================== */
+
+.panel,.tcard,.icobtn,.btn,.chip,.tab{
+  -webkit-backdrop-filter:blur(22px) saturate(185%);
+  backdrop-filter:blur(22px) saturate(185%)
+}
+.tcard,.panel{background-image:linear-gradient(150deg,rgba(255,255,255,.10),rgba(255,255,255,0) 42%)}
+
+.tcard{position:relative;overflow:hidden;isolation:isolate;
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 10px 30px rgba(0,0,0,.26);
+  transition:transform .28s cubic-bezier(.2,.7,.3,1),box-shadow .28s,border-color .28s,background-color .28s}
+.tcard>.sheen{position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;opacity:0;
+  background:linear-gradient(115deg,rgba(255,255,255,.46) 0%,rgba(255,255,255,.14) 24%,rgba(255,255,255,0) 44%);
+  transition:opacity .35s ease}
+.tcard:hover{transform:translateY(-5px) scale(1.012);border-color:rgba(255,255,255,.62);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -1px 0 rgba(255,255,255,.08),
+    0 20px 46px rgba(0,0,0,.36),0 8px 26px rgba(246,121,56,.3)}
+.tcard:hover>.sheen{opacity:1}
+.tcard:hover .tic{background:rgba(246,121,56,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.tcard .tic{transition:background-color .28s,box-shadow .28s}
+
+.btn{border-color:rgba(255,255,255,.34);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 6px 18px rgba(246,121,56,.32);
+  transition:filter .18s,transform .18s,box-shadow .18s,border-color .18s}
+.btn:hover{filter:brightness(1.07);transform:translateY(-2px) scale(1.01);border-color:rgba(255,255,255,.65);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 12px 30px rgba(246,121,56,.42)}
+.btn:active{transform:translateY(0) scale(.995)}
+.btn.ghost:hover{background:rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 10px 26px rgba(0,0,0,.3)}
+
+.chip,.tab{transition:background-color .22s,color .22s,border-color .22s,transform .22s,box-shadow .22s}
+.chip:hover,.tab:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 20px rgba(0,0,0,.3)}
+.chip.on,.chip:hover,.tab.active{background:linear-gradient(135deg,var(--ac),var(--ac2));border-color:rgba(255,255,255,.5);color:#fff}
+
+/* glass icon button + cart badge ----------------------------------------- */
+.topnav{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;
+  padding:10px 14px;border-radius:20px;position:relative;
+  background:linear-gradient(150deg,rgba(255,255,255,.12),rgba(255,255,255,.02) 45%);
+  border:1px solid rgba(255,255,255,.24);
+  -webkit-backdrop-filter:blur(22px) saturate(185%);backdrop-filter:blur(22px) saturate(185%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 10px 30px rgba(0,0,0,.26)}
+.topnav .brand{color:#fff;font-weight:800;letter-spacing:-.02em;text-decoration:none;font-size:1.02rem}
+.topnav .brand span{color:var(--ac)}
+.topnav-links{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.topnav-links a.txt{color:var(--mut);text-decoration:none;font-size:.86rem;font-weight:600;padding:8px 12px;border-radius:999px;
+  transition:background-color .22s,color .22s}
+.topnav-links a.txt:hover{background:rgba(255,255,255,.12);color:#fff}
+.icobtn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;
+  border-radius:14px;color:var(--ink);text-decoration:none;
+  background:linear-gradient(150deg,rgba(255,255,255,.2),rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 6px 18px rgba(0,0,0,.24);
+  transition:transform .2s,box-shadow .2s,border-color .2s,color .2s}
+.icobtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.icobtn:hover{transform:translateY(-3px) scale(1.05);color:#fff;border-color:rgba(255,255,255,.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 12px 28px rgba(246,121,56,.4)}
+.icobtn .cart-badge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;
+  background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-size:10.5px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(246,121,56,.55)}
+@media(max-width:560px){.topnav .brand{font-size:.95rem}.icobtn{width:38px;height:38px}}
+
+:where(.tcard,.btn,.chip,.tab,.icobtn):focus-visible{outline:2px solid rgba(255,255,255,.75);outline-offset:2px}
+
+@media(prefers-reduced-motion:reduce){
+  .tcard,.btn,.chip,.tab,.icobtn{transition:none}
+  .tcard:hover,.btn:hover,.icobtn:hover{transform:none}
+  .tcard>.sheen{display:none}
+}
+
 footer.site{text-align:center;color:var(--mut);font-size:.78rem;padding:26px 10px 10px}
 footer.site a{color:var(--ac);text-decoration:none}
