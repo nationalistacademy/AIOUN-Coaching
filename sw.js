@@ -1,5 +1,5 @@
-/* AIOU Coaching offline app shell. LMS/auth routes are deliberately excluded. */
-const VERSION = 'aiou-coaching-pwa-v1';
+/* AIOU Coaching offline app shell. LMS and Firebase-auth routes are deliberately excluded. */
+const VERSION = 'aiou-coaching-pwa-v2';
 const CORE = [
   './',
   './index.html',
@@ -16,6 +16,7 @@ const CORE = [
 const SCOPE = new URL(self.registration.scope);
 const withinScope = url => url.origin === SCOPE.origin && url.pathname.startsWith(SCOPE.pathname);
 const isLms = url => /\/lms(?:\/|$)/i.test(url.pathname);
+const isFirebase = url => /\/firebase(?:\/|$)/i.test(url.pathname);
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(CORE.map(path => new URL(path, SCOPE).href))).then(() => self.skipWaiting()));
@@ -27,7 +28,8 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (!withinScope(url) || isLms(url) || url.pathname.includes('/auth/')) return;
+  // Keep account, auth, file and notification screens out of the public cache.
+  if (!withinScope(url) || isLms(url) || isFirebase(url) || url.pathname.includes('/auth/')) return;
   if (req.mode === 'navigate') {
     event.respondWith((async () => {
       try {
