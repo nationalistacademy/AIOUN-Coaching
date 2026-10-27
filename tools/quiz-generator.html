@@ -6,7 +6,12 @@
 <meta name="description" content="Free browser-based quiz generator for AIOU students. Create MCQ quizzes, practice tests and instant results.">
 <style>
 :root{--p:#f67938;--d:#151515;--muted:#687078;--bg:#f7f8fa;--card:#fff}*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(135deg,#fff7f2,#f5f7fb);color:var(--d)}.wrap{max-width:980px;margin:auto;padding:24px 16px 50px}.hero,.card{background:rgba(255,255,255,.82);border:1px solid rgba(0,0,0,.08);border-radius:22px;box-shadow:0 12px 35px rgba(0,0,0,.08)}.hero{padding:28px;margin-bottom:18px}.hero h1{margin:0 0 8px;font-size:clamp(28px,6vw,48px)}.hero p{color:var(--muted);margin:0}.card{padding:20px;margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}label{font-weight:700;font-size:14px;display:block;margin-bottom:6px}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #d8dde2;border-radius:12px;background:#fff;font:inherit}textarea{min-height:190px;resize:vertical}.btn{border:0;border-radius:999px;padding:11px 18px;font-weight:800;cursor:pointer;background:var(--p);color:#fff}.btn.secondary{background:#eceff2;color:#222}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.hint{font-size:13px;color:var(--muted)}.q{padding:16px;border:1px solid #e1e4e8;border-radius:16px;margin:12px 0;background:#fff}.q h3{margin:0 0 10px;font-size:17px}.opts{display:grid;gap:8px}.opt{padding:10px;border:1px solid #ddd;border-radius:11px;cursor:pointer}.opt:hover{border-color:var(--p)}.result{padding:16px;border-radius:15px;background:#fff3eb;border:1px solid #ffd2bd;font-weight:800}#quiz,#result{display:none}@media(max-width:600px){.wrap{padding:14px 10px 35px}.hero,.card{padding:16px;border-radius:17px}}
-</style></head>
+</style><meta name="theme-color" content="#f67938">
+<meta name="application-name" content="AIOU Coaching">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/brand.css">
+</head>
 <body><main class="wrap">
 <section class="hero"><h1>📝 AIOU Quiz Generator</h1><p>Apna MCQ quiz banayein, attempt karein aur foran score hasil karein. Sab kuch browser mein — data server par nahi bheja jata.</p></section>
 <section class="card" id="setup"><h2>Quiz banayein</h2><div class="grid"><div><label>Subject / Course</label><input id="subject" placeholder="e.g. Pakistan Studies"></div><div><label>Questions</label><select id="count"><option value="5">5</option><option value="10" selected>10</option><option value="15">15</option><option value="20">20</option></select></div></div><p class="hint">Har line mein format: <b>Question | Option A | Option B | Option C | Option D | Correct option (A-D)</b></p><textarea id="data" placeholder="Pakistan ka dar-ul-hukumat kya hai? | Lahore | Karachi | Islamabad | Quetta | C
@@ -28,4 +33,5 @@ $('start').onclick=()=>{let all=parse();if(!all.length){alert('Kam az kam ek val
 $('submit').onclick=()=>{let score=0;questions.forEach((x,i)=>{let v=document.querySelector(`input[name=q${i}]:checked`);if(v&&v.value===x.a)score++});let pct=Math.round(score/questions.length*100);$('score').textContent=`Score: ${score}/${questions.length} — ${pct}%`;$('quiz').style.display='none';$('result').style.display='block';scrollTo(0,0)};
 $('restart').onclick=()=>{$('quiz').style.display='none';$('setup').style.display='block';scrollTo(0,0)};$('again').onclick=()=>{$('result').style.display='none';$('setup').style.display='block';scrollTo(0,0)};
 function escapeHtml(s){return s.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-</script></body></html>
+</script><script src="../js/pwa.js" defer></script>
+</body></html>

@@ -11,6 +11,11 @@
 <style>
 .formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.formgrid .full{grid-column:1/-1}.check{display:flex;gap:8px;align-items:flex-start}.check input{width:auto;margin-top:5px}.out{white-space:pre-wrap;line-height:1.7;background:rgba(0,0,0,.18);border:1px solid var(--line);border-radius:12px;padding:16px;min-height:180px}.toolbar{display:flex;flex-wrap:wrap;gap:10px}.small{font-size:.86rem}.warn{border-left:4px solid #e8b949}.ok{border-left:4px solid #54c78a}@media(max-width:700px){.formgrid{grid-template-columns:1fr}.formgrid .full{grid-column:auto}}
 </style>
+<meta name="theme-color" content="#f67938">
+<meta name="application-name" content="AIOU Coaching">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/brand.css">
 </head>
 <body><div class="blob b1"></div><div class="blob b2"></div><div class="wrap">
 <header class="site"><h1>📚 AIOU <span>Academic Report Builder</span></h1><div class="sub">Capstone · Internship Report · Thesis · Proposal · Word · PDF</div><div class="note">Independent study assistance. AIOU ka official tool nahi.</div></header>
@@ -46,4 +51,5 @@ $('copy').onclick=function(){navigator.clipboard.writeText($('sectionOut').textC
 $('word').onclick=function(){var text=(lastOutline+'\n\n'+lastSection).trim();if(!text){alert('Pehle outline ya section generate karein.');return}var D=window.docx;if(!D){alert('Word library load nahi hui.');return}var lines=text.split(/\r?\n/),children=[];lines.forEach(function(x){var s=x.trim();if(!s)return;children.push(new D.Paragraph({text:s,spacing:{after:160}}))});var doc=new D.Document({sections:[{properties:{page:{margin:{top:1440,right:1440,bottom:1440,left:1440}}},children:children}]});D.Packer.toBlob(doc).then(function(blob){saveAs(blob,(($('topic').value||'AIOU-Report').replace(/[^a-z0-9_-]+/gi,'-'))+'.docx')})};
 $('pdf').onclick=function(){var m=meta(),body=(lastOutline+'\n\n'+lastSection).trim();if(!body){alert('Pehle content generate karein.');return}var w=window.open('','_blank');w.document.write('<!doctype html><html><head><title>AIOU Report</title><style>@page{size:A4;margin:25mm}body{font-family:"Times New Roman",serif;line-height:1.6}h1{font-size:22px}pre{white-space:pre-wrap;font:14pt/1.6 "Times New Roman",serif}</style></head><body><h1>'+m.topic.replace(/</g,'&lt;')+'</h1><pre>'+body.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</pre><script>setTimeout(function(){print()},300)<\\/script></body></html>');w.document.close()};
 })();
-</script></body></html>
+</script><script src="../js/pwa.js" defer></script>
+</body></html>
