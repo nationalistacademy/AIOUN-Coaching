@@ -147,3 +147,24 @@ test('PDF export opens a populated print document that Chromium can render as PD
   expect(pdf.subarray(0, 4).toString()).toBe('%PDF');
   expect(pdf.length).toBeGreaterThan(1000);
 });
+
+
+test('PWA manifest and offline shell are wired without exposing LMS routes to cache', async ({ page, request }) => {
+  await page.goto('/');
+  const manifestResponse = await request.get('/manifest.webmanifest');
+  expect(manifestResponse.ok()).toBeTruthy();
+  const manifest = await manifestResponse.json();
+  expect(manifest.name).toContain('AIOU Coaching');
+  expect(manifest.start_url).toContain('source=pwa');
+  expect(manifest.scope).toBe('./');
+  expect(manifest.theme_color).toBe('#f67938');
+
+  const swResponse = await request.get('/sw.js');
+  expect(swResponse.ok()).toBeTruthy();
+  const sw = await swResponse.text();
+  expect(sw).toContain('offline.html');
+  expect(sw).toMatch(/isLms\s*=\s*url\s*=>/);
+  expect(sw).toContain('/lms');
+  await expect(page.locator('#pwa-install-card')).toBeVisible();
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', 'manifest.webmanifest');
+});
