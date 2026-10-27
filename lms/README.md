@@ -28,7 +28,9 @@ Google and Facebook credentials are configured in the provider consoles and Supa
 - `supabase-config.js` contains the project's public publishable key; browser-side publishable keys are expected to be public.
 - Never add a Supabase `service_role` or secret API key to browser code or commit one to GitHub.
 - The dashboard validates the signed-in user with `supabase.auth.getUser()` before showing the dashboard. This is a client-side page guard, not server-side protection for sensitive data.
-- Before storing course enrolments, grades, quiz attempts, or private student records, create appropriate Row Level Security (RLS) policies in Supabase. A sign-in page alone does not protect database rows.
+- The database has RLS enabled on all `public` tables. Enrollment creation/status changes are staff-only; quiz attempts and answers are written through the server-side grading RPC, and correct-answer keys are kept in the non-exposed `private` schema.
+- Admin/teacher authorization uses `app_metadata.role` (`admin` or `teacher`), not user-editable `user_metadata`. Assign staff roles only from a trusted server/admin process.
+- Security advisor review: the three public `SECURITY DEFINER` warnings were removed by making public helper/RPC functions `SECURITY INVOKER`. The remaining INFO for `private.quiz_question_keys` having no RLS policies is intentional: no client role can read it, and the private grading routine accesses it under its owner privileges.
 
 ## Files
 
@@ -67,4 +69,4 @@ If the final GitHub Pages URL differs, use the exact URL shown by the deployment
 
 ### LMS readiness warning
 
-Static hosting only serves the LMS files; it does not create its database tables or security policies. Before treating the LMS as production-ready, verify the required `courses`, `enrollments`, `lesson_progress`, and `course_announcements` tables exist and have correct Row Level Security policies. Do not store private student records until those policies have been reviewed.
+Static hosting only serves the LMS files; it does not configure Supabase Auth URLs or OAuth provider credentials. The LMS tables and core RLS policies are present and the security hardening migration is applied. Before production use, finish end-to-end tests with separate student and staff accounts, verify Auth redirect/provider settings, and confirm staff roles are assigned only through a trusted process.
