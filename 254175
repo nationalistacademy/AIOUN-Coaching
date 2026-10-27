@@ -1,0 +1,22 @@
+{
+  "brand": "Taleemwaly",
+  "siteUrl": "https://taleemwaly.blogspot.com",
+  "pageUrl": "https://taleemwaly.blogspot.com/p/solved-assignments.html",
+  "whatsapp": "923702388998",
+  "semesterLabel": "Autumn 2026 · Updated Weekly",
+  "hero": {
+    "title": "AIOU Solved Assignments — Matric se Master tak.",
+    "lead": "Har course code ke solved assignments — AIOU ke past pattern aur marking scheme ke mutabiq. Reference ke liye best material, plagiarism-free."
+  },
+  "stats": [
+    { "num": "200+", "count": 200, "suffix": "+", "label": "Course Codes" },
+    { "num": "10,000+", "count": 10000, "suffix": "+", "label": "Students Helped" },
+    { "num": "98%", "count": 98, "suffix": "%", "label": "Satisfaction" },
+    { "num": "24/7", "label": "Support" }
+  ],
+  "cta": {
+    "title": "Apna assignment abhi order karein.",
+    "text": "Course code bhejein WhatsApp par, hum aapko sample aur price bata denge — phir aap decide karein.",
+    "message": "Assignment order karni hai"
+  }
+}
