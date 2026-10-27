@@ -1,0 +1,343 @@
+<!-- ===== AIOU Mashqi Form Generator (Blogger ready) ===== -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- Controls ---------- */
+.aiou-ui{max-width:900px;margin:0 auto;font-family:Arial,Helvetica,sans-serif;color:#222;direction:ltr}
+.aiou-ui *{box-sizing:border-box}
+.aiou-card{background:#fff;border:1px solid #d9dde3;border-radius:10px;padding:16px;margin-bottom:16px}
+.aiou-card h3{margin:0 0 12px;font-size:17px;color:#0b4f9c;border-bottom:2px solid #eef1f5;padding-bottom:6px}
+.aiou-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.aiou-grid .full{grid-column:1/-1}
+.aiou-grid label{display:block;font-size:12.5px;font-weight:bold;color:#555;margin-bottom:3px}
+.aiou-grid input,.aiou-grid select{width:100%;padding:8px;border:1px solid #c7ccd4;border-radius:5px;font-size:14px;background:#fff}
+@media(max-width:600px){.aiou-grid{grid-template-columns:1fr}}
+.aiou-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.aiou-btn{padding:11px 22px;border:0;border-radius:6px;color:#fff;font-weight:bold;font-size:15px;cursor:pointer}
+.aiou-btn.pdf{background:#d93a49}.aiou-btn.jpg{background:#1a8fa6}.aiou-btn.png{background:#2f9e5a}
+.aiou-stage{width:100%;background:#6b7280;padding:14px 8px;border-radius:10px;overflow:hidden}
+.aiou-holder{margin:0 auto;position:relative}
+#aiou-busy{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);color:#fff;font:bold 20px Arial;align-items:center;justify-content:center;z-index:99999}
+
+/* ---------- Paper (A4 = 794 x 1123 px) ---------- */
+.aiou-paper{width:794px;height:1123px;background:#fff;position:relative;overflow:hidden;color:#000;direction:rtl;
+  font-family:'Jameel Noori Nastaleeq','Noto Nastaliq Urdu',serif;transform-origin:top left;text-align:right}
+.aiou-paper *{box-sizing:border-box;margin:0;padding:0}
+.aiou-paper img{max-width:none;border:0}
+.aiou-logo{position:absolute;right:92px;top:54px;width:125px;height:auto}
+.aiou-t1{position:absolute;left:0;width:712px;top:58px;text-align:center;font-size:34px;line-height:62px;font-weight:700}
+.aiou-t2{position:absolute;left:0;width:794px;top:114px;text-align:center;font-size:28px;line-height:52px;font-weight:700;padding-right:8px}
+.aiou-ins{position:absolute;left:97px;top:181px;width:600px;height:45px;border:1.6px solid #000;border-radius:15px;
+  display:flex;align-items:center;justify-content:center;font-size:17px;line-height:30px;text-align:center}
+.aiou-ph{position:absolute;top:236px;font:700 14.5px/20px Arial,Helvetica,sans-serif;direction:ltr}
+.aiou-phL{left:120px}.aiou-phR{right:115px}
+.aiou-box{position:absolute;left:53px;width:688px;border:2px solid #000}
+.aiou-b1{top:262px;height:396px}
+.aiou-b2{top:692px;height:341px}
+.aiou-leg{position:absolute;top:-19px;left:50%;transform:translateX(-50%);background:#fff;padding:0 14px;
+  font-size:20px;line-height:36px;font-weight:700;white-space:nowrap}
+
+/* rows */
+.aiou-f{display:flex;align-items:flex-end;height:34px}
+.aiou-l{font-size:19px;line-height:34px;height:34px;white-space:nowrap;margin-left:6px;position:relative;top:8px;font-weight:700}
+.aiou-v{flex:1;min-width:0;height:27px;border-bottom:1px solid #000;font:700 14px/26px Arial,Helvetica,sans-serif;
+  text-align:center;direction:ltr;overflow:hidden;white-space:nowrap}
+.aiou-vl{text-align:left;padding-left:4px}
+
+/* student column */
+.aiou-sc{position:absolute;right:22px;top:15px;width:326px}
+.aiou-idl{margin-top:8px;height:22px;font-size:14.5px;line-height:22px;white-space:nowrap}
+.aiou-idl span{font-family:'Times New Roman',serif;font-size:15px}
+.aiou-ids{margin-top:3px;height:36px;border:1.5px solid #000;display:flex;direction:ltr}
+.aiou-ids div{flex:1;border-left:1px solid #000;display:flex;align-items:center;justify-content:center;font:700 17px Arial,Helvetica,sans-serif}
+.aiou-ids div:first-child{border-left:0}
+.aiou-fa{height:30px;margin-top:0}
+.aiou-ruled{direction:ltr;text-align:left;font:700 14px Arial,Helvetica,sans-serif;background-repeat:repeat-y;overflow:hidden}
+.aiou-r34{margin-top:5px;height:68px;line-height:34px;background-image:linear-gradient(to bottom,transparent 28px,#000 28px,#000 29px,transparent 29px);background-size:100% 34px}
+.aiou-r41{position:absolute;left:0;top:54px;width:292px;height:123px;line-height:41px;background-image:linear-gradient(to bottom,transparent 35px,#000 35px,#000 36px,transparent 36px);background-size:100% 41px}
+.aiou-fl{float:right;height:41px;line-height:41px;background:#fff;padding-left:6px;direction:rtl}
+.aiou-fli{position:relative;top:7px;font:700 19px/41px 'Jameel Noori Nastaleeq','Noto Nastaliq Urdu',serif;white-space:nowrap}
+.aiou-f2{margin-top:0}.aiou-f3{margin-top:12px}
+.aiou-f3 .aiou-v:nth-child(2){flex:.9}.aiou-f3 .aiou-v:nth-child(4){flex:1}
+.aiou-f3 .aiou-l:nth-child(3){margin-left:6px;margin-right:8px}
+.aiou-note{margin-top:16px;height:22px;text-align:center;font-size:14.5px;line-height:22px}
+.aiou-paper sup{font-size:.6em;vertical-align:super;line-height:0}
+
+/* tutor column */
+.aiou-tc{position:absolute;left:26px;top:15px;width:292px}
+.aiou-sem{position:absolute;left:31px;top:209px;width:168px}
+.aiou-sr{display:flex;align-items:flex-end;height:28px;direction:rtl}
+.aiou-sr1{height:30px;border-bottom:1px solid #000}
+.aiou-sw{font-size:17px;line-height:28px;width:46px;white-space:nowrap;position:relative;top:4px;font-weight:700}
+.aiou-sv{flex:1;text-align:center;font:700 15px/22px Arial,Helvetica,sans-serif;direction:ltr;white-space:nowrap}
+.aiou-sy{font-size:15px;line-height:22px;width:14px;text-align:left}
+.aiou-semL{position:absolute;right:34px;top:229px;font-size:21px;line-height:34px;font-weight:700}
+
+/* dates */
+.aiou-dates{position:absolute;left:26px;right:22px;top:347px;display:flex;align-items:flex-end;height:34px}
+.aiou-dates .aiou-v{margin-left:8px}
+.aiou-dates .aiou-v.dv{flex:0 0 118px}
+.aiou-dates .aiou-v.sg{margin-left:0}
+
+/* tutor box */
+.aiou-r1{position:absolute;left:26px;right:22px;top:26px;display:flex;gap:26px}
+.aiou-r1 .aiou-f{flex:1}.aiou-r1 .aiou-f:first-child{flex:0 0 320px}
+.aiou-r2{position:absolute;left:26px;right:318px;top:63px}
+.aiou-mt{position:absolute;left:26px;right:24px;top:108px;height:93px;display:grid;direction:rtl;
+  grid-template-columns:59px repeat(12,1fr);grid-template-rows:31px 62px;border-top:1px solid #000;border-right:1px solid #000}
+.aiou-mt div{border-left:1px solid #000;border-bottom:1px solid #000;display:flex;align-items:center;justify-content:center;
+  font:700 15px Arial,Helvetica,sans-serif;text-align:center}
+.aiou-mt div.u{font:700 14px/1.9 'Jameel Noori Nastaleeq','Noto Nastaliq Urdu',serif}
+.aiou-sb{position:absolute;left:26px;top:211px;width:118px;height:116px;display:grid;direction:rtl;
+  grid-template-columns:48px 70px;grid-template-rows:1fr 1fr;border:1px solid #000}
+.aiou-sb div{display:flex;align-items:center;justify-content:center;text-align:center;font:700 14px/1.9 'Jameel Noori Nastaleeq','Noto Nastaliq Urdu',serif}
+.aiou-sb .lb{border-left:1px solid #000}
+.aiou-sb .r1{border-bottom:1px solid #000}
+.aiou-rm{position:absolute;right:22px;left:172px;top:195px}
+.aiou-rm .row{height:31px;display:flex;align-items:flex-end;border-bottom:1px solid #000}
+.aiou-rm .row.nl{border-bottom:0}
+.aiou-rm .ln{flex:1;height:31px;border-bottom:1px solid #000}
+.aiou-rm .row.nl .ln{height:30px}
+.aiou-rm .row .l2{font-size:19px;line-height:34px;height:34px;white-space:nowrap;position:relative;top:8px;font-weight:700;margin-left:6px}
+.aiou-rm .gap{width:14px}
+.aiou-foot{position:absolute;left:0;width:794px;top:1036px;text-align:center;font-size:18px;line-height:34px;padding-right:2px}
+</style>
+
+<div class="aiou-ui">
+  <div id="aiou-busy">⏳ File ban rahi hai...</div>
+
+  <div class="aiou-card">
+    <h3>🛠️ Form Details / فارم کی تفصیل</h3>
+    <div class="aiou-grid">
+      <div><label>Tutor Name / نام ٹیوٹر</label><input id="i-tname" value="TUTOR NAME"></div>
+      <div><label>Tutor Phone / ٹیوٹر فون</label><input id="i-tphone" value="0300-0000000"></div>
+      <div class="full"><label>Tutor Address / ٹیوٹر کا پتہ</label><input id="i-tadd" maxlength="90" value="HOUSE / FLAT NO, STREET, AREA, CITY."></div>
+
+      <div><label>Student Name / نام طالب علم</label><input id="i-sname" value="STUDENT NAME"></div>
+      <div><label>Student Phone / طالب علم فون</label><input id="i-sphone" value="0300-0000000"></div>
+      <div><label>Student ID / رجسٹریشن نمبر (10 digits)</label><input id="i-sid" maxlength="10" inputmode="numeric" value="0000000000"></div>
+      <div><label>Course Name / کورس کا نام</label><input id="i-course" value="BCOM"></div>
+      <div class="full"><label>Student Address / طالب علم کا پتہ</label><input id="i-sadd" maxlength="70" value="HOUSE NO, STREET, AREA, CITY."></div>
+
+      <div><label>Course Code / کوڈ نمبر</label><input id="i-code" value="AIOU1423"></div>
+      <div><label>Semester / سمسٹر</label>
+        <select id="i-sem"><option value="spring">Spring / بہار</option><option value="autumn">Autumn / خزاں</option></select></div>
+      <div><label>Year / سال</label><input id="i-year" maxlength="4" inputmode="numeric" value="2026"></div>
+      <div><label>Due Date / مقررہ تاریخ</label><input type="date" id="i-due" value="2026-08-20"></div>
+      <div><label>Dispatch Date / روانگی کی تاریخ</label><input type="date" id="i-disp" value="2026-06-27"></div>
+      <div><label>Logo (optional) / لوگو تبدیل کریں</label><input type="file" id="i-logo" accept="image/*"></div>
+    </div>
+  </div>
+
+  <div class="aiou-card">
+    <div class="aiou-btns">
+      <button class="aiou-btn pdf" id="b-pdf">📄 Download PDF</button>
+      <button class="aiou-btn jpg" id="b-jpg">🖼️ Download JPG</button>
+      <button class="aiou-btn png" id="b-png">🖼️ Download PNG</button>
+    </div>
+  </div>
+
+  <div class="aiou-stage" id="aiou-stage">
+    <div class="aiou-holder" id="aiou-holder">
+      <div class="aiou-paper" id="aiou-paper">
+        <img class="aiou-logo" id="o-logo" src="{{LOGO}}" alt="">
+        <div class="aiou-t1">علامہ اقبال اوپن یونیورسٹی، اسلام آباد</div>
+        <div class="aiou-t2">مشقی فارم</div>
+        <div class="aiou-ins">حل شدہ مشق کے ساتھ مقررہ تاریخ سے پہلے اس فارم کے 3 پرت اپنے ٹیوٹر کو ارسال کریں۔</div>
+        <div class="aiou-ph aiou-phL" id="o-tphone"></div>
+        <div class="aiou-ph aiou-phR" id="o-sphone"></div>
+
+        <div class="aiou-box aiou-b1">
+          <div class="aiou-leg">یہ حصہ طالب علم پُر کریں</div>
+
+          <div class="aiou-sc">
+            <div class="aiou-f"><span class="aiou-l">نام طالب علم</span><span class="aiou-v aiou-vl" id="o-sname"></span></div>
+            <div class="aiou-idl">طالب علم کا شناختی نمبر <span>(Student ID)</span> / رجسٹریشن نمبر</div>
+            <div class="aiou-ids" id="o-sid"></div>
+            <div class="aiou-f aiou-fa"><span class="aiou-l">مکمل پتہ (طالب علم)</span><span class="aiou-v"></span></div>
+            <div class="aiou-ruled aiou-r34" id="o-sadd"></div>
+            <div class="aiou-f aiou-f2"><span class="aiou-l">کورس کا نام</span><span class="aiou-v" id="o-course"></span></div>
+            <div class="aiou-f aiou-f3"><span class="aiou-l">کوڈ نمبر</span><span class="aiou-v" id="o-code"></span><span class="aiou-l">مشق نمبر</span><span class="aiou-v"></span></div>
+            <div class="aiou-note">( نیچے دونوں تاریخیں طالب علم ضرور پُر کریں)</div>
+          </div>
+
+          <div class="aiou-tc">
+            <div class="aiou-f"><span class="aiou-l">نام ٹیوٹر</span><span class="aiou-v" id="o-tname"></span></div>
+            <div class="aiou-ruled aiou-r41"><span class="aiou-fl"><span class="aiou-fli">مکمل پتہ (ٹیوٹر)</span></span><span id="o-tadd"></span></div>
+            <div class="aiou-semL">سمسٹر</div>
+            <div class="aiou-sem">
+              <div class="aiou-sr aiou-sr1"><span class="aiou-sw">بہار</span><span class="aiou-sv" id="o-spring"></span><span class="aiou-sy">ء</span></div>
+              <div class="aiou-sr"><span class="aiou-sw">خزاں</span><span class="aiou-sv" id="o-autumn"></span><span class="aiou-sy">ء</span></div>
+            </div>
+          </div>
+
+          <div class="aiou-dates">
+            <span class="aiou-l">مقررہ تاریخ</span><span class="aiou-v dv" id="o-due"></span>
+            <span class="aiou-l">روانگی کی تاریخ</span><span class="aiou-v dv" id="o-disp"></span>
+            <span class="aiou-l">طالب علم کے دستخط</span><span class="aiou-v sg"></span>
+          </div>
+        </div>
+
+        <div class="aiou-box aiou-b2">
+          <div class="aiou-leg">یہ حصہ ٹیوٹر پُر کریں گے</div>
+          <div class="aiou-r1">
+            <div class="aiou-f"><span class="aiou-l">نام مطالعاتی مرکز</span><span class="aiou-v"></span></div>
+            <div class="aiou-f"><span class="aiou-l">ضلع</span><span class="aiou-v"></span></div>
+          </div>
+          <div class="aiou-f aiou-r2"><span class="aiou-l">مشق وصول کرنے کی تاریخ</span><span class="aiou-v"></span></div>
+
+          <div class="aiou-mt">
+            <div class="u">سوال نمبر</div><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div>
+            <div class="u">حاصل<br>کردہ نمبر</div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+          </div>
+
+          <div class="aiou-sb">
+            <div class="lb r1">حاصل<br>کردہ نمبر</div><div class="r1"></div>
+            <div class="lb">کل نمبر</div><div></div>
+          </div>
+
+          <div class="aiou-rm">
+            <div class="row"><span class="l2">ٹیوٹر کی رائے</span><span class="ln" style="border:0;border-bottom:0"></span></div>
+            <div class="row"></div>
+            <div class="row"></div>
+            <div class="row nl"><span class="l2">دستخط</span><span class="ln" style="flex:0 0 238px"></span><span class="gap"></span><span class="l2">تاریخ واپسی</span><span class="ln"></span></div>
+          </div>
+        </div>
+
+        <div class="aiou-foot">نوٹ: اس فارم کی فوٹو کاپی بھی استعمال ہو سکتی ہے۔</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+//<![CDATA[
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var W = 794, H = 1123;
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function addr(s) {
+    return esc(s.toUpperCase()).replace(/(\d)(ST|ND|RD|TH)\b/g, '$1<sup>$2</sup>');
+  }
+  function fmtDate(v) {
+    if (!v) { return ''; }
+    var p = v.split('-');
+    return MONTHS[parseInt(p[1], 10) - 1] + ' ' + parseInt(p[2], 10) + ', ' + p[0];
+  }
+  function up(id) { return $(id).value.trim().toUpperCase(); }
+
+  function update() {
+    $('o-tname').textContent = up('i-tname');
+    $('o-tadd').innerHTML = addr($('i-tadd').value.trim());
+    var tp = $('i-tphone').value.trim(), sp = $('i-sphone').value.trim();
+    $('o-tphone').textContent = tp ? '(' + tp + ')' : '';
+    $('o-sphone').textContent = sp ? '(' + sp + ')' : '';
+    $('o-sname').textContent = up('i-sname');
+    $('o-sadd').innerHTML = addr($('i-sadd').value.trim());
+    $('o-course').textContent = up('i-course');
+    $('o-code').textContent = up('i-code');
+    $('o-due').textContent = fmtDate($('i-due').value);
+    $('o-disp').textContent = fmtDate($('i-disp').value);
+
+    var year = $('i-year').value.trim();
+    var isSpring = $('i-sem').value === 'spring';
+    $('o-spring').textContent = isSpring ? year + ' SPRING' : '20';
+    $('o-autumn').textContent = isSpring ? '20' : year + ' AUTUMN';
+
+    var id = $('i-sid').value.replace(/\D/g, '');
+    if (id.length > 0) { while (id.length !== 10) { if (id.length > 10) { id = id.substring(0, 10); } else { id = '0' + id; } } }
+    var box = $('o-sid');
+    box.innerHTML = '';
+    for (var i = 0; i !== 10; i++) {
+      var d = document.createElement('div');
+      d.textContent = id.charAt(i);
+      box.appendChild(d);
+    }
+  }
+
+  function fit() {
+    var stage = $('aiou-stage');
+    var s = Math.min(1, (stage.clientWidth - 16) / W);
+    if (s <= 0) { s = 1; }
+    $('aiou-paper').style.transform = 'scale(' + s + ')';
+    $('aiou-holder').style.width = (W * s) + 'px';
+    $('aiou-holder').style.height = (H * s) + 'px';
+  }
+
+  function snap() {
+    var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    return ready.then(function () {
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'position:fixed;left:0;top:0;z-index:-9999;pointer-events:none;background:#fff;width:' + W + 'px;height:' + H + 'px';
+      var c = $('aiou-paper').cloneNode(true);
+      c.removeAttribute('id');
+      c.style.transform = 'none';
+      wrap.appendChild(c);
+      document.body.appendChild(wrap);
+      return html2canvas(c, { scale: 3, useCORS: true, backgroundColor: '#ffffff', width: W, height: H, scrollX: 0, scrollY: 0 })
+        .then(function (cv) { document.body.removeChild(wrap); return cv; },
+              function (e) { document.body.removeChild(wrap); throw e; });
+    });
+  }
+
+  function fname(ext) {
+    var n = $('i-sname').value.trim().replace(/\s+/g, '_') || 'Student';
+    var c = $('i-code').value.trim() || 'Form';
+    return 'AIOU_' + n + '_' + c + '.' + ext;
+  }
+  function busy(on) { $('aiou-busy').style.display = on ? 'flex' : 'none'; }
+
+  function exportImg(type) {
+    busy(true);
+    snap().then(function (cv) {
+      var mime = type === 'png' ? 'image/png' : 'image/jpeg';
+      cv.toBlob(function (blob) {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fname(type);
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        busy(false);
+      }, mime, 0.95);
+    }).catch(function (e) { busy(false); alert('Error: ' + e); });
+  }
+
+  function exportPdf() {
+    busy(true);
+    snap().then(function (cv) {
+      var pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+      pdf.addImage(cv.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 210, 297);
+      pdf.save(fname('pdf'));
+      busy(false);
+    }).catch(function (e) { busy(false); alert('Error: ' + e); });
+  }
+
+  function init() {
+    var ids = ['i-tname','i-tphone','i-tadd','i-sname','i-sphone','i-sid','i-course','i-sadd','i-code','i-sem','i-year','i-due','i-disp'];
+    for (var k = 0; k !== ids.length; k++) {
+      $(ids[k]).addEventListener('input', update);
+      $(ids[k]).addEventListener('change', update);
+    }
+    $('i-logo').addEventListener('change', function (e) {
+      var f = e.target.files[0];
+      if (!f) { return; }
+      var r = new FileReader();
+      r.onload = function (ev) { $('o-logo').src = ev.target.result; };
+      r.readAsDataURL(f);
+    });
+    $('b-pdf').addEventListener('click', exportPdf);
+    $('b-jpg').addEventListener('click', function () { exportImg('jpeg'); });
+    $('b-png').addEventListener('click', function () { exportImg('png'); });
+    window.addEventListener('resize', fit);
+    update(); fit();
+    setTimeout(fit, 400);
+  }
+
+  if (document.readyState === 'complete') { init(); } else { window.addEventListener('load', init); }
+})();
+//]]>
+</script>
