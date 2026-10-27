@@ -29,12 +29,24 @@ tabs.forEach(t=>t.onclick=()=>showTab(t.dataset.tab));
 document.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>{const i=document.getElementById(b.dataset.toggle);i.type=i.type==='password'?'text':'password';b.textContent=i.type==='password'?'Show':'Hide'});
 function message(text,ok=false){notice.textContent=text;notice.classList.toggle('ok',ok);notice.style.display='block'}
 function loading(btn,on){btn.disabled=on;btn.textContent=on?'Please wait…':btn.id==='loginBtn'?'Sign In':'Create Account'}
-async function redirectIfSignedIn(){const {data}=await supabase.auth.getSession();if(data.session) location.href='./dashboard.html'}
+async function redirectIfSignedIn(){const {data,error}=await supabase.auth.getUser();if(!error&&data.user) location.replace('./dashboard.html')}
 redirectIfSignedIn();
 supabase.auth.onAuthStateChange((event,session)=>{if(session && (event==='SIGNED_IN'||event==='INITIAL_SESSION')) location.href='./dashboard.html'});
 document.getElementById('loginForm').onsubmit=async e=>{e.preventDefault();const btn=document.getElementById('loginBtn');loading(btn,true);const {error}=await supabase.auth.signInWithPassword({email:document.getElementById('loginEmail').value.trim(),password:document.getElementById('loginPass').value});loading(btn,false);if(error){message(error.message);return}message('Sign in successful. Redirecting…',true)};
 document.getElementById('signupForm').onsubmit=async e=>{e.preventDefault();const pass=document.getElementById('signupPass').value;if(pass!==document.getElementById('confirmPass').value){message('Passwords match nahi kar rahe.');return}const btn=document.getElementById('signupBtn');loading(btn,true);const {data,error}=await supabase.auth.signUp({email:document.getElementById('signupEmail').value.trim(),password:pass,options:{data:{full_name:document.getElementById('fullName').value.trim()},emailRedirectTo:new URL('./dashboard.html',location.href).href}});loading(btn,false);if(error){message(error.message);return}if(data.session){message('Account created. Redirecting…',true);location.href='./dashboard.html'}else{message('Account create ho gaya. Email confirmation complete karke sign in karein.',true)}};
 document.getElementById('forgot').onclick=async e=>{e.preventDefault();const email=document.getElementById('loginEmail').value.trim();if(!email){message('Password reset ke liye pehle email enter karein.');document.getElementById('loginEmail').focus();return}const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:new URL('./reset-password.html',location.href).href});if(error){message(error.message);return}message('Password reset link email par bhej diya gaya hai.',true)};
-['googleBtn','facebookBtn'].forEach(id=>document.getElementById(id).onclick=()=>message('Social login abhi Supabase provider settings mein enable nahi kiya gaya. Email login ready hai.'));
+async function signInWithProvider(provider,buttonId){
+ const button=document.getElementById(buttonId),label=button.textContent;
+ button.disabled=true;button.textContent='Connecting…';
+ try{
+  const {error}=await supabase.auth.signInWithOAuth({provider,options:{redirectTo:new URL('./dashboard.html',location.href).href}});
+  if(error)throw error;
+ }catch(error){
+  message(error instanceof Error?error.message:'Social sign-in could not be started. Please try again.');
+  button.disabled=false;button.textContent=label;
+ }
+}
+document.getElementById('googleBtn').onclick=()=>signInWithProvider('google','googleBtn');
+document.getElementById('facebookBtn').onclick=()=>signInWithProvider('facebook','facebookBtn');
 </script>
 </body></html>

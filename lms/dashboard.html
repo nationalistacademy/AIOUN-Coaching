@@ -1,1 +1,69 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AIOU Coaching LMS — Dashboard</title><style>body{margin:0;font-family:Inter,system-ui,sans-serif;background:#f7f8fa;color:#171717}.wrap{max-width:980px;margin:auto;padding:28px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;background:#fff;border:1px solid #e8e8e8;border-radius:20px;padding:20px 22px;box-shadow:0 12px 35px #0000000b}h1{margin:0;font-size:28px}.muted{color:#6c737b}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}.card{background:#fff;border:1px solid #e8e8e8;border-radius:18px;padding:22px;min-height:120px}.card b{display:block;margin-bottom:8px}.logout{border:0;border-radius:11px;padding:10px 15px;background:#f67938;color:#fff;font-weight:800;cursor:pointer}@media(max-width:700px){.grid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}</style></head><body><main class="wrap"><section class="top"><div><div class="muted">AIOU Coaching LMS</div><h1 id="welcome">Student Dashboard</h1><div class="muted" id="email"></div></div><button class="logout" id="logout">Logout</button></section><section class="grid"><article class="card"><b>📚 Courses</b><span class="muted">Your LMS courses will appear here.</span></article><article class="card"><b>📝 Quizzes</b><span class="muted">Practice quizzes and results.</span></article><article class="card"><b>📈 Progress</b><span class="muted">Track your learning progress.</span></article></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-config.js"></script><script>const supabase=window.supabase.createClient(window.AIOU_SUPABASE_URL,window.AIOU_SUPABASE_PUBLISHABLE_KEY);(async()=>{const {data}=await supabase.auth.getSession();if(!data.session){location.href='./signin-signup.html';return}const u=data.session.user;document.getElementById('email').textContent=u.email||'';document.getElementById('welcome').textContent='Welcome, '+(u.user_metadata?.full_name||'Student')+' 👋'})();document.getElementById('logout').onclick=async()=>{await supabase.auth.signOut();location.href='./signin-signup.html'};</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AIOU Coaching LMS — Dashboard</title>
+<style>
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#f7f8fa;color:#171717}
+.wrap{max-width:980px;margin:auto;padding:28px;visibility:hidden}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;background:#fff;border:1px solid #e8e8e8;border-radius:20px;padding:20px 22px;box-shadow:0 12px 35px #0000000b}
+h1{margin:0;font-size:28px}
+.muted{color:#6c737b}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+.card{background:#fff;border:1px solid #e8e8e8;border-radius:18px;padding:22px;min-height:120px}
+.card b{display:block;margin-bottom:8px}
+.logout{border:0;border-radius:11px;padding:10px 15px;background:#f67938;color:#fff;font-weight:800;cursor:pointer}
+.logout:disabled{opacity:.65;cursor:wait}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.wrap{padding:16px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="top">
+<div><div class="muted">AIOU Coaching LMS</div><h1 id="welcome">Student Dashboard</h1><div class="muted" id="email"></div></div>
+<button class="logout" id="logout" type="button">Logout</button>
+</section>
+<section class="grid">
+<article class="card"><b>📚 Courses</b><span class="muted">Your LMS courses will appear here.</span></article>
+<article class="card"><b>📝 Quizzes</b><span class="muted">Practice quizzes and results.</span></article>
+<article class="card"><b>📈 Progress</b><span class="muted">Track your learning progress.</span></article>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
+<script>
+const supabase=window.supabase.createClient(window.AIOU_SUPABASE_URL,window.AIOU_SUPABASE_PUBLISHABLE_KEY);
+const signInPath='./signin-signup.html';
+const app=document.querySelector('.wrap');
+async function initializeDashboard(){
+  try{
+    const {data,error}=await supabase.auth.getUser();
+    if(error||!data.user){location.replace(signInPath);return;}
+    const user=data.user;
+    document.getElementById('email').textContent=user.email||'';
+    document.getElementById('welcome').textContent='Welcome, '+(user.user_metadata?.full_name||'Student')+' 👋';
+    app.style.visibility='visible';
+  }catch(error){
+    location.replace(signInPath);
+  }
+}
+supabase.auth.onAuthStateChange((event)=>{
+  if(event==='SIGNED_OUT')location.replace(signInPath);
+});
+document.getElementById('logout').onclick=async()=>{
+  const button=document.getElementById('logout');
+  button.disabled=true;button.textContent='Signing out…';
+  try{
+    const {error}=await supabase.auth.signOut();
+    if(error)throw error;
+    location.replace(signInPath);
+  }catch(error){
+    button.disabled=false;button.textContent='Logout';
+    alert(error instanceof Error?error.message:'Sign out failed. Please try again.');
+  }
+};
+initializeDashboard();
+</script>
+</body>
+</html>
