@@ -1,0 +1,1 @@
+const b=document.querySelector('.menu'),n=document.querySelector('.mobile-nav');if(b&&n)b.addEventListener('click',()=>{const o=n.classList.toggle('open');b.setAttribute('aria-expanded',o);b.textContent=o?'✕':'☰'});
