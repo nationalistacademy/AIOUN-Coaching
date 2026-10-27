@@ -15,7 +15,7 @@ function walk(dir) {
 }
 walk(root);
 
-test('all local HTML href/src references resolve to files or in-page anchors', async () => {
+test('repository-local HTML links and in-page anchors resolve', async () => {
   const missing = [];
   for (const file of htmlFiles) {
     const html = fs.readFileSync(file, 'utf8');
@@ -23,19 +23,28 @@ test('all local HTML href/src references resolve to files or in-page anchors', a
     for (const match of html.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi)) {
       const raw = match[1].trim();
       if (!raw || /^(?:https?:|\/\/|mailto:|tel:|javascript:|data:|blob:)/i.test(raw)) continue;
+      if (raw.includes('$' + '{') || /PASTE_YOUR_|YOUR_.*_HERE/i.test(raw)) continue;
+      // /p/ URLs are Blogger-hosted page routes, not repository file paths.
+      if (/^\/p\//i.test(raw)) continue;
       const clean = raw.split('#')[0].split('?')[0];
       if (!clean) {
-        const hash = raw.includes('#') ? raw.slice(raw.indexOf('#') + 1) : '';
-        if (hash && !ids.has(decodeURIComponent(hash))) missing.push(`${path.relative(root, file)} -> missing anchor #${hash}`);
+        const hash = raw.includes('#') ? decodeURIComponent(raw.slice(raw.indexOf('#') + 1)) : '';
+        if (hash && !ids.has(hash)) missing.push(path.relative(root, file) + ' -> missing anchor #' + hash);
         continue;
       }
       let target;
-      try { target = clean.startsWith('/') ? path.resolve(root, decodeURIComponent(clean).slice(1)) : path.resolve(path.dirname(file), decodeURIComponent(clean)); }
-      catch { missing.push(`${path.relative(root, file)} -> invalid path ${raw}`); continue; }
+      try {
+        target = clean.startsWith('/')
+          ? path.resolve(root, decodeURIComponent(clean).slice(1))
+          : path.resolve(path.dirname(file), decodeURIComponent(clean));
+      } catch {
+        missing.push(path.relative(root, file) + ' -> invalid path ' + raw);
+        continue;
+      }
       if (!target.startsWith(root + path.sep) && target !== root) {
-        missing.push(`${path.relative(root, file)} -> path escapes repository: ${raw}`);
+        missing.push(path.relative(root, file) + ' -> path escapes repository: ' + raw);
       } else if (!fs.existsSync(target) || !fs.statSync(target).isFile()) {
-        missing.push(`${path.relative(root, file)} -> missing local target ${raw}`);
+        missing.push(path.relative(root, file) + ' -> missing local target ' + raw);
       }
     }
   }
