@@ -165,6 +165,8 @@ test('PWA manifest and offline shell are wired without exposing LMS routes to ca
   expect(sw).toContain('offline.html');
   expect(sw).toMatch(/isLms\s*=\s*url\s*=>/);
   expect(sw).toContain('/lms');
+  expect(sw).toContain('isFirebase');
+  expect(sw).toContain('/firebase');
   await expect(page.locator('#pwa-install-card')).toBeVisible();
   await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', 'manifest.webmanifest');
 });
