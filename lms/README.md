@@ -40,7 +40,7 @@ Google and Facebook credentials are configured in the provider consoles and Supa
 
 ## Free static deployment (GitHub Pages)
 
-A deployment workflow is included at `.github/workflows/deploy-pages.yml`. It publishes this repository as a static site on pushes to `main` and on manual runs.
+A deployment workflow is included at `.github/workflows/deploy-pages.yml`. It deploys the exact commit only after the existing **Browser QA** workflow succeeds on `main`, so broken local links, mobile layout regressions, or DOCX/PDF export failures block the deployment.
 
 Expected project-site base URL (confirm the actual URL from the successful workflow run):
 `https://nationalistacademy.github.io/AIOUN-Coaching/`
@@ -52,7 +52,7 @@ LMS sign-in page:
 
 1. Open the repository's **Settings → Pages**.
 2. Set the publishing source to **GitHub Actions**, if GitHub asks you to choose a source.
-3. Open **Actions → Deploy AIOU Coaching to GitHub Pages** and check the latest run. The site is not live until this workflow succeeds.
+3. Open **Actions → Browser QA** and check that the latest run succeeds. Then open **Actions → Deploy AIOU Coaching to GitHub Pages** and confirm its deployment run succeeds. The site is not updated until deployment completes.
 
 ### Required Supabase Auth URLs
 
