@@ -23,8 +23,8 @@ test('repository-local HTML links and in-page anchors resolve', async () => {
     for (const match of html.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi)) {
       const raw = match[1].trim();
       // Firebase config is injected only during Pages deployment from repository variables.
-      if (raw === './config.js' && path.relative(root, file).replace(/\\\\/g, '/') === 'firebase/index.html') continue;
-      if (!raw || /^(?:https?:|\\/\\/|mailto:|tel:|javascript:|data:|blob:)/i.test(raw)) continue;
+      if (raw === './config.js' && path.relative(root, file).split(path.sep).join('/') === 'firebase/index.html') continue;
+      if (!raw || ['http:', 'https:', '//', 'mailto:', 'tel:', 'javascript:', 'data:', 'blob:'].some(prefix => raw.toLowerCase().startsWith(prefix))) continue;
       if (raw.includes('$' + '{') || /PASTE_YOUR_|YOUR_.*_HERE/i.test(raw)) continue;
       // /p/ URLs are Blogger-hosted page routes, not repository file paths.
       if (/^\/p\//i.test(raw)) continue;
