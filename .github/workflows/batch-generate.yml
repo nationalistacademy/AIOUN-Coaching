@@ -5,6 +5,10 @@ on:
       topics:
         description: 'Topics (one per line)'
         required: true
+        type: string
+
+permissions:
+  contents: write
 
 jobs:
   generate:
@@ -15,18 +19,65 @@ jobs:
       - name: Generate posts
         env:
           DEEPSEEK_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          TOPICS: ${{ inputs.topics }}
         run: |
+          set -euo pipefail
+          if [ -z "${DEEPSEEK_KEY:-}" ]; then
+            echo "::error::Missing repository secret DEEPSEEK_API_KEY."
+            exit 1
+          fi
+
           mkdir -p posts
-          echo "${{ github.event.inputs.topics }}" | while read -r topic; do
+          index=0
+          while IFS= read -r topic || [ -n "$topic" ]; do
+            topic="$(printf '%s' "$topic" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
             [ -z "$topic" ] && continue
-            SLUG=$(echo "$topic" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
-            echo "Generating: $topic → posts/$SLUG.json"
-            curl -s https://api.deepseek.com/v1/chat/completions \
+            index=$((index + 1))
+
+            slug="$(printf '%s' "$topic" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g; s/--*/-/g; s/^-//; s/-$//')"
+            [ -n "$slug" ] || slug="study-note-$index"
+            output="posts/$slug.json"
+            request_file="$(mktemp)"
+            response_file="$(mktemp)"
+            trap 'rm -f "$request_file" "$response_file"' EXIT
+
+            echo "Generating note $index: $topic"
+            jq -n --arg topic "$topic" '{
+              model: "deepseek-chat",
+              messages: [{
+                role: "user",
+                content: ("Write a clear AIOU Coaching study note as a JSON object for this topic: " + $topic + ". State that this is independent study material, not an official university publication. Include title, summary, and sections. Do not invent official claims or citations.")
+              }],
+              response_format: {type: "json_object"}
+            }' > "$request_file"
+
+            if ! curl --silent --show-error --fail-with-body --retry 2 --retry-delay 2 \
+              --connect-timeout 15 --max-time 120 \
+              https://api.deepseek.com/v1/chat/completions \
               -H "Authorization: Bearer $DEEPSEEK_KEY" \
               -H "Content-Type: application/json" \
-              -d "{\"model\":\"deepseek-chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Write a clear AIOU Coaching study note as JSON for: $topic. Independent of the university. Include title, summary, and sections.\"}],\"response_format\":{\"type\":\"json_object\"}}" \
-              > "posts/$SLUG.json"
-          done
+              --data-binary "@$request_file" > "$response_file"; then
+              echo "::error::API request failed for topic: $topic"
+              cat "$response_file"
+              exit 1
+            fi
+
+            if ! jq -e '.choices[0].message.content | fromjson' "$response_file" > "$output"; then
+              echo "::error::API response was not valid JSON content for topic: $topic"
+              cat "$response_file"
+              rm -f "$output"
+              exit 1
+            fi
+
+            rm -f "$request_file" "$response_file"
+            trap - EXIT
+            echo "Saved $output"
+          done <<< "$TOPICS"
+
+          if [ "$index" -eq 0 ]; then
+            echo "::error::No non-empty topics were supplied."
+            exit 1
+          fi
 
       - name: Commit generated posts
         uses: stefanzweifel/git-auto-commit-action@v5
