@@ -79,6 +79,14 @@ npx wrangler deploy
 
 Do not paste secrets into issues, commit history, screenshots, or chat messages. Rotate any token or API key that has been exposed.
 
+## Progressive Web App (PWA)
+
+The repository now includes an installable GitHub Pages study app with a web manifest, app icon, service worker, offline fallback, and runtime caching for previously visited non-LMS pages. Start from the [AIOU Coaching app](https://nationalistacademy.github.io/AIOUN-Coaching/) and use the browser's **Install app / Add to Home screen** option when available.
+
+**Blogger origin limitation:** Blogger does not let a theme upload a same-origin root service-worker file. The Blogger XML therefore provides a branded entry point to the installable companion app; it does not make `aioucoaching.blogspot.com` itself an offline-capable PWA. To make the Blogger hostname itself installable as a PWA, use a custom domain and a same-origin service-worker hosting/proxy arrangement. LMS routes and authentication are intentionally excluded from offline caching.
+
+Offline mode is limited: pages generally need to be visited once while online; external AI Worker calls, authentication, LMS data, and third-party downloads still need a connection.
+
 ## Blogger publishing
 
 - [Pages guide](pages/README.md): paste body-only HTML into Blogger **Pages → HTML view**.

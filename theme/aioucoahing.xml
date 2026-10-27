@@ -3158,7 +3158,26 @@ function jtCallback(){
 })();
 /*]]>*/</script>
 
-<!-- Your Style and Script before </body> is here -->
+<!-- AIOU Coaching installable companion PWA entry point. Blogger cannot host a same-origin service worker, so the installable app opens on GitHub Pages. -->
+<style type='text/css'><![CDATA[
+.aio-pwa-cta{position:fixed;z-index:9998;right:18px;bottom:18px;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 28px);padding:12px 14px;border:1px solid #f1c4a8;border-radius:18px;background:rgba(255,255,255,.96);box-shadow:0 12px 36px rgba(24,23,22,.16);font:600 13px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;color:#181716;backdrop-filter:blur(14px)}
+.aio-pwa-cta strong{display:block;font-weight:850}.aio-pwa-cta span{display:block;color:#6d6a67;font-size:11px}.aio-pwa-cta a{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border-radius:999px;background:#f67938;color:#fff!important;text-decoration:none;padding:10px 13px;font-weight:800}.aio-pwa-cta a:hover{background:#b8470f}
+@media(max-width:520px){.aio-pwa-cta{left:10px;right:10px;bottom:10px;justify-content:space-between}.aio-pwa-cta>div{min-width:0}.aio-pwa-cta a{padding:10px 11px}}
+]]></style>
+<script type='text/javascript'><![CDATA[
+(function(){
+  if (location.hostname !== 'aioucoaching.blogspot.com' || document.querySelector('.aio-pwa-cta')) return;
+  function addAppLink(){
+    if (!document.body || document.querySelector('.aio-pwa-cta')) return;
+    var box=document.createElement('aside');box.className='aio-pwa-cta';box.setAttribute('aria-label','AIOU Coaching study app');
+    var info=document.createElement('div'),title=document.createElement('strong'),detail=document.createElement('span'),link=document.createElement('a');
+    title.textContent='AIOU Coaching App';detail.textContent='Installable study tools · offline for cached pages';link.href='https://nationalistacademy.github.io/AIOUN-Coaching/';link.textContent='Open app';link.setAttribute('aria-label','Open installable AIOU Coaching study app');
+    info.appendChild(title);info.appendChild(detail);box.appendChild(info);box.appendChild(link);document.body.appendChild(box);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addAppLink);else addAppLink();
+})();
+]]></script>
+\n<!-- Blogger theme app entry point ends here. -->
 
 <b:if cond='!data:view.isPreview'>&lt;textarea disabled readonly id=&quot;element-b&quot; style=&quot;display:none&quot;&gt;&lt;style&gt;/*</b:if></body><b:if cond='!data:view.isPreview'>*/&lt;/style&gt;&lt;/textarea&gt;<script>/*<![CDATA[*/const _eh=document.getElementById("element-h"),_eb=document.getElementById("element-b"),_WidgetManager={_PopupConfig:function(){}};null!==_eh&&(_eh.outerHTML=""),null!==_eb&&(_eb.outerHTML="");/*]]>*/</script>
 &lt;/body&gt;</b:if>
