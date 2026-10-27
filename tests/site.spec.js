@@ -94,6 +94,10 @@ test('DOCX export downloads a non-empty Office document', async ({ page }) => {
   const bytes = fs.readFileSync(filePath);
   expect(bytes.length).toBeGreaterThan(1000);
   expect(bytes.subarray(0, 2).toString()).toBe('PK');
+  const zipListing = execFileSync('unzip', ['-l', filePath], { encoding: 'utf8' });
+  expect(zipListing).toContain('word/document.xml');
+  const documentXml = execFileSync('unzip', ['-p', filePath, 'word/document.xml'], { encoding: 'utf8' });
+  expect(documentXml).toContain('Effects of digital learning');
   expect(download.suggestedFilename()).toMatch(/\.docx$/i);
 });
 
