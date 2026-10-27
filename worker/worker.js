@@ -3,7 +3,7 @@
 //
 // Secrets (Cloudflare dashboard or `wrangler secret put`):
 //   DEEPSEEK_API_KEY   required — your DeepSeek key, stays server side
-//   AUTH_TOKEN         optional — one token, or many separated by commas
+//   AUTH_TOKEN         required — one token, or many separated by commas
 //
 // The browser never sees the DeepSeek key. Tools send an X-Auth-Token header
 // that must match one of the tokens above; kai "IDs" = kai tokens.
@@ -30,7 +30,7 @@ export default {
         ok: true,
         service: 'aiou-coaching-tools',
         models: MODELS,
-        authRequired: !!env.AUTH_TOKEN,
+        authRequired: true,
         tokens: countTokens(env)
       }, 200);
     }
@@ -41,6 +41,10 @@ export default {
 
     if (!env.DEEPSEEK_API_KEY) {
       return json({ error: 'Server setup incomplete: DEEPSEEK_API_KEY secret missing' }, 500);
+    }
+
+    if (!String(env.AUTH_TOKEN || '').split(',').some((t) => t.trim())) {
+      return json({ error: 'Server setup incomplete: AUTH_TOKEN secret missing. Configure it before enabling AI requests.' }, 503);
     }
 
     if (!authorized(request, env)) {
@@ -114,7 +118,7 @@ function authorized(request, env) {
     .split(',')
     .map((t) => t.trim())
     .filter(Boolean);
-  if (configured.length === 0) return true; // no token configured = open proxy
+  if (configured.length === 0) return false; // fail closed: never expose an unauthenticated API proxy
   const sent = String(request.headers.get('X-Auth-Token') || '').trim();
   return !!sent && configured.includes(sent);
 }
