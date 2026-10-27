@@ -29,7 +29,7 @@ test('all local HTML href/src references resolve to files or in-page anchors', a
         continue;
       }
       let target;
-      try { target = path.resolve(path.dirname(file), decodeURIComponent(clean)); }
+      try { target = clean.startsWith('/') ? path.resolve(root, decodeURIComponent(clean).slice(1)) : path.resolve(path.dirname(file), decodeURIComponent(clean)); }
       catch { missing.push(`${path.relative(root, file)} -> invalid path ${raw}`); continue; }
       if (!target.startsWith(root + path.sep) && target !== root) {
         missing.push(`${path.relative(root, file)} -> path escapes repository: ${raw}`);
