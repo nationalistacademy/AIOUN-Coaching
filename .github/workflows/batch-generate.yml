@@ -24,12 +24,12 @@ jobs:
             curl -s https://api.deepseek.com/v1/chat/completions \
               -H "Authorization: Bearer $DEEPSEEK_KEY" \
               -H "Content-Type: application/json" \
-              -d "{\"model\":\"deepseek-chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Generate AssignmentWaly JSON for: $topic\"}],\"response_format\":{\"type\":\"json_object\"}}" \
+              -d "{\"model\":\"deepseek-chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Write a clear AIOU Coaching study note as JSON for: $topic. Independent of the university. Include title, summary, and sections.\"}],\"response_format\":{\"type\":\"json_object\"}}" \
               > "posts/$SLUG.json"
           done
 
       - name: Commit generated posts
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: '🤖 Auto-generate batch posts'
+          commit_message: 'Auto-generate batch posts'
           file_pattern: 'posts/*.json'

@@ -1,15 +1,11 @@
-// ═══════════════════════════════════════════════════════════════
-// AssignmentWaly AI Worker — DeepSeek API Proxy
-// ═══════════════════════════════════════════════════════════════
-// Deploy this on Cloudflare Workers (free tier: 100k req/day)
-// Add secrets in Cloudflare dashboard:
-//   DEEPSEEK_API_KEY = sk-your-key-here
-//   AUTH_TOKEN       = your-random-secret-token
-// ═══════════════════════════════════════════════════════════════
+// AIOU Coaching AI Worker — DeepSeek API proxy
+// Deploy on Cloudflare Workers.
+// Secrets (Cloudflare dashboard or `wrangler secret put`):
+//   DEEPSEEK_API_KEY
+//   AUTH_TOKEN
 
 export default {
   async fetch(request, env) {
-    // CORS headers — allow calls from GitHub Pages
     const cors = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -17,17 +13,14 @@ export default {
       'Access-Control-Max-Age': '86400'
     };
 
-    // Handle preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: cors });
     }
 
-    // Only POST allowed
     if (request.method !== 'POST') {
       return json({ error: 'Method not allowed. Use POST.' }, 405, cors);
     }
 
-    // Optional auth token check (recommended)
     if (env.AUTH_TOKEN) {
       const tok = request.headers.get('X-Auth-Token');
       if (tok !== env.AUTH_TOKEN) {
@@ -35,7 +28,6 @@ export default {
       }
     }
 
-    // Parse request body
     let body;
     try {
       body = await request.json();
@@ -47,7 +39,6 @@ export default {
       return json({ error: 'messages[] array is required' }, 400, cors);
     }
 
-    // Build DeepSeek payload
     const payload = {
       model: body.model || 'deepseek-chat',
       messages: body.messages,
@@ -56,12 +47,10 @@ export default {
       stream: false
     };
 
-    // Force JSON mode if requested
     if (body.json === true) {
       payload.response_format = { type: 'json_object' };
     }
 
-    // Call DeepSeek API
     try {
       const r = await fetch('https://api.deepseek.com/v1/chat/completions', {
         method: 'POST',

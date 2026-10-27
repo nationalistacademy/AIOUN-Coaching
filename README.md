@@ -1,81 +1,113 @@
 <div align="center">
 
-# 🎓 AssignmentWaly AI Studio
+# AIOU Coaching
 
-### The Ultimate All-in-One AI Toolkit for AIOU Students
+### Independent study help and standalone tools for AIOU students
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Studio-Visit_Now-6366f1?style=for-the-badge)](https://nationalistacademy.github.io/Assignmentwaly-Tools/)
+[![Repo](https://img.shields.io/badge/GitHub-AIOUN--Coaching-181717?style=for-the-badge&logo=github)](https://github.com/nationalistacademy/AIOUN-Coaching)
 [![DeepSeek](https://img.shields.io/badge/Powered_by-DeepSeek_API-7c3aed?style=for-the-badge)](https://platform.deepseek.com)
 [![Cloudflare](https://img.shields.io/badge/Security-Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare)](https://workers.cloudflare.com)
-[![GitHub Pages](https://img.shields.io/badge/Hosted_on-GitHub_Pages-181717?style=for-the-badge&logo=github)](https://pages.github.com)
 [![License](https://img.shields.io/badge/License-MIT-10b981?style=for-the-badge)](LICENSE)
-[![Made in Pakistan](https://img.shields.io/badge/Made_in-Pakistan_🇵🇰-success?style=for-the-badge)](#)
+[![Made in Pakistan](https://img.shields.io/badge/Made_in-Pakistan-success?style=for-the-badge)](#)
 
-**Write, Humanize, Draw, and Download AIOU Assignments — All in One Place.**
+**Each tool is a standalone HTML file. Open one. Use it. You do not need the others.**
 
 </div>
 
 ---
 
-## 🌟 Overview
+## Overview
 
-**AssignmentWaly AI Studio** is a comprehensive, serverless web application designed to automate the entire AIOU assignment creation process. Powered by **DeepSeek AI** and secured via **Cloudflare Workers**, it provides students and freelancers with a suite of 6 powerful tools to generate high-quality, plagiarism-free academic content.
+**AIOU Coaching** is an independent resource for Allama Iqbal Open University students. It is **not affiliated with AIOU** and does not issue degrees, results, or official documents.
 
-Whether you need to write an assignment from scratch, bypass Turnitin, generate complex diagrams, or bulk-download Word files for multiple students, this Studio does it all.
+This repository holds:
 
----
+- the Blogger theme
+- legal and info pages
+- standalone browser tools (guess papers, cover pages, humanizer, diagrams, bulk download)
 
-## 🛠️ The 6 Powerful Tools
-
-### 1. 🧠 AI Assignment Writer
-*   **What it does:** Generates complete, A-Grade assignments in **APA format** based on your questions.
-*   **Key Feature:** Uses smart prompting to ensure the content is original, academic, and tailored to AIOU standards.
-
-### 2. 🛡️ AI Humanizer (Plagiarism Bypass)
-*   **What it does:** Takes AI-generated text and rewrites it to sound 100% human.
-*   **Key Feature:** Removes typical AI patterns and structures, allowing students to **bypass AI detectors** like Turnitin, GPTZero, and Copyleaks.
-
-### 3. 🎯 Guess Paper Extractor
-*   **What it does:** Analyzes past papers (PDF upload) and identifies the most repeated questions.
-*   **Key Feature:** Categorizes questions into High Priority, Medium Priority, and Subjective types to help students study smartly.
-
-### 4. 🎨 AI Diagram Generator
-*   **What it does:** Auto-generates flowcharts, mind maps, and graphs based on a simple text prompt.
-*   **Key Feature:** Uses `Mermaid.js` to render diagrams that can be downloaded as high-resolution PNG images for assignments.
-
-### 5. 🖼️ Front Page / Cover Generator
-*   **What it does:** Creates an official AIOU assignment cover page.
-*   **Key Feature:** Live A4-size preview with perfect formatting. Students can directly "Print to PDF" without messing with MS Word tables.
-
-### 6. 📥 Bulk Assignment Downloader
-*   **What it does:** Generates multiple MS Word (`.docx`) files at once and packs them into a single `.zip` folder.
-*   **Key Feature:** Perfect for freelancers and teachers managing assignments for multiple students at the same time.
+No account is required to open a tool. AI tools that call DeepSeek go through the Cloudflare Worker in `worker.js`, so the API key stays off the page.
 
 ---
 
-## 🏗️ Architecture & Security
+## Standalone tools
 
-This project is built with a **Zero-Backend** architecture, ensuring high speed and zero hosting costs.
+| Tool | File | What it does |
+| --- | --- | --- |
+| Guess paper | [Tool/aiou-guess-paper-generator.html](Tool/aiou-guess-paper-generator.html) | Build a paper, add a logo or watermark, download PDF / Word / image |
+| BS and BBA guess paper | [Tool/aiou-bsbba-guess-paper-generator.html](Tool/aiou-bsbba-guess-paper-generator.html) | MCQ plus short and long questions, multi-page export |
+| Assignment cover page | [Tool/aiou-assignment-cover-page-generator.html](Tool/aiou-assignment-cover-page-generator.html) | Cover layouts with student, programme, and course details |
+| Cover sheet | [Tool/aiou-assignment-cover-sheet-generator.html](Tool/aiou-assignment-cover-sheet-generator.html) | Simple assignment cover sheet |
+| Assignment writer | [Tool/aiou-assignment-writer.html](Tool/aiou-assignment-writer.html) | Draft help from pasted questions |
+| Humanizer | [aiou-humanizer.html](aiou-humanizer.html) | Rewrite text so it reads more naturally |
+| Diagram generator | [aiou-diagram-generator.html](aiou-diagram-generator.html) | Flowcharts and diagrams from a short prompt |
+| Front page | [aiou-front-page.html](aiou-front-page.html) | A4-style assignment front page, print to PDF |
+| Bulk downloader | [aiou-bulk-downloader.html](aiou-bulk-downloader.html) | Several Word files packed into one ZIP |
+
+Blogger widget markup for the tools page lives in [Tool/tools.html](Tool/tools.html). Homepage markup for the blog is [home.html](home.html).
+
+Guess papers are for revision only. They are not the real exam.
+
+---
+
+## Site pages
+
+| Page | File |
+| --- | --- |
+| About | [Legal/about.html](Legal/about.html) |
+| Contact | [Legal/contact.html](Legal/contact.html) |
+| FAQs | [Legal/faqs.html](Legal/faqs.html) |
+| How it works | [Legal/how-it-works.html](Legal/how-it-works.html) |
+| Privacy | [Legal/privacy.html](Legal/privacy.html) |
+| Terms | [Legal/terms.html](Legal/terms.html) |
+| Disclaimer | [Legal/disclaimer.html](Legal/disclaimer.html) |
+| DMCA | [Legal/dmca.html](Legal/dmca.html) |
+| Blogger theme | [Theme/AIOUCOACHING.XML](Theme/AIOUCOACHING.XML) |
+
+---
+
+## How the AI tools run
+
+Each HTML tool runs in the browser. Calls that need a model go to the Worker, which holds the API key.
 
 ```text
-┌──────────────────────────┐
-│  User's Browser          │
-│  ┌────────────────────┐  │
-│  │  GitHub Pages      │  │  ← Hosts the UI (HTML/JS/CSS)
-│  │  (The AI Studio)   │  │
-│  └────────────────────┘  │
-└────────────┬─────────────┘
-             │ Fetch API Request (CORS)
-             ▼
-┌──────────────────────────┐
-│  Cloudflare Worker       │  ← Hides API Key & Handles Auth
-│  ┌────────────────────┐  │
-│  │  Proxy Server      │  │
-│  └────────────────────┘  │
-└────────────┬─────────────┘
-             │ HTTPS POST (Bearer Token)
-             ▼
-┌──────────────────────────┐
-│  DeepSeek API            │  ← Generates the Content
-│  (deepseek-chat model)   │
-└──────────────────────────┘
+Browser (one standalone HTML file)
+        |
+        | POST  (optional X-Auth-Token)
+        v
+Cloudflare Worker  (worker.js)
+        |
+        | HTTPS
+        v
+DeepSeek API  (deepseek-chat)
+```
+
+### Worker setup
+
+1. Install [Wrangler](https://developers.cloudflare.com/workers/wrangler/) and log in.
+2. From this repo, set secrets (do not commit them):
+
+```bash
+npx wrangler secret put DEEPSEEK_API_KEY
+npx wrangler secret put AUTH_TOKEN
+```
+
+3. Deploy:
+
+```bash
+npx wrangler deploy
+```
+
+`wrangler.toml` names the worker `aiou-coaching-tools`. After deploy, paste the Worker URL into the tool that asks for it. The auth token stays in Cloudflare, not in the HTML.
+
+---
+
+## Independence
+
+AIOU Coaching is not Allama Iqbal Open University. Confirm fees, dates, eligibility, and results on the university website before you submit anything.
+
+---
+
+## License
+
+[MIT](LICENSE)
