@@ -268,7 +268,13 @@ $('bWord').onclick=function(){
   var html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>AIOU Paper</title><style>'
   +'body{font-family:Times New Roman,serif;direction:'+(ur?'rtl':'ltr')+';text-align:'+(ur?'right':'left')+'}'
   +'.ag-hd{text-align:center}table{width:100%;border-collapse:collapse}td,th{border:1px solid black;padding:8px}th{background:#f2f2f2}'
-  +'.cn,.cm{text-align:center}.ag-note{text-align:center;font-weight:bold}.qx{font-family:'+qf+';font-size:15pt}</style></head><body>'+c.innerHTML+'</body></html>';
+  +'.cn,.cm{text-align:center}.ag-note{text-align:center;font-weight:bold}.qx{font-family:'+qf+';font-size:15pt}</style><meta name="theme-color" content="#f67938">
+<meta name="application-name" content="AIOU Coaching">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/brand.css">
+</head><body>'+c.innerHTML+'<script src="../js/pwa.js" defer></script>
+</body></html>';
   var a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob(['\ufeff',html],{type:'application/msword;charset=utf-8'}));
   a.download='AIOU_Paper.doc';document.body.appendChild(a);a.click();document.body.removeChild(a);
