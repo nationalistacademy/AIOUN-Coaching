@@ -2,237 +2,123 @@
 
 # AIOU Coaching
 
-### Independent study help and standalone tools for AIOU students
+### Independent study resources and browser-based tools for AIOU students
 
-[![Repo](https://img.shields.io/badge/GitHub-AIOUN--Coaching-181717?style=for-the-badge&logo=github)](https://github.com/nationalistacademy/AIOUN-Coaching)
-[![DeepSeek](https://img.shields.io/badge/Powered_by-DeepSeek_API-7c3aed?style=for-the-badge)](https://platform.deepseek.com)
-[![Cloudflare](https://img.shields.io/badge/Security-Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare)](https://workers.cloudflare.com)
+[![Repository](https://img.shields.io/badge/GitHub-AIOUN--Coaching-181717?style=for-the-badge&logo=github)](https://github.com/nationalistacademy/AIOUN-Coaching)
 [![License](https://img.shields.io/badge/License-MIT-10b981?style=for-the-badge)](LICENSE)
 [![Made in Pakistan](https://img.shields.io/badge/Made_in_Pakistan-success?style=for-the-badge)](#)
 
-**Each tool is a standalone HTML file. Open one. Use it. You do not need the others.**
+**Standalone study tools, Blogger resources, and a Supabase-backed learning management system.**
 
 </div>
 
 ---
 
-## Overview
+## Project overview
 
-**AIOU Coaching** is an independent resource for Allama Iqbal Open University students. It is **not affiliated with AIOU** and does not issue degrees, results, or official documents.
+AIOU Coaching is an independent study-support project for Allama Iqbal Open University students. It is **not affiliated with AIOU** and does not issue official degrees, results, admission decisions, or university documents.
 
-New here? Open [index.html](index.html) — it lists every tool. The flagship is the
-**[Multi-ID AI Studio](tools/studio.html)**: send one question to several DeepSeek Worker
-IDs (URL + token + model), compare all answers side by side, mark the best one, and export the
-assignment as a Word file.
+- Start with the [tool directory](index.html).
+- Use the [Multi-ID AI Studio](tools/studio.html) to send a prompt to configured AI Worker endpoints and compare responses.
+- Browse Blogger page and post source in [pages/](pages/README.md) and [posts/](posts/README.md).
+- Read the [LMS setup and security guide](lms/README.md) before configuring authentication or using the learning platform.
+- Review the [SEO guide](seo/README.md), [GEO guide](geo/README.md), and [Google Search guide](google-search/README.md) for Blogger publishing.
 
-No account is required. Anthromes that call DeepSeek go through the Cloudflare Worker in
-[worker/worker.js](worker/worker.js), so the API key stays off the page.
+Most study tools are standalone HTML pages. Tools that call an AI model require a configured Worker endpoint and token; the AI service is not automatically available just because the page loads.
 
----
+## Repository map
 
-## Repository structure
-
-```text
-.
-├── index.html                 # landing page: every tool in one grid
-├── css/
-│   ├── theme.css              # shared dark-glass theme (buttons, panels, cards, chips)
-│   └── studio.css             # studio layout (stepper, ID rows, response cards)
-├── js/                        # shared JavaScript (classic scripts, no build step)
-│   ├── store.js               # the list of AI IDs + settings, saved in localStorage
-│   ├── ai.js                  # DeepSeek client: askAll / askFirst / ask (multi-ID + fallback)
-│   ├── ui.js                  # DOM, status, toast, copy and download helpers
-│   ├── tools.js               # ONE registry of every tool (used by index.html + studio)
-│   ├── hub.js                 # renders the filterable tool grid
-│   └── studio.js              # studio app: multi-ID compare, helper, diagram, docx
-├── tools/                     # every standalone tool
-│   ├── studio.html            # ⭐ Multi-ID AI Studio (5 sections)
-│   ├── guess-paper.html
-│   ├── bs-bba-guess-paper.html
-│   ├── assignment-cover-page.html
-│   ├── assignment-cover-sheet.html
-│   ├── assignment-writer.html
-│   ├── humanizer.html
-│   ├── diagram-generator.html
-│   ├── front-page.html
-│   ├── bulk-downloader.html
-│   ├── generator.html         # blog post generator (SEO + JSON-LD)
-│   └── tools.html             # Blogger widget markup for the tools page
-├── pages/                     # PAGE body (Blogger Pages): about, contact, faqs, how-it-works,
-│                              #   privacy, terms, disclaimer, dmca, aiou-tool-kit
-├── posts/                     # POST body (Blogger Posts): post-template.html
-├── seo/                       # SEO kit — theme audit + checklist + paste-in snippets
-├── geo/                       # GEO kit — quick-answer block for AI search
-├── google-search/             # Google Search kit — Search Console, schema, indexing
-├── theme/
-│   ├── AIOUCOACHING.XML       # Blogger theme
-│   └── home.html              # Blogger homepage markup
-├── worker/
-│   ├── worker.js              # Cloudflare Worker: DeepSeek proxy (multi-token)
-│   └── wrangler.toml
-└── .github/workflows/batch-generate.yml
-```
-
-### Where files moved
-
-| Old path | New path |
+| Path | Purpose |
 | --- | --- |
-| `studio.html` | [tools/studio.html](tools/studio.html) |
-| `generator.html` | [tools/generator.html](tools/generator.html) |
-| `aiou-humanizer.html` | [tools/humanizer.html](tools/humanizer.html) |
-| `aiou-diagram-generator.html` | [tools/diagram-generator.html](tools/diagram-generator.html) |
-| `aiou-front-page.html` | [tools/front-page.html](tools/front-page.html) |
-| `aiou-bulk-downloader.html` | [tools/bulk-downloader.html](tools/bulk-downloader.html) |
-| `Tool/*.html` | `tools/*.html` (prefix dropped: `aiou-guess-paper-generator.html` → `guess-paper.html`) |
-| `Legal/*.html` | `pages/*.html` |
-| `home.html` | [theme/home.html](theme/home.html) |
-| `Theme/AIOUCOACHING.XML` | [theme/AIOUCOACHING.XML](theme/AIOUCOACHING.XML) |
-| `worker.js`, `wrangler.toml` | `worker/worker.js`, `worker/wrangler.toml` |
+| `index.html` | Tool landing page |
+| `tools/` | Standalone study, assignment, diagram, and writing tools |
+| `js/` | Shared browser-side JavaScript |
+| `css/` | Shared theme and studio styles |
+| `pages/` | Blogger Page body snippets and publishing guide |
+| `posts/` | Blogger Post body template and publishing guide |
+| `theme/` | Blogger theme and homepage markup |
+| `worker/` | Cloudflare Worker proxy for supported AI tools |
+| `lms/` | LMS pages, Supabase browser configuration, and setup guide |
+| `supabase/migrations/` | Versioned database security migration SQL |
+| `tests/` | Browser QA and real-account LMS security tests |
+| `.github/workflows/` | Browser QA, Pages deployment, security E2E, and batch-generation workflows |
+| `seo/`, `geo/`, `google-search/` | Search optimization and publishing guides |
 
-Blogger pages link tools with `/p/...` URLs, so moving the source files does not change the live
-site. Publish the updated markup when you are ready.
+The source tree is the source of truth for file names; older references to renamed or removed files should not be used.
 
----
+## Main study tools
 
-## Standalone tools
+The tool index at [index.html](index.html) is the most reliable current directory. The repository includes tools for:
 
-| Tool | File | What it does |
-| --- | --- | --- |
-| Multi-ID AI Studio | [tools/studio.html](tools/studio.html) | One prompt to many Worker IDs, answers side by side, best pick, Word export |
-| Guess paper | [tools/guess-paper.html](tools/guess-paper.html) | Build a paper, add a logo or watermark, download PDF / Word / image |
-| BS and BBA guess paper | [tools/bs-bba-guess-paper.html](tools/bs-bba-guess-paper.html) | MCQ plus short and long questions, multi-page export |
-| Assignment cover page | [tools/assignment-cover-page.html](tools/assignment-cover-page.html) | Cover layouts with student, programme, and course details |
-| Cover sheet | [tools/assignment-cover-sheet.html](tools/assignment-cover-sheet.html) | Simple assignment cover sheet |
-| Assignment writer | [tools/assignment-writer.html](tools/assignment-writer.html) | Draft help from pasted questions |
-| Humanizer | [tools/humanizer.html](tools/humanizer.html) | Rewrite text so it reads more naturally |
-| Diagram generator | [tools/diagram-generator.html](tools/diagram-generator.html) | Flowcharts and diagrams from a short prompt |
-| Front page | [tools/front-page.html](tools/front-page.html) | A4-style assignment front page, print to PDF |
-| Bulk downloader | [tools/bulk-downloader.html](tools/bulk-downloader.html) | Several Word files packed into one ZIP |
-| Blog post generator | [tools/generator.html](tools/generator.html) | Post draft, meta tags and JSON-LD schema |
+- Multi-ID AI response comparison and Word export
+- Guess-paper and BS/BBA practice-paper preparation
+- Assignment writing support and cover pages
+- Text rewriting and diagram generation
+- Front-page creation, bulk downloads, and blog-post drafting
+- Academic report generation and related formatting utilities
 
-Blogger widget markup for the tools page lives in [tools/tools.html](tools/tools.html).
-Homepage markup for the blog is [theme/home.html](theme/home.html).
+Guess papers are for revision and practice only. They are not leaked or official exam papers, and they cannot guarantee exam questions.
 
-Guess papers are for revision only. They are not the real exam.
+## AI Worker configuration
 
----
-
-## How the AI tools run
+AI-enabled tools that use the Cloudflare Worker follow this general flow:
 
 ```text
-Browser (one HTML file + the shared js/ modules)
-        |
-        | POST  (X-Auth-Token)
-        v
-Cloudflare Worker  (worker/worker.js)
-        |
-        | HTTPS  (DeepSeek key stays here)
-        v
-DeepSeek API  (deepseek-chat / deepseek-reasoner)
+Browser tool → Cloudflare Worker → AI provider API
 ```
 
-### Multiple IDs (multi-key mode)
+Keep provider API keys in Worker secrets, never in HTML, JavaScript, Blogger posts, or public repository files. The Worker requires an `AUTH_TOKEN`; configure it as a Worker secret and keep the matching token private. See the [Worker configuration in this README's history/source](worker/) and the Cloudflare Workers documentation before deploying changes.
 
-An "ID" is one Worker URL plus its Auth token and the model it should use. The studio stores the
-whole list in your browser only (`localStorage`, key `aiou_ids_v2`) — nothing is uploaded.
-
-- **Sab IDs ko bhejein** — the same prompt goes to every enabled ID at the same time. Each answer
-  lands in its own card with status, latency and length. Mark the best with ⭐, copy it or push it
-  into the assignment draft.
-- **Fallback** — tries IDs in list order and stops at the first answer, so a dead or rate-limited
-  key never blocks the work.
-- **Export / import** — back the ID list up as JSON (`AIOU ids` never leave the browser).
-- **Test** — `🔌 Sab IDs test karein` sends a one-word prompt to each ID to check which ones work.
-
-The Worker **requires `AUTH_TOKEN`** for every AI request; without it, POST requests fail closed instead of exposing an unauthenticated, billable AI proxy. Set one strong random token or a comma separated list (`tokenA,tokenB`); any configured token will be accepted. Keep tokens private and do not publish them in screenshots or public code.
-
-### Worker setup
-
-1. Install [Wrangler](https://developers.cloudflare.com/workers/wrangler/) and log in.
-2. From this repo, set secrets (do not commit them):
+Example secret setup from the `worker/` directory:
 
 ```bash
-cd worker
 npx wrangler secret put DEEPSEEK_API_KEY
-npx wrangler secret put AUTH_TOKEN          # required: strong token or tokenA,tokenB
+npx wrangler secret put AUTH_TOKEN
 npx wrangler deploy
 ```
 
-Optional: `AI_TIMEOUT_MS` (a `[vars]` entry) changes the upstream timeout; the default is 120000.
+Do not paste secrets into issues, commit history, screenshots, or chat messages. Rotate any token or API key that has been exposed.
 
-Endpoints: `POST /` with `{ messages, model, temperature, max_tokens, json }` and an
-`X-Auth-Token` header, plus `GET /` for a small health check (`ok`, `models`, `tokens`).
+## Blogger publishing
 
-After deploy, open the studio, add one ID per Worker URL + token, and press
-`🔌 Sab IDs test karein`.
+- [Pages guide](pages/README.md): paste body-only HTML into Blogger **Pages → HTML view**.
+- [Posts guide](posts/README.md): use the post-body starter and publishing checklist.
+- [SEO guide](seo/README.md): titles, descriptions, internal links, and technical SEO.
+- [GEO guide](geo/README.md): concise answer blocks and useful page structure.
+- [Google Search guide](google-search/README.md): Search Console, sitemaps, and structured data.
 
-### Editing the shared code
+The public blog is [aioucoaching.blogspot.com](https://aioucoaching.blogspot.com/). Editing repository files does **not** automatically publish them to Blogger: paste or upload the relevant content through Blogger and verify the live page afterward.
 
-- Add a tool: append it to the list in [js/tools.js](js/tools.js) — it then shows up on
-  `index.html` and in the studio's **All Tools** section automatically.
-- Theme: [css/theme.css](css/theme.css) for shared look, [css/studio.css](css/studio.css) for the
-  studio layout.
-- The `js/` files are plain classic scripts exposing `window.AIOU.*`, so the tools also work when
-  opened straight from disk. Pages load them with relative paths (`../js/…`), so keep the folder
-  structure when you paste a page into Blogger — or host the files and use their full URLs.
+## LMS deployment and security
 
----
+The LMS is in [lms/](lms/README.md). It uses Supabase Auth and database row-level security (RLS). Browser-visible Supabase publishable/anon keys are not secrets; **never expose a service-role key or secret API key in client code**.
 
-## Where each HTML goes in Blogger
+- [LMS setup, redirects, and security notes](lms/README.md)
+- [Database hardening migration](supabase/migrations/20261028000000_harden_lms_enrollment_and_quiz_writes.sql)
+- [Real-account security test suite](tests/lms-security.spec.js)
+- [Manual LMS security workflow](.github/workflows/lms-security-e2e.yml)
 
-The theme is unchanged (`theme/AIOUCOACHING.XML`) — instead every file here is labelled by the
-place you paste it.
+The security test harness is committed, but its real-account run depends on dedicated test users, course/quiz fixtures, and GitHub Actions secrets. See the LMS guide for setup. Do not interpret a committed test file as a passing test result.
 
-| Folder | Paste target | Body only? |
-| --- | --- | --- |
-| [`pages/`](pages/README.md) | Blogger → **Pages** → HTML view | yes, no `<html>`/`<head>` |
-| [`posts/`](posts/README.md) | Blogger → **Posts** → HTML view | yes |
-| [`tools/`](tools) | standalone apps (served from this repo, or used as Page content) | full documents |
-| [`theme/`](theme) | Blogger → **Theme** → Edit HTML | the theme itself |
-| `tools/tools.html` | HTML widget content (tools page / sidebar) | body only |
+## Quality assurance and GitHub Pages
 
-Ready kits for the four areas:
+The repository includes a [Browser QA workflow](.github/workflows/browser-qa.yml) and a [GitHub Pages deployment workflow](.github/workflows/deploy-pages.yml). Deployment is intended to be gated on successful Browser QA.
 
-- **SEO** → [seo/README.md](seo/README.md) — what the theme already handles (robots directives,
-  canonical, Organization JSON-LD, sitemap template) plus the content checklist.
-- **GEO** → [geo/README.md](geo/README.md) and [geo/quick-answer.html](geo/quick-answer.html) —
-  the `.key-takeaways` quick-answer block that AI answers pick up.
-- **Google Search** → [google-search/README.md](google-search/README.md) — Search Console setup,
-  sitemap submission, and FAQ / Article / SoftwareApplication schema snippets.
-- **AIOU Tool Kit** → [pages/aiou-tool-kit.html](pages/aiou-tool-kit.html) — every tool as one
-  Blogger page (filter chips, crystal glass cards, FAQ + ItemList schema).
+- [View Browser QA runs](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/browser-qa.yml)
+- [View Pages deployment runs](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/deploy-pages.yml)
+- [View LMS security E2E runs](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/lms-security-e2e.yml)
 
-New post ka starter: [posts/post-template.html](posts/post-template.html).
+A workflow being present does not mean the latest run passed or the site is live. Check the latest run's conclusion and the deployed URL before reporting success. For local checks, use the scripts documented in [package.json](package.json) and the relevant workflow file.
 
----
+## Security and privacy checklist
 
-## Blogger theme
-
-`theme/AIOUCOACHING.XML` is the live Blogger theme (JetTheme core + the glassmorphism
-layer). Two things changed to it:
-
-- **Fixed:** it used `xlink:href` for the SVG icon sprite without declaring the `xlink`
-  namespace, so the file was **not well-formed XML** (45 uses). `xmlns:xlink='http://www.w3.org/1999/xlink'`
-  is now declared on `<html>`.
-- **Fixed:** two icon-sprite attributes used a double prefix, `expr:xlink:href`, which strict XML
-  parsers reject; they now use `expr:href`, matching the 64 other `expr:href` attributes already in
-  the theme. The file now parses as well-formed XML end to end.
-- **Added:** a crystal-glassmorphism hover layer (section `B15`) on cards, widgets, nav
-  links and buttons, plus a glass shop-cart icon button in the navbar. The cart points at
-  `/p/get-solved-assignments.html` — change that one `href` if your shop lives elsewhere.
-
-The same crystal treatment is in [css/theme.css](css/theme.css) (for pages served from
-this repo) and in the tools widget [tools/tools.html](tools/tools.html). Theme and pages
-share the `--glass-*` tokens, so the blog and the studio look like one product.
-
----
-
-## Independence
-
-AIOU Coaching is not Allama Iqbal Open University. Confirm fees, dates, eligibility, and results on the university website before you submit anything.
-
----
+- Do not commit passwords, OAuth client secrets, service-role keys, or AI provider keys.
+- Assign LMS staff roles only through trusted Supabase admin/server tooling using `app_metadata.role`; never trust user-editable metadata for authorization.
+- Keep LMS test accounts and fixtures separate from production data.
+- Confirm Supabase Auth redirect URLs match the actual deployed origin.
+- Review changes to RLS policies and database functions before applying migrations.
+- Use official university sources to verify dates, eligibility, fees, and results.
 
 ## License
 
-[MIT](LICENSE)
+This repository includes an [MIT License](LICENSE). Third-party libraries and services remain subject to their own terms.
