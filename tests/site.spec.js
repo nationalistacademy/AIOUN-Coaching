@@ -87,6 +87,7 @@ test('report engine supports mobile layout and report generation flow', async ({
 
 test('DOCX export downloads a non-empty Office document', async ({ page }) => {
   await page.goto('/tools/aiou-report-engine.html');
+  await expect.poll(() => page.evaluate(() => Boolean(window.docx && window.docx.Packer && typeof window.saveAs === 'function')), { timeout: 20000, message: 'DOCX/FileSaver libraries failed to load from primary and fallback CDNs' }).toBe(true);
   await page.locator('#program').fill('BS Economics');
   await page.locator('#student').fill('QA Student');
   await page.locator('#topic').fill('Effects of digital learning on student engagement');
