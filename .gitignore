@@ -3,6 +3,10 @@
 .env.local
 *.key
 secrets.json
+firebase/config.js
+firebase/config.local.js
+firebase-adminsdk*.json
+service-account*.json
 
 # OS files
 .DS_Store
