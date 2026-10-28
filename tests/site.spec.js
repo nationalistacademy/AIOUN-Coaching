@@ -85,8 +85,9 @@ test('mobile navigation and site search are interactive', async ({ page }) => {
   await expect(page.locator('.search-status')).toContainText('matching section');
 });
 
-test('report engine supports mobile layout and report generation flow', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+test('report engine supports mobile and desktop layouts and report generation flow', async ({ page }) => {
+  for (const viewport of [{ width: 390, height: 844 }, { width: 1365, height: 900 }]) {
+  await page.setViewportSize(viewport);
   await page.goto('/tools/aiou-report-engine.html');
   await expect(page.getByRole('heading', { name: /Project setup/i })).toBeVisible();
   await page.locator('#program').fill('BS Economics');
@@ -102,7 +103,8 @@ test('report engine supports mobile layout and report generation flow', async ({
     viewport: document.documentElement.clientWidth,
     content: document.documentElement.scrollWidth
   }));
-  expect(dimensions.content, `report engine horizontal overflow: ${JSON.stringify(dimensions)}`).toBeLessThanOrEqual(dimensions.viewport + 1);
+  expect(dimensions.content, `report engine horizontal overflow at ${viewport.width}px: ${JSON.stringify(dimensions)}`).toBeLessThanOrEqual(dimensions.viewport + 1);
+  }
 });
 
 test('DOCX export downloads a non-empty Office document', async ({ page }) => {
@@ -148,6 +150,11 @@ test('PDF export opens a populated print document that Chromium can render as PD
   const pdf = await popup.pdf({ format: 'A4', printBackground: true });
   expect(pdf.subarray(0, 4).toString()).toBe('%PDF');
   expect(pdf.length).toBeGreaterThan(1000);
+  const pdfSource = pdf.toString('latin1');
+  const pageObjects = pdfSource.match(/\\/Type\\s*\\/Page\\b/g) || [];
+  expect(pageObjects.length, 'PDF should paginate cover, contents and report sections').toBeGreaterThanOrEqual(3);
+  await expect(popup.locator('body')).toContainText('Chapter I — Introduction');
+  await expect(popup.locator('body')).toContainText('References');
 });
 
 
