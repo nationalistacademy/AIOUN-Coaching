@@ -231,3 +231,19 @@ exports.submitQuizAttempt = onCall(async (request) => {
   });
   return { attemptId: attemptRef.id, score, maxScore, percentage: maxScore ? Math.round((score / maxScore) * 10000) / 100 : 0, correctCount, unansweredCount };
 });
+
+exports.setLmsEnrollment = onCall(async (request) => {
+  requireLmsStaff(request);
+  const uid = lmsText(request.data?.uid, "uid", 128);
+  const courseId = lmsText(request.data?.courseId, "courseId", 128);
+  const status = request.data?.status === "revoked" ? "revoked" : "active";
+  const userSnap = await db.collection("users").doc(uid).get();
+  if (!userSnap.exists) throw new HttpsError("not-found", "Student profile not found; the student must sign up first.");
+  const courseSnap = await db.collection("courses").doc(courseId).get();
+  if (!courseSnap.exists) throw new HttpsError("not-found", "Course not found.");
+  await lmsEnrollmentRef(uid, courseId).set({
+    uid, courseId, status, updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    updatedBy: request.auth.uid
+  }, { merge: true });
+  return { uid, courseId, status };
+});
