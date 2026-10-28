@@ -3,13 +3,22 @@ const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 
-test('Firebase workspace loads the supplied public config and fits mobile/desktop', async ({ page }) => {
+test('Firebase workspace handles configured and placeholder public config and fits mobile/desktop', async ({ page }) => {
   for (const viewport of [{ width: 1365, height: 900 }, { width: 390, height: 844 }]) {
     await page.setViewportSize(viewport);
     await page.goto('/firebase/index.html');
     await expect(page.getByRole('heading', { name: /Your study companion, connected/i })).toBeVisible();
-    expect(await page.evaluate(() => window.AIOU_FIREBASE_CONFIG?.projectId)).toBe('aioucoaching');
-    await expect(page.locator('#status')).not.toContainText('Firebase is not configured');
+
+    const config = await page.evaluate(() => window.AIOU_FIREBASE_CONFIG);
+    expect(config, 'Firebase config object should always be present').toBeTruthy();
+    if (config.projectId) {
+      expect(config.projectId).toBe('aioucoaching');
+      await expect(page.locator('#status')).not.toContainText('Firebase is not configured');
+    } else {
+      // Pull-request CI serves the repository's intentionally blank placeholder.
+      // GitHub Pages injects the real public web config only during a configured deployment.
+      await expect(page.locator('#status')).toContainText('Firebase is not configured');
+    }
     await expect(page.locator('#signout')).toBeDisabled();
     const dimensions = await page.evaluate(() => ({
       viewport: document.documentElement.clientWidth,
