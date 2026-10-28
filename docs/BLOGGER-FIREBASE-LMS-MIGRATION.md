@@ -13,7 +13,7 @@ Blogger is a static/content host, not a secure application database or server ru
 
 ## Canonical Blogger pages
 
-- Sign in/sign up: https://aioucoaching.blogspot.com/p/signin-signup.html
+- Sign in/sign up: https://aioucoaching.blogspot.com/p/aiou-coaching-lms-sign-in-sign-up.html
 - Dashboard: https://aioucoaching.blogspot.com/p/dashboard_02000936824.html
 - Course: https://aioucoaching.blogspot.com/p/course.html
 - Lesson: https://aioucoaching.blogspot.com/p/lesson.html
@@ -56,3 +56,13 @@ A first Firebase LMS replacement now exists in `firebase-lms/index.html`, with F
 This is an implementation milestone, **not a production-ready certification**. The app and functions still require syntax/build checks, Firebase Emulator Suite rules/function tests, isolated account end-to-end testing, and verification of Firebase Console settings. In particular, add the Hosting domain (such as `aioucoaching.web.app`) to Authentication authorized domains; enable Email/Password authentication; provision Firestore and Cloud Functions billing/runtime as needed; assign staff custom claims only through a trusted Admin SDK process; and review/deploy rules only after emulator tests. The current public Blogger pages and old `lms/` Supabase implementation have deliberately not been redirected or deleted. No hosting deployment, DNS changes, Blogger theme publication, or PR merge has occurred.
 
 The repository already contains a Supabase-backed LMS in `lms/`. Keep it as a rollback/reference until the Firebase replacement passes the acceptance tests. Do not change DNS, publish the Blogger theme, or merge the migration branch as part of repository-only work.
+
+## Safe rollout steps (not run automatically)
+
+1. Run `npm install`, `npm test`, and `npm --prefix functions install`; install Firebase CLI and Firebase Emulator Suite.
+2. Run Firestore rules and callable-function tests against the Emulator Suite with separate Student A, Student B, and trusted Staff accounts. Verify unanswered answers, invalid indexes, enrollment revocation, and cross-student read denial.
+3. In Firebase Console for project `aioucoaching`, enable Email/Password Authentication, add the Firebase Hosting default domain to Authentication → Settings → Authorized domains, provision Firestore, and verify Cloud Functions billing/runtime prerequisites.
+4. Set staff/teacher custom claims only from a trusted Admin SDK environment. Never expose service-account credentials in this repository or browser code.
+5. After emulator tests pass, deploy reviewed rules/indexes/functions and Hosting using the Firebase CLI. Deployment has intentionally not been run from this repository workflow.
+6. Test the actual `https://aioucoaching.web.app` URL and password reset/sign-in, then only after explicit approval change the Blogger login/dashboard links to the verified Firebase app URL. Keep Blogger's existing custom domain/DNS unchanged.
+7. Do not delete the Supabase files or change Blogger pages until Firebase tests and real-account checks pass. Supabase is the rollback/reference path until then.
