@@ -19,7 +19,20 @@ textarea { min-height: 150px; resize: vertical; }
 .btn { background: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; transition: 0.2s; }
 .btn:hover { background: #1d4ed8; }
 .btn:disabled { background: #94a3b8; cursor: not-allowed; }
-.output-box { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; font-family: 'Times New Roman', Times, serif; font-size: 16px; line-height: 1.6; min-height: 500px; overflow-y: auto; white-space: pre-wrap; }
+.output-box { background:#fff; border:1px solid #cbd5e1; padding:20px; border-radius:8px; font-family:'Times New Roman',Times,serif; font-size:16px; line-height:1.65; min-height:500px; max-height:72vh; overflow:auto; white-space:normal; overflow-wrap:anywhere; }
+.output-box:focus{outline:2px solid #93c5fd;border-color:#2563eb}
+.output-box h1,.output-box h2,.output-box h3{line-height:1.3;margin:1em 0 .45em}
+.output-box p{margin:.55em 0}
+.output-box table{width:100%;border-collapse:collapse;margin:12px 0;table-layout:auto}
+.output-box th,.output-box td{border:1px solid #64748b;padding:8px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.output-box th{background:#e2e8f0;font-weight:700}
+.output-box ul,.output-box ol{padding-left:28px;margin:.5em 0}
+.editor-tools{display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:#f1f5f9;border:1px solid #cbd5e1;border-bottom:0;border-radius:8px 8px 0 0}
+.editor-tools button{min-width:38px;padding:8px 10px;border:1px solid #cbd5e1;border-radius:6px;background:#fff;color:#0f172a;font-weight:700;cursor:pointer}
+.editor-tools button:hover,.editor-tools button:focus-visible{background:#dbeafe;outline:2px solid #93c5fd}
+.editor-hint{font-size:12px;color:#64748b;margin:7px 0 10px}
+.output-box:empty:before{content:attr(data-placeholder);color:#94a3b8}
+@media(max-width:600px){.wrap{padding:12px}.card{padding:14px}.editor-tools button{padding:8px;min-width:34px}.output-box{padding:14px;font-size:15px}.output-box table{font-size:13px}.output-box th,.output-box td{padding:5px}}
 .status { text-align: center; margin-top: 10px; font-weight: bold; font-size: 14px; }
 .status.err { color: #ef4444; }
 .status.ok { color: #22c55e; }
@@ -70,8 +83,21 @@ textarea { min-height: 150px; resize: vertical; }
     <!-- Output Section -->
     <div class="card">
       <h2>📄 Generated Assignment (APA Format)</h2>
-      <div class="output-box" id="output">Your assignment will appear here...</div>
-      <button class="btn" style="background:#10b981; margin-top:10px;" onclick="copyOutput()">📋 Copy to Clipboard</button>
+      <div class="editor-tools" role="toolbar" aria-label="Assignment formatting toolbar">
+        <button type="button" title="Bold (Ctrl+B)" onmousedown="keepEditorSelection(event)" onclick="formatText('bold')"><b>B</b></button>
+        <button type="button" title="Italic (Ctrl+I)" onmousedown="keepEditorSelection(event)" onclick="formatText('italic')"><i>I</i></button>
+        <button type="button" title="Underline (Ctrl+U)" onmousedown="keepEditorSelection(event)" onclick="formatText('underline')"><u>U</u></button>
+        <button type="button" title="Bulleted list" onmousedown="keepEditorSelection(event)" onclick="formatText('insertUnorderedList')">• List</button>
+        <button type="button" title="Numbered list" onmousedown="keepEditorSelection(event)" onclick="formatText('insertOrderedList')">1. List</button>
+        <button type="button" title="Insert table" onclick="insertTable()">▦ Table</button>
+        <button type="button" title="Insert maths expression" onclick="insertMath()">∑ Math</button>
+        <button type="button" title="Heading" onmousedown="keepEditorSelection(event)" onclick="formatText('formatBlock','h2')">Heading</button>
+        <button type="button" title="Clear formatting" onmousedown="keepEditorSelection(event)" onclick="formatText('removeFormat')">Clear</button>
+      </div>
+      <p class="editor-hint">ChatGPT / DeepSeek se formatted text copy-paste karein, ya yahan likhein. Tables, bold, italic aur lists edit ho sakti hain.</p>
+      <div class="output-box" id="output" contenteditable="true" role="textbox" aria-label="Editable assignment content" aria-multiline="true" data-placeholder="Assignment yahan generate ya paste karein..."></div>
+      <button class="btn" style="background:#10b981; margin-top:10px;" onclick="copyOutput(this)">📋 Copy with Formatting</button>
+      <button class="btn" style="background:#475569; margin-top:8px;" onclick="downloadHTML()">⬇️ Download Editable HTML</button>
     </div>
   </div>
   <div class="watermark">Powered by DeepSeek AI & Cloudflare Worker</div>
@@ -97,9 +123,11 @@ RULES FOR WRITING:
 2. STRUCTURE: Break down each question logically. Use Part 1, Part 2, etc. Use bullet points, tables, or numbered lists where appropriate to make it readable.
 3. ORIGINALITY (COPYRIGHT): DO NOT copy word-for-word from textbooks. Explain concepts in your own words. Write in a way that it passes AIOU plagiarism checks easily. Change sentence structures and provide unique examples.
 4. AIOU STANDARDS: Mention local context (e.g., Pakistan, AIOU) where relevant. Use clear, academic English.
-5. TABLES: If a question requires a table, generate a clean HTML table.
-6. REFERENCES: Create a standard APA bibliography at the end. Use the provided course textbook as the main reference (e.g., "AIOU Course Code 1429 Study Guide").
-7. OUTPUT: Return the content in plain text with clear markdown-like spacing. Do not use markdown code blocks. Use HTML tags for Tables if needed.
+5. TABLES: Use semantic HTML tables with clear headers when a question requires tabular data.
+6. FORMATTING: Use proper HTML headings, paragraphs, bold, italic, numbered lists and bullet lists.
+7. MATHEMATICS: Preserve equations and calculation steps. Use readable Unicode symbols or LaTeX delimiters such as \\( ... \\) and \\[ ... \\].
+8. REFERENCES: Cite real sources only; do not invent page numbers or publications.
+9. OUTPUT: Return clean HTML for headings, paragraphs, tables and lists, without markdown code blocks.
 
 Write as if you are an A-grade student submitting this assignment.`;
 
