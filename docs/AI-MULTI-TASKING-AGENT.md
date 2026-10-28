@@ -27,7 +27,7 @@ This document defines a safe multi-agent workflow for maintaining `nationalistac
 - Compare changed files to the request, list remaining risks, and require a human review before merge.
 - Never mark a failed or skipped check as passed.
 
-## Task protocol
+### Agent 5 — AIOU Education Professor\n- Explain AIOU-related learning topics in Urdu, English, or Roman Urdu; prepare study aids, outlines, practice questions, and constructive assignment feedback.\n- Follow academic integrity, never invent official AIOU details or citations, and distinguish verified information from examples.\n- See `docs/AI-AIOU-EDUCATION-PROFESSOR-AGENT.md`.\n\n### Agent 6 — AIOU Tool Developer\n- Inspect the repository, implement focused Blogger/PWA tool improvements, add regression tests, and review accessibility, responsive layout, RTL/LTR, security, and exports.\n- Respect LMS, Firebase, Cloudflare, DNS, deployment, and Blogger publication boundaries.\n- See `docs/AI-AIOU-TOOL-DEVELOPER-AGENT.md`.\n\n## Task protocol
 
 1. **Intake:** Restate the requested outcome, locate related code/docs/tests, inspect current branch and open PRs, and avoid duplicate implementations.
 2. **Plan:** Split work into independent review/implementation tasks. Define acceptance criteria and file ownership before parallel changes.
