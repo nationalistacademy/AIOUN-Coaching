@@ -33,6 +33,23 @@
 .sab-li button.d{background:rgba(217,58,73,.15);color:#d93a49}
 .sab-empty{padding:14px;opacity:.7;text-align:center}
 .sab-note{font-size:12.5px;opacity:.85;margin:8px 0 0}
+.sab-editorbar{display:flex;flex-wrap:wrap;gap:6px;padding:9px;background:var(--ag-soft);border:1px solid var(--ag-bd);border-radius:10px 10px 0 0}
+.sab-editorbar button{border:1px solid var(--ag-bd);border-radius:7px;background:var(--ag-glass);color:inherit;padding:7px 10px;font:inherit;font-weight:700;cursor:pointer}
+.sab-editorbar button:hover,.sab-editorbar button:focus-visible{outline:2px solid var(--ag-p)}
+.sab-editor{min-height:190px;max-height:520px;overflow:auto;padding:12px;border:1px solid var(--ag-bd);border-radius:0 0 10px 10px;background:var(--ag-glass);outline:none;white-space:normal;overflow-wrap:anywhere}
+.sab-editor:focus{box-shadow:0 0 0 2px var(--ag-p)}
+.sab-editor:empty:before{content:attr(data-placeholder);opacity:.55}
+.sab-editor p{margin:.45em 0}.sab-editor table{border-collapse:collapse;width:100%;margin:10px 0}
+.sab-editor th,.sab-editor td{border:1px solid #64748b;padding:6px;min-width:50px;text-align:left;vertical-align:top}
+.sab-editor ul,.sab-editor ol{padding-left:28px}
+.sab-pg .sab-rich{font-size:15px;line-height:1.55;text-align:justify;margin-bottom:8px;overflow-wrap:anywhere}
+.sab-pg .sab-rich table{border-collapse:collapse;width:100%;margin:8px 0;table-layout:fixed}
+.sab-pg .sab-rich th,.sab-pg .sab-rich td{border:1px solid #333;padding:5px;vertical-align:top;overflow-wrap:anywhere}
+.sab-pg .sab-rich th{font-weight:700;background:#eee}
+.sab-pg .sab-rich ul,.sab-pg .sab-rich ol{padding-left:24px;margin:4px 0}
+.sab-pg .sab-math{font-family:'Times New Roman',serif;font-style:italic;white-space:normal}
+@media(max-width:600px){.sab-editorbar button{padding:7px 8px}.sab-editor{min-height:170px}}
+
 .sab-res{margin-top:12px;border:1px solid var(--ag-bd);border-radius:14px;overflow:hidden}
 .sab-rr{display:grid;grid-template-columns:1.2fr .6fr .9fr .9fr .8fr;gap:6px;padding:8px 12px;border-bottom:1px solid var(--ag-bd);font-size:13px;align-items:center}
 .sab-rr:last-child{border-bottom:0}
@@ -94,7 +111,22 @@
     <div class="sab-tabs"><button type="button" class="sab-tab on" id="s-t1">Assignment 1</button><button type="button" class="sab-tab" id="s-t2">Assignment 2</button></div>
     <div class="sab-row">
       <div class="full"><label for="s-q">Question</label><input type="text" id="s-q" placeholder="Q1. Question likhein"></div>
-      <div class="full"><label for="s-a">Answer (apne alfaz mein)</label><textarea id="s-a" style="min-height:170px" placeholder="Paragraph ke darmiyan khali line chhorein.&#10;Bullets ke liye har line &quot;- &quot; se shuru karein.&#10;Subheading ke liye line &quot;# &quot; se shuru karein."></textarea></div>
+      <div class="full"><label for="s-editor">Answer (Rich Editor — ChatGPT / DeepSeek se paste karein)</label>
+        <div class="sab-editorbar" role="toolbar" aria-label="Answer formatting">
+          <button type="button" data-cmd="bold" title="Bold"><b>B</b></button>
+          <button type="button" data-cmd="italic" title="Italic"><i>I</i></button>
+          <button type="button" data-cmd="underline" title="Underline"><u>U</u></button>
+          <button type="button" data-cmd="insertUnorderedList" title="Bullet list">• List</button>
+          <button type="button" data-cmd="insertOrderedList" title="Numbered list">1. List</button>
+          <button type="button" data-cmd="formatBlock" data-value="h3" title="Heading">Heading</button>
+          <button type="button" id="sab-insert-table" title="Insert table">▦ Table</button>
+          <button type="button" id="sab-insert-math" title="Insert maths/equation">∑ Math</button>
+          <button type="button" data-cmd="removeFormat" title="Clear inline formatting">Clear</button>
+        </div>
+        <div id="s-editor" class="sab-editor" contenteditable="true" role="textbox" aria-label="Editable answer" aria-multiline="true" data-placeholder="Yahan answer likhein ya ChatGPT / DeepSeek ka formatted answer paste karein..."></div>
+        <p class="sab-note">Formatting aur tables ke saath copy-paste supported. Math ke liye Unicode ya LaTeX expression insert karein. Preview aur Word export mein formatting rakhi jayegi.</p>
+        <textarea id="s-a" style="display:none" aria-hidden="true"></textarea>
+      </div>
       <div><label for="s-m">Marks (optional)</label><input type="text" id="s-m" placeholder="e.g. 10"></div>
     </div>
     <div class="sab-btns">
@@ -192,7 +224,7 @@
     if (k === 'd') { qs.splice(i, 1); if (editIdx === i) { editIdx = -1; setEdit(); } }
     else if (k === 'u' && i > 0) { t = qs[i - 1]; qs[i - 1] = qs[i]; qs[i] = t; }
     else if (k === 'n' && i < qs.length - 1) { t = qs[i + 1]; qs[i + 1] = qs[i]; qs[i] = t; }
-    else if (k === 'e') { editIdx = i; $('s-q').value = qs[i].q; $('s-a').value = qs[i].a; $('s-m').value = qs[i].m || ''; setEdit(); $('s-q').focus(); }
+    else if (k === 'e') { editIdx = i; $('s-q').value = qs[i].q; $('s-a').value = qs[i].a; $('s-editor').innerHTML = /<\w[\s>]/.test(qs[i].a || '') ? safeRich(qs[i].a) : plainToEditor(qs[i].a || ''); $('s-m').value = qs[i].m || ''; setEdit(); $('s-q').focus(); }
     save(); renderList(); schedule();
   }
   function setEdit() { $('s-add').textContent = editIdx >= 0 ? 'Update Question' : 'Add Question'; $('s-cancel').style.display = editIdx >= 0 ? '' : 'none'; }
@@ -201,13 +233,40 @@
     if (!q) { alert('Pehle sawal likhein.'); return; }
     var o = { q: q, a: a, m: v('s-m') };
     if (editIdx >= 0) { cur().qs[editIdx] = o; editIdx = -1; } else { cur().qs.push(o); }
-    $('s-q').value = ''; $('s-a').value = ''; $('s-m').value = '';
+    $('s-q').value = ''; $('s-a').value = ''; $('s-editor').innerHTML = ''; $('s-m').value = '';
     setEdit(); save(); renderList(); schedule();
   }
   function wc(t) { var m = t.trim().match(/\S+/g); return m ? m.length : 0; }
+  function safeRich(html) {
+    var doc = new DOMParser().parseFromString(String(html || ''), 'text/html');
+    doc.querySelectorAll('script,style,iframe,object,embed,form,link,meta').forEach(function (el) { el.remove(); });
+    doc.body.querySelectorAll('*').forEach(function (el) {
+      Array.prototype.slice.call(el.attributes).forEach(function (a) {
+        if (/^on/i.test(a.name) || (a.name === 'href' && /^\s*javascript:/i.test(a.value))) { el.removeAttribute(a.name); }
+      });
+    });
+    return doc.body.innerHTML;
+  }
   function blocks(text) {
+    var raw = String(text || '');
+    if (/<(p|div|h[1-6]|ul|ol|li|table|blockquote|strong|em|b|i|u)\b/i.test(raw)) {
+      var doc = new DOMParser().parseFromString(safeRich(raw), 'text/html'), richOut = [];
+      Array.prototype.slice.call(doc.body.childNodes).forEach(function (node) {
+        if (node.nodeType === 3) { var plain = node.textContent.trim(); if (plain) { richOut.push({ t: 'p', x: plain }); } return; }
+        if (node.nodeType !== 1) { return; }
+        var tag = node.tagName.toLowerCase();
+        if (/^h[1-6]$/.test(tag)) { richOut.push({ t: 'h', x: node.innerHTML }); }
+        else if (tag === 'ul' || tag === 'ol') {
+          Array.prototype.slice.call(node.querySelectorAll(':scope > li')).forEach(function (li) {
+            richOut.push({ t: 'rich', x: '<' + tag + '><li>' + li.innerHTML + '</li></' + tag + '>' });
+          });
+        } else if (tag === 'p' || tag === 'div' || tag === 'blockquote') { richOut.push({ t: 'rich', x: node.innerHTML }); }
+        else { richOut.push({ t: 'rich', x: node.outerHTML }); }
+      });
+      return richOut;
+    }
     var out = [];
-    text.split(/\n\s*\n/).forEach(function (b) {
+    raw.split(/\n\s*\n/).forEach(function (b) {
       var ls = b.split('\n').map(function (x) { return x.trim(); }).filter(Boolean);
       if (!ls.length) { return; }
       if (ls[0].indexOf('# ') === 0) { out.push({ t: 'h', x: ls[0].substring(2) }); ls = ls.slice(1); if (!ls.length) { return; } }
@@ -284,7 +343,8 @@
     cur().qs.forEach(function (q, i) {
       unit(mk('div', 'sab-qh', 'Q' + (i + 1) + '. ' + q.q + (q.m ? '  [' + q.m + ' marks]' : '')));
       blocks(q.a).forEach(function (b) {
-        if (b.t === 'h') { unit(mk('div', 'sab-sh', b.x)); }
+        if (b.t === 'h') { var shEl = mk('div', 'sab-sh'); shEl.innerHTML = safeRich(b.x); unit(shEl); }
+        else if (b.t === 'rich') { var rich = mk('div', 'sab-rich'); rich.innerHTML = safeRich(b.x); unit(rich); }
         else { text(b.t === 'b' ? 'sab-b' : 'sab-p', b.x); }
       });
     });
@@ -365,7 +425,7 @@
     var h = '<h2 style="text-align:center">Assignment No. ' + S.cur + '</h2><p align="center"><b>' + esc(v('s-title')) + ' (' + esc(v('s-code')) + ')</b><br>' + esc(v('s-name')) + ' - ' + esc(v('s-id')) + ' - ' + esc($('s-prog').value) + '</p>';
     cur().qs.forEach(function (q, i) {
       h += '<p><b>Q' + (i + 1) + '. ' + esc(q.q) + (q.m ? ' [' + esc(q.m) + ' marks]' : '') + '</b></p>';
-      blocks(q.a).forEach(function (b) { h += b.t === 'h' ? '<p><b><u>' + esc(b.x) + '</u></b></p>' : (b.t === 'b' ? '<p style="margin-left:24px">&bull; ' + esc(b.x) + '</p>' : '<p style="text-align:justify">' + esc(b.x) + '</p>'); });
+      blocks(q.a).forEach(function (b) { h += b.t === 'h' ? '<p><b><u>' + safeRich(b.x) + '</u></b></p>' : (b.t === 'rich' ? '<div>' + safeRich(b.x) + '</div>' : (b.t === 'b' ? '<p style="margin-left:24px">&bull; ' + esc(b.x) + '</p>' : '<p style="text-align:justify">' + esc(b.x) + '</p>')); });
     });
     var refs = cur().refs.split('\n').filter(function (x) { return x.trim(); });
     if (refs.length) { h += '<p><b>References</b></p>'; refs.forEach(function (r) { h += '<p>' + esc(r) + '</p>'; }); }
