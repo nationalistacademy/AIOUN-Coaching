@@ -31,10 +31,13 @@ test('public PWA service worker excludes both LMS and Firebase account routes', 
 test('Firebase security scaffolding denies public private-data access and protects notification sender', async () => {
   const firestore = fs.readFileSync(path.join(root, 'firestore.rules'), 'utf8');
   const storage = fs.readFileSync(path.join(root, 'storage.rules'), 'utf8');
+  const realtime = JSON.parse(fs.readFileSync(path.join(root, 'database.rules.json'), 'utf8'));
   const sender = fs.readFileSync(path.join(root, 'functions/index.js'), 'utf8');
   expect(firestore).toContain("request.auth.uid == uid");
   expect(firestore).toContain("request.auth.token.admin == true");
   expect(firestore).toContain("allow read, write: if false");
+  expect(realtime.rules['.read']).toBe(false);
+  expect(realtime.rules['.write']).toBe(false);
   expect(storage).toContain("request.auth.uid == uid");
   expect(storage).toContain("request.resource.size < 10 * 1024 * 1024");
   expect(storage).toContain("allow read, write: if false");
