@@ -19,11 +19,11 @@
 </main><script>
 const form=document.getElementById('reminderForm'),status=document.getElementById('status');
 function icsEscape(value){return String(value||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
-function toUtcStamp(value){const d=new Date(value);if(Number.isNaN(d.getTime()))throw Error('Please enter valid start and end times.');return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z')}
+function parsePakistanTime(value){const d=new Date(value+':00+05:00');if(Number.isNaN(d.getTime()))throw Error('Please enter valid start and end times.');return d}function toUtcStamp(value){return parsePakistanTime(value).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z')}
 form.addEventListener('submit',event=>{event.preventDefault();status.textContent='';try{
  const title=document.getElementById('eventTitle').value.trim(),start=document.getElementById('eventStart').value,end=document.getElementById('eventEnd').value,locationText=document.getElementById('eventLocation').value.trim(),notes=document.getElementById('eventNotes').value.trim();
  if(!title)throw Error('Enter a workshop title.');
- if(!start||!end||new Date(end)<=new Date(start))throw Error('End time must be after the start time.');
+ if(!start||!end||parsePakistanTime(end)<=parsePakistanTime(start))throw Error('End time must be after the start time.');
  const now=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');
  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AIOU Coaching//Workshop Reminder//EN','CALSCALE:GREGORIAN','BEGIN:VEVENT','UID:'+crypto.randomUUID()+'@aioucoaching','DTSTAMP:'+now,'DTSTART:'+toUtcStamp(start),'DTEND:'+toUtcStamp(end),'SUMMARY:'+icsEscape(title)];
  if(locationText)lines.push('LOCATION:'+icsEscape(locationText));
