@@ -32,6 +32,25 @@ test.describe('Assignment Writing Studio', () => {
     expect(download.suggestedFilename()).toMatch(/\.doc$/);
   });
 
+  test('applies paragraph direction and font to selected text', async ({ page }) => {
+    await page.goto('/tools/aiou-assignment-writing-studio.html');
+    await page.locator('#editor').evaluate(el => {
+      el.innerHTML = '<p>Urdu text and English text</p>';
+      const text = el.querySelector('p').firstChild;
+      const range = document.createRange();
+      range.setStart(text, 0);
+      range.setEnd(text, 4);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    });
+    await page.locator('#urduFontBtn').click();
+    await expect(page.locator('#editor span[dir="rtl"]')).toContainText('Urdu');
+    await expect(page.locator('#editor span[dir="rtl"]')).toHaveCSS('font-family', /Noto Nastaliq Urdu/);
+    await page.locator('#rtlBtn').click();
+    await expect(page.locator('#editor p')).toHaveAttribute('dir', 'rtl');
+  });
+
   test('rejects non-http image URLs and oversized local images', async ({ page }) => {
     await page.goto('/tools/aiou-assignment-writing-studio.html');
     page.once('dialog', dialog => dialog.accept('javascript:alert(1)'));
