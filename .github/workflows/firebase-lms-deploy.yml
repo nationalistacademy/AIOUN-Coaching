@@ -1,0 +1,57 @@
+name: Firebase LMS Deploy (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_project:
+        description: Type aioucoaching to confirm the Firebase project
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firebase-lms-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: ${{ inputs.confirm_project == 'aioucoaching' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: feature/assignment-rich-editor-automation
+      - name: Verify deployment credential is configured
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AIOUCOACHING }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "::error::Set repository Actions secret FIREBASE_SERVICE_ACCOUNT_AIOUCOACHING to a service-account JSON for project aioucoaching before deploying."
+            exit 1
+          fi
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Firebase CLI and Functions dependencies
+        run: |
+          npm install
+          npm --prefix functions install
+          npm install --global firebase-tools
+      - name: Validate source and configuration
+        run: |
+          node --check functions/index.js
+          node -e "JSON.parse(require('node:fs').readFileSync('firebase.json','utf8')); JSON.parse(require('node:fs').readFileSync('firestore.indexes.json','utf8')); JSON.parse(require('node:fs').readFileSync('.firebaserc','utf8'))"
+      - name: Deploy isolated LMS hosting and required Firebase backend
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AIOUCOACHING }}
+        run: |
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/firebase-service-account.json"
+          firebase deploy --project aioucoaching --only hosting,functions,firestore:rules,firestore:indexes,storage,database --non-interactive
+      - name: Report deployed Hosting URL
+        run: echo "Firebase Hosting default URL: https://aioucoaching.web.app"
