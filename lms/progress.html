@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My Progress — AIOU Coaching</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#17202a;--muted:#667085;--line:#e5e7eb;--brand:#f67938;--soft:#fff1e9;--ok:#15803d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px system-ui,sans-serif}.wrap{max-width:1050px;margin:auto;padding:20px}.top,.panel,.stat,.attempt{background:var(--card);border:1px solid var(--line);border-radius:18px}.top{padding:22px;margin-bottom:14px}.brand{color:#c2410c;font-weight:800;font-size:13px}.top h1{margin:7px 0}.muted{color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0}.stat{padding:18px}.stat strong{display:block;font-size:27px;margin-top:5px}.panel{padding:20px;margin-bottom:14px}.attempt{padding:14px;margin:10px 0;display:flex;justify-content:space-between;gap:14px;align-items:center}.attempt h3{margin:0 0 5px}.score{font-weight:850;color:#9a3412}.empty,.error{padding:16px;border-radius:12px;background:#f8fafc;color:var(--muted)}.error{display:none;background:#fef2f2;color:#b91c1c}.badge{display:inline-block;background:var(--soft);color:#9a3412;border-radius:99px;padding:4px 8px;font-size:12px;font-weight:800}a{color:#c2410c;font-weight:750}@media(max-width:760px){.wrap{padding:12px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.attempt{align-items:flex-start;flex-direction:column}.top,.panel{padding:16px}}
+</style></head><body><main class="wrap">
+<p><a href="./dashboard.html">← Student dashboard</a> · <a href="./practice.html">Practice Hub</a></p>
+<section class="top"><div class="brand">AIOU COACHING LMS</div><h1>My learning progress</h1><p class="muted">Review your quiz attempts, best score and overall accuracy. Only your own attempts are shown.</p></section>
+<div id="error" class="error" role="alert"></div>
+<section class="stats">
+<div class="stat"><span class="muted">Total attempts</span><strong id="totalAttempts">—</strong></div>
+<div class="stat"><span class="muted">Best score</span><strong id="bestScore">—</strong></div>
+<div class="stat"><span class="muted">Average accuracy</span><strong id="accuracy">—</strong></div>
+<div class="stat"><span class="muted">Quizzes attempted</span><strong id="quizCount">—</strong></div>
+</section>
+<section class="panel"><h2>Attempt history</h2><p class="muted">Latest attempts appear first. Scores are shown only when grading has completed.</p><div id="history" class="empty">Loading your progress…</div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-config.js"></script>
+<script>
+const supabase=window.supabase.createClient(window.AIOU_SUPABASE_URL,window.AIOU_SUPABASE_PUBLISHABLE_KEY);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fail(message){const el=document.getElementById('error');el.textContent=message;el.style.display='block'}
+function fmtDate(value){if(!value)return 'Date unavailable';const d=new Date(value);return Number.isNaN(d.getTime())?'Date unavailable':d.toLocaleString()}
+async function init(){
+ try{
+  const auth=await supabase.auth.getUser();if(auth.error||!auth.data.user){location.replace('./signin-signup.html');return}
+  const user=auth.data.user;
+  const result=await supabase.from('quiz_attempts').select('id,quiz_id,score,submitted_at,quizzes(id,title,course_id)').eq('student_id',user.id).order('submitted_at',{ascending:false});
+  if(result.error)throw result.error;
+  const attempts=(result.data||[]).filter(a=>a.quizzes);
+  const quizIds=[...new Set(attempts.map(a=>a.quiz_id))];
+  let maxByQuiz=new Map();
+  if(quizIds.length){
+   const qs=await supabase.from('quiz_questions').select('quiz_id,points').in('quiz_id',quizIds);
+   if(qs.error)throw qs.error;
+   for(const q of qs.data||[]){const p=Number(q.points);if(Number.isFinite(p)&&p>=0)maxByQuiz.set(q.quiz_id,(maxByQuiz.get(q.quiz_id)||0)+p)}
+  }
+  const graded=attempts.filter(a=>a.score!==null&&a.score!==undefined&&Number.isFinite(Number(a.score)));
+  const scoreValues=graded.map(a=>Number(a.score));
+  document.getElementById('totalAttempts').textContent=String(attempts.length);
+  document.getElementById('quizCount').textContent=String(quizIds.length);
+  document.getElementById('bestScore').textContent=scoreValues.length?String(Math.max(...scoreValues)):'—';
+  const percentages=graded.map(a=>{const max=maxByQuiz.get(a.quiz_id);return max>0?Math.max(0,Math.min(100,Number(a.score)/max*100)):null}).filter(v=>v!==null);
+  document.getElementById('accuracy').textContent=percentages.length?(percentages.reduce((a,b)=>a+b,0)/percentages.length).toFixed(1)+'%':'—';
+  const box=document.getElementById('history');
+  if(!attempts.length){box.textContent='No quiz attempts yet. Open Practice Hub and complete your first quiz.';return}
+  box.className='';
+  box.innerHTML=attempts.map(a=>{
+   const title=a.quizzes?.title||'Quiz';
+   const max=maxByQuiz.get(a.quiz_id);
+   const score=a.score===null||a.score===undefined?'Pending grading':esc(a.score)+(max>0?' / '+max:' points');
+   const pct=a.score!==null&&a.score!==undefined&&max>0?Math.max(0,Math.min(100,Number(a.score)/max*100)).toFixed(1)+'% accuracy':'Accuracy unavailable';
+   return '<article class="attempt"><div><h3>'+esc(title)+'</h3><div class="muted">'+esc(fmtDate(a.submitted_at))+'</div><div class="muted">'+pct+'</div></div><div class="score">'+score+'</div></article>'
+  }).join('');
+ }catch(e){fail(e.message||'Could not load your progress.');document.getElementById('history').textContent='Progress could not be loaded. Please try again later.'}
+}
+init();
+</script></body></html>
