@@ -6,7 +6,7 @@ const vendor = path.join(root, 'vendor');
 fs.mkdirSync(vendor, { recursive: true });
 
 const assets = [
-  [path.join(root, 'node_modules/docx/build/index.umd.js'), path.join(vendor, 'docx.min.js')],
+  [path.join(root, 'node_modules/docx/build/index.umd.cjs'), path.join(vendor, 'docx.min.js')],
   [path.join(root, 'node_modules/file-saver/dist/FileSaver.min.js'), path.join(vendor, 'FileSaver.min.js')]
 ];
 
