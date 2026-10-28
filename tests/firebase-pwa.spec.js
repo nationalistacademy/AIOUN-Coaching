@@ -3,12 +3,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 
-test('Firebase workspace stays disconnected without real config and fits mobile/desktop', async ({ page }) => {
+test('Firebase workspace loads the supplied public config and fits mobile/desktop', async ({ page }) => {
   for (const viewport of [{ width: 1365, height: 900 }, { width: 390, height: 844 }]) {
     await page.setViewportSize(viewport);
     await page.goto('/firebase/index.html');
     await expect(page.getByRole('heading', { name: /Your study companion, connected/i })).toBeVisible();
-    await expect(page.locator('#status')).toContainText('Firebase is not configured');
+    await expect(page.locator('#status')).not.toContainText('Firebase is not configured');
     await expect(page.locator('#signout')).toBeDisabled();
     const dimensions = await page.evaluate(() => ({
       viewport: document.documentElement.clientWidth,
