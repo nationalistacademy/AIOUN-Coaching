@@ -236,7 +236,10 @@ exports.setLmsEnrollment = onCall(async (request) => {
   requireLmsStaff(request);
   const uid = lmsText(request.data?.uid, "uid", 128);
   const courseId = lmsText(request.data?.courseId, "courseId", 128);
-  const status = request.data?.status === "revoked" ? "revoked" : "active";
+  const status = request.data?.status;
+  if (status !== "active" && status !== "revoked") {
+    throw new HttpsError("invalid-argument", "status must be either active or revoked.");
+  }
   const userSnap = await db.collection("users").doc(uid).get();
   if (!userSnap.exists) throw new HttpsError("not-found", "Student profile not found; the student must sign up first.");
   const courseSnap = await db.collection("courses").doc(courseId).get();
