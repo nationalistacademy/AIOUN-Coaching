@@ -47,7 +47,7 @@
 .sab-pg .sab-rich th,.sab-pg .sab-rich td{border:1px solid #333;padding:5px;vertical-align:top;overflow-wrap:anywhere}
 .sab-pg .sab-rich th{font-weight:700;background:#eee}
 .sab-pg .sab-rich ul,.sab-pg .sab-rich ol{padding-left:24px;margin:4px 0}
-.sab-pg .sab-math{font-family:'Times New Roman',serif;font-style:italic;white-space:normal}
+.sab-pg .sab-math{font-family:'Times New Roman',serif;font-style:normal;white-space:normal}.sab-editor .sab-math{display:inline-block;padding:2px 4px;border:1px dashed var(--ag-p);border-radius:4px;background:var(--ag-soft)}
 @media(max-width:600px){.sab-editorbar button{padding:7px 8px}.sab-editor{min-height:170px}}
 
 .sab-res{margin-top:12px;border:1px solid var(--ag-bd);border-radius:14px;overflow:hidden}
@@ -124,7 +124,7 @@
           <button type="button" data-cmd="removeFormat" title="Clear inline formatting">Clear</button>
         </div>
         <div id="s-editor" class="sab-editor" contenteditable="true" role="textbox" aria-label="Editable answer" aria-multiline="true" data-placeholder="Yahan answer likhein ya ChatGPT / DeepSeek ka formatted answer paste karein..."></div>
-        <p class="sab-note">Formatting aur tables ke saath copy-paste supported. Math ke liye Unicode ya LaTeX expression insert karein. Preview aur Word export mein formatting rakhi jayegi.</p>
+        <p class="sab-note">Formatting, tables aur LaTeX maths supported. ∑ Math par click karke expression likhein, jaise \\frac{a+b}{c}, \\sqrt{x}, x^2 ya \\int_0^1 x^2 dx. Preview mein equation render hogi; Word export mein equation markup bhi rakha jayega.</p>
         <textarea id="s-a" style="display:none" aria-hidden="true"></textarea>
       </div>
       <div><label for="s-m">Marks (optional)</label><input type="text" id="s-m" placeholder="e.g. 10"></div>
@@ -156,7 +156,7 @@
   </div>
   <div class="sab-stage" id="sab-stage"><div class="sab-holder" id="sab-holder"><div class="sab-host" id="sab-host"></div></div></div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>window.MathJax={tex:{inlineMath:[["\\\\(","\\\\)"],["$","$"]],displayMath:[["\\\\[","\\\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};</script>\n<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 //<![CDATA[
@@ -276,6 +276,11 @@
     });
     return out;
   }
+  function typesetMath(root) {
+    if (!window.MathJax || !window.MathJax.typesetPromise || !root) { return Promise.resolve(); }
+    try { if (window.MathJax.typesetClear) { window.MathJax.typesetClear([root]); } return window.MathJax.typesetPromise([root]).catch(function () {}); }
+    catch (e) { return Promise.resolve(); }
+  }
   function render() {
     var host = $('sab-host'); host.textContent = ''; pages = [];
     var c1 = v('s-c1'), c2 = v('s-c2');
@@ -355,6 +360,7 @@
     }
     for (var i = 1; i < pages.length; i++) { pages[i].querySelector('.sab-ftr').textContent = 'Page ' + i + ' of ' + (pages.length - 1); }
     fit();
+    typesetMath(host).then(fit);
   }
   function schedule() { clearTimeout(timer); timer = setTimeout(function () { save(); render(); }, 200); }
   function fit() {
@@ -516,8 +522,12 @@
     });
     $('sab-insert-math').addEventListener('mousedown', function (e) { e.preventDefault(); rememberEditorRange(); });
     $('sab-insert-math').addEventListener('click', function () {
-      var equation = prompt('Math expression type/paste karein (Unicode ya LaTeX, e.g. x² + y² = z²):');
-      if (equation) { editorInsert('<span class="sab-math">' + esc(equation) + '</span>'); }
+      var equation = prompt('LaTeX maths likhein (examples: \\frac{a+b}{c}, \\sqrt{x}, x^2, \\int_0^1 x^2 dx):');
+      if (!equation || !equation.trim()) { return; }
+      equation = equation.trim().replace(/[<>]/g, '');
+      var encoded = equation.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+      editorInsert('<span class="sab-math" data-latex="' + encoded + '">\\(' + esc(equation) + '\\)</span>&nbsp;');
+      typesetMath($('s-editor'));
     });
   }
   function init() {
