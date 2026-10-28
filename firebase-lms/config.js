@@ -1,11 +1,11 @@
-/* Public Firebase Web App configuration. Never place Admin SDK credentials here. */
+/* Generated from repository Actions variables during Firebase Hosting deployment. */
 window.AIOU_FIREBASE_CONFIG = Object.freeze({
-  apiKey: "AIzaSyAB9dY0-6C5z2SJt_HPIcoknUjphNiYmM4",
-  authDomain: "aioucoaching.firebaseapp.com",
-  databaseURL: "https://aioucoaching-default-rtdb.firebaseio.com",
-  projectId: "aioucoaching",
-  storageBucket: "aioucoaching.firebasestorage.app",
-  messagingSenderId: "974474959349",
-  appId: "1:974474959349:web:b61f429c04b9cb332e28bc",
-  measurementId: "G-D8KQJEMM5E"
+  apiKey: "",
+  authDomain: "",
+  databaseURL: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: "",
+  measurementId: ""
 });
