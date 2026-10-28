@@ -151,7 +151,7 @@ test('PDF export opens a populated print document that Chromium can render as PD
   expect(pdf.subarray(0, 4).toString()).toBe('%PDF');
   expect(pdf.length).toBeGreaterThan(1000);
   const pdfSource = pdf.toString('latin1');
-  const pageObjects = pdfSource.match(/\\/Type\\s*\\/Page\\b/g) || [];
+  const pageObjects = pdfSource.match(/\/Type\s*\/Page\b/g) || [];
   expect(pageObjects.length, 'PDF should paginate cover, contents and report sections').toBeGreaterThanOrEqual(3);
   await expect(popup.locator('body')).toContainText('Chapter 1 — Introduction');
   await expect(popup.locator('body')).toContainText('References');
