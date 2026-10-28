@@ -2,7 +2,7 @@ name: Firebase LMS Deploy (manual)
 
 on:
   workflow_dispatch:
-    inputs:
+    inputs: aioucoaching
       confirm_project:
         description: Type aioucoaching to confirm the Firebase project
         required: true
