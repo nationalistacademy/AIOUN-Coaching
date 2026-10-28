@@ -391,8 +391,78 @@
     cur().refs = 'Mankiw, N. G. (2021). Principles of economics. Cengage Learning.';
     save(); renderList(); schedule();
   }
+  function plainToEditor(raw) {
+    var s = String(raw || '');
+    if (!s.trim()) { return ''; }
+    if (/<(p|div|ul|ol|li|table|strong|em|b|i|u|h[1-6])\b/i.test(s)) { return safeRich(s); }
+    return s.split(/\n\s*\n/).map(function (para) {
+      var lines = para.split('\n').filter(Boolean);
+      if (!lines.length) { return ''; }
+      if (lines[0].indexOf('# ') === 0) { lines[0] = '<h3>' + esc(lines[0].substring(2)) + '</h3>'; }
+      var list = lines.every(function (line) { return /^[-*]\s+/.test(line); });
+      if (list) { return '<ul>' + lines.map(function (line) { return '<li>' + esc(line.replace(/^[-*]\s+/, '')) + '</li>'; }).join('') + '</ul>'; }
+      return lines.map(function (line) { return '<p>' + esc(line) + '</p>'; }).join('');
+    }).join('');
+  }
+  var editorRange = null;
+  function rememberEditorRange() {
+    var sel = window.getSelection();
+    if (sel && sel.rangeCount) { editorRange = sel.getRangeAt(0).cloneRange(); }
+  }
+  function focusEditorRange() {
+    var ed = $('s-editor'); ed.focus();
+    var sel = window.getSelection();
+    if (editorRange && sel) { sel.removeAllRanges(); sel.addRange(editorRange); }
+  }
+  function editorInsert(html) {
+    focusEditorRange();
+    document.execCommand('insertHTML', false, html);
+    editorRange = null;
+    syncEditor();
+  }
+  function syncEditor() {
+    var ed = $('s-editor');
+    ed.innerHTML = safeRich(ed.innerHTML);
+    $('s-a').value = ed.innerHTML;
+  }
+  function initRichEditor() {
+    var ed = $('s-editor');
+    ed.addEventListener('input', syncEditor);
+    ed.addEventListener('keyup', rememberEditorRange);
+    ed.addEventListener('mouseup', rememberEditorRange);
+    ed.addEventListener('blur', rememberEditorRange);
+    ed.addEventListener('paste', function () {
+      setTimeout(syncEditor, 0);
+    });
+    document.querySelectorAll('.sab-editorbar [data-cmd]').forEach(function (button) {
+      button.addEventListener('mousedown', function (e) { e.preventDefault(); rememberEditorRange(); });
+      button.addEventListener('click', function () {
+        focusEditorRange();
+        var cmd = this.getAttribute('data-cmd'), value = this.getAttribute('data-value');
+        document.execCommand(cmd, false, value);
+        syncEditor(); rememberEditorRange();
+      });
+    });
+    $('sab-insert-table').addEventListener('mousedown', function (e) { e.preventDefault(); rememberEditorRange(); });
+    $('sab-insert-table').addEventListener('click', function () {
+      var rr = prompt('Rows including header (1–20):', '3'); if (rr === null) { return; }
+      var cc = prompt('Columns (1–10):', '3'); if (cc === null) { return; }
+      var rows = Math.max(1, Math.min(20, parseInt(rr, 10) || 1)), cols = Math.max(1, Math.min(10, parseInt(cc, 10) || 1));
+      var html = '<table><thead><tr>';
+      for (var j = 0; j < cols; j++) { html += '<th>Header ' + (j + 1) + '</th>'; }
+      html += '</tr></thead><tbody>';
+      for (var i = 1; i < rows; i++) { html += '<tr>'; for (var k = 0; k < cols; k++) { html += '<td><br></td>'; } html += '</tr>'; }
+      html += '</tbody></table><p><br></p>'; editorInsert(html);
+    });
+    $('sab-insert-math').addEventListener('mousedown', function (e) { e.preventDefault(); rememberEditorRange(); });
+    $('sab-insert-math').addEventListener('click', function () {
+      var equation = prompt('Math expression type/paste karein (Unicode ya LaTeX, e.g. x² + y² = z²):');
+      if (equation) { editorInsert('<span class="sab-math">' + esc(equation) + '</span>'); }
+    });
+  }
   function init() {
     load();
+    initRichEditor();
     FIELDS.forEach(function (id) { $(id).addEventListener('input', schedule); $(id).addEventListener('change', schedule); });
     $('s-tpl').addEventListener('change', function () { var c = COL[$('s-tpl').value]; $('s-c1').value = c[0]; $('s-c2').value = c[1]; schedule(); });
     $('s-logo').addEventListener('change', function (e) {
