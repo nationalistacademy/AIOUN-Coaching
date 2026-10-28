@@ -156,11 +156,13 @@ test.describe('LMS real-account RLS and score-tampering checks', () => {
     expect(Number(row.percentage)).toBe(0);
     expect(row.attempt_id).toBeTruthy();
 
-    const stored = await ownRows(a.token, 'quiz_attempts', 'id,student_id,quiz_id,score', `&id=eq.${row.attempt_id}`);
+    const stored = await ownRows(a.token, 'quiz_attempts', 'id,student_id,quiz_id,score,max_score,percentage', `&id=eq.${row.attempt_id}`);
     expect(stored).toHaveLength(1);
     expect(stored[0].student_id).toBe(a.user.id);
     expect(stored[0].quiz_id).toBe(cfg.quizId);
     expect(Number(stored[0].score)).toBe(0);
+    expect(Number(stored[0].max_score)).toBe(expectedMax);
+    expect(Number(stored[0].percentage)).toBe(0);
 
     const answers = await ownRows(a.token, 'quiz_answers', 'attempt_id,question_id,is_correct,points_awarded', `&attempt_id=eq.${row.attempt_id}`);
     expect(answers).toHaveLength(questions.body.length);
