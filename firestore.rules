@@ -75,7 +75,7 @@ service cloud.firestore {
     // Document ID contract: {uid}_{courseId}.
     match /enrollments/{enrollmentId} {
       allow read: if isAdmin() ||
-        (signedIn() && enrollmentId.matches('^' + request.auth.uid + '_.*$'));
+        (signedIn() && resource.data.uid == request.auth.uid && enrollmentId == request.auth.uid + '_' + resource.data.courseId);
       allow create, update, delete: if isStaff();
     }
 
