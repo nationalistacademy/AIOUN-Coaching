@@ -28,7 +28,7 @@ async function init(){
  try{
   const auth=await supabase.auth.getUser();if(auth.error||!auth.data.user){location.replace('./signin-signup.html');return}
   const user=auth.data.user;
-  const result=await supabase.from('quiz_attempts').select('id,quiz_id,score,submitted_at,quizzes(id,title,course_id)').eq('student_id',user.id).order('submitted_at',{ascending:false});
+  const result=await supabase.from('quiz_attempts').select('id,quiz_id,score,max_score,percentage,submitted_at,quizzes(id,title,course_id)').eq('student_id',user.id).order('submitted_at',{ascending:false});
   if(result.error)throw result.error;
   const attempts=(result.data||[]).filter(a=>a.quizzes);
   const quizIds=[...new Set(attempts.map(a=>a.quiz_id).filter(Boolean))];
@@ -38,8 +38,14 @@ async function init(){
    if(qs.error)throw qs.error;
    for(const q of qs.data||[]){const p=Number(q.points);if(Number.isFinite(p)&&p>=0)maxByQuiz.set(q.quiz_id,(maxByQuiz.get(q.quiz_id)||0)+p)}
   }
+  const accuracyForAttempt=a=>{
+   const stored=Number(a.percentage);
+   if(a.percentage!==null&&a.percentage!==undefined&&Number.isFinite(stored))return Math.max(0,Math.min(100,stored));
+   const max=a.max_score!==null&&a.max_score!==undefined?Number(a.max_score):maxByQuiz.get(a.quiz_id);
+   return pct(a.score,max);
+  };
   const graded=attempts.filter(a=>a.score!==null&&a.score!==undefined&&Number.isFinite(Number(a.score)));
-  const percentages=graded.map(a=>pct(a.score,maxByQuiz.get(a.quiz_id))).filter(v=>v!==null);
+  const percentages=graded.map(accuracyForAttempt).filter(v=>v!==null);
   document.getElementById('totalAttempts').textContent=String(attempts.length);
   document.getElementById('quizCount').textContent=String(quizIds.length);
   document.getElementById('bestScore').textContent=percentages.length?Math.max(...percentages).toFixed(1)+'%':'—';
@@ -50,13 +56,12 @@ async function init(){
   const analysis=document.getElementById('quizAnalysis');
   const summaries=[...byQuiz.entries()].map(([quizId,rows])=>{
    const title=rows[0]?.quizzes?.title||'Quiz';
-   const max=maxByQuiz.get(quizId);
-   const scored=rows.filter(a=>pct(a.score,max)!==null);
+   const scored=rows.filter(a=>accuracyForAttempt(a)!==null);
    const latest=scored[0],previous=scored[1];
-   const latestPct=latest?pct(latest.score,max):null;
-   const previousPct=previous?pct(previous.score,max):null;
+   const latestPct=latest?accuracyForAttempt(latest):null;
+   const previousPct=previous?accuracyForAttempt(previous):null;
    const delta=latestPct!==null&&previousPct!==null?latestPct-previousPct:null;
-   return {quizId,title,rows,latest,latestPct,delta,max};
+   return {quizId,title,rows,latest,latestPct,delta};
   }).sort((a,b)=>(a.latestPct??101)-(b.latestPct??101));
   if(!summaries.length){analysis.textContent='No quiz attempts yet. Open Practice Hub and complete your first quiz.'}
   else {analysis.className='';analysis.innerHTML=summaries.map(s=>{
@@ -98,7 +103,7 @@ async function init(){
   if(!attempts.length){box.textContent='No quiz attempts yet. Open Practice Hub and complete your first quiz.';return}
   box.className='';
   box.innerHTML=attempts.map(a=>{
-   const title=a.quizzes?.title||'Quiz',max=maxByQuiz.get(a.quiz_id),accuracy=pct(a.score,max);
+   const title=a.quizzes?.title||'Quiz',max=a.max_score!==null&&a.max_score!==undefined?Number(a.max_score):maxByQuiz.get(a.quiz_id),accuracy=accuracyForAttempt(a);
    const score=a.score===null||a.score===undefined?'Pending grading':esc(a.score)+(max>0?' / '+max+' points':' points');
    const accuracyText=accuracy===null?'Accuracy unavailable':accuracy.toFixed(1)+'% accuracy';
    return '<article class="attempt"><div><h3>'+esc(title)+'</h3><div class="muted">'+esc(fmtDate(a.submitted_at))+'</div><div class="muted">'+accuracyText+'</div></div><div class="score">'+score+'</div></article>';
