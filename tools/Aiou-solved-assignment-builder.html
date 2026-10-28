@@ -249,7 +249,7 @@
   }
   function blocks(text) {
     var raw = String(text || '');
-    if (/<(p|div|h[1-6]|ul|ol|li|table|blockquote|strong|em|b|i|u)\b/i.test(raw)) {
+    if (/<(p|div|span|h[1-6]|ul|ol|li|table|blockquote|strong|em|b|i|u)\\b/i.test(raw)) {
       var doc = new DOMParser().parseFromString(safeRich(raw), 'text/html'), richOut = [];
       Array.prototype.slice.call(doc.body.childNodes).forEach(function (node) {
         if (node.nodeType === 3) { var plain = node.textContent.trim(); if (plain) { richOut.push({ t: 'p', x: plain }); } return; }
@@ -460,7 +460,7 @@
   function plainToEditor(raw) {
     var s = String(raw || '');
     if (!s.trim()) { return ''; }
-    if (/<(p|div|ul|ol|li|table|strong|em|b|i|u|h[1-6])\b/i.test(s)) { return safeRich(s); }
+    if (/<(p|div|span|ul|ol|li|table|strong|em|b|i|u|h[1-6])\\b/i.test(s)) { return safeRich(s); }
     return s.split(/\n\s*\n/).map(function (para) {
       var lines = para.split('\n').filter(Boolean);
       if (!lines.length) { return ''; }
