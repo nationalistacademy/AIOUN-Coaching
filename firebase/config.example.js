@@ -5,9 +5,11 @@
 self.AIOU_FIREBASE_CONFIG = Object.freeze({
   apiKey: "",
   authDomain: "",
+  databaseURL: "",
   projectId: "",
   storageBucket: "",
   messagingSenderId: "",
   appId: "",
+  measurementId: "",
   vapidKey: ""
 });
