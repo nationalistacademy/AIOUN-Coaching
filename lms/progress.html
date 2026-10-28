@@ -14,7 +14,7 @@
 <div class="stat"><span class="muted">Quizzes attempted</span><strong id="quizCount">—</strong></div>
 </section>
 <section class="panel"><h2>Per-quiz improvement</h2><p class="muted">Trend is shown only when at least two attempts have a calculable percentage. Low accuracy highlights quizzes to revisit; topic-level analysis requires topic tags in the question data.</p><div id="quizAnalysis" class="empty">Loading your progress…</div></section>
-<section class="panel"><h2>Attempt history</h2><p class="muted">Latest attempts appear first. Scores are shown only when grading has completed.</p><div id="history" class="empty">Loading your progress…</div></section>
+<section class="panel"><h2>Weak-topic analysis</h2><p class="muted">Topics are ranked by incorrect answers across your submitted attempts. Staff must tag questions with a topic for this to be meaningful.</p><div id="topicAnalysis" class="empty">Loading topic analysis…</div></section>\n<section class="panel"><h2>Attempt history</h2><p class="muted">Latest attempts appear first. Scores are shown only when grading has completed.</p><div id="history" class="empty">Loading your progress…</div></section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-config.js"></script>
 <script>
@@ -64,6 +64,34 @@ async function init(){
    const note=s.latestPct===null?'Check whether quiz points are available.':s.latestPct<60?'Suggested review: revisit this quiz and practise again.':s.latestPct<80?'Keep practising to strengthen this result.':'Good result — keep it consistent.';
    return '<article class="quiz-progress"><div class="progress-row"><h3>'+esc(s.title)+'</h3><strong>'+current+'</strong></div><div class="progress-row"><span class="muted">'+s.rows.length+' attempt(s) · '+note+'</span><span>'+trend+'</span></div></article>';
   }).join('')}
+
+  const topicBox=document.getElementById('topicAnalysis');
+  const attemptIds=attempts.map(a=>a.id).filter(Boolean);
+  if(!attemptIds.length){topicBox.textContent='Complete a quiz to build topic-level insights.'}
+  else {
+   try {
+    const answers=await supabase.from('quiz_answers').select('attempt_id,question_id,is_correct').in('attempt_id',attemptIds);
+    if(answers.error)throw answers.error;
+    const questionIds=[...new Set((answers.data||[]).map(a=>a.question_id).filter(Boolean))];
+    if(!questionIds.length){topicBox.textContent='No graded answer details are available yet.'}
+    else {
+     const qs=await supabase.from('quiz_questions').select('id,topic').in('id',questionIds);
+     if(qs.error)throw qs.error;
+     const topics=new Map((qs.data||[]).map(q=>[q.id,(q.topic||'').trim()]));
+     const totals=new Map();
+     for(const a of answers.data||[]){
+      const topic=topics.get(a.question_id)||'';
+      if(!topic)continue;
+      if(!totals.has(topic))totals.set(topic,{correct:0,wrong:0,answered:0});
+      const t=totals.get(topic);t.answered++;
+      if(a.is_correct===true)t.correct++;else if(a.is_correct===false)t.wrong++;
+     }
+     const ranked=[...totals.entries()].map(([topic,t])=>({topic,...t,wrongRate:t.answered?t.wrong/t.answered:0})).sort((a,b)=>b.wrongRate-a.wrongRate||b.wrong-a.wrong);
+     if(!ranked.length){topicBox.textContent='Topic tags are not set on answered questions yet. Staff can add them in Admin → Add Quiz Question.'}
+     else {topicBox.className='';topicBox.innerHTML=ranked.slice(0,6).map(t=>'<article class="quiz-progress"><div class="progress-row"><h3>'+esc(t.topic)+'</h3><strong>'+Math.round(t.wrongRate*100)+'% incorrect</strong></div><div class="muted">'+t.wrong+' incorrect · '+t.correct+' correct recorded answers</div></article>').join('')}
+    }
+   } catch(topicError) {topicBox.textContent='Topic analysis is unavailable until the topic-tags migration is applied and answer-level access is verified.'}
+  }
 
   const box=document.getElementById('history');
   if(!attempts.length){box.textContent='No quiz attempts yet. Open Practice Hub and complete your first quiz.';return}
