@@ -22,6 +22,12 @@
 <footer>AIOU Coaching is an independent study-support project and is not affiliated with AIOU. <a href="../index.html">Back to study tools</a></footer>
 </main>
 <script src="./config.js"></script>
+<script>
+if (!window.AIOU_FIREBASE_CONFIG || !window.AIOU_FIREBASE_CONFIG.apiKey) {
+  const status = document.getElementById("status");
+  if (status) { status.textContent = "Firebase is not configured yet. Copy config.example.js to config.js and fill the actual Firebase Web App values. No credentials have been invented."; status.className = "status error"; }
+}
+</script>
 <script type="module">
 import {signUp,signIn,signOut,sendPasswordReset,getCurrentUser,listOwnNotifications,uploadOwnFile,enablePushNotifications,isTrustedAdmin,sendUserNotification} from "./client.js";
 const $=id=>document.getElementById(id), status=$("status");
