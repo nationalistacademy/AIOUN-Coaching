@@ -8,6 +8,7 @@ test('Firebase workspace loads the supplied public config and fits mobile/deskto
     await page.setViewportSize(viewport);
     await page.goto('/firebase/index.html');
     await expect(page.getByRole('heading', { name: /Your study companion, connected/i })).toBeVisible();
+    expect(await page.evaluate(() => window.AIOU_FIREBASE_CONFIG?.projectId)).toBe('aioucoaching');
     await expect(page.locator('#status')).not.toContainText('Firebase is not configured');
     await expect(page.locator('#signout')).toBeDisabled();
     const dimensions = await page.evaluate(() => ({
