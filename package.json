@@ -6,7 +6,7 @@
     "test": "npm run build:vendor && playwright test",
     "test:lms-security": "playwright test tests/lms-security.spec.js",
     "check:firebase": "node --check functions/index.js && node -e \"JSON.parse(require('node:fs').readFileSync('firebase.json','utf8')); JSON.parse(require('node:fs').readFileSync('firestore.indexes.json','utf8')); JSON.parse(require('node:fs').readFileSync('.firebaserc','utf8')); console.log('Firebase configuration JSON is valid')\"",
-    "test:firebase-rules": "firebase emulators:exec --only firestore --project demo-aioucoaching \"node --test tests/firestore-rules.test.js\""
+    "test:firebase-rules": "firebase emulators:exec --only firestore --project demo-aioucoaching \"node --test scripts/firestore-rules.test.cjs\""
   },
   "dependencies": {
     "docx": "9.1.0",
