@@ -49,6 +49,10 @@ Use absolute Blogger URLs for redirects and email-action links. Relative paths s
 - Mobile and desktop layout works on the canonical Blogger pages.
 - Security rules and Functions tests pass before production rollout.
 
-## Current known state
+## Current implementation status (repository only)
 
-The repository already contains a Supabase-backed LMS in `lms/` and a separate Firebase starter for non-LMS study tools. This document is the migration contract, not evidence that the LMS migration or production deployment is complete. Do not delete the existing Supabase implementation until the Firebase replacement passes the acceptance tests. Do not change DNS, publish the Blogger theme, or merge the migration branch as part of repository-only work.
+A first Firebase LMS replacement now exists in `firebase-lms/index.html`, with Firebase Authentication, enrollment-based dashboard/course access, lessons, quiz submission, result display, staff-only course/lesson/quiz creation, and enrollment management. Callable Cloud Functions in `functions/index.js` validate staff claims, keep correct-answer keys in the server-only `quizAnswerKeys` collection, grade submissions server-side, allow unanswered questions, and persist attempts/progress. Firebase Hosting is configured to serve `firebase-lms/` with no-store and security headers; Firestore rules/indexes are configured in the repository.
+
+This is an implementation milestone, **not a production-ready certification**. The app and functions still require syntax/build checks, Firebase Emulator Suite rules/function tests, isolated account end-to-end testing, and verification of Firebase Console settings. In particular, add the Hosting domain (such as `aioucoaching.web.app`) to Authentication authorized domains; enable Email/Password authentication; provision Firestore and Cloud Functions billing/runtime as needed; assign staff custom claims only through a trusted Admin SDK process; and review/deploy rules only after emulator tests. The current public Blogger pages and old `lms/` Supabase implementation have deliberately not been redirected or deleted. No hosting deployment, DNS changes, Blogger theme publication, or PR merge has occurred.
+
+The repository already contains a Supabase-backed LMS in `lms/`. Keep it as a rollback/reference until the Firebase replacement passes the acceptance tests. Do not change DNS, publish the Blogger theme, or merge the migration branch as part of repository-only work.
