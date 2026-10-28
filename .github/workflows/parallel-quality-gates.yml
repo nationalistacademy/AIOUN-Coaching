@@ -92,7 +92,7 @@ jobs:
       - name: Ensure Markdown docs are non-empty
         run: |
           set -euo pipefail
-          for f in docs/CHATGPT-REPOSITORY-AUTOMATION-MASTER-PROMPT.md docs/AI-MULTI-TASKING-AGENT.md; do
+          for f in docs/CHATGPT-REPOSITORY-AUTOMATION-MASTER-PROMPT.md docs/AI-MULTI-TASKING-AGENT.md docs/AI-AIOU-EDUCATION-PROFESSOR-AGENT.md docs/AI-AIOU-TOOL-DEVELOPER-AGENT.md; do
             test -s "$f" || { echo "::error::Missing or empty required documentation: $f"; exit 1; }
           done
 
@@ -129,10 +129,40 @@ jobs:
         if: hashFiles('package-lock.json') == ''
         run: echo "No package-lock.json found. Node/browser tests were skipped rather than guessed."
 
+  education-professor-agent:
+    name: Agent 5 — Education professor profile validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate education agent guide
+        run: |
+          set -euo pipefail
+          f=docs/AI-AIOU-EDUCATION-PROFESSOR-AGENT.md
+          test -s "$f"
+          grep -q "Academic integrity" "$f"
+          grep -q "Assignment review rubric" "$f"
+          grep -q "Quality checklist" "$f"
+          echo "Education agent profile and learning/integrity sections are present."
+
+  tool-developer-agent:
+    name: Agent 6 — Tool developer profile validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate developer agent guide
+        run: |
+          set -euo pipefail
+          f=docs/AI-AIOU-TOOL-DEVELOPER-AGENT.md
+          test -s "$f"
+          grep -q "Required development workflow" "$f"
+          grep -q "Security and infrastructure boundaries" "$f"
+          grep -q "Front-end and editor acceptance checklist" "$f"
+          echo "Tool developer profile and safety/test sections are present."
+
   parallel-summary:
     name: Agent 4 — Final gate summary
     runs-on: ubuntu-latest
-    needs: [repository-hygiene, html-and-docs, browser-tests]
+    needs: [repository-hygiene, html-and-docs, browser-tests, education-professor-agent, tool-developer-agent]
     if: always()
     steps:
       - name: Report all agent results
@@ -140,8 +170,12 @@ jobs:
           HYGIENE: ${{ needs.repository-hygiene.result }}
           HTML_DOCS: ${{ needs.html-and-docs.result }}
           BROWSER: ${{ needs.browser-tests.result }}
+          EDUCATION_AGENT: ${{ needs.education-professor-agent.result }}
+          TOOL_AGENT: ${{ needs.tool-developer-agent.result }}
         run: |
           printf 'Parallel quality-gate summary\n- Hygiene/safety: %s\n- HTML/docs: %s\n- Browser tests: %s\n' "$HYGIENE" "$HTML_DOCS" "$BROWSER"
           test "$HYGIENE" = success
           test "$HTML_DOCS" = success
           test "$BROWSER" = success
+          test "$EDUCATION_AGENT" = success
+          test "$TOOL_AGENT" = success
