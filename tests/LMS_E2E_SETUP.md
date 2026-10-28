@@ -4,7 +4,7 @@ This is for the connected Supabase project `ktmeipbspavgvgecqzwg` only. Use dedi
 
 ## Current seed fixtures
 
-The Supabase database currently has 10 published BBA practice quizzes and 40 questions with private answer keys. Five starter quizzes cover course codes 5402, 5418, 8407, 9382 and 9424 (5 questions each); five additional original practice quizzes cover 5414, 5419, 9381, 9384 and 9389 (3 questions each). The latter course metadata is linked to the official AIOU BBA scheme of study. These are starter practice banks, not full syllabus coverage.
+The Supabase database currently has 15 published BBA practice quizzes and 55 questions with private answer keys. Five starter quizzes cover course codes 5402, 5418, 8407, 9382 and 9424 (5 questions each); ten additional original practice quizzes cover 5414, 5419, 9381, 9384, 9389, 5026, 5410, 5413, 8425 and 8594 (3 questions each). Course metadata is linked to the official AIOU BBA scheme of study. These are starter practice banks, not full syllabus coverage.
 
 - Test course: Financial Accounting (5418), course ID `ca0f145e-3163-4381-a9ed-7246d188becb`
 - Test quiz: Starter MCQ Practice, quiz ID `44fb93fb-47bb-42ca-8939-1b922bb9a4a9`
@@ -74,6 +74,6 @@ Sign in as Student A in the LMS, open `lms/quiz.html?id=44fb93fb-47bb-42ca-8939-
 
 ## Cleanup
 
-The live database currently has no Auth users, enrollments, or quiz attempts. A successful database seed check confirmed 40 questions, 40 private answer keys, no answer key missing from its options, and topic tags on every question. This does not replace authenticated end-to-end testing.
+The live database currently has no Auth users, enrollments, or quiz attempts. A successful database seed check confirmed 55 questions, 55 private answer keys, no answer key missing from its options, and topic tags on every question. This does not replace authenticated end-to-end testing.
 
 After evidence has been captured, remove only the dedicated QA enrollments and Auth users created for this test. Do not delete unrelated data or disable security controls. Keep the test users isolated from real student accounts.
