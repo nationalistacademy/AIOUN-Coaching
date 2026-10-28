@@ -136,7 +136,7 @@ test.describe('LMS real-account RLS and score-tampering checks', () => {
 
     const expectedMax = questions.body.reduce((sum, question) => sum + Number(question.points || 0), 0);
     expect(expectedMax, 'Fixture questions must have a positive total point value').toBeGreaterThan(0);
-    const submitted = await fetch(`${cfg.url.replace(/\\/$/, '')}/rest/v1/rpc/submit_quiz_attempt`, {
+    const submitted = await fetch(cfg.url.replace(/\/$/, '') + '/rest/v1/rpc/submit_quiz_attempt', {
       method: 'POST',
       headers: {
         apikey: cfg.key,
