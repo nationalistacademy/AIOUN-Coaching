@@ -25,6 +25,17 @@ jobs:
           node-version: 20
       - name: Install dependencies
         run: npm install
+      - name: Validate Firebase Functions syntax and configuration
+        run: |
+          node --check functions/index.js
+          node -e "JSON.parse(require('node:fs').readFileSync('firebase.json','utf8')); JSON.parse(require('node:fs').readFileSync('firestore.indexes.json','utf8')); JSON.parse(require('node:fs').readFileSync('.firebaserc','utf8')); console.log('Firebase configuration JSON is valid')"
+      - name: Set up Java for Firebase Emulator
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Run Firebase Firestore security rules tests in the Emulator
+        run: npm run test:firebase-rules
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Run responsive, link and export tests

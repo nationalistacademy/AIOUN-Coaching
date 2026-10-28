@@ -4,13 +4,18 @@
   "scripts": {
     "build:vendor": "node scripts/copy-vendor.js",
     "test": "npm run build:vendor && playwright test",
-    "test:lms-security": "playwright test tests/lms-security.spec.js"
+    "test:lms-security": "playwright test tests/lms-security.spec.js",
+    "check:firebase": "node --check functions/index.js && node -e \"JSON.parse(require('node:fs').readFileSync('firebase.json','utf8')); JSON.parse(require('node:fs').readFileSync('firestore.indexes.json','utf8')); JSON.parse(require('node:fs').readFileSync('.firebaserc','utf8')); console.log('Firebase configuration JSON is valid')\"",
+    "test:firebase-rules": "firebase emulators:exec --only firestore --project demo-aioucoaching \"node --test scripts/firestore-rules.test.cjs\""
   },
   "dependencies": {
     "docx": "9.1.0",
     "file-saver": "2.0.5"
   },
   "devDependencies": {
-    "@playwright/test": "1.56.1"
+    "@playwright/test": "1.56.1",
+    "firebase": "^11.10.0",
+    "@firebase/rules-unit-testing": "^4.0.1",
+    "firebase-tools": "^14.12.0"
   }
 }

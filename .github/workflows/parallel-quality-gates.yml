@@ -1,0 +1,181 @@
+name: Parallel Agent Quality Gates
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      run_browser_tests:
+        description: "Run browser tests when Playwright is configured"
+        required: false
+        default: "true"
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: parallel-quality-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repository-hygiene:
+    name: Agent 1 — Repository hygiene and safety boundaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check whitespace errors
+        run: git diff --check ${{ github.event.pull_request.base.sha || 'HEAD~1' }}...HEAD
+      - name: Check accidental secret patterns
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Check tracked text files only; avoid scanning generated assets and Git internals.
+          if git grep -n -I -E '(sk-[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{30,}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|xox[baprs]-[A-Za-z0-9-]{20,})' -- ':!*.lock' ':!*.min.js'; then
+            echo "::error::Possible secret-like value found. Verify and replace it with a secret reference or placeholder."
+            exit 1
+          fi
+          echo "No known high-confidence secret patterns found."
+      - name: Guard LMS paths
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if git diff --name-only "$BASE_SHA...$HEAD_SHA" | grep -E '^(lms/|supabase/|.*(quiz|grading|enrollment|score|progress).*)'; then
+            echo "::error::LMS-related paths changed. This project requires explicit separate approval for LMS work."
+            exit 1
+          fi
+          echo "No LMS-related paths changed."
+
+  html-and-docs:
+    name: Agent 2 — HTML and documentation checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check HTML files for basic structural issues
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=$(git ls-files '*.html' '*.htm')
+          if [ -z "$files" ]; then echo "No tracked HTML files."; exit 0; fi
+          node - <<'NODE' $files
+          const fs = require('fs');
+          const files = process.argv.slice(2);
+          let failed = false;
+          for (const file of files) {
+            const s = fs.readFileSync(file, 'utf8');
+            const checks = [
+              [/<script\b[^>]*src=["']javascript:/i, 'script src uses javascript: URL'],
+              [/<iframe\b[^>]*src=["']javascript:/i, 'iframe src uses javascript: URL'],
+              [/<html\b/i, 'missing <html> root'],
+              [/<\/html\s*>/i, 'missing closing </html> tag']
+            ];
+            // Only run root checks on full-page documents, not HTML fragments.
+            if (/<html\b/i.test(s)) {
+              for (const [re, message] of checks.slice(0, 2)) {
+                if (re.test(s)) { console.error(file + ': ' + message); failed = true; }
+              }
+              if (!checks[2][0].test(s)) { console.error(file + ': ' + checks[2][1]); failed = true; }
+              if (!checks[3][0].test(s)) { console.error(file + ': ' + checks[3][1]); failed = true; }
+            }
+          }
+          if (failed) process.exit(1);
+          console.log('Basic HTML structure checks passed for ' + files.length + ' tracked HTML files.');
+          NODE
+      - name: Ensure Markdown docs are non-empty
+        run: |
+          set -euo pipefail
+          for f in docs/CHATGPT-REPOSITORY-AUTOMATION-MASTER-PROMPT.md docs/AI-MULTI-TASKING-AGENT.md docs/AI-AIOU-EDUCATION-PROFESSOR-AGENT.md docs/AI-AIOU-TOOL-DEVELOPER-AGENT.md; do
+            test -s "$f" || { echo "::error::Missing or empty required documentation: $f"; exit 1; }
+          done
+
+  browser-tests:
+    name: Agent 3 — Browser test suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+        if: hashFiles('package-lock.json') != ''
+      - name: Install project dependencies
+        if: hashFiles('package-lock.json') != ''
+        run: npm ci
+      - name: Install Playwright Chromium
+        if: hashFiles('package-lock.json') != '' && (github.event_name != 'workflow_dispatch' || inputs.run_browser_tests)
+        run: npx playwright install --with-deps chromium
+      - name: Run configured tests
+        if: hashFiles('package-lock.json') != ''
+        run: npm test --if-present
+      - name: Run Playwright suite when configured
+        if: hashFiles('package-lock.json') != '' && (github.event_name != 'workflow_dispatch' || inputs.run_browser_tests)
+        run: |
+          if [ -f playwright.config.js ] || [ -f playwright.config.ts ] || [ -f playwright.config.mjs ]; then
+            npx playwright test
+          elif [ -d tests ] && grep -R -q "require(['\"]@playwright/test['\"])" tests; then
+            npx playwright test tests/assignment-writing-studio.spec.js
+          else
+            echo "No Playwright config detected; browser suite skipped."
+          fi
+      - name: Explain skipped tests
+        if: hashFiles('package-lock.json') == ''
+        run: echo "No package-lock.json found. Node/browser tests were skipped rather than guessed."
+
+  education-professor-agent:
+    name: Agent 5 — Education professor profile validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate education agent guide
+        run: |
+          set -euo pipefail
+          f=docs/AI-AIOU-EDUCATION-PROFESSOR-AGENT.md
+          test -s "$f"
+          grep -q "Academic integrity" "$f"
+          grep -q "Assignment review rubric" "$f"
+          grep -q "Quality checklist" "$f"
+          echo "Education agent profile and learning/integrity sections are present."
+
+  tool-developer-agent:
+    name: Agent 6 — Tool developer profile validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate developer agent guide
+        run: |
+          set -euo pipefail
+          f=docs/AI-AIOU-TOOL-DEVELOPER-AGENT.md
+          test -s "$f"
+          grep -q "Required development workflow" "$f"
+          grep -q "Security and infrastructure boundaries" "$f"
+          grep -q "Front-end and editor acceptance checklist" "$f"
+          echo "Tool developer profile and safety/test sections are present."
+
+  parallel-summary:
+    name: Agent 4 — Final gate summary
+    runs-on: ubuntu-latest
+    needs: [repository-hygiene, html-and-docs, browser-tests, education-professor-agent, tool-developer-agent]
+    if: always()
+    steps:
+      - name: Report all agent results
+        env:
+          HYGIENE: ${{ needs.repository-hygiene.result }}
+          HTML_DOCS: ${{ needs.html-and-docs.result }}
+          BROWSER: ${{ needs.browser-tests.result }}
+          EDUCATION_AGENT: ${{ needs.education-professor-agent.result }}
+          TOOL_AGENT: ${{ needs.tool-developer-agent.result }}
+        run: |
+          printf 'Parallel quality-gate summary\n- Hygiene/safety: %s\n- HTML/docs: %s\n- Browser tests: %s\n' "$HYGIENE" "$HTML_DOCS" "$BROWSER"
+          test "$HYGIENE" = success
+          test "$HTML_DOCS" = success
+          test "$BROWSER" = success
+          test "$EDUCATION_AGENT" = success
+          test "$TOOL_AGENT" = success

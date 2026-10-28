@@ -9,13 +9,14 @@ Independent study-support tools, Blogger resources, and a separate Supabase-back
 - Firebase guide: [firebase/README.md](firebase/README.md)
 - Firebase Cloud Functions: [functions/index.js](functions/index.js)
 - Firebase CLI manifest: [firebase.json](firebase.json)
+- Realtime Database rules: [database.rules.json](database.rules.json)
 - Firestore rules: [firestore.rules](firestore.rules)
 - Storage rules: [storage.rules](storage.rules)
 - Blogger theme: [theme/aioucoahing.xml](theme/aioucoahing.xml)
 - LMS security guide: [lms/README.md](lms/README.md)
 
 ## Firebase starter
-The Firebase starter provides email/password Auth, profile documents, password reset, private uploads, notification reads and FCM token registration. Copy `firebase/config.example.js` to `firebase/config.js` and fill values from the actual Firebase project. The local config is ignored by Git. Push sending is implemented as a callable Cloud Function requiring the trusted `admin: true` custom claim and targeting one user per call; never put Admin SDK credentials in browser code.
+The Firebase starter provides email/password Auth, profile documents, password reset, private uploads, notification reads and FCM token registration. `firebase/config.js` contains the user-supplied public Web App config for project `aioucoaching`. Firebase Web config is browser-visible by design; never commit Admin SDK credentials or private keys. Push notifications still need the FCM Web Push VAPID public key and server-side setup. Push sending is implemented as a callable Cloud Function requiring the trusted `admin: true` custom claim and targeting one user per call; never put Admin SDK credentials in browser code.
 
 ## PWA and Cloudflare
 The companion app is separate from Blogger and the Blogger XML must be uploaded manually. A custom domain being connected does not verify DNS, Worker routing or origin configuration; no DNS or Worker route was changed. Verify the exact domain and rollback plan before same-origin service-worker routing.

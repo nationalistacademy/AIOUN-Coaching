@@ -6,6 +6,7 @@
     { id:'paper',label:'Guess Papers' },{ id:'cover',label:'Cover Pages' },{ id:'files',label:'Image / PDF / Downloads' },{ id:'site',label:'Pages' }
   ];
   var LIST = [
+    {id:'assignment-writing-studio',icon:'📝',group:'academic',name:'Bilingual Assignment Writing Studio',file:'aiou-assignment-writing-studio.html',badges:['Urdu RTL','Watermark','Images','Diagrams','Word/PDF'],desc:'Urdu/English rich editor with tables, math, images, diagrams, watermark and export.'},
     {id:'studio',icon:'🤖',group:'ai',name:'Multi-ID AI Studio',file:'studio.html',badges:['DeepSeek','Multiple IDs','Compare'],desc:'Ek prompt kai Worker IDs ko bhejein, jawab compare karein aur Word draft banayein.'},
     {id:'humanizer',icon:'✍️',group:'ai',name:'AI Text Humanizer',file:'humanizer.html',badges:['Rewrite'],desc:'Apne draft ko natural aur clear banane ke liye rewriting help.'},
     {id:'diagram',icon:'🎨',group:'ai',name:'AI Diagram Generator',file:'diagram-generator.html',badges:['Mermaid','PNG'],desc:'Topic se flowchart/diagram generate karein.'},

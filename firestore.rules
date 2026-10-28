@@ -4,9 +4,16 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
     function isAdmin() { return signedIn() && request.auth.token.admin == true; }
+    function isStaff() {
+      return signedIn() &&
+        (request.auth.token.admin == true || request.auth.token.teacher == true);
+    }
+    function hasActiveEnrollment(courseId) {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/enrollments/$(request.auth.uid + '_' + courseId)) &&
+        get(/databases/$(database)/documents/enrollments/$(request.auth.uid + '_' + courseId)).data.status == 'active';
+    }
 
-    // Public content is read-only to ordinary clients. Admin claims must be set
-    // by a trusted Admin SDK environment, never by a client profile field.
     match /announcements/{announcementId} {
       allow read: if true;
       allow create, update, delete: if isAdmin();
@@ -25,7 +32,6 @@ service cloud.firestore {
 
       match /notifications/{notificationId} {
         allow read: if isSelf(uid);
-        // Notification records are server-created; clients may only mark read.
         allow create, delete: if false;
         allow update: if isSelf(uid)
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readAt', 'isRead']);
@@ -41,13 +47,56 @@ service cloud.firestore {
         allow delete: if isSelf(uid);
       }
 
-      // Per-user private app data. Keep LMS records out of this namespace.
       match /private/{document=**} {
         allow read, write: if isSelf(uid);
       }
     }
 
-    // All unspecified collections are denied.
+    // Published catalog metadata can be discovered without exposing private keys.
+    match /courses/{courseId} {
+      allow read: if resource.data.published == true || isStaff();
+      allow create, update, delete: if isStaff();
+    }
+
+    // Lessons and quiz metadata require an active enrollment in the owning course.
+    match /lessons/{lessonId} {
+      allow read: if isStaff() ||
+        (resource.data.published == true && hasActiveEnrollment(resource.data.courseId));
+      allow create, update, delete: if isStaff();
+    }
+
+    match /quizzes/{quizId} {
+      allow read: if isStaff() ||
+        (resource.data.published == true && hasActiveEnrollment(resource.data.courseId));
+      allow create, update, delete: if isStaff();
+    }
+
+    // Enrollment status is staff-controlled; a student can only read their own.
+    // Document ID contract: {uid}_{courseId}.
+    match /enrollments/{enrollmentId} {
+      allow read: if isAdmin() ||
+        (signedIn() && resource.data.uid == request.auth.uid && enrollmentId == request.auth.uid + '_' + resource.data.courseId);
+      allow create, update, delete: if isStaff();
+    }
+
+    // Attempts and progress are written only by trusted callable Functions.
+    match /quizAttempts/{attemptId} {
+      allow read: if isAdmin() ||
+        (signedIn() && resource.data.uid == request.auth.uid);
+      allow create, update, delete: if false;
+    }
+
+    match /progress/{progressId} {
+      allow read: if isAdmin() ||
+        (signedIn() && resource.data.uid == request.auth.uid);
+      allow create, update, delete: if false;
+    }
+
+    // Correct answers and grading metadata are never directly readable by clients.
+    match /quizAnswerKeys/{quizId} {
+      allow read, write: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
