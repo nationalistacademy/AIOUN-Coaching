@@ -81,10 +81,13 @@ $('insertQuestion').onclick=()=>insertHtml('<h2>Question '+(editor.querySelector
 $('insertReferences').onclick=()=>insertHtml('<h2>References</h2><ol><li>Author. (Year). <i>Title</i>. Publisher / URL.</li></ol>');
 $('insertPageBreak').onclick=()=>insertHtml('<div style="break-before:page;page-break-before:always;border-top:1px dashed #94a3b8;margin:20px 0;padding-top:8px" contenteditable="false">— Page break —</div><p><br></p>');
 $('insertDate').onclick=()=>insertHtml('<span>'+new Date().toLocaleDateString()+'</span>');
-$('rtlBtn').onclick=()=>{restore();cmd('insertHTML','<p dir="rtl" style="text-align:right;font-family:Noto Nastaliq Urdu,serif"><br></p>')};
-$('ltrBtn').onclick=()=>{restore();cmd('insertHTML','<p dir="ltr" style="text-align:left;font-family:Arial,sans-serif"><br></p>')};
-$('urduFontBtn').onclick=()=>{restore();cmd('insertHTML','<span dir="rtl" style="font-family:Noto Nastaliq Urdu,serif"></span>')};
-$('englishFontBtn').onclick=()=>{restore();cmd('insertHTML','<span dir="ltr" style="font-family:Arial,sans-serif"></span>')};
+function selectedBlock(){restore();const s=getSelection();if(!s||!s.rangeCount||!editor.contains(s.anchorNode))return editor;let n=s.anchorNode.nodeType===Node.TEXT_NODE?s.anchorNode.parentElement:s.anchorNode;while(n&&n!==editor&&!/^(P|DIV|H1|H2|H3|H4|LI|BLOCKQUOTE|TD|TH)$/.test(n.tagName))n=n.parentElement;return n&&n!==editor?n:editor}
+function setDirection(dir){const b=selectedBlock();b.setAttribute('dir',dir);b.style.textAlign=dir==='rtl'?'right':'left';if(dir==='rtl')b.style.fontFamily='"Noto Nastaliq Urdu","Noto Sans",serif';else b.style.fontFamily='"Noto Sans",Arial,sans-serif';scheduleSave();say((dir==='rtl'?'RTL / Urdu':'LTR / English')+' direction applied to selected paragraph.')}
+function setSelectedFont(font,dir){restore();const s=getSelection();if(!s||!s.rangeCount||s.isCollapsed||!editor.contains(s.anchorNode)){say('Pehle editor mein woh text select karein jis ka font badalna hai.');return}const range=s.getRangeAt(0);const span=document.createElement('span');span.style.fontFamily=font;span.setAttribute('dir',dir);try{range.surroundContents(span)}catch(e){span.appendChild(range.extractContents());range.insertNode(span)}const next=document.createRange();next.selectNodeContents(span);s.removeAllRanges();s.addRange(next);remember();scheduleSave();say('Selected text ka font update ho gaya.')}
+$('rtlBtn').onclick=()=>setDirection('rtl');
+$('ltrBtn').onclick=()=>setDirection('ltr');
+$('urduFontBtn').onclick=()=>setSelectedFont('"Noto Nastaliq Urdu",serif','rtl');
+$('englishFontBtn').onclick=()=>setSelectedFont('"Noto Sans",Arial,sans-serif','ltr');
 load();sync();
 })();
 </script></body></html>
