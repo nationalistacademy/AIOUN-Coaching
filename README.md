@@ -9,6 +9,7 @@ Independent study-support tools, Blogger resources, and a separate Supabase-back
 - Firebase guide: [firebase/README.md](firebase/README.md)
 - Firebase Cloud Functions: [functions/index.js](functions/index.js)
 - Firebase CLI manifest: [firebase.json](firebase.json)
+- Realtime Database rules: [database.rules.json](database.rules.json)
 - Firestore rules: [firestore.rules](firestore.rules)
 - Storage rules: [storage.rules](storage.rules)
 - Blogger theme: [theme/aioucoahing.xml](theme/aioucoahing.xml)
