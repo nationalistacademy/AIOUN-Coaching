@@ -128,4 +128,43 @@ test.describe('LMS real-account RLS and score-tampering checks', () => {
     expect(studentIds.has((await signIn(cfg.studentAEmail, cfg.studentAPassword)).user.id)).toBeTruthy();
     expect(studentIds.has((await signIn(cfg.studentBEmail, cfg.studentBPassword)).user.id)).toBeTruthy();
   });
+  test('incomplete quiz submission scores unanswered questions as zero and keeps full denominator', async () => {
+    const a = await signIn(cfg.studentAEmail, cfg.studentAPassword);
+    const questions = await api(`quiz_questions?select=id,points&quiz_id=eq.${cfg.quizId}&order=sort_order.asc`, a.token);
+    expect(questions.response.ok, 'Student should be able to read published quiz questions').toBeTruthy();
+    expect(questions.body.length, 'Controlled fixture must include questions').toBeGreaterThan(0);
+
+    const expectedMax = questions.body.reduce((sum, question) => sum + Number(question.points || 0), 0);
+    expect(expectedMax, 'Fixture questions must have a positive total point value').toBeGreaterThan(0);
+    const submitted = await fetch(`${cfg.url.replace(/\\/$/, '')}/rest/v1/rpc/submit_quiz_attempt`, {
+      method: 'POST',
+      headers: {
+        apikey: cfg.key,
+        Authorization: `Bearer ${a.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        p_quiz_id: cfg.quizId,
+        p_answers: questions.body.map(question => ({ question_id: question.id, answer: null }))
+      })
+    });
+    const result = await submitted.json();
+    expect(submitted.ok, `Incomplete quiz submission should succeed: ${JSON.stringify(result)}`).toBeTruthy();
+    const row = Array.isArray(result) ? result[0] : result;
+    expect(Number(row.score)).toBe(0);
+    expect(Number(row.max_score)).toBe(expectedMax);
+    expect(Number(row.percentage)).toBe(0);
+    expect(row.attempt_id).toBeTruthy();
+
+    const stored = await ownRows(a.token, 'quiz_attempts', 'id,student_id,quiz_id,score', `&id=eq.${row.attempt_id}`);
+    expect(stored).toHaveLength(1);
+    expect(stored[0].student_id).toBe(a.user.id);
+    expect(stored[0].quiz_id).toBe(cfg.quizId);
+    expect(Number(stored[0].score)).toBe(0);
+
+    const answers = await ownRows(a.token, 'quiz_answers', 'attempt_id,question_id,is_correct,points_awarded', `&attempt_id=eq.${row.attempt_id}`);
+    expect(answers).toHaveLength(questions.body.length);
+    expect(answers.every(answer => answer.is_correct === false && Number(answer.points_awarded) === 0)).toBeTruthy();
+  });
+
 });
