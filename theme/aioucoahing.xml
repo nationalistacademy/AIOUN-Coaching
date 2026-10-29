@@ -3191,7 +3191,7 @@ function jtCallback(){
     <p>Open the installable study app for a mobile-friendly experience. Offline access applies to pages already cached by the app.</p>
     <div class="aio-pwa-layout-actions">
       <a class="aio-pwa-layout-button" href="https://nationalistacademy.github.io/AIOUN-Coaching/">Open Study App</a>
-      <button class="aio-pwa-layout-button aio-pwa-install" type="button" hidden>Install App</button>
+      
     </div>
     <p class="aio-pwa-layout-status" role="status" aria-live="polite">Install option depends on your browser and device.</p>
   </div>
@@ -3206,17 +3206,9 @@ function jtCallback(){
   var card=document.querySelector('.aio-pwa-layout-card');
   if(!card || card.dataset.ready==='1') return;
   card.dataset.ready='1';
-  var install=card.querySelector('.aio-pwa-install');
   var status=card.querySelector('.aio-pwa-layout-status');
-  var promptEvent=null;
-  window.addEventListener('beforeinstallprompt',function(event){
-    event.preventDefault();promptEvent=event;if(install)install.hidden=false;
-  });
-  if(install) install.addEventListener('click',async function(){
-    if(!promptEvent){status.textContent='Install is not offered by this browser. Use the browser menu → Add to Home screen.';return;}
-    promptEvent.prompt();await promptEvent.userChoice;promptEvent=null;install.hidden=true;
-  });
-  window.addEventListener('appinstalled',function(){if(install)install.hidden=true;status.textContent='Study app installed successfully.';});
+  if(status) status.textContent='Open the study app, then use your browser menu to install it or add it to your home screen if supported.';
+
   var fbStatus=card.querySelector('.aio-firebase-status');
   var cfg=window.AIOU_FIREBASE_CONFIG;
   if(cfg && cfg.apiKey && cfg.authDomain && cfg.projectId && cfg.appId){
