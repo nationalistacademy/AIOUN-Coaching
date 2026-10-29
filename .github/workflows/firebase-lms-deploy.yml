@@ -42,6 +42,24 @@ jobs:
           npm ci
           npm --prefix functions ci
           npm install --global firebase-tools
+      - name: Inject Firebase Web API key from Actions variable
+        env:
+          AIOU_FIREBASE_API_KEY: ${{ vars.AIOU_FIREBASE_API_KEY }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = 'firebase-lms/config.js';
+          const key = process.env.AIOU_FIREBASE_API_KEY;
+          if (!key || !/^AIza[0-9A-Za-z_-]{20,}$/.test(key)) {
+            throw new Error('Missing or invalid Actions variable AIOU_FIREBASE_API_KEY');
+          }
+          const source = fs.readFileSync(path, 'utf8');
+          if (!source.includes('"__FIREBASE_API_KEY__"')) {
+            throw new Error('Firebase API key placeholder not found in config.js');
+          }
+          fs.writeFileSync(path, source.replace('"__FIREBASE_API_KEY__"', JSON.stringify(key)));
+          console.log('Firebase Web API key injected from Actions variable');
+          NODE
       - name: Validate Firebase web config, source and deployment files
         run: |
           node --check functions/index.js
