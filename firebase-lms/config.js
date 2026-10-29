@@ -1,9 +1,10 @@
 /* Firebase web configuration for the AIOU Coaching project.
- * Web config values identify the project; enforce access with Firebase Security Rules.
+ * The deploy workflow injects the public Web API key from the Actions variable
+ * AIOU_FIREBASE_API_KEY. Enforce access with Firebase Security Rules.
  * Never place service-account credentials or private keys in this file.
  */
 window.AIOU_FIREBASE_CONFIG = Object.freeze({
-  apiKey: "AIzaSyAB9dY0-6C5z2SJt_HPIcoknUjphNiYmM4",
+  apiKey: "__FIREBASE_API_KEY__",
   authDomain: "aioucoaching.firebaseapp.com",
   databaseURL: "https://aioucoaching-default-rtdb.firebaseio.com",
   projectId: "aioucoaching",
