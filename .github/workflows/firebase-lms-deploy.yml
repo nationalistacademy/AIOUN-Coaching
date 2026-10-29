@@ -46,7 +46,7 @@ jobs:
         run: |
           node --check functions/index.js
           node --check firebase-lms/config.js
-          node -e "JSON.parse(require('node:fs').readFileSync('firebase.json','utf8')); JSON.parse(require('node:fs').readFileSync('firestore.indexes.json','utf8')); JSON.parse(require('node:fs').readFileSync('.firebaserc','utf8')); const c=require('node:fs').readFileSync('firebase-lms/config.js','utf8'); for (const k of ['apiKey','authDomain','projectId','appId']) if (!new RegExp(k + ': \\\"[^\\\"]+\\\"').test(c)) throw new Error('Missing Firebase web config field: '+k); console.log('Firebase configuration files validated')"
+          node -e "JSON.parse(require('node:fs').readFileSync('firebase.json','utf8')); JSON.parse(require('node:fs').readFileSync('firestore.indexes.json','utf8')); JSON.parse(require('node:fs').readFileSync('.firebaserc','utf8')); const c=require('node:fs').readFileSync('firebase-lms/config.js','utf8'); for (const k of ['apiKey','authDomain','projectId','appId']) if (!c.includes(k + ': \\\"') || c.includes(k + ': \\\"\\\"')) throw new Error('Missing Firebase web config field: '+k); console.log('Firebase configuration files validated')"
       - name: Deploy isolated LMS hosting and required Firebase backend
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AIOUCOACHING }}
