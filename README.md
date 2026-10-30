@@ -61,3 +61,15 @@ The Python helper runs locally and has no paid API dependency. It is not a hoste
 
 Practice questions are revision material derived from supplied course text, not actual, leaked or predicted exam questions. Automated assignment checks are structural feedback, not proof of originality, factual accuracy, citation validity or compliance with the latest AIOU manual.
 
+
+
+## Free local AI with Ollama
+
+The AI Studio can use a local Ollama model first, with the existing configured Cloudflare Worker IDs as fallback. Prompts sent to Ollama go to `127.0.0.1` on the student's own computer; no paid AI API key is needed for that local route.
+
+1. Install Ollama from [ollama.com](https://ollama.com/).
+2. Pull a starter model: `ollama pull qwen2.5:3b`.
+3. Start Ollama with the AIOU Coaching origins allowed (Linux/macOS example): `OLLAMA_ORIGINS=https://aioucoaching.netlify.app,https://aioucoaching.blogspot.com ollama serve`. Restart the Ollama service after changing origins.
+4. Open **AI Studio → Free Local AI — Ollama**, enable it, save, then test the connection.
+
+Ollama must be running on the same device/browser that opens the site. The browser may show a local-network permission prompt. If the local model is unavailable, use the existing Worker fallback. Model speed and quality depend on local RAM/CPU/GPU. Never expose Ollama's port publicly; keep it bound to loopback. The local provider is integrated in the Multi-ID AI Studio; other standalone tools are not automatically switched to Ollama by this change.
