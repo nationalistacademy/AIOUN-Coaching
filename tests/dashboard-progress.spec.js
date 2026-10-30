@@ -10,7 +10,7 @@ test.describe('Dashboard and progress analysis', () => {
       { course_id: 'cancelled-1', status: 'cancelled' },
       { course_id: 'inactive-1', status: 'inactive' },
       { course_id: 'active-2', status: 'ACTIVE' },
-      { course_id: 'missing-id', status: 'active' }
+      { course_id: '   ', status: 'active' }
     ])]);
     expect(ids.sort()).toEqual(['active-1', 'active-2']);
   });
