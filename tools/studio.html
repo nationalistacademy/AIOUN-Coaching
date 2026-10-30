@@ -30,6 +30,26 @@
 <!-- ======================= 1. MULTI-ID RESPONSE ======================= -->
 <section id="s1">
   <div class="panel">
+    <div class="sec-head"><h2>🦙 Free Local AI — Ollama</h2><span class="pill" id="ollamaStatus">Not connected</span></div>
+    <p class="muted">Ollama aapke apne computer par chalega. Local AI ko pehli priority milegi; agar connect na ho to saved Cloudflare Worker IDs fallback rahenge.</p>
+    <div class="row">
+      <div><label class="lab" for="ollamaModel">Local model</label><input id="ollamaModel" value="qwen2.5:3b" placeholder="qwen2.5:3b"></div>
+      <div><label class="lab" for="ollamaEnabled">Use local AI first</label><div style="padding-top:9px"><input id="ollamaEnabled" type="checkbox"> <span class="muted">Enable Ollama</span></div></div>
+    </div>
+    <div class="row">
+      <div><button class="btn pk" id="ollamaSave" type="button">💾 Save local AI settings</button></div>
+      <div><button class="btn ghost" id="ollamaTest" type="button">🔌 Test Ollama</button></div>
+    </div>
+    <div class="stt hid" id="ollamaMessage" role="status" aria-live="polite"></div>
+    <details><summary>Ollama install / start karne ka tareeqa</summary>
+      <p class="muted">Computer par Ollama install karein, terminal mein model download karein aur service start rakhein:</p>
+      <pre style="background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:12px;padding:14px;overflow:auto;font-size:.82rem"><code>ollama pull qwen2.5:3b
+OLLAMA_ORIGINS=https://aioucoaching.netlify.app,https://aioucoaching.blogspot.com ollama serve</code></pre>
+      <p class="muted">Agar Ollama pehle se background service ke taur par chal raha ho to origins set karne ke baad usay restart karein. Local AI tabhi chalega jab aapka computer on ho aur Ollama running ho.</p>
+    </details>
+    <div class="ib">Privacy: prompts local Ollama ko <code>127.0.0.1</code> par bheje jate hain. Model download ka size aur speed internet/hardware par depend karte hain. Worker IDs alag se configured reh sakte hain.</div>
+  </div>
+  <div class="panel">
     <div class="sec-head">
       <h2>🔀 Worker IDs (multiple IDs)</h2>
       <span class="pill" id="idSummary">Koi ID nahi</span>
@@ -178,6 +198,7 @@
 </script>
 <script src="../js/store.js"></script>
 <script src="../js/ai.js"></script>
+<script src="../js/ollama-ui.js"></script>
 <script src="../js/ui.js"></script>
 <script src="../js/tools.js"></script>
 <script src="../js/hub.js"></script>
