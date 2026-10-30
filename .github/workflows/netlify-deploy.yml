@@ -1,0 +1,47 @@
+name: Deploy LMS to Netlify
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/student-practice-hub
+    paths:
+      - "lms/**"
+      - "assets/**"
+      - "scripts/**"
+      - "package.json"
+      - "netlify.toml"
+      - ".github/workflows/netlify-deploy.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: netlify-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout deployment branch
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build static vendor assets
+        run: |
+          npm install --omit=dev
+          npm run build:vendor
+
+      - name: Deploy to Netlify production
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          test -n "$NETLIFY_AUTH_TOKEN" || (echo "NETLIFY_AUTH_TOKEN secret is missing" && exit 1)
+          test -n "$NETLIFY_SITE_ID" || (echo "NETLIFY_SITE_ID secret is missing" && exit 1)
+          npx --yes netlify-cli deploy --dir . --prod --site "$NETLIFY_SITE_ID" --auth "$NETLIFY_AUTH_TOKEN"
