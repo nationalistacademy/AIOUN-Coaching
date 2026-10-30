@@ -47,3 +47,17 @@ The dashboard and progress views use active enrollments when calculating course 
 
 Do not treat a successful Node.js CI or Browser QA run as proof that Netlify deployment succeeded; these are separate checks. Likewise, do not claim deployment is complete until the Netlify workflow succeeds and the live site is checked. Keep LMS schema, Supabase production configuration, Blogger DNS, Cloudflare routes and Firebase credentials unchanged unless a separately verified task requires a change.
 
+## Python + TypeScript study tooling
+
+The repository now includes an offline-first Python companion and shared TypeScript AI contracts:
+
+- Python helper: `python/aiou_ai.py` — assignment structure audit, practice-question drafting from student-supplied topics, and optional local Ollama model calls.
+- Python tests: `python/test_aiou_ai.py`; run with `python -m unittest discover -s python -p 'test_*.py' -v`.
+- Python setup and privacy notes: [python/README.md](python/README.md).
+- Shared typed contracts: [types/ai-contracts.ts](types/ai-contracts.ts).
+- Browser QA workflow runs the Python unit tests before Playwright.
+
+The Python helper runs locally and has no paid API dependency. It is not a hosted Python service and is not deployed by the static Netlify workflow. The existing browser AI Studio continues to use the student's configured Cloudflare Worker. Optional local model generation uses Ollama on the student's own machine. Keep API tokens and private student data out of source control and public prompts.
+
+Practice questions are revision material derived from supplied course text, not actual, leaked or predicted exam questions. Automated assignment checks are structural feedback, not proof of originality, factual accuracy, citation validity or compliance with the latest AIOU manual.
+
