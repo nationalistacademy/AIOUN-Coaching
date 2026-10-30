@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My Progress — AIOU Coaching</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#17202a;--muted:#667085;--line:#e5e7eb;--brand:#f67938;--soft:#fff1e9;--ok:#15803d;--bad:#b91c1c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px system-ui,sans-serif}.wrap{max-width:1050px;margin:auto;padding:20px}.top,.panel,.stat,.attempt,.quiz-progress{background:var(--card);border:1px solid var(--line);border-radius:18px}.top{padding:22px;margin-bottom:14px}.brand{color:#c2410c;font-weight:800;font-size:13px}.top h1{margin:7px 0}.muted{color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0}.stat{padding:18px}.stat strong{display:block;font-size:27px;margin-top:5px}.panel{padding:20px;margin-bottom:14px}.attempt{padding:14px;margin:10px 0;display:flex;justify-content:space-between;gap:14px;align-items:center}.attempt h3,.quiz-progress h3{margin:0 0 5px}.score{font-weight:850;color:#9a3412;text-align:right}.empty,.error{padding:16px;border-radius:12px;background:#f8fafc;color:var(--muted)}.error{display:none;background:#fef2f2;color:#b91c1c}.badge{display:inline-block;background:var(--soft);color:#9a3412;border-radius:99px;padding:4px 8px;font-size:12px;font-weight:800}.quiz-progress{padding:15px;margin:10px 0}.progress-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.trend-up{color:var(--ok);font-weight:800}.trend-down{color:var(--bad);font-weight:800}a{color:#c2410c;font-weight:750}@media(max-width:760px){.wrap{padding:12px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.attempt{align-items:flex-start;flex-direction:column}.score{text-align:left}.top,.panel{padding:16px}}
+</style></head><body><main class="wrap">
+<p><a href="./dashboard.html">← Student dashboard</a> · <a href="./practice.html">Practice Hub</a></p>
+<section class="top"><div class="brand">AIOU COACHING LMS</div><h1>My learning progress</h1><p class="muted">Scores are normalized against each quiz's available points. Improvement compares your two most recent graded attempts for the same quiz. Only your own attempts are requested.</p></section>
+<div id="error" class="error" role="alert"></div>
+<section class="stats">
+<div class="stat"><span class="muted">Total attempts</span><strong id="totalAttempts">—</strong></div>
+<div class="stat"><span class="muted">Best accuracy</span><strong id="bestScore">—</strong></div>
+<div class="stat"><span class="muted">Average accuracy</span><strong id="accuracy">—</strong></div>
+<div class="stat"><span class="muted">Quizzes attempted</span><strong id="quizCount">—</strong></div>
+</section>
+<section class="panel"><h2>Per-quiz improvement</h2><p class="muted">Trend is shown only when at least two attempts have a calculable percentage. Low accuracy highlights quizzes to revisit; topic-level analysis requires topic tags in the question data.</p><div id="quizAnalysis" class="empty">Loading your progress…</div></section>
+<section class="panel"><h2>Weak-topic analysis</h2><p class="muted">Topics are ranked by incorrect answers across your submitted attempts. Staff must tag questions with a topic for this to be meaningful.</p><div id="topicAnalysis" class="empty">Loading topic analysis…</div></section>
+<section class="panel"><h2>Attempt history</h2><p class="muted">Latest attempts appear first. Scores are shown only when grading has completed.</p><div id="history" class="empty">Loading your progress…</div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-config.js"></script>
+<script>
+const supabase=window.supabase.createClient(window.AIOU_SUPABASE_URL,window.AIOU_SUPABASE_PUBLISHABLE_KEY);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fail(message){const el=document.getElementById('error');el.textContent=message;el.style.display='block'}
+function fmtDate(value){if(!value)return 'Date unavailable';const d=new Date(value);return Number.isNaN(d.getTime())?'Date unavailable':d.toLocaleString()}
+function pct(score,max){const s=Number(score),m=Number(max);return Number.isFinite(s)&&Number.isFinite(m)&&m>0?Math.max(0,Math.min(100,s/m*100)):null}
+async function init(){
+ try{
+  const auth=await supabase.auth.getUser();if(auth.error||!auth.data.user){location.replace('./signin-signup.html');return}
+  const user=auth.data.user;
+  const result=await supabase.from('quiz_attempts').select('id,quiz_id,score,max_score,percentage,submitted_at,quizzes(id,title,course_id)').eq('student_id',user.id).order('submitted_at',{ascending:false});
+  if(result.error)throw result.error;
+  const attempts=(result.data||[]).filter(a=>a.quizzes);
+  const quizIds=[...new Set(attempts.map(a=>a.quiz_id).filter(Boolean))];
+  const maxByQuiz=new Map();
+  if(quizIds.length){
+   const qs=await supabase.from('quiz_questions').select('quiz_id,points').in('quiz_id',quizIds);
+   if(qs.error)throw qs.error;
+   for(const q of qs.data||[]){const p=Number(q.points);if(Number.isFinite(p)&&p>=0)maxByQuiz.set(q.quiz_id,(maxByQuiz.get(q.quiz_id)||0)+p)}
+  }
+  const accuracyForAttempt=a=>{
+   const stored=Number(a.percentage);
+   if(a.percentage!==null&&a.percentage!==undefined&&Number.isFinite(stored))return Math.max(0,Math.min(100,stored));
+   const max=a.max_score!==null&&a.max_score!==undefined?Number(a.max_score):maxByQuiz.get(a.quiz_id);
+   return pct(a.score,max);
+  };
+  const graded=attempts.filter(a=>a.score!==null&&a.score!==undefined&&Number.isFinite(Number(a.score)));
+  const percentages=graded.map(accuracyForAttempt).filter(v=>v!==null);
+  document.getElementById('totalAttempts').textContent=String(attempts.length);
+  document.getElementById('quizCount').textContent=String(quizIds.length);
+  document.getElementById('bestScore').textContent=percentages.length?Math.max(...percentages).toFixed(1)+'%':'—';
+  document.getElementById('accuracy').textContent=percentages.length?(percentages.reduce((a,b)=>a+b,0)/percentages.length).toFixed(1)+'%':'—';
+
+  const byQuiz=new Map();
+  for(const a of attempts){if(!byQuiz.has(a.quiz_id))byQuiz.set(a.quiz_id,[]);byQuiz.get(a.quiz_id).push(a)}
+  const analysis=document.getElementById('quizAnalysis');
+  const summaries=[...byQuiz.entries()].map(([quizId,rows])=>{
+   const title=rows[0]?.quizzes?.title||'Quiz';
+   const scored=rows.filter(a=>accuracyForAttempt(a)!==null);
+   const latest=scored[0],previous=scored[1];
+   const latestPct=latest?accuracyForAttempt(latest):null;
+   const previousPct=previous?accuracyForAttempt(previous):null;
+   const delta=latestPct!==null&&previousPct!==null?latestPct-previousPct:null;
+   return {quizId,title,rows,latest,latestPct,delta};
+  }).sort((a,b)=>(a.latestPct??101)-(b.latestPct??101));
+  if(!summaries.length){analysis.textContent='No quiz attempts yet. Open Practice Hub and complete your first quiz.'}
+  else {analysis.className='';analysis.innerHTML=summaries.map(s=>{
+   const trend=s.delta===null?'<span class="muted">Need 2 graded attempts to show trend</span>':s.delta>0?'<span class="trend-up">↑ '+s.delta.toFixed(1)+' percentage points</span>':s.delta<0?'<span class="trend-down">↓ '+Math.abs(s.delta).toFixed(1)+' percentage points</span>':'<span class="muted">No change</span>';
+   const current=s.latestPct===null?'Accuracy unavailable':s.latestPct.toFixed(1)+'%';
+   const note=s.latestPct===null?'Check whether quiz points are available.':s.latestPct<60?'Suggested review: revisit this quiz and practise again.':s.latestPct<80?'Keep practising to strengthen this result.':'Good result — keep it consistent.';
+   return '<article class="quiz-progress"><div class="progress-row"><h3>'+esc(s.title)+'</h3><strong>'+current+'</strong></div><div class="progress-row"><span class="muted">'+s.rows.length+' attempt(s) · '+note+'</span><span>'+trend+'</span></div></article>';
+  }).join('')}
+
+  const topicBox=document.getElementById('topicAnalysis');
+  const attemptIds=attempts.map(a=>a.id).filter(Boolean);
+  if(!attemptIds.length){topicBox.textContent='Complete a quiz to build topic-level insights.'}
+  else {
+   try {
+    const answers=await supabase.from('quiz_answers').select('attempt_id,question_id,is_correct').in('attempt_id',attemptIds);
+    if(answers.error)throw answers.error;
+    const questionIds=[...new Set((answers.data||[]).map(a=>a.question_id).filter(Boolean))];
+    if(!questionIds.length){topicBox.textContent='No graded answer details are available yet.'}
+    else {
+     const qs=await supabase.from('quiz_questions').select('id,topic').in('id',questionIds);
+     if(qs.error)throw qs.error;
+     const topics=new Map((qs.data||[]).map(q=>[q.id,(q.topic||'').trim()]));
+     const totals=new Map();
+     for(const a of answers.data||[]){
+      const topic=topics.get(a.question_id)||'';
+      if(!topic)continue;
+      if(!totals.has(topic))totals.set(topic,{correct:0,wrong:0,answered:0});
+      const t=totals.get(topic);t.answered++;
+      if(a.is_correct===true)t.correct++;else if(a.is_correct===false)t.wrong++;
+     }
+     const ranked=[...totals.entries()].map(([topic,t])=>({topic,...t,wrongRate:t.answered?t.wrong/t.answered:0})).sort((a,b)=>b.wrongRate-a.wrongRate||b.wrong-a.wrong);
+     if(!ranked.length){topicBox.textContent='Topic tags are not set on answered questions yet. Staff can add them in Admin → Add Quiz Question.'}
+     else {topicBox.className='';topicBox.innerHTML=ranked.slice(0,6).map(t=>'<article class="quiz-progress"><div class="progress-row"><h3>'+esc(t.topic)+'</h3><strong>'+Math.round(t.wrongRate*100)+'% incorrect</strong></div><div class="muted">'+t.wrong+' incorrect · '+t.correct+' correct recorded answers</div></article>').join('')}
+    }
+   } catch(topicError) {topicBox.textContent='Topic analysis is unavailable until the topic-tags migration is applied and answer-level access is verified.'}
+  }
+
+  const box=document.getElementById('history');
+  if(!attempts.length){box.textContent='No quiz attempts yet. Open Practice Hub and complete your first quiz.';return}
+  box.className='';
+  box.innerHTML=attempts.map(a=>{
+   const title=a.quizzes?.title||'Quiz',max=a.max_score!==null&&a.max_score!==undefined?Number(a.max_score):maxByQuiz.get(a.quiz_id),accuracy=accuracyForAttempt(a);
+   const score=a.score===null||a.score===undefined?'Pending grading':esc(a.score)+(max>0?' / '+max+' points':' points');
+   const accuracyText=accuracy===null?'Accuracy unavailable':accuracy.toFixed(1)+'% accuracy';
+   return '<article class="attempt"><div><h3>'+esc(title)+'</h3><div class="muted">'+esc(fmtDate(a.submitted_at))+'</div><div class="muted">'+accuracyText+'</div></div><div class="score">'+score+'</div></article>';
+  }).join('');
+ }catch(e){fail(e.message||'Could not load your progress.');document.getElementById('history').textContent='Progress could not be loaded. Please try again later.';document.getElementById('quizAnalysis').textContent='Analysis could not be loaded.'}
+}
+init();
+</script></body></html>
