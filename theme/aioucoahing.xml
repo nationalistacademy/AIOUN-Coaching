@@ -12,13 +12,13 @@
 # + Glassmorphism / SEO / GEO / AdSense layer
 ---------------------------
 
-<Variable name="tagline" description="Tagline" type="string" value=""/>
+<Variable name="tagline" description="Tagline" type="string" value="Free AIOU Study Resources, Notes &amp; Assignment Guidance"/>
 [!] Homepage tagline, ex: BlogName - Tagline
 
 <Variable name="separator" description="Separator" type="string" value=" - "/>
 [!] Title separator ( – ), ( | ), ( • )
 
-<Variable name="description" description="Description" type="string" value=""/>
+<Variable name="description" description="Description" type="string" value="Independent AIOU study support with programme guides, assignment guidance, notes, past papers and exam-preparation resources for students in Pakistan."/>
 [!] Default meta description, recommended 155–160 characters
 
 <Variable name="cover" description="Cover" type="string" value=""/>
@@ -241,8 +241,17 @@ object-fit:cover;
 label {
 cursor: pointer;
 }
-.visually-hidden {
-position: unset !important;
+.visually-hidden:not(caption),
+.visually-hidden-focusable:not(:focus):not(:focus-within) {
+position: absolute !important;
+width: 1px !important;
+height: 1px !important;
+padding: 0 !important;
+margin: -1px !important;
+overflow: hidden !important;
+clip: rect(0, 0, 0, 0) !important;
+white-space: nowrap !important;
+border: 0 !important;
 }
 .form-control:focus {
 box-shadow: none;
@@ -1291,7 +1300,7 @@ width: 50%;
 <b:defaultmarkups>
 <b:defaultmarkup type='Common'>
 <b:includable id='JetAll-head-content'>
-<script>/*<![CDATA[*/function rmurl(e,t){var r=new RegExp(/\?m=0|&m=0|\?m=1|&m=1/g);return r.test(e)&&(e=e.replace(r,""),t&&window.history.replaceState({},document.title,e)),e}const currentUrl=rmurl(location.toString(),!0);null!==localStorage&&"dark"==localStorage.getItem("theme")&&(document.querySelector("html").className="dark-mode");/*]]>*/</script>
+<script>/*<![CDATA[*/function rmurl(e,t){var r=new RegExp(/\?m=0|&m=0|\?m=1|&m=1/g);return r.test(e)&&(e=e.replace(r,""),t&&window.history.replaceState({},document.title,e)),e}const currentUrl=rmurl(location.toString(),!0);try{if(window.localStorage&&window.localStorage.getItem("theme")==="dark"){document.documentElement.classList.add("dark-mode");}}catch(e){}/*]]>*/</script>
 <meta expr:content='&quot;text/html; charset=&quot; + data:blog.encoding' http-equiv='Content-Type'/>
 <meta content='width=device-width,initial-scale=1' name='viewport'/>
 
@@ -1389,6 +1398,7 @@ width: 50%;
 <!-- Schema: Organization / EducationalOrganization entity (homepage). Add your social URLs to sameAs. -->
 <script type='application/ld+json'>{&quot;@context&quot;:&quot;https://schema.org&quot;,&quot;@type&quot;:[&quot;Organization&quot;,&quot;EducationalOrganization&quot;],&quot;name&quot;:&quot;<data:blog.title.jsonEscaped/>&quot;,&quot;url&quot;:&quot;<data:blog.canonicalHomepageUrl/>&quot;,&quot;description&quot;:&quot;Independent coaching, solved-assignment guidance and study resources for AIOU students. Not affiliated with Allama Iqbal Open University.&quot;,&quot;areaServed&quot;:&quot;PK&quot;,&quot;knowsAbout&quot;:[&quot;Allama Iqbal Open University&quot;,&quot;AIOU admissions&quot;,&quot;AIOU assignments&quot;,&quot;Distance learning in Pakistan&quot;]<b:if cond='data:skin.vars.logo'>,&quot;logo&quot;:{&quot;@type&quot;:&quot;ImageObject&quot;,&quot;url&quot;:&quot;<data:skin.vars.logo/>&quot;}</b:if>}</script>
 </b:if>
+<link href='https://cdn.jsdelivr.net' rel='preconnect' crossorigin='anonymous'/><link href='https://blogger.googleusercontent.com' rel='preconnect' crossorigin='anonymous'/>
 <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' media='print' onload='if(media!=&quot;all&quot;)media=&quot;all&quot;' rel='stylesheet'/><noscript><link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'/></noscript>
 </b:includable>
 </b:defaultmarkup>
@@ -1450,7 +1460,7 @@ width: 50%;
       <b:widget-setting name='sorting'>NONE</b:widget-setting>
       <b:widget-setting name='link-1'>/p/programmes.html</b:widget-setting>
       <b:widget-setting name='link-2'>#</b:widget-setting>
-      <b:widget-setting name='link-0'>/p/home.html</b:widget-setting>
+      <b:widget-setting name='link-0'>/</b:widget-setting>
       <b:widget-setting name='link-11'>/p/contact.html</b:widget-setting>
       <b:widget-setting name='link-10'>/p/faqs.html</b:widget-setting>
       <b:widget-setting name='text-9'>Sub Menu 1</b:widget-setting>
@@ -1465,11 +1475,11 @@ width: 50%;
       <b:widget-setting name='text-1'>Programmes</b:widget-setting>
       <b:widget-setting name='text-0'>Home</b:widget-setting>
       <b:widget-setting name='text-3'>Sub Menu 1</b:widget-setting>
-      <b:widget-setting name='text-2'>AIOUN</b:widget-setting>
+      <b:widget-setting name='text-2'>Study Resources</b:widget-setting>
       <b:widget-setting name='text-5'>Solved Assignments</b:widget-setting>
       <b:widget-setting name='text-4'>Admissions</b:widget-setting>
       <b:widget-setting name='text-7'>Original Books</b:widget-setting>
-      <b:widget-setting name='text-6'>Academic Calandar</b:widget-setting>
+      <b:widget-setting name='text-6'>Academic Calendar</b:widget-setting>
       <b:widget-setting name='text-11'>Contact</b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
@@ -2040,11 +2050,7 @@ width: 50%;
 
 <div class='position-fixed d-none' id='back-to-top' style='right:20px;bottom:20px'><a aria-label='Back to Top' class='btn btn-sm jt-btn-light rounded-circle jt-icon-center' href='#back-to-top' onclick='window.scroll({top:0,left: 0,behavior:&apos;smooth&apos;});'><svg aria-hidden='true' class='jt-icon' height='1em' width='1em'><use xlink:href='#i-arrow-t'/></svg></a></div>
 
-<!-- NEW: Cookie / ad-personalisation notice (logic in the script near </body>) -->
-<div aria-label='Cookie notice' aria-live='polite' class='glass-cookie' hidden='hidden' id='cookie-consent' role='dialog'>
-<p>We use cookies for analytics and for showing ads (Google AdSense). By continuing you agree to our <a href='/p/privacy.html'>Privacy Policy</a>.</p>
-<div><button class='btn btn-sm jt-btn-primary rounded-pill px-4 me-2' id='cookie-accept' type='button'>Accept</button><button class='btn btn-sm jt-btn-light rounded-pill px-4' id='cookie-decline' type='button'>Decline</button></div>
-</div>
+<!-- Use Google's certified consent solution where required; a localStorage banner is not a consent-management platform. -->
 
 <b:section class='d-none' id='jet-options' maxwidgets='5' showaddelement='no'>
   <b:widget id='HTML24' locked='true' title='SVG Icons' type='HTML' version='2' visible='true'>
@@ -3106,58 +3112,7 @@ function jtCallback(){
 /*]]>*/</script>
 <script src='https://cdn.jsdelivr.net/gh/jettheme/js@0.5.5/main.js'/>
 
-<!-- NEW: GEO "Quick answer" box + cookie notice (plain JS, no dependencies) -->
-<script>/*<![CDATA[*/
-(function () {
-  function ready(fn) {
-    if (document.readyState !== 'loading') { fn(); } else { document.addEventListener('DOMContentLoaded', fn); }
-  }
-
-  /* 1. Quick answer: a 40-55 word direct answer taken from the first paragraph of a post.
-        Skipped if the author already wrote a .key-takeaways block by hand. */
-  ready(function () {
-    try {
-      var body = document.getElementById('post-body');
-      if (!body || document.querySelector('.key-takeaways')) { return; }
-      var first = body.querySelector('p');
-      if (!first) { return; }
-      var words = (first.textContent || '').replace(/\s+/g, ' ').trim().split(' ');
-      if (words.length < 12) { return; }
-      var box = document.createElement('div');
-      box.className = 'key-takeaways';
-      box.setAttribute('role', 'note');
-      var title = document.createElement('strong');
-      title.textContent = 'Quick answer';
-      var text = document.createElement('p');
-      text.textContent = words.slice(0, 55).join(' ') + (words.length > 55 ? '\u2026' : '');
-      box.appendChild(title);
-      box.appendChild(text);
-      body.parentNode.insertBefore(box, body);
-    } catch (e) {}
-  });
-
-  /* 2. Cookie notice (stores the choice in localStorage) */
-  ready(function () {
-    try {
-      var bar = document.getElementById('cookie-consent');
-      if (!bar) { return; }
-      var saved = null;
-      try { saved = localStorage.getItem('cookie-choice'); } catch (e) {}
-      if (saved) { return; }
-      bar.removeAttribute('hidden');
-      function choose(value) {
-        try { localStorage.setItem('cookie-choice', value); } catch (e) {}
-        bar.setAttribute('hidden', 'hidden');
-      }
-      var yes = document.getElementById('cookie-accept');
-      var no = document.getElementById('cookie-decline');
-      if (yes) { yes.addEventListener('click', function () { choose('accepted'); }); }
-      if (no) { no.addEventListener('click', function () { choose('declined'); }); }
-    } catch (e) {}
-  });
-})();
-/*]]>*/</script>
-
+<!-- Quick-answer summaries should be written and reviewed by the post author, not auto-copied from the opening paragraph. -->
 <!-- AIOU Coaching installable companion PWA entry point. Blogger cannot host a same-origin service worker, so the installable app opens on GitHub Pages. -->
 <style type='text/css'><![CDATA[
 .aio-pwa-cta{position:fixed;z-index:9998;right:18px;bottom:18px;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 28px);padding:12px 14px;border:1px solid #f1c4a8;border-radius:18px;background:rgba(255,255,255,.96);box-shadow:0 12px 36px rgba(24,23,22,.16);font:600 13px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;color:#181716;backdrop-filter:blur(14px)}
