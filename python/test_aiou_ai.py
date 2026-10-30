@@ -6,7 +6,7 @@ from aiou_ai import audit_assignment, build_practice_set, word_count
 class AssignmentAuditTests(unittest.TestCase):
     def test_counts_words_and_flags_missing_sections(self):
         result = audit_assignment("A short draft without sections.")
-        self.assertEqual(result["word_count"], 6)
+        self.assertEqual(result["word_count"], 5)
         self.assertFalse(next(x for x in result["checks"] if x["id"] == "has_headings")["ok"])
         self.assertFalse(next(x for x in result["checks"] if x["id"] == "references")["ok"])
 
