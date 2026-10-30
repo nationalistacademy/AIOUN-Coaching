@@ -97,6 +97,9 @@ select option { background: #1e293b; color: #fff; }
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="icon" href="../icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../css/brand.css">
+  <script src="../js/store.js"></script>
+  <script src="../js/ai.js"></script>
+  <script src="../js/ai-tool-bridge.js"></script>
 </head>
 <body>
 
@@ -216,27 +219,33 @@ async function generateDiagram() {
     `;
 
     try {
-        const response = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'X-Auth-Token': AUTH_TOKEN 
-            },
-            body: JSON.stringify({
-                model: 'deepseek-chat',
-                messages: [
-                    { role: 'system', content: SYSTEM_PROMPT },
-                    { role: 'user', content: userPrompt }
-                ],
-                temperature: 0.1, // Very low temp for strict syntax adherence
-                max_tokens: 1000
-            })
+        const diagramResponse = await window.AIOU.toolAI.generate({
+            system: SYSTEM_PROMPT,
+            user: userPrompt,
+            temperature: 0.1,
+            maxTokens: 1000,
+            fallback: async function () {
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Auth-Token': AUTH_TOKEN },
+                    body: JSON.stringify({
+                        model: 'deepseek-chat',
+                        messages: [
+                            { role: 'system', content: SYSTEM_PROMPT },
+                            { role: 'user', content: userPrompt }
+                        ],
+                        temperature: 0.1,
+                        max_tokens: 1000
+                    })
+                });
+                if (!response.ok) throw new Error('Worker Error: ' + response.status);
+                const data = await response.json();
+                const content = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+                if (!content) throw new Error('Worker returned an empty diagram response');
+                return content;
+            }
         });
-
-        if (!response.ok) throw new Error(`Worker Error: ${response.status}`);
-
-        const data = await response.json();
-        let mermaidCode = data.choices[0].message.content.trim();
+        let mermaidCode = diagramResponse.trim();
         
         // Safety: Remove markdown formatting if AI adds it anyway
         mermaidCode = mermaidCode.replace(/```mermaid/g, '').replace(/```/g, '').trim();
