@@ -133,18 +133,86 @@
     });
   }
 
-  /* Convenience: first working saved ID. */
+  /* Local Ollama: prompts stay on this device; no cloud API key or fee. */
+  var OLLAMA_KEY = 'aiou_ollama_settings_v1';
+  function ollamaConfig() {
+    try {
+      var saved = JSON.parse(w.localStorage.getItem(OLLAMA_KEY) || '{}');
+      return { enabled: saved.enabled === true, host: 'http://127.0.0.1:11434',
+        model: String(saved.model || 'qwen2.5:3b').trim() };
+    } catch (e) { return { enabled: false, host: 'http://127.0.0.1:11434', model: 'qwen2.5:3b' }; }
+  }
+  function saveOllamaConfig(patch) {
+    var current = ollamaConfig();
+    var next = { enabled: patch.enabled === undefined ? current.enabled : !!patch.enabled,
+      model: String(patch.model || current.model || 'qwen2.5:3b').trim().slice(0, 80) };
+    try { w.localStorage.setItem(OLLAMA_KEY, JSON.stringify(next)); } catch (e) {}
+    return ollamaConfig();
+  }
+  function askOllama(o) {
+    o = o || {};
+    var cfg = ollamaConfig(), started = Date.now();
+    var out = { id: 'local-ollama', name: 'Local Ollama', model: cfg.model, ok: false,
+      text: '', reasoning: '', error: '', ms: 0, chars: 0 };
+    var messages = [], settings = store ? store.getSettings() : {};
+    var system = o.system !== undefined ? o.system : settings.system;
+    if (system) messages.push({ role: 'system', content: String(system) });
+    messages.push({ role: 'user', content: String(o.user || '') });
+    var controller = w.AbortController ? new w.AbortController() : null;
+    var timeout = setTimeout(function () { if (controller) controller.abort(); }, (o.timeoutMs || 120000));
+    return w.fetch(cfg.host + '/api/chat', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: cfg.model, messages: messages, stream: false,
+        options: { temperature: typeof o.temperature === 'number' ? o.temperature : 0.7,
+          num_predict: o.maxTokens || settings.maxTokens || 4000 } }),
+      signal: controller ? controller.signal : undefined
+    }).then(function (r) {
+      return r.text().then(function (raw) {
+        if (!r.ok) throw new Error('Ollama ' + r.status + ': ' + raw.slice(0, 240));
+        var data = JSON.parse(raw);
+        out.text = String(data.message && data.message.content || '').trim();
+        if (!out.text) throw new Error('Ollama ne khali jawab diya');
+        out.ok = true; return out;
+      });
+    }).catch(function (err) {
+      out.error = err && err.name === 'AbortError' ? 'Local Ollama timeout' :
+        ((err && err.message) || 'Ollama connect nahi hua. Ollama start karein aur model pull karein.');
+      return out;
+    }).then(function (result) {
+      clearTimeout(timeout); result.ms = Date.now() - started; result.chars = result.text.length; return result;
+    });
+  }
+
+  function withLocalOllama(ids) {
+    var cfg = ollamaConfig(), list = (ids || []).slice();
+    if (cfg.enabled) list.unshift({ id: 'local-ollama', name: 'Local Ollama', model: cfg.model, enabled: true, localOllama: true });
+    return list;
+  }
+
+  var workerAskId = askId;
+  askId = function (id, o) { return id && id.localOllama ? askOllama(o) : workerAskId(id, o); };
+  var workerAskAll = askAll;
+  askAll = function (ids, o, onDone) { return workerAskAll(withLocalOllama(ids), o, onDone); };
+  var workerAskFirst = askFirst;
+  askFirst = function (ids, o, onTry) { return workerAskFirst(withLocalOllama(ids), o, onTry); };
+
+  /* Convenience: prefer local Ollama, then fall back to saved Worker IDs. */
   function ask(o) {
     var ids = store ? store.enabledIds() : [];
-    if (!ids.length) {
-      return Promise.resolve({
-        id: null, name: '—', model: '—', ok: false, text: '', reasoning: '',
-        error: 'Pehle "Multi-ID Response" section me kam az kam ek Worker URL save karein', ms: 0, chars: 0
-      });
+    if (!ids.length && !ollamaConfig().enabled) {
+      return Promise.resolve({ id: null, name: '—', model: '—', ok: false, text: '', reasoning: '',
+        error: 'Ollama enable karein ya pehle Worker URL save karein', ms: 0, chars: 0 });
     }
     return askFirst(ids, o);
   }
 
   w.AIOU = w.AIOU || {};
-  w.AIOU.ai = { askId: askId, askAll: askAll, askFirst: askFirst, ask: ask };
+  w.AIOU.ai = { askId: askId, askAll: askAll, askFirst: askFirst, ask: ask,
+    ollamaConfig: ollamaConfig, saveOllamaConfig: saveOllamaConfig,
+    testOllama: function () {
+      var previous = ollamaConfig();
+      saveOllamaConfig({ enabled: true });
+      return askOllama({ system: 'Reply with exactly OK.', user: 'Connection test. Reply OK.', maxTokens: 8, timeoutMs: 15000 })
+        .then(function (result) { saveOllamaConfig({ enabled: previous.enabled }); return result; });
+    } };
 })(window);
