@@ -179,3 +179,45 @@ test('PWA manifest and offline shell are wired without exposing LMS routes to ca
   await expect(page.locator('#pwa-install-card')).toBeVisible();
   await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href', 'manifest.webmanifest');
 });
+
+
+test('AIOU workshop reminder saves events and generates Google Calendar and ICS reminders', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/tools/aiou-workshop-reminder.html');
+  await expect(page.getByRole('heading', { name: /AIOU Workshop Reminder/i })).toBeVisible();
+  await page.locator('#scheduleText').fill('Course Code 1429 | Workshop 1 | 12 November 2026 | 10:00 AM - 11:00 AM');
+  await page.locator('#parseBtn').click();
+  await expect(page.locator('#course')).toHaveValue('1429');
+  await expect(page.locator('#date')).toHaveValue('2026-11-12');
+  await expect(page.locator('#start')).toHaveValue('10:00');
+  await expect(page.locator('#end')).toHaveValue('11:00');
+  await expect(page.locator('#title')).toHaveValue(/AIOU Workshop/);
+
+  await page.locator('#joinUrl').fill('https://aaghi.aiou.edu.pk/');
+  await page.getByRole('button', { name: 'Save workshop in this browser' }).click();
+  await expect(page.locator('#status')).toContainText('Reminder browser mein save ho gaya');
+  await expect(page.locator('.wr-event')).toHaveCount(1);
+
+  const calendarHref = await page.getByRole('link', { name: 'Add to Google Calendar' }).getAttribute('href');
+  const calendarUrl = new URL(calendarHref);
+  expect(calendarUrl.hostname).toBe('calendar.google.com');
+  expect(calendarUrl.searchParams.get('ctz')).toBe('Asia/Karachi');
+  expect(calendarUrl.searchParams.get('dates')).toContain('20261112T100000/20261112T110000');
+  expect(calendarUrl.searchParams.get('details')).toContain('Course: 1429');
+
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Download .ics' }).click();
+  const download = await downloadPromise;
+  const filePath = await download.path();
+  expect(filePath).toBeTruthy();
+  const ics = fs.readFileSync(filePath, 'utf8');
+  expect(ics).toContain('BEGIN:VCALENDAR');
+  expect(ics).toContain('DTSTART;TZID=Asia/Karachi:20261112T100000');
+  expect(ics).toContain('DTEND;TZID=Asia/Karachi:20261112T110000');
+  expect(ics).toContain('TRIGGER:-PT30M');
+  expect(ics).toContain('END:VCALENDAR');
+  await page.reload();
+  await expect(page.locator('.wr-event')).toHaveCount(1);
+  await page.getByRole('button', { name: 'Delete' }).click();
+  await expect(page.locator('.wr-event')).toHaveCount(0);
+});
