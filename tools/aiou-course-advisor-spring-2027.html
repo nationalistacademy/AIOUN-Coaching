@@ -1,0 +1,443 @@
+<!-- ===== AIOU Course Advisor &#x2014; Spring 2027 (Blogger ready) ===== -->
+<style>
+.adv{--ac:#f67938;--ac2:#b8470f;--ink:var(--bs-body-color,#4a4a4a);--head:var(--jt-heading-color,#111);--soft:var(--jt-bg-light,#f3f7f9);
+  --line:var(--jt-border-light,#e6e6e6);--card:var(--jt-archive-bg,#fff);--mut:rgba(104,104,104,.9);--ok:#16a34a;--warn:#d97706;--bad:#dc2626;
+  max-width:1000px;margin:0 auto;color:var(--ink);font-family:inherit;line-height:1.55;text-align:left;direction:ltr}
+.dark-mode .adv{--mut:rgba(184,184,184,.9)}
+.adv *,.adv *:before,.adv *:after{box-sizing:border-box}
+.adv h2,.adv h3,.adv h4{margin:0;padding:0;color:var(--head);line-height:1.25}
+.adv-hero{text-align:center;padding:10px 0 18px}
+.adv-hero h2{font-size:clamp(24px,4vw,36px);margin-bottom:8px}
+.adv-hero p{max-width:640px;margin:0 auto;color:var(--mut);font-size:15px}
+.adv-src{display:inline-block;margin-top:12px;padding:6px 14px;border-radius:999px;background:color-mix(in srgb,var(--ac) 12%,transparent);color:var(--ac2);font-size:12.5px;font-weight:700}
+.dark-mode .adv-src{color:var(--ac)}
+.adv-panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:18px}
+.adv-panel h3{font-size:17px;margin-bottom:14px}
+.adv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.adv-grid .full{grid-column:1/-1}
+.adv label.l{display:block;font-size:12.5px;font-weight:700;color:var(--head);margin-bottom:5px}
+.adv select,.adv input[type=number],.adv input[type=text]{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:10px;font-size:14.5px;background:var(--card);color:var(--ink);font-family:inherit}
+.adv select:focus,.adv input:focus{outline:2px solid color-mix(in srgb,var(--ac) 55%,transparent);border-color:var(--ac)}
+.adv small.h{display:block;color:var(--mut);font-size:12px;margin-top:4px}
+.adv-checks,.adv-chips{display:flex;flex-wrap:wrap;gap:8px}
+.adv-checks label{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;font-size:13px;cursor:pointer;background:var(--card)}
+.adv-checks input{accent-color:var(--ac)}
+.adv-chip{padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.adv-chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.adv-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.adv-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;border:2px solid var(--ac);background:var(--ac);color:#fff!important;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;font-family:inherit}
+.adv-btn:hover{background:var(--ac2);border-color:var(--ac2)}
+.adv-btn.ghost{background:transparent;color:var(--head)!important;border-color:var(--line)}
+.adv-btn.ghost:hover{background:var(--ac);border-color:var(--ac);color:#fff!important}
+.adv-btn.wa{background:#22a559;border-color:#22a559}
+.adv-intro{text-align:center;padding:36px 16px;color:var(--mut);border:2px dashed var(--line);border-radius:18px}
+.adv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.adv-stat{padding:12px 10px;border:1px solid var(--line);border-radius:14px;background:var(--card);text-align:center;cursor:pointer;font-family:inherit;color:var(--ink)}
+.adv-stat b{display:block;font-size:24px;line-height:1.1;color:var(--head)}
+.adv-stat span{font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--mut)}
+.adv-stat.on{border-color:var(--ac);box-shadow:0 8px 20px -12px rgba(246,121,56,.7)}
+.adv-stat.ok b{color:var(--ok)}.adv-stat.cond b{color:var(--warn)}.adv-stat.no b{color:var(--bad)}
+.adv-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.adv-tools select{width:auto;min-width:200px}
+.adv-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.adv-card{border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--card);display:flex;flex-direction:column;gap:9px;position:relative;border-left:5px solid var(--line)}
+.adv-card.ok{border-left-color:var(--ok)}.adv-card.cond{border-left-color:var(--warn)}.adv-card.no{border-left-color:var(--bad)}
+.adv-top{position:absolute;top:-10px;right:12px;background:var(--ac);color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px}
+.adv-card h4{font-size:15.5px;padding-right:2px}
+.adv-fee{font-weight:800;color:var(--ac);font-size:16px}
+.adv-fee small{display:block;font-weight:600;font-size:11px;color:var(--mut)}
+.adv-hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.adv-tags{display:flex;flex-wrap:wrap;gap:6px}
+.adv-tag{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--soft);color:var(--ink)}
+.dark-mode .adv-tag{background:rgba(255,255,255,.07)}
+.adv-msg{margin:0;padding:0;list-style:none;font-size:13px}
+.adv-msg li{padding-left:18px;position:relative;margin-bottom:3px}
+.adv-msg li:before{position:absolute;left:0;font-weight:800}
+.adv-msg .g:before{content:'\2713 ';color:var(--ok)}.adv-msg .w:before{content:'!';color:var(--warn)}.adv-msg .b:before{content:'\2715 ';color:var(--bad)}
+.adv-card details{font-size:12.5px;color:var(--mut)}
+.adv-card summary{cursor:pointer;font-weight:700;color:var(--ac2)}
+.dark-mode .adv-card summary{color:var(--ac)}
+.adv-card details p{margin:6px 0 0}
+.adv-empty{padding:24px;text-align:center;color:var(--mut);border:1px dashed var(--line);border-radius:14px;grid-column:1/-1}
+.adv-more{display:block;margin:16px auto 0}
+.adv-g details{border:1px solid var(--line);border-radius:14px;margin-bottom:10px;background:var(--card);overflow:hidden}
+.adv-g summary{cursor:pointer;padding:14px 18px;font-weight:700;color:var(--head);list-style:none}
+.adv-g summary::-webkit-details-marker{display:none}
+.adv-g summary:after{content:'+';float:right;color:var(--ac);font-size:20px;line-height:1}
+.adv-g details[open] summary:after{content:'\2013 '}
+.adv-g .b{padding:0 18px 16px;font-size:14px}
+.adv-note{margin-top:18px;padding:14px 16px;border-radius:14px;background:var(--soft);font-size:12.5px;color:var(--mut)}
+.dark-mode .adv-note{background:rgba(255,255,255,.04)}
+@media(max-width:600px){.adv-panel{padding:16px}.adv-list{grid-template-columns:1fr}.adv-tools select{width:100%}}
+</style>
+
+<div class="adv" id="adv">
+  <div class="adv-hero">
+    <h2>&#x1f393; AIOU Course Advisor &#x2014; Spring 2027</h2>
+    <p>Apni pichli qualification aur marks / grade batayen &#x2014; tool aap ko batayega ke AIOU ke kaun se programs mein admission ban sakta hai, fee kitni hai, aur aap ka raasta kya hona chahiye.</p>
+    <span class="adv-src">&#x1f4c5; Data: AIOU Eligibility & First Semester Fee &#x2014; Autumn 2026 prospectus</span>
+  </div>
+
+  <div class="adv-panel">
+    <h3>1&#xfe0f;&#x20e3; Aap ki qualification</h3>
+    <div class="adv-grid">
+      <div class="full"><label class="l" for="a-qual">Sab se ooncha complete kiya hua level</label>
+        <select id="a-qual"><option value="">&#x2014; Select karein &#x2014;</option></select></div>
+      <div><label class="l" for="a-pct">Marks % (agar pata hon)</label>
+        <input type="number" id="a-pct" min="0" max="100" step="0.1" placeholder="Masalan 62.5"></div>
+      <div><label class="l" for="a-band">Ya grade / division chunein</label>
+        <select id="a-band"><option value="">&#x2014; Marks nahi pata &#x2014;</option></select>
+        <small class="h">Marks % likhein to woh grade se zyada ahem hai.</small></div>
+      <div id="w-cgpa" style="display:none"><label class="l" for="a-cgpa">CGPA (out of 4) &#x2014; agar hai</label>
+        <input type="number" id="a-cgpa" min="0" max="4" step="0.01" placeholder="Masalan 3.2"></div>
+      <div id="w-subj" style="display:none"><label class="l" for="a-subj" id="l-subj">Subject</label>
+        <select id="a-subj"><option value="">&#x2014; Select karein &#x2014;</option></select></div>
+      <div class="full" id="w-subs" style="display:none"><label class="l">Aap ne kaun se subjects parhe hain? (Inter / Degree)</label>
+        <div class="adv-checks" id="a-subs"></div>
+        <small class="h">Kuch programs ke liye Math / Biology / Chemistry wagaira zaroori hain.</small></div>
+    </div>
+  </div>
+
+  <div class="adv-panel">
+    <h3>2&#xfe0f;&#x20e3; Aap ki pasand (optional)</h3>
+    <div class="adv-grid">
+      <div class="full"><label class="l">Kis field mein dilchaspi hai?</label><div class="adv-chips" id="a-cats"></div></div>
+      <div><label class="l" for="a-mode">Study mode</label>
+        <select id="a-mode"><option value="any">Dono (ODL + Face-to-Face)</option><option value="ODL">Sirf ODL (ghar baithe)</option><option value="F2F">Sirf Face-to-Face</option></select></div>
+      <div><label class="l" for="a-budget">Pehle semester ka budget (Rs.)</label>
+        <input type="number" id="a-budget" min="0" step="500" placeholder="Masalan 20000"></div>
+      <div><label class="l" for="a-sort">Tarteeb</label>
+        <select id="a-sort"><option value="match">Best match</option><option value="fee">Sab se kam fee</option><option value="level">Sab se ooncha level</option></select></div>
+    </div>
+    <div class="adv-row"><button type="button" class="adv-btn ghost" id="a-reset">&#x1f504; Reset</button></div>
+  </div>
+
+  <div id="a-out"></div>
+
+  <div class="adv-note">&#x26a0;&#xfe0f; Yeh tool sirf rehnumai ke liye hai. Eligibility aur fee <b>AIOU Eligibility & First Semester Fee &#x2014; Autumn 2026 prospectus</b> se li gayi hain (PDF mein ghaltiyan / kamiyan ho sakti hain). Spring 2027 ke final criteria, fee aur schedule ke liye AIOU ki official admission notice dekhein.</div>
+</div>
+
+<script>
+//<![CDATA[
+/* AIOU Course Advisor \u2014 engine (pure functions, no DOM).
+   Browser: ADV.toUser / ADV.run / ADV.advise      Node: require('./engine.js') */
+var ADV = (function () {
+  function byId(list, id) { for (var i = 0; i !== list.length; i++) { if (list[i].id === id) { return list[i]; } } return null; }
+  function has(arr, x) { return !!arr && arr.indexOf(x) !== -1; }
+  function fmt(n) { return 'Rs. ' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function fieldLabel(meta, id) { var f = byId(meta.fields, id); if (f) { return f.label; } var s = byId(meta.subjectsStudied, id); return s ? s.label : id; }
+
+  /* raw form values -> normalized user */
+  function toUser(raw, meta) {
+    var q = byId(meta.quals, raw.qual) || meta.quals[0];
+    var u = { type: q.id, qual: q, rank: q.rank, pct: null, pctHi: null, pctApprox: false, cgpa: null,
+      subj: raw.subj || '', subjects: (raw.subjects || []).slice(), mode: raw.mode || 'any',
+      budget: raw.budget ? Number(raw.budget) : null, interests: (raw.interests || []).slice(), sort: raw.sort || 'match' };
+    var p = parseFloat(raw.pct);
+    if (!isNaN(p) && p >= 0 && p <= 100) { u.pct = p; u.pctHi = p; }
+    else if (raw.band) {
+      var b = byId(meta.bands, raw.band);
+      if (b) { u.pct = b.lo; u.pctHi = b.hi; u.pctApprox = true; }
+    }
+    var c = parseFloat(raw.cgpa);
+    if (!isNaN(c) && c > 0 && c <= 4) { u.cgpa = c; }
+    if (!u.qual.needsSubj) { u.subj = ''; }
+    return u;
+  }
+
+  /* check one program against one user */
+  function evaluate(p, u, meta) {
+    var g = meta.groups[p.g];
+    var r = { st: 'ok', why: [], warn: [], p: p };
+    function no(m) { r.st = 'no'; r.why.push(m); }
+    function cn(m) { if (r.st === 'ok') { r.st = 'cond'; } r.warn.push(m); }
+    var min = (p.min !== undefined) ? p.min : g.min;
+
+    if (!g.addon && u.rank >= g.rank) {
+      r.st = 'above';
+      r.why.push('Aap pehle hi is level (' + g.label + ') ya us se upar ki qualification rakhte hain.');
+      return r;
+    }
+    if (u.rank < min) { no('Kam az kam ' + meta.ranks[min] + ' qualification chahiye.'); return r; }
+
+    if (p.ty) {
+      var ok = has(p.ty, u.type), mx = 0, i;
+      for (i = 0; i !== p.ty.length; i++) { var q = byId(meta.quals, p.ty[i]); if (q && q.rank > mx) { mx = q.rank; } }
+      if (!ok && u.rank > mx) { ok = true; }
+      if (!ok) { no('Is program ke liye ' + p.ty.map(function (t) { var x = byId(meta.quals, t); return x ? x.label : t; }).join(' ya ') + ' chahiye.'); }
+    }
+    if (p.p) {
+      if (u.pct === null) { cn('Kam az kam ' + p.p + '% marks chahiye \u2014 apne marks / grade darj karein.'); }
+      else if (u.pct >= p.p) { /* ok */ }
+      else if (u.pctApprox && u.pctHi >= p.p) { cn('Aap ke grade band mein ' + p.p + '% ka imkaan hai \u2014 exact marks check karein.'); }
+      else { no('Marks kam hain: ' + p.p + '% chahiye, aap ke ' + u.pct + '%.'); }
+    }
+    if (p.cg) {
+      if (u.cgpa === null) { cn('CGPA ' + p.cg + '+ (ya equivalent division) chahiye \u2014 CGPA darj karein.'); }
+      else if (u.cgpa < p.cg) { no('CGPA kam hai: ' + p.cg + ' chahiye, aap ka ' + u.cgpa + '.'); }
+    }
+    if (p.s) {
+      var miss = p.s.filter(function (s) { return !has(u.subjects, s); });
+      if (miss.length) { no('Zaroori subject: ' + miss.map(function (s) { return fieldLabel(meta, s); }).join(', ') + '.'); }
+    }
+    if (p.sa && !p.sa.some(function (s) { return has(u.subjects, s); })) {
+      no('In mein se kam az kam ek subject chahiye: ' + p.sa.map(function (s) { return fieldLabel(meta, s); }).join(' / ') + '.');
+    }
+    if (p.ad) {
+      if (u.type !== 'ad') { no('Is program ke liye relevant subject mein Associate Degree (AD) chahiye.'); }
+      else if (!u.subj) { cn('Apne AD ka subject select karein.'); }
+      else if (has(p.ad, u.subj)) { /* ok */ }
+      else if (has(p.adc, u.subj)) { cn('Aap ka AD subject qareebi hai \u2014 admission office se confirm karein.'); }
+      else { no('AD ka subject ' + fieldLabel(meta, p.ad[0]) + ' hona chahiye' + (u.subj ? ' (aap ka: ' + fieldLabel(meta, u.subj) + ')' : '') + '.'); }
+    }
+    if (p.ado && u.type === 'ad' && u.subj && u.subj === p.k) {
+      cn('Same subject ke AD ke liye 60 credit hours se kam hona shart hai.');
+    }
+    if (p.dk && u.rank >= 4) {
+      if (!u.subj) { cn('Apni degree ka subject select karein \u2014 relevant subject ki degree chahiye.'); }
+      else if (u.subj !== p.k) { cn('Relevant subject ki degree chahiye \u2014 eligibility text dhyan se dekhein.'); }
+    }
+    if (r.st !== 'no') {
+      if ((u.type === 'alevel' || u.type === 'dae') && min === 2) { cn('IBCC equivalence certificate lagana hoga.'); }
+      if (p.x) { cn(p.n || 'Eligibility AIOU se confirm karein.'); }
+    }
+    return r;
+  }
+
+  /* evaluate everything, filter, rank */
+  function run(data, u, meta) {
+    var out = { ok: [], cond: [], no: [], above: [], over: [], hiddenMode: 0 };
+    data.forEach(function (p) {
+      if (u.mode !== 'any' && p.m !== u.mode) { out.hiddenMode++; return; }
+      var r = evaluate(p, u, meta);
+      var g = meta.groups[p.g];
+      var base = r.st === 'ok' ? 200 : (r.st === 'cond' ? 100 : 0);
+      var interest = has(u.interests, p.ct) ? 60 : 0;
+      var step = g.addon ? 8 : Math.max(0, 10 - Math.abs(g.rank - u.rank - 1) * 4);
+      r.score = base + interest + step;
+      r.interest = interest > 0;
+      if ((r.st === 'ok' || r.st === 'cond') && u.budget && p.f && p.f > u.budget) { out.over.push(r); return; }
+      out[r.st].push(r);
+    });
+    var cmp = {
+      match: function (a, b) { return (b.score - a.score) || ((a.p.f || 9e9) - (b.p.f || 9e9)); },
+      fee: function (a, b) { return ((a.p.f || 9e9) - (b.p.f || 9e9)) || (b.score - a.score); },
+      level: function (a, b) { return (meta.groups[b.p.g].rank - meta.groups[a.p.g].rank) || (b.score - a.score); }
+    }[u.sort] || null;
+    ['ok', 'cond', 'over'].forEach(function (k) { out[k].sort(cmp); });
+    return out;
+  }
+
+  /* Roman-Urdu guidance blocks */
+  function advise(u, res, meta, brand) {
+    var B = [], q = u.qual, n1 = res.ok.length, n2 = res.cond.length;
+    B.push({ t: '\ud83d\udccc Aap ki position', h: 'Aap ki qualification: <b>' + q.label + '</b>' + (u.pct !== null ? (u.pctApprox ? ' (grade band ~' + u.pct + '\u2013' + u.pctHi + '%)' : ' (' + u.pct + '%)') : '') +
+      '. Is ke mutabiq <b>' + n1 + '</b> programs mein seedha admission ban sakta hai aur <b>' + n2 + '</b> programs mein kuch shart confirm karni hogi.' });
+
+    if (u.pct !== null) {
+      var hi = u.pctApprox ? u.pctHi : u.pct;
+      if (hi < 45) {
+        B.push({ t: '\ud83d\udcc9 Marks ke hisab se mashwara', h: 'Zyada tar degree programs ki shart <b>45\u201350% marks</b> hoti hai, is liye aap ke options mehdood hain. Behtar raasta: jin certificates / open-course / HSSC-level programs mein marks ki shart nahi unse shuru karein, aur agar board allow kare to <b>improvement exam</b> se marks barhane ka sochein. Phir agle level par better programs khul jayenge.' });
+      } else if (hi < 60) {
+        B.push({ t: '\ud83d\udcca Marks ke hisab se mashwara', h: 'Aap ke marks zyada tar programs ki <b>45\u201350%</b> wali shart poori karte hain. Jin programs mein <b>60% ya CGPA</b> ki shart hai (jaise MS Computer Science, PhD) wahan nahi \u2014 baqi bohat se options khule hain.' });
+      } else {
+        B.push({ t: '\ud83d\udcaa Marks ke hisab se mashwara', h: 'Aap ke marks achhe hain \u2014 marks ki wajah se koi program band nahi hona chahiye. Ab faisla <b>interest, career goal aur fee</b> par rakhein.' });
+      }
+    }
+
+    var path = {
+      0: 'Pehle <b>Matric (SSC)</b> karein (ya Dars-e-Nizami / Open Courses), phir <b>Intermediate</b>, uske baad Associate Degree ya BS. Beech mein koi Certificate course bhi kar sakte hain.',
+      1: 'Aap ka agla qadam <b>Intermediate (HSSC)</b> hai \u2014 Pre-Medical / Pre-Engineering sirf <b>Matric Science</b> walon ke liye hai. Phir 2-saala <b>Associate Degree</b> ya seedha <b>4-saala BS</b>.',
+      2: 'Aap ke paas 2 raaste hain: <b>(1)</b> seedha <b>4-saala BS</b>, ya <b>(2)</b> pehle 2-saala <b>Associate Degree</b> aur phir us ke baad <b>2-saala BS (AD based)</b> \u2014 dono ka total 4 saal hai, lekin AD beech mein ek degree de deta hai. Teaching mein jana ho to <b>ADE / B.Ed (4 saal)</b> dekhein.',
+      3: 'AD / 14 saal ki degree ke baad: <b>2 \u2013 2.5 saala BS</b>, <b>BBA</b>, <b>B.Ed (2\u20132.5 saal)</b> ya <b>PGD</b>. Agar aap ka AD kisi subject mein hai to usi subject ka BS (AD based) sab se seedha raasta hai.',
+      4: '16 saal ke baad: <b>B.Ed (1.5 saal)</b>, <b>MBA</b>, <b>MPhil / MS</b> ya <b>PGD</b> aur short <b>Certificates</b>. MPhil / MS ke liye usi subject ki degree aur CGPA / division ki shart dekhein.',
+      5: '18 saal ke baad: <b>PhD</b> (CGPA 3.0 / 1st division ki shart), ya apni skill ke liye <b>PGD / Certificates</b>.'
+    }[u.rank];
+    B.push({ t: '\ud83e\udded Aap ka raasta (pathway)', h: path });
+
+    var top = res.ok.slice(0, 3);
+    if (top.length) {
+      B.push({ t: '\u2b50 Top picks', h: top.map(function (r) { return '<b>' + r.p.t + '</b> (' + r.p.c + ')' + (r.p.f ? ' \u2014 ' + fmt(r.p.f) : ''); }).join('<br>') +
+        (u.interests.length ? '<br><small>Aap ki interests ko pehle rakha gaya hai.</small>' : '<br><small>Interest select karein to suggestions aur behtar hongi.</small>') });
+    }
+    var withFee = res.ok.filter(function (r) { return r.p.f; }).sort(function (a, b) { return a.p.f - b.p.f; });
+    if (withFee.length) {
+      B.push({ t: '\ud83d\udcb0 Fee planning', h: 'Sab se kam pehle-semester ki fee wala eligible option: <b>' + withFee[0].p.t + '</b> \u2014 ' + fmt(withFee[0].p.f) +
+        '. Yeh sirf <b>pehle semester</b> ki fee hai; agle semesters, books/workshops ya exam ke alag kharche AIOU se confirm karein. Spring 2027 ki fee Autumn 2026 se mukhtalif ho sakti hai.' });
+    }
+    var docs = ['CNIC / B-Form ki copy', 'Pichli qualification ki marks sheet aur certificate', 'Passport-size tasweer'];
+    if (u.type === 'alevel' || u.type === 'dae') { docs.push('<b>IBCC equivalence certificate</b> (A-Level / DAE / foreign qualification ke liye)'); }
+    if (u.type === 'ad') { docs.push('AD ka transcript (credit hours likhe hon)'); }
+    B.push({ t: '\ud83d\udcc4 Documents (aam tor par)', h: docs.join('<br>\u2022 ').replace(/^/, '\u2022 ') + '<br><small>Exact list AIOU ke admission notice mein dekhein.</small>' });
+    B.push({ t: '\ud83d\udcdd Admission ke steps', h: '1) AIOU ki official website par Spring 2027 admission notice / schedule dekhein.<br>2) Program select karke online form bharein aur documents upload karein.<br>3) Fee jama karwayen.<br>4) Admission confirm hone par books / LMS milti hain; phir <b>assignments</b> aur final exam.<br><small>Dates yahan nahi di gayi \u2014 woh sirf AIOU ke official notice se lein.</small>' });
+    B.push({ t: '\ud83e\udd1d ' + (brand || 'Coaching') + ' se madad', h: 'Program chunne mein confusion ho, assignments ya tutor guidance chahiye to humse WhatsApp par rabta karein.' });
+    return B;
+  }
+
+  var api = { toUser: toUser, evaluate: evaluate, run: run, advise: advise, fmt: fmt, byId: byId, fieldLabel: fieldLabel };
+  if (typeof module !== 'undefined' && module.exports) { module.exports = api; }
+  return api;
+})();
+
+
+(function () {
+  var META = {"source":"AIOU Eligibility \u0026 First Semester Fee \u2014 Autumn 2026 prospectus","sourceNote":"Fee aur eligibility Autumn 2026 ki list se hain. Spring 2027 mein tabdeeli ho sakti hai \u2014 final tasdeeq AIOU ki official site se karein.","ranks":["Literate (Matric nahi)","Matric","Intermediate / 12 saal","14 saal (AD / BA / BSc / BCom)","16 saal (BS / MA / MSc)","18 saal (MPhil / MS)"],"quals":[{"id":"literate","label":"Matric nahi kiya (sirf literate)","rank":0},{"id":"matric_sci","label":"Matric (SSC) \u2014 Science group","rank":1},{"id":"matric_arts","label":"Matric (SSC) \u2014 Arts / General","rank":1},{"id":"inter_premed","label":"Intermediate \u2014 F.Sc Pre-Medical","rank":2,"subjects":["physics","chem","bio"]},{"id":"inter_preeng","label":"Intermediate \u2014 F.Sc Pre-Engineering","rank":2,"subjects":["math","physics","chem"]},{"id":"inter_ics","label":"Intermediate \u2014 ICS (Computer Science)","rank":2,"subjects":["math","physics","comp"]},{"id":"inter_arts","label":"Intermediate \u2014 FA / Arts / General","rank":2,"subjects":[]},{"id":"inter_com","label":"Intermediate \u2014 I.Com / Commerce","rank":2,"subjects":[]},{"id":"alevel","label":"A-Level (equivalence certificate chahiye)","rank":2,"subjects":[]},{"id":"dae","label":"DAE (Diploma of Associate Engineer)","rank":2,"subjects":[]},{"id":"ad","label":"Associate Degree (AD, 2 saal)","rank":3,"needsSubj":true},{"id":"ba","label":"BA (14 saal)","rank":3},{"id":"bsc","label":"BSc (14 saal)","rank":3},{"id":"bcom","label":"BCom (14 saal)","rank":3},{"id":"bs16","label":"BS 4-year / MA / MSc / MBA (16 saal)","rank":4,"needsSubj":true,"cgpa":true},{"id":"ms","label":"MPhil / MS (18 saal)","rank":5,"needsSubj":true,"cgpa":true}],"bands":[{"id":"a1","label":"A+ / A-1 (80% ya zyada)","lo":80,"hi":100},{"id":"a","label":"A (70\u201379%)","lo":70,"hi":79},{"id":"b","label":"B (60\u201369%) \u2014 1st division","lo":60,"hi":69},{"id":"c","label":"C (50\u201359%) \u2014 2nd division","lo":50,"hi":59},{"id":"d","label":"D (45\u201349%) \u2014 2nd division","lo":45,"hi":49},{"id":"e","label":"E (33\u201344%) \u2014 3rd division / pass","lo":33,"hi":44}],"subjectsStudied":[{"id":"math","label":"Mathematics"},{"id":"physics","label":"Physics"},{"id":"chem","label":"Chemistry"},{"id":"bio","label":"Biology"},{"id":"comp","label":"Computer Science"}],"fields":[{"id":"islamic","label":"Islamic Studies"},{"id":"arabic","label":"Arabic"},{"id":"urdu","label":"Urdu"},{"id":"english","label":"English"},{"id":"pakstudies","label":"Pakistan Studies"},{"id":"mass","label":"Mass Communication"},{"id":"library","label":"Library \u0026 Information Sciences"},{"id":"sociology","label":"Sociology"},{"id":"economics","label":"Economics"},{"id":"history","label":"History"},{"id":"gender","label":"Gender \u0026 Women Studies"},{"id":"ir","label":"International Relations"},{"id":"business","label":"Business Administration / BBA"},{"id":"commerce","label":"Commerce (BCom / ADC)"},{"id":"accounting","label":"Accounting \u0026 Finance"},{"id":"ecommerce","label":"E-Commerce"},{"id":"idt","label":"Instructional Design \u0026 Technology"},{"id":"psychology","label":"Psychology"},{"id":"polsci","label":"Political Science"},{"id":"education","label":"Education"},{"id":"math","label":"Mathematics"},{"id":"physics","label":"Physics"},{"id":"chem","label":"Chemistry"},{"id":"stats","label":"Statistics"},{"id":"botany","label":"Botany"},{"id":"biochem","label":"Biochemistry"},{"id":"micro","label":"Microbiology"},{"id":"nutrition","label":"Nutrition \u0026 Dietetics / Food"},{"id":"cs","label":"Computer Science / IT"},{"id":"agri","label":"Agriculture / Livestock"},{"id":"env","label":"Environmental Science"},{"id":"general","label":"General (BA General / koi aur)"}],"cats":[{"id":"edu","label":"Education \u0026 Teaching","icon":"\ud83d\udc68\u200d\ud83c\udfeb"},{"id":"biz","label":"Business, Commerce \u0026 Finance","icon":"\ud83d\udcbc"},{"id":"cs","label":"Computing \u0026 Data","icon":"\ud83d\udcbb"},{"id":"sci","label":"Sciences \u0026 Mathematics","icon":"\ud83d\udd2c"},{"id":"hum","label":"Languages, Media \u0026 Humanities","icon":"\ud83d\udcda"},{"id":"soc","label":"Social Sciences","icon":"\ud83c\udf0d"},{"id":"isl","label":"Islamic Studies \u0026 Arabic","icon":"\ud83d\udd4c"},{"id":"life","label":"Health, Nutrition, Agriculture \u0026 Environment","icon":"\ud83c\udf31"}],"groups":{"matric":{"label":"Matric (SSC)","rank":1,"min":0,"order":1},"hssc":{"label":"Intermediate (HSSC)","rank":2,"min":1,"order":2},"adgen":{"label":"Associate Degree \u2014 General","rank":3,"min":2,"order":3,"dur":"2 years"},"adsub":{"label":"Associate Degree \u2014 Subject","rank":3,"min":2,"order":4,"dur":"2 years"},"bs_hssc":{"label":"BS \u2014 4 Years (Inter ke baad)","rank":4,"min":2,"order":5,"dur":"4 years"},"bs_ba":{"label":"BS \u2014 2.5 Years (BA/BSc ke baad)","rank":4,"min":3,"order":6,"dur":"2.5 years"},"bs_ad":{"label":"BS \u2014 2 Years (Associate Degree ke baad)","rank":4,"min":3,"order":7,"dur":"2 years"},"bba":{"label":"BBA","rank":4,"min":2,"order":8},"bed":{"label":"B.Ed / Teacher Training","rank":4,"min":2,"order":9,"addon":true},"pgd":{"label":"Post Graduate Diploma (PGD)","rank":4,"min":3,"order":10,"addon":true},"cert":{"label":"Certificate / Diploma","rank":0,"min":0,"order":11,"addon":true},"mphil":{"label":"MPhil / MS / MBA","rank":5,"min":4,"order":12},"phd":{"label":"PhD","rank":6,"min":5,"order":13}}};
+  var ESTR = ["Literate, minimum 12 Years age","Matric Pass","Matric Science","FA/F.Sc./A levels/12 years of Education OR Equivalent","BA / BSc/AD or Equivalent with 45% Marks.","BA/BSc/ AD other than the relevant discipline (with 45% marks)/ AD relevant with less than 60 credit hours","BA/BSc/BCom degree or equivalent (at least 45% marks) with any subject(s)","BA/BSc with 45% marks or associate degree in sociology with less than 60 credit hours","BA / BSc OR Equivalent with 45% Marks.","B.A/BSc/AD other than History with 50% Marks","BA/BSc/BCom/AD/ADC/ADS/BCS/BBA degree or equivalent (at least 45% marks) or fourteen (14) year education with any subject(s)","BA/BSc or equivalent qualification, Fourteen Years of Education","AD in Islamic Studies with 50% Marks.","AD in Arabic with 50% Marks.","Associate Degree in Urdu with at least 50% marks.","14 years Associate Degree in Pakistan Studies (at least 50 percent marks) with at least 60 credit hours","Associate Degree in English and/or any related discipline (with at least 60 Credit Hours) with 50% marks","Associate Degree in Library and Information Sciences or equivalent with at least 60 credit hours and 50% marks","50% mark in Associate Degree in Economics with at least 60 credit hours","Minimum 50% marks in Intermediate/ 12 years Schooling/ A-Level (HSSC) or equivalent with Mathematics","Associate Degree in the relevant discipline (with 50% marks).","B.A/BSc/AD History with 50% Marks","Associate Degree in International Relations/Science or equivalent with at least 60 Credit hours and 45% marks","Intermediate OR Equivalent Education.","16 Years of Education (Academic Disciplines Other than Education) MA/MSc/BA (4-year)/BS (4 years) or equivalent with 50% marks.","16 years of Education i.e. B.S Hon/MA/M.Sc/ B.S (4-Year) etc. with 45% marks.","Associate Degree in Education (ADE) or equivalent with at least 50% marks.","14 years of education (BA/BSc/ADA or equivalent with 45% marks)","AD (School Science Subject)/ B.Sc. or Equivalent with at least 45% marks.","Associate Degree (AD)/14 years of education (with at least 45% marks) or equivalent.","FA/F.Sc./A levels/12 years of Education with equivalence certificate","MA/BS (16 years' education/degree in English Language/Linguistics/Literature)","14 years of Education with at least 2nd division (45%) marks or equivalent","14 years of Education with at least 2nd division","Minimum 14 years of education in commerce/business or management sciences (B.Com/Associate Degree/BBA or equivalent). Higher qualifications in commerce/business (BS Accounting \u0026 Finance, MBA, M.Com, CMA, ACCA, CA etc.) are also eligible.","Literate","Matric or Recognized Shahadat-ul-Almia","12 Years of Education minimum 2nd Division","Matric with Second Division","Graduate (14 Years of Education) 2nd Division.","Nazra \u0026 Quran","F.A / FSc or equivalence","14 Years education (BBA/BA/BCom/Associate Degree)","Matric with Certificate in Literacy and Non-Formal Education and 12 years of education with second division (or the AIOU certificate).","14-years Bachelor's Degree in Science or any other field with mathematics as a subject, and a minimum 2nd division","HSSc/FSc with major Mathematics or equivalent","F.Sc (Pre-Engineering/Pre-Medical), ICS (Physics Mathematics Combination) DAE","F.Sc Pre-Medical","FSc with Chemistry as a major subject. DAE in Chemical Engineering/Technology, or A-Level with Chemistry","(PDF text appears copied from Chemistry) FSc with Chemistry / DAE Chemical / A-Level Chemistry","FSc (Pre-Medical) or equivalent / A-Level with Biology as a major subject","F.Sc (Pre-medical) OR Equivalent A Level qualification with Biology as major subject.","FSc (Pre-Medical) OR Equivalent with at least 2nd Division.","F.Sc. (Pre-medical) OR Equivalent A Level qualification with Biology as major subject","FSc with Math as a Major Subject OR Equivalent","FSc (Pre-Medical+Pre-Engineering) / ICS (Physics, Mathematics Combination)/ DAE","FSc (Pre-Medical+Pre-Engineering/Computer) / A-Level/DAE with Physics as a course","F.Sc (Pre-Medical)","Minimum 50% marks in Intermediate/12 years Schooling/A-Level (HSSC) or equivalent with Mathematics. IBCC equivalence certificate required.","HSSC or equivalent exams approved/verified by IBCC","Pre-medical \u0026 Pre-engineering or diploma holders (3-year Diploma of field assistant or in field of agriculture) from HEC recognized institutions.","FSc with Chemistry as one of the Major Subject. DAE in Chemical Engineering/Technology, or A-Level with Chemistry","Students with B.Sc. or Associate degree in Human Nutrition and Dietetics with less than 60 credit hours","BSc/AD with less than 60 credit hours with Bridging Semester","B.Sc./ AD other than the relevant field OR Equivalent with 45% marks.","BSc with 45% marks with Bridging Semester","BSc degree with 45% marks","AD Based","AD Chemistry with 50% marks with minimum 60 Credit hours","Associate degree with at least 60 CH in relevant field","BSc/AD Based with less than 60 Credit Hours","AD Mathematics with 50% marks","AD Physics with 50% marks","MA in Islamic Studies or an equivalent degree with minimum second division","MA Education (2nd division) OR MEd OR MSEd OR BEd (4 Year) OR BS Education OR BEd (2.5 Year)","16 years of business education (Old MBA/MPA/M.Com/ACMA/ACA/4-Years B.Com/4-Years BBA) from HEC recognized institution with minimum 50% marks or equivalent CGPA","16 years of education from any HEC recognized institution with minimum 50% marks or equivalent CGPA","B.Sc. (Hons.)/BS Agriculture, Agriculture Biotechnology, Animal Husbandry or Food Technology with at least 2nd division or equivalent CGPA","DVM or BSc (Hons) Animal Husbandry, 2nd division (not less than 2.5 CGPA)","BSc (Hons) Agricultural Extension, 2nd division, or related discipline (Agriculture, Rural Sociology, Animal Husbandry, DVM, Agricultural Engineering) in 2nd division","BSc (Hons) Agriculture/DVM/Animal Husbandry/Agriculture Engineering in 2nd division or MA/MSc in related social science/development fields, 2nd division / 2.5 CGPA","MSc Statistics/BS Statistics (4 years) from HEC recognized institute with minimum 2.5 CGPA or 2nd Division","BS/Master's in Computer Science/IT/Software Engineering (16 years), minimum 130 credit hours, 60% marks (annual) or 2.0 CGPA (semester)","BS/MSc in Physics (16 years) with at least second division or equivalent CGPA","M.Sc./BS (at least 2nd division or equivalent) in Chemistry","MBBS, BS/MSc Food \u0026 Nutrition, Human Nutrition, BDS, B/D-Pharmacy, BS/BSc (Hons) Food Technology, MSc Public Nutrition","BS/MA/MSc in Mathematics with minimum CGPA 2.5/4 or 45% marks (annual system)","Sixteen years of education in Environmental Science or a related science/engineering field (see AIOU prospectus for full list)","Sixteen years of education in Biology/Microbiology/Biochemistry/Biotechnology/related fields, at least 50% marks in last degree","MPhil Islamic Studies or equivalent in First division or CGPA 3.00","MS/MPhil in relevant area with min 30 credit hours coursework + thesis, CGPA 3.0/4.0 or 1st Division","MS/MPhil in relevant area with 3.00 CGPA / 1st Division","MPhil Mass Communication, first division or CGPA 3.0","MPhil Pakistani Languages and Literature from AIOU with minimum CGPA 3.0/4","MSc (Hons) Agricultural Extension, first division or 3.0 CGPA (or MSc Agriculture with deficiency courses)","MS/MPhil (18 years) in Computer Science or related, with thesis; CGPA 3.00/4.00 or First Division 60%","MS/MPhil Physics with CGPA 3.0/4.0 or 1st division","MS/MPhil or equivalent in Chemistry with CGPA 3.0 or equivalent","MS/MPhil Food \u0026 Nutrition / Human Nutrition / Community Health \u0026 Nutrition / Food Technology etc. with CGPA 3.0 / First division","MPhil/MS in Mathematics with minimum CGPA 3.00/4.00","MS/MPhil in Environmental Sciences or related field with CGPA 3.0 or equivalent"];
+  var DATA = [{"i":1,"c":"2003","t":"SSC (Science)","m":"ODL","g":"matric","f":4100,"e":0,"ct":"gen","n":"Kam az kam 12 saal umar zaroori"},{"i":2,"c":"0219","t":"SSC General","m":"ODL","g":"matric","f":4200,"e":0,"ct":"gen","n":"Kam az kam 12 saal umar zaroori"},{"i":3,"c":"220","t":"SSC Dars-e-Nizami","m":"ODL","g":"matric","f":4200,"e":0,"ct":"isl","n":"Kam az kam 12 saal umar zaroori"},{"i":4,"c":"0221","t":"SSC Open Courses","m":"ODL","g":"matric","f":6850,"e":0,"ct":"gen","n":"Kam az kam 12 saal umar zaroori"},{"i":5,"c":"0332","t":"HSSC General","m":"ODL","g":"hssc","f":4560,"e":1,"ct":"gen"},{"i":6,"c":"333","t":"I.Com","m":"ODL","g":"hssc","f":4560,"e":1,"ct":"biz"},{"i":7,"c":"3003","t":"HSSC (Pre-Medical)","m":"ODL","g":"hssc","f":4670,"e":2,"ct":"life","ty":["matric_sci"]},{"i":8,"c":"3004","t":"HSSC (Pre-Engineering)","m":"ODL","g":"hssc","f":4670,"e":2,"ct":"sci","ty":["matric_sci"]},{"i":9,"c":"0334","t":"HSSC Dars-e-Nizami","m":"ODL","g":"hssc","f":4560,"e":1,"ct":"isl"},{"i":10,"c":"3002","t":"Open Course Deeni Madaris","m":"ODL","g":"hssc","f":null,"e":1,"ct":"isl","n":"Fee list mein darj nahi - AIOU se confirm karein"},{"i":11,"c":"0335","t":"HSSC Open Courses","m":"ODL","g":"hssc","f":8770,"e":1,"ct":"gen"},{"i":12,"c":"0475","t":"Associate Degree in Arts (BA General)","m":"ODL","g":"adgen","f":6310,"e":3,"ct":"gen","k":"general"},{"i":13,"c":"0480","t":"BA Open Courses","m":"ODL","g":"adgen","f":5770,"e":3,"ct":"gen","k":"general"},{"i":14,"c":"4019","t":"Associate Degree in Commerce (BCom)","m":"ODL","g":"adgen","f":7150,"e":3,"ct":"biz","k":"commerce"},{"i":15,"c":"4008","t":"Associate Degree in Mass Communication","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"hum","k":"mass"},{"i":16,"c":"4009","t":"Associate Degree in Business Administration","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"biz","k":"business"},{"i":17,"c":"4010","t":"Associate Degree in Urdu","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"hum","k":"urdu"},{"i":18,"c":"4011","t":"Associate Degree in Pakistan Studies","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"soc","k":"pakstudies"},{"i":19,"c":"4012","t":"Associate Degree in English","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"hum","k":"english"},{"i":20,"c":"4013","t":"Associate Degree in Gender \u0026 Women Studies","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"soc","k":"gender"},{"i":21,"c":"4014","t":"Associate Degree in Library and Information Sciences","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"hum","k":"library"},{"i":22,"c":"4015","t":"Associate Degree in Sociology","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"soc","k":"sociology"},{"i":23,"c":"4016","t":"Associate Degree in Economics","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"soc","k":"economics"},{"i":24,"c":"4017","t":"Associate Degree in History","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"hum","k":"history"},{"i":25,"c":"4018","t":"Associate Degree in Arabic","m":"ODL","g":"adsub","f":17650,"e":3,"ct":"isl","k":"arabic"},{"i":26,"c":"4020","t":"Associate Degree in Instructional Design \u0026 Technology","m":"ODL","g":"adsub","f":30670,"e":3,"ct":"edu","k":"idt"},{"i":27,"c":"4021","t":"Associate Degree in Political Science","m":"ODL","g":"adsub","f":20120,"e":3,"ct":"soc","k":"polsci"},{"i":28,"c":"4022","t":"Associate Degree in International Relations","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"soc","k":"ir"},{"i":29,"c":"4026","t":"Associate Degree in Psychology","m":"ODL","g":"adsub","f":19110,"e":3,"ct":"soc","k":"psychology"},{"i":30,"c":"4030","t":"Associate Degree in E-Commerce","m":"ODL","g":"adsub","f":18100,"e":3,"ct":"biz","k":"ecommerce"},{"i":31,"c":"4033","t":"Associate Degree in Islamic Studies","m":"ODL","g":"adsub","f":18630,"e":3,"ct":"isl","k":"islamic"},{"i":32,"c":"5615","t":"Associate Degree in Education (ADE)","m":"ODL","g":"adsub","f":31210,"e":3,"ct":"edu","k":"education"},{"i":33,"c":"5034","t":"BS Islamic Studies General","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"isl","k":"islamic"},{"i":34,"c":"5035","t":"BS Islamic Studies Quran \u0026 Tafseer","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"isl","k":"islamic"},{"i":35,"c":"5036","t":"BS Islamic Studies Hadith \u0026 Hadith Science","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"isl","k":"islamic"},{"i":36,"c":"5037","t":"BS Islamic Studies Seerat Studies","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"isl","k":"islamic"},{"i":37,"c":"5038","t":"BS Islamic Studies Dars-e-Nizami","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"isl","k":"islamic"},{"i":38,"c":"5040","t":"BS Islamic Studies Interfaith Studies","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"isl","k":"islamic"},{"i":39,"c":"5041","t":"BS Arabic","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"isl","k":"arabic"},{"i":40,"c":"5042","t":"BS Islamic Finance","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"biz","k":"islamicfin"},{"i":41,"c":"5054","t":"BS Mass Communication","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"hum","k":"mass"},{"i":42,"c":"5056","t":"BS Urdu","m":"ODL","g":"bs_hssc","f":18100,"e":3,"ct":"hum","k":"urdu"},{"i":43,"c":"5057","t":"BS Pakistan Studies","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"soc","k":"pakstudies"},{"i":44,"c":"5058","t":"BS English","m":"ODL","g":"bs_hssc","f":20590,"e":3,"ct":"hum","k":"english"},{"i":45,"c":"5059","t":"BS Library and Information Sciences","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"hum","k":"library"},{"i":46,"c":"5060","t":"BS Sociology","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"soc","k":"sociology"},{"i":47,"c":"5061","t":"BS Economics","m":"ODL","g":"bs_hssc","f":20590,"e":3,"ct":"soc","k":"economics"},{"i":48,"c":"5073","t":"BS Early Childhood Care and Education","m":"ODL","g":"bs_hssc","f":26050,"e":3,"ct":"edu","k":"ecce"},{"i":49,"c":"5080","t":"BS Agricultural Extension","m":"ODL","g":"bs_hssc","f":26050,"e":3,"ct":"life","k":"agri"},{"i":50,"c":"5081","t":"BS Rural Development","m":"ODL","g":"bs_hssc","f":26050,"e":3,"ct":"life","k":"rural"},{"i":51,"c":"5083","t":"BS Islamic Law and Jurisprudence","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"isl","k":"islamiclaw"},{"i":52,"c":"5084","t":"BS Accounting \u0026 Finance","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"biz","k":"accounting"},{"i":53,"c":"5085","t":"BS History","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"hum","k":"history"},{"i":54,"c":"5086","t":"BS Gender \u0026 Women Studies","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"soc","k":"gender"},{"i":55,"c":"5087","t":"BS International Relations","m":"ODL","g":"bs_hssc","f":17650,"e":3,"ct":"soc","k":"ir"},{"i":56,"c":"5098","t":"BS Environmental Studies (4 Years)","m":"ODL","g":"bs_hssc","f":26050,"e":3,"ct":"life","k":"env"},{"i":57,"c":"5637","t":"BS E-Commerce","m":"ODL","g":"bs_hssc","f":20590,"e":3,"ct":"biz","k":"ecommerce"},{"i":58,"c":"5099","t":"BS Instructional Design \u0026 Technology","m":"ODL","g":"bs_hssc","f":30670,"e":3,"ct":"edu","k":"idt"},{"i":59,"c":"5100","t":"BS Political Science","m":"ODL","g":"bs_hssc","f":19610,"e":3,"ct":"soc","k":"polsci"},{"i":60,"c":"5115","t":"BS Psychology","m":"ODL","g":"bs_hssc","f":18630,"e":3,"ct":"soc","k":"psychology"},{"i":61,"c":"5561","t":"BS Islamic Studies General (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":4,"ct":"isl","k":"islamic","p":45},{"i":62,"c":"5562","t":"BS Islamic Studies Quran \u0026 Tafseer (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":4,"ct":"isl","k":"islamic","p":45},{"i":63,"c":"5563","t":"BS Islamic Studies Hadith \u0026 Hadith Science (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":4,"ct":"isl","k":"islamic","p":45},{"i":64,"c":"5564","t":"BS Islamic Studies Seerat Studies (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":4,"ct":"isl","k":"islamic","p":45},{"i":65,"c":"5565","t":"BS Islamic Studies Dars-e-Nizami (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":4,"ct":"isl","k":"islamic","p":45},{"i":66,"c":"5566","t":"BS Islamic Studies Interfaith Studies (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":4,"ct":"isl","k":"islamic","p":45},{"i":67,"c":"5567","t":"BS Arabic (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":4,"ct":"isl","k":"arabic","p":45},{"i":68,"c":"5594","t":"BS Urdu (BA/BSc Based)","m":"ODL","g":"bs_ba","f":21130,"e":4,"ct":"hum","k":"urdu","p":45},{"i":69,"c":"5595","t":"BS Pakistan Studies (BA/BSc Based)","m":"ODL","g":"bs_ba","f":17650,"e":5,"ct":"soc","k":"pakstudies","p":45,"ado":1},{"i":70,"c":"5596","t":"BS English (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":5,"ct":"hum","k":"english","p":45,"ado":1},{"i":71,"c":"5597","t":"BS Library and Information Sciences (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":6,"ct":"hum","k":"library","p":45,"ty":["ba","bsc","bcom"]},{"i":72,"c":"5598","t":"BS Sociology (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":7,"ct":"soc","k":"sociology","p":45,"ty":["ba","bsc"],"n":"AD in Sociology (60 credit hours se kam) bhi eligible"},{"i":73,"c":"5599","t":"BS Economics (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":5,"ct":"soc","k":"economics","p":45,"ado":1},{"i":74,"c":"5624","t":"BS Islamic Finance (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":8,"ct":"biz","k":"islamicfin","p":45},{"i":75,"c":"5626","t":"BS Islamic Studies Law \u0026 Jurisprudence (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":8,"ct":"isl","k":"islamiclaw","p":45},{"i":76,"c":"5631","t":"BS Accounting \u0026 Finance (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":5,"ct":"biz","k":"accounting","p":45,"ado":1},{"i":77,"c":"5633","t":"BS Gender \u0026 Women Studies (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":5,"ct":"soc","k":"gender","p":45,"ado":1},{"i":78,"c":"5635","t":"BS History (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":9,"ct":"hum","k":"history","p":50,"ado":1},{"i":79,"c":"5638","t":"BS Instructional Design \u0026 Technology 2.5 Year","m":"ODL","g":"bs_ba","f":26050,"e":5,"ct":"edu","k":"idt","p":45,"ado":1},{"i":80,"c":"5639","t":"BS International Relations (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":10,"ct":"soc","k":"ir","p":45},{"i":81,"c":"5641","t":"BS Mass Communication (BA/BSc Based)","m":"ODL","g":"bs_ba","f":20590,"e":11,"ct":"hum","k":"mass"},{"i":82,"c":"5568","t":"BS Islamic Studies General (AD Based)","m":"ODL","g":"bs_ad","f":20590,"e":12,"ct":"isl","k":"islamic","ad":["islamic"],"p":50},{"i":83,"c":"5569","t":"BS Islamic Studies Quran \u0026 Tafseer (AD Based)","m":"ODL","g":"bs_ad","f":20590,"e":12,"ct":"isl","k":"islamic","ad":["islamic"],"p":50},{"i":84,"c":"5570","t":"BS Islamic Studies Hadith \u0026 Hadith Science (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":12,"ct":"isl","k":"islamic","ad":["islamic"],"p":50},{"i":85,"c":"5571","t":"BS Islamic Studies Seerat Studies (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":12,"ct":"isl","k":"islamic","ad":["islamic"],"p":50},{"i":86,"c":"5572","t":"BS Islamic Studies Dars-e-Nizami (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":12,"ct":"isl","k":"islamic","ad":["islamic"],"p":50},{"i":87,"c":"5574","t":"BS Arabic (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":13,"ct":"isl","k":"arabic","ad":["arabic"],"p":50},{"i":88,"c":"5573","t":"BS Islamic Studies Interfaith Studies (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":12,"ct":"isl","k":"islamic","ad":["islamic"],"p":50},{"i":89,"c":"5602","t":"BS Urdu (AD Based)","m":"ODL","g":"bs_ad","f":18100,"e":14,"ct":"hum","k":"urdu","ad":["urdu"],"p":50},{"i":90,"c":"5603","t":"BS Pakistan Studies (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":15,"ct":"soc","k":"pakstudies","ad":["pakstudies"],"p":50,"n":"Kam az kam 60 credit hours ka AD"},{"i":91,"c":"5604","t":"BS English (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":16,"ct":"hum","k":"english","ad":["english"],"p":50,"n":"Kam az kam 60 credit hours"},{"i":92,"c":"5605","t":"BS Library \u0026 Information Sciences (AD Based)","m":"ODL","g":"bs_ad","f":20590,"e":17,"ct":"hum","k":"library","ad":["library"],"p":50,"n":"Kam az kam 60 credit hours"},{"i":93,"c":"5606","t":"BS Sociology (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":5,"ct":"soc","k":"sociology","p":45,"ado":1,"x":1,"n":"PDF mein eligibility general likhi hai - Sociology AD ke liye AIOU se confirm karein"},{"i":94,"c":"5607","t":"BS Economics (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":18,"ct":"soc","k":"economics","ad":["economics"],"p":50,"n":"Kam az kam 60 credit hours"},{"i":95,"c":"5119","t":"BS Computer Science","m":"ODL","g":"bs_ad","f":33050,"e":19,"ct":"cs","k":"cs","min":2,"p":50,"s":["math"],"n":"PDF mein AD-Based section mein hai lekin eligibility Inter (Math ke saath) 50% likhi hai"},{"i":96,"c":"5120","t":"BS Computer Science (WDC)","m":"ODL","g":"bs_ad","f":33050,"e":19,"ct":"cs","k":"cs","min":2,"p":50,"s":["math"],"n":"PDF mein AD-Based section mein hai lekin eligibility Inter (Math ke saath) 50% likhi hai"},{"i":97,"c":"5627","t":"BS Islamic Finance (AD Based)","m":"ODL","g":"bs_ad","f":20590,"e":13,"ct":"biz","k":"islamicfin","ad":["arabic"],"adc":["islamic"],"p":50,"n":"PDF mein 'AD in Arabic' likha hai (typo ho sakta hai) - confirm karein"},{"i":98,"c":"5629","t":"BS Islamic Studies Law \u0026 Jurisprudence (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":12,"ct":"isl","k":"islamiclaw","ad":["islamic"],"p":50},{"i":99,"c":"5632","t":"BS Accounting \u0026 Finance (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":20,"ct":"biz","k":"accounting","ad":["accounting"],"adc":["business","commerce"],"p":50},{"i":100,"c":"5634","t":"BS Gender \u0026 Women Studies (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":20,"ct":"soc","k":"gender","ad":["gender"],"p":50},{"i":101,"c":"5636","t":"BS History (AD Based)","m":"ODL","g":"bs_ad","f":20590,"e":21,"ct":"hum","k":"history","ad":["history"],"p":50},{"i":102,"c":"5640","t":"BS International Relations (AD Based)","m":"ODL","g":"bs_ad","f":17650,"e":22,"ct":"soc","k":"ir","ad":["ir"],"p":45,"n":"Kam az kam 60 credit hours"},{"i":103,"c":"5055","t":"BBA (Intermediate Based)","m":"ODL","g":"bba","f":17650,"e":23,"ct":"biz","k":"business","min":2},{"i":104,"c":"5593","t":"BBA (BA/BSc Based)","m":"ODL","g":"bba","f":20590,"e":5,"ct":"biz","k":"business","min":3,"p":45,"ado":1},{"i":105,"c":"5601","t":"BBA (AD Based)","m":"ODL","g":"bba","f":20590,"e":20,"ct":"biz","k":"business","min":3,"ad":["business"],"adc":["commerce","ecommerce"],"p":50},{"i":106,"c":"5008","t":"BEd (1.5 Years)","m":"ODL","g":"bed","f":30670,"e":24,"ct":"edu","k":"education","min":4,"p":50,"du":"1.5 years","n":"Education ke ilawa kisi discipline ki 16 saal ki degree"},{"i":107,"c":"5082","t":"BEd (1.5 Years) Special Education","m":"ODL","g":"bed","f":30670,"e":25,"ct":"edu","k":"education","min":4,"p":45,"du":"1.5 years"},{"i":108,"c":"5619","t":"BEd Elementary Teacher Education (ADE Based, 2 Years)","m":"ODL","g":"bed","f":30670,"e":26,"ct":"edu","k":"education","min":3,"ad":["education"],"p":50,"du":"2 years"},{"i":109,"c":"5620","t":"BEd Secondary Teacher Education (ADE Based, 2 Years)","m":"ODL","g":"bed","f":30670,"e":26,"ct":"edu","k":"education","min":3,"ad":["education"],"p":50,"du":"2 years"},{"i":110,"c":"5621","t":"BEd Science Education (ADE Based, 2 Years)","m":"ODL","g":"bed","f":30670,"e":26,"ct":"edu","k":"education","min":3,"ad":["education"],"p":50,"du":"2 years","sa":["physics","chem","bio","math"]},{"i":111,"c":"5622","t":"BEd School Leadership \u0026 Management (ADE Based, 2 Years)","m":"ODL","g":"bed","f":30670,"e":26,"ct":"edu","k":"education","min":3,"ad":["education"],"p":50,"du":"2 years","n":"Kam az kam 60 credit hours"},{"i":112,"c":"5623","t":"BEd Distance \u0026 Non-Formal Education (ADE Based, 2 Years)","m":"ODL","g":"bed","f":30670,"e":26,"ct":"edu","k":"education","min":3,"ad":["education"],"p":50,"du":"2 years"},{"i":113,"c":"5616","t":"BEd Elementary Teacher Education (BA/BSc/AD Based, 2.5 Years)","m":"ODL","g":"bed","f":30670,"e":27,"ct":"edu","k":"education","min":3,"p":45,"du":"2.5 years"},{"i":114,"c":"5617","t":"BEd Science Education (BSc/ADS Based, 2.5 Years)","m":"ODL","g":"bed","f":30670,"e":28,"ct":"edu","k":"education","min":3,"p":45,"ty":["bsc","ad"],"du":"2.5 years","n":"AD school science subject ka ho ya BSc"},{"i":115,"c":"5630","t":"BEd Special Education (BA/BSc/AD Based, 2.5 Years)","m":"ODL","g":"bed","f":30670,"e":29,"ct":"edu","k":"education","min":3,"p":45,"du":"2.5 years"},{"i":116,"c":"5074","t":"BEd (4 Years) Elementary Teacher Education","m":"ODL","g":"bed","f":30670,"e":30,"ct":"edu","k":"education","min":2,"du":"4 years"},{"i":117,"c":"5075","t":"BEd (4 Years) Secondary Teacher Education","m":"ODL","g":"bed","f":30670,"e":30,"ct":"edu","k":"education","min":2,"du":"4 years"},{"i":118,"c":"5076","t":"BEd (4 Years) Science Education","m":"ODL","g":"bed","f":30670,"e":30,"ct":"edu","k":"education","min":2,"du":"4 years","sa":["physics","chem","bio","math"]},{"i":119,"c":"5077","t":"BEd (4 Years) School Leadership \u0026 Management","m":"ODL","g":"bed","f":30670,"e":30,"ct":"edu","k":"education","min":2,"du":"4 years"},{"i":120,"c":"5078","t":"BEd (4 Years) Special Education","m":"ODL","g":"bed","f":30670,"e":30,"ct":"edu","k":"education","min":2,"du":"4 years"},{"i":121,"c":"5079","t":"BEd (4 Years) Distance \u0026 Non-Formal Education","m":"ODL","g":"bed","f":30670,"e":30,"ct":"edu","k":"education","min":2,"du":"4 years"},{"i":122,"c":"1302","t":"PGD TEFL","m":"ODL","g":"pgd","f":19750,"e":31,"ct":"hum","k":"english","min":4,"dk":1},{"i":123,"c":"0716","t":"PGD Educational Leadership and Management","m":"ODL","g":"pgd","f":30250,"e":32,"ct":"edu","p":45},{"i":124,"c":"1500","t":"PGD Educational Planning and Management","m":"ODL","g":"pgd","f":15550,"e":32,"ct":"edu","p":45},{"i":125,"c":"6002","t":"PGD Entrepreneurship in Early Childhood Care and Education","m":"ODL","g":"pgd","f":32830,"e":32,"ct":"edu","p":45},{"i":126,"c":"0713","t":"PGD Early Childhood Education (ECE)","m":"ODL","g":"pgd","f":35710,"e":32,"ct":"edu","p":45},{"i":127,"c":"0712","t":"PGD Human Resource Management","m":"ODL","g":"pgd","f":30250,"e":32,"ct":"biz","p":45},{"i":128,"c":"0717","t":"PGD Supply Chain Management","m":"ODL","g":"pgd","f":30250,"e":32,"ct":"biz","p":45},{"i":129,"c":"0718","t":"PGD Entrepreneurship","m":"ODL","g":"pgd","f":30250,"e":32,"ct":"biz","p":45},{"i":130,"c":"0714","t":"PGD Criminology","m":"ODL","g":"pgd","f":35710,"e":32,"ct":"soc","p":45},{"i":131,"c":"0715","t":"PGD Population and Development","m":"ODL","g":"pgd","f":35710,"e":32,"ct":"soc","p":45},{"i":132,"c":"2102","t":"PGD Gender \u0026 Women Studies","m":"ODL","g":"pgd","f":15910,"e":32,"ct":"soc","p":45},{"i":133,"c":"1047","t":"PGD Sustainable Environmental Design (SED)","m":"ODL","g":"pgd","f":34600,"e":33,"ct":"life","p":45},{"i":134,"c":"1048","t":"PGD Public Health and Nutrition","m":"ODL","g":"pgd","f":34600,"e":33,"ct":"life","p":45},{"i":135,"c":"6005","t":"PGD Environment, Health and Safety","m":"ODL","g":"pgd","f":28270,"e":33,"ct":"life","p":45},{"i":136,"c":"1060","t":"PGD International Financial Reporting Standards","m":"ODL","g":"pgd","f":30250,"e":34,"ct":"biz","ty":["bcom","ad"],"n":"Commerce/Business/Management ki 14+ saal ki education zaroori"},{"i":137,"c":"0105","t":"Certificate Al Lisanul Arabi","m":"ODL","g":"cert","f":5400,"e":35,"ct":"isl","min":0},{"i":138,"c":"0105","t":"Certificate Arabi Bole Chall","m":"ODL","g":"cert","f":5400,"e":35,"ct":"isl","min":0},{"i":139,"c":"0105","t":"Certificate Lughat ul Quran","m":"ODL","g":"cert","f":5400,"e":35,"ct":"isl","min":0},{"i":140,"c":"1058","t":"Certificate Imam \u0026 Khateeb","m":"ODL","g":"cert","f":7540,"e":35,"ct":"isl","min":0},{"i":141,"c":"1057","t":"Certificate Course IFTAA","m":"ODL","g":"cert","f":7540,"e":36,"ct":"isl","min":1},{"i":142,"c":"1059","t":"Arabic Teachers Training Course (ATTC)","m":"ODL","g":"cert","f":7380,"e":37,"ct":"isl","min":2,"p":45},{"i":143,"c":"0121","t":"Certificate in Literacy \u0026 Non-Formal Education","m":"ODL","g":"cert","f":10810,"e":38,"ct":"edu","min":1,"p":45},{"i":144,"c":"1022","t":"Certificate of Entrepreneurship in Early Childhood Education","m":"ODL","g":"cert","f":24700,"e":37,"ct":"edu","min":2,"p":45},{"i":145,"c":"1061","t":"Certificate in Special Education","m":"ODL","g":"cert","f":31510,"e":37,"ct":"edu","min":2,"p":45},{"i":146,"c":"1062","t":"Certificate in Hearing Impairment","m":"ODL","g":"cert","f":26800,"e":39,"ct":"edu","min":3,"p":45},{"i":147,"c":"1063","t":"Certificate in Intellectual Disability","m":"ODL","g":"cert","f":26800,"e":39,"ct":"edu","min":3,"p":45},{"i":148,"c":"1065","t":"Certificate in Physical and Health Impairment","m":"ODL","g":"cert","f":26800,"e":39,"ct":"edu","min":3,"p":45},{"i":149,"c":"1066","t":"Certificate in Visual Impairment","m":"ODL","g":"cert","f":26800,"e":39,"ct":"edu","min":3,"p":45},{"i":150,"c":"0431","t":"Certificate in Librarianship","m":"ODL","g":"cert","f":7310,"e":37,"ct":"hum","min":2,"p":45},{"i":151,"c":"1031","t":"Organic Kitchen Gardening","m":"ODL","g":"cert","f":3940,"e":38,"ct":"life","min":1,"p":45},{"i":152,"c":"1071","t":"Certificate in Literacy \u0026 Non-Formal Education (1071)","m":"ODL","g":"cert","f":10810,"e":38,"ct":"edu","min":1,"p":45},{"i":153,"c":"1072","t":"Certificate in Arabic Course","m":"ODL","g":"cert","f":9130,"e":38,"ct":"isl","min":1,"p":45},{"i":154,"c":"1078","t":"Certificate in Tajweed ul Quran","m":"ODL","g":"cert","f":6190,"e":40,"ct":"isl","min":0},{"i":155,"c":"1069","t":"Diploma in Islamic Law and Jurisprudence","m":"ODL","g":"cert","f":16950,"e":41,"ct":"isl","min":2},{"i":156,"c":"1032","t":"Diploma Islamic Finance","m":"ODL","g":"cert","f":30850,"e":42,"ct":"biz","min":3},{"i":157,"c":"1070","t":"Diploma in Library and Information Sciences","m":"ODL","g":"cert","f":16950,"e":37,"ct":"hum","min":2,"p":45},{"i":158,"c":"1073","t":"Diploma in Literacy and Non-Formal Education","m":"ODL","g":"cert","f":8100,"e":43,"ct":"edu","min":2,"p":45,"x":1,"n":"Matric ke saath AIOU ka Certificate in Literacy \u0026 NFE hona zaroori hai"},{"i":159,"c":"6003","t":"PGD Data Science","m":"F2F","g":"pgd","f":34600,"e":44,"ct":"cs","k":"cs","min":3,"p":45,"s":["math"]},{"i":160,"c":"1052","t":"Certificate AutoCAD Civil","m":"F2F","g":"cert","f":19810,"e":38,"ct":"sci","min":1,"p":45},{"i":161,"c":"4005","t":"Associate Degree in Mathematics","m":"F2F","g":"adsub","f":46050,"e":45,"ct":"sci","k":"math","min":2,"s":["math"]},{"i":162,"c":"4006","t":"Associate Degree in Physics","m":"F2F","g":"adsub","f":56110,"e":46,"ct":"sci","k":"physics","min":2,"s":["physics"]},{"i":163,"c":"4007","t":"Associate Degree in Human Nutrition and Dietetics","m":"F2F","g":"adsub","f":57550,"e":47,"ct":"life","k":"nutrition","min":2,"s":["bio"]},{"i":164,"c":"4023","t":"Associate Degree in Chemistry","m":"F2F","g":"adsub","f":61750,"e":48,"ct":"sci","k":"chem","min":2,"s":["chem"]},{"i":165,"c":"4024","t":"Associate Degree in Statistics","m":"F2F","g":"adsub","f":48850,"e":49,"ct":"sci","k":"stats","min":2,"x":1,"n":"PDF mein is program ki eligibility Chemistry wali copy ho gayi hai - AIOU se confirm karein"},{"i":166,"c":"4028","t":"Associate Degree in Botany","m":"F2F","g":"adsub","f":57550,"e":50,"ct":"life","k":"botany","min":2,"s":["bio"]},{"i":167,"c":"4025","t":"Associate Degree in Data Analytics","m":"F2F","g":"adsub","f":48850,"e":49,"ct":"cs","k":"dataanalytics","min":2,"x":1,"n":"PDF mein is program ki eligibility Chemistry wali copy ho gayi hai - AIOU se confirm karein"},{"i":168,"c":"5045","t":"BS Microbiology","m":"F2F","g":"bs_hssc","f":57550,"e":51,"ct":"life","k":"micro","s":["bio"]},{"i":169,"c":"5048","t":"BS Biochemistry","m":"F2F","g":"bs_hssc","f":57550,"e":52,"ct":"life","k":"biochem","s":["bio"],"p":45},{"i":170,"c":"5116","t":"BS Botany","m":"F2F","g":"bs_hssc","f":57550,"e":53,"ct":"life","k":"botany","s":["bio"]},{"i":171,"c":"5050","t":"BS Mathematics","m":"F2F","g":"bs_hssc","f":46050,"e":54,"ct":"sci","k":"math","s":["math"]},{"i":172,"c":"5052","t":"BS Physics","m":"F2F","g":"bs_hssc","f":56110,"e":55,"ct":"sci","k":"physics","s":["physics"]},{"i":173,"c":"5069","t":"BS Physics (Minor) Data Science","m":"F2F","g":"bs_hssc","f":56110,"e":56,"ct":"sci","k":"physics","s":["physics"]},{"i":174,"c":"5053","t":"BS Human Nutrition and Dietetics","m":"F2F","g":"bs_hssc","f":57250,"e":57,"ct":"life","k":"nutrition","s":["bio"]},{"i":175,"c":"5117","t":"BS Computer Science","m":"F2F","g":"bs_hssc","f":60350,"e":58,"ct":"cs","k":"cs","p":50,"s":["math"],"n":"IBCC equivalence certificate lagega"},{"i":176,"c":"5118","t":"BS Computer Science (WDC)","m":"F2F","g":"bs_hssc","f":60350,"e":58,"ct":"cs","k":"cs","p":50,"s":["math"],"n":"IBCC equivalence certificate lagega"},{"i":177,"c":"5121","t":"BS Statistics","m":"F2F","g":"bs_hssc","f":48850,"e":59,"ct":"sci","k":"stats"},{"i":178,"c":"5067","t":"BSc (Hons) Agriculture","m":"F2F","g":"bs_hssc","f":48850,"e":60,"ct":"life","k":"agri","sa":["bio","math"]},{"i":179,"c":"5111","t":"BS Data Analytics","m":"F2F","g":"bs_hssc","f":48850,"e":30,"ct":"cs","k":"dataanalytics"},{"i":180,"c":"5112","t":"BS Statistics (Data Science)","m":"F2F","g":"bs_hssc","f":46050,"e":30,"ct":"cs","k":"stats"},{"i":181,"c":"5110","t":"BS Chemistry","m":"F2F","g":"bs_hssc","f":61750,"e":61,"ct":"sci","k":"chem","s":["chem"]},{"i":182,"c":"5063","t":"BS Health and Physical Education","m":"F2F","g":"bs_hssc","f":47750,"e":30,"ct":"life","k":"pe"},{"i":183,"c":"5582","t":"BS Human Nutrition and Dietetics (BSc Based)","m":"F2F","g":"bs_ba","f":57250,"e":62,"ct":"life","k":"nutrition","ty":["bsc","ad"],"n":"BSc ya Human Nutrition ka AD (60 credit hours se kam)"},{"i":184,"c":"5577","t":"BS Chemistry (BSc Based)","m":"F2F","g":"bs_ba","f":61750,"e":63,"ct":"sci","k":"chem","ty":["bsc","ad"],"n":"Bridging semester ho sakta hai"},{"i":185,"c":"5579","t":"BS Statistics (BSc Based)","m":"F2F","g":"bs_ba","f":54450,"e":64,"ct":"sci","k":"stats","p":45,"ty":["bsc","ad"]},{"i":186,"c":"5581","t":"BS Physics (BSc Based)","m":"F2F","g":"bs_ba","f":56110,"e":65,"ct":"sci","k":"physics","p":45,"ty":["bsc"],"n":"Bridging semester ho sakta hai"},{"i":187,"c":"5580","t":"BS Mathematics (BSc Based)","m":"F2F","g":"bs_ba","f":54450,"e":66,"ct":"sci","k":"math","p":45,"ty":["bsc"]},{"i":188,"c":"5584","t":"BS Microbiology (AD Based)","m":"F2F","g":"bs_ad","f":57550,"e":67,"ct":"life","k":"micro","x":1,"n":"Relevant AD (60 credit hours) chahiye - AIOU se confirm karein"},{"i":189,"c":"5583","t":"BS Chemistry (AD Based)","m":"F2F","g":"bs_ad","f":61750,"e":68,"ct":"sci","k":"chem","ad":["chem"],"p":50,"n":"Kam az kam 60 credit hours"},{"i":190,"c":"5585","t":"BS Botany (AD Based)","m":"F2F","g":"bs_ad","f":54550,"e":69,"ct":"life","k":"botany","ad":["botany"],"n":"Relevant field mein kam az kam 60 CH"},{"i":191,"c":"5587","t":"BS Biochemistry (AD Based)","m":"F2F","g":"bs_ad","f":57550,"e":69,"ct":"life","k":"biochem","x":1,"n":"Relevant AD (60 CH) chahiye - AIOU se confirm karein"},{"i":192,"c":"5588","t":"BS Statistics (AD Based)","m":"F2F","g":"bs_ad","f":46050,"e":70,"ct":"sci","k":"stats","ty":["bsc","ad"],"n":"BSc/AD (60 credit hours se kam)"},{"i":193,"c":"5589","t":"BS Mathematics (AD Based)","m":"F2F","g":"bs_ad","f":46050,"e":71,"ct":"sci","k":"math","ad":["math"],"p":50},{"i":194,"c":"5590","t":"BS Physics (AD Based)","m":"F2F","g":"bs_ad","f":50550,"e":72,"ct":"sci","k":"physics","ad":["physics"],"p":50},{"i":195,"c":"6201","t":"MPhil Islamic Studies General (New Scheme)","m":"F2F","g":"mphil","f":23520,"e":73,"ct":"isl","k":"islamic","p":45,"dk":1},{"i":196,"c":"7032","t":"MPhil Distance \u0026 Non-Formal Education (Revised Scheme)","m":"F2F","g":"mphil","f":23520,"e":74,"ct":"edu","k":"education","p":45,"dk":1},{"i":197,"c":"1427","t":"Master of Business Administration (1.5 Years)","m":"F2F","g":"mphil","f":56900,"e":75,"ct":"biz","k":"business","p":50},{"i":198,"c":"1428","t":"Master of Business Administration (2 Years)","m":"F2F","g":"mphil","f":46400,"e":76,"ct":"biz","k":"business","p":50},{"i":199,"c":"7025","t":"MPhil Agricultural Technology","m":"F2F","g":"mphil","f":40200,"e":77,"ct":"life","k":"agri","p":45,"dk":1},{"i":200,"c":"2701","t":"MSc (Hons.) Livestock Management","m":"F2F","g":"mphil","f":40200,"e":78,"ct":"life","k":"agri","p":45,"cg":2.5,"dk":1},{"i":201,"c":"3501","t":"MSc (Hons.) Agricultural Extension","m":"F2F","g":"mphil","f":40200,"e":79,"ct":"life","k":"agri","p":45,"dk":1},{"i":202,"c":"3901","t":"MSc (Hons.) Rural Development","m":"F2F","g":"mphil","f":40200,"e":80,"ct":"life","k":"rural","p":45,"cg":2.5,"dk":1},{"i":203,"c":"7802","t":"MPhil Statistics (2026)","m":"F2F","g":"mphil","f":40200,"e":81,"ct":"sci","k":"stats","p":45,"cg":2.5,"dk":1},{"i":204,"c":"7024","t":"MS Computer Science (Revised Scheme)","m":"F2F","g":"mphil","f":40200,"e":82,"ct":"cs","k":"cs","p":60,"cg":2,"dk":1},{"i":205,"c":"6501","t":"MPhil Physics","m":"F2F","g":"mphil","f":40200,"e":83,"ct":"sci","k":"physics","p":45,"dk":1},{"i":206,"c":"7001","t":"MPhil Chemistry","m":"F2F","g":"mphil","f":40200,"e":84,"ct":"sci","k":"chem","p":45,"dk":1},{"i":207,"c":"7105","t":"MS Community Health and Nutrition (New Scheme)","m":"F2F","g":"mphil","f":40200,"e":85,"ct":"life","k":"nutrition","dk":1},{"i":208,"c":"7901","t":"MPhil Mathematics","m":"F2F","g":"mphil","f":40200,"e":86,"ct":"sci","k":"math","p":45,"cg":2.5,"dk":1},{"i":209,"c":"7031","t":"MPhil Environmental Science","m":"F2F","g":"mphil","f":40200,"e":87,"ct":"life","k":"env","dk":1},{"i":210,"c":"7030","t":"MPhil Microbiology and Molecular Genetics (New Programme)","m":"F2F","g":"mphil","f":40200,"e":88,"ct":"life","k":"micro","p":50,"dk":1},{"i":211,"c":"8204","t":"PhD Islamic Studies General (New Scheme)","m":"F2F","g":"phd","f":39550,"e":89,"ct":"isl","k":"islamic","cg":3,"dk":1},{"i":212,"c":"9023","t":"PhD Islamic Studies - Seerat Studies","m":"F2F","g":"phd","f":39550,"e":89,"ct":"isl","k":"islamic","cg":3,"dk":1},{"i":213,"c":"9029","t":"PhD Islamic Studies - Hadith \u0026 Hadith Sciences","m":"F2F","g":"phd","f":39550,"e":89,"ct":"isl","k":"islamic","cg":3,"dk":1},{"i":214,"c":"9024","t":"PhD Distance \u0026 Non-Formal Education (Revised New Scheme)","m":"F2F","g":"phd","f":39550,"e":90,"ct":"edu","k":"education","cg":3,"dk":1},{"i":215,"c":"8409","t":"PhD Science Education","m":"F2F","g":"phd","f":39550,"e":91,"ct":"edu","k":"education","cg":3,"dk":1},{"i":216,"c":"9001","t":"PhD Mass Communication","m":"F2F","g":"phd","f":45760,"e":92,"ct":"hum","k":"mass","cg":3,"dk":1},{"i":217,"c":"9501","t":"PhD Pakistani Language \u0026 Literature","m":"F2F","g":"phd","f":45760,"e":93,"ct":"hum","k":"urdu","cg":3,"dk":1},{"i":218,"c":"9401","t":"PhD Agricultural Extension","m":"F2F","g":"phd","f":45760,"e":94,"ct":"life","k":"agri","cg":3,"dk":1},{"i":219,"c":"9201","t":"PhD Computer Science","m":"F2F","g":"phd","f":45760,"e":95,"ct":"cs","k":"cs","cg":3,"dk":1},{"i":220,"c":"8901","t":"PhD Physics","m":"F2F","g":"phd","f":45760,"e":96,"ct":"sci","k":"physics","cg":3,"dk":1},{"i":221,"c":"8501","t":"PhD Chemistry","m":"F2F","g":"phd","f":45760,"e":97,"ct":"sci","k":"chem","cg":3,"dk":1},{"i":222,"c":"9101","t":"PhD Food \u0026 Nutrition","m":"F2F","g":"phd","f":45760,"e":98,"ct":"life","k":"nutrition","cg":3,"dk":1},{"i":223,"c":"9018","t":"PhD Mathematics","m":"F2F","g":"phd","f":45760,"e":99,"ct":"sci","k":"math","cg":3,"dk":1},{"i":224,"c":"9031","t":"PhD Islamic Studies - Seerat Studies (9031)","m":"F2F","g":"phd","f":39550,"e":89,"ct":"isl","k":"islamic","cg":3,"dk":1},{"i":225,"c":"9028","t":"PhD Environmental Sciences","m":"F2F","g":"phd","f":45760,"e":100,"ct":"life","k":"env","cg":3,"dk":1}];
+  var WA = '923702388998', BRAND = 'Taleemwaly';
+  DATA.forEach(function (p) { p.e = ESTR[p.e]; });
+
+  var KEY = 'adv_v1';
+  var $ = function (id) { return document.getElementById(id); };
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) { e.className = cls; } if (txt !== undefined) { e.textContent = txt; } return e; }
+  var state = { tab: 'ok', shown: 12, lvl: '', cats: [] };
+  var TABS = [['ok', '\u2705 Eligible'], ['cond', '\u26a0\ufe0f Shart ke saath'], ['no', '\u274c Eligible nahi'], ['over', '\ud83d\udcb8 Budget se zyada'], ['above', '\u2b06\ufe0f Pehle se upar']];
+  var last = null;
+
+  function fillSelect(sel, items, valKey, lblKey) {
+    items.forEach(function (it) { var o = el('option', '', it[lblKey]); o.value = it[valKey]; sel.appendChild(o); });
+  }
+  function setup() {
+    fillSelect($('a-qual'), META.quals, 'id', 'label');
+    fillSelect($('a-band'), META.bands, 'id', 'label');
+    fillSelect($('a-subj'), META.fields, 'id', 'label');
+    META.subjectsStudied.forEach(function (s) {
+      var lb = el('label'); var cb = el('input'); cb.type = 'checkbox'; cb.value = s.id; cb.addEventListener('change', render);
+      lb.appendChild(cb); lb.appendChild(document.createTextNode(' ' + s.label)); $('a-subs').appendChild(lb);
+    });
+    META.cats.forEach(function (c) {
+      var b = el('button', 'adv-chip', c.icon + ' ' + c.label); b.type = 'button'; b.setAttribute('data-id', c.id);
+      b.addEventListener('click', function () { b.classList.toggle('on'); render(); });
+      $('a-cats').appendChild(b);
+    });
+    ['a-qual', 'a-pct', 'a-band', 'a-cgpa', 'a-subj', 'a-mode', 'a-budget', 'a-sort'].forEach(function (id) {
+      $(id).addEventListener('input', function () { if (id === 'a-qual') { onQual(); } state.shown = 12; render(); });
+      $(id).addEventListener('change', function () { if (id === 'a-qual') { onQual(); } state.shown = 12; render(); });
+    });
+    $('a-reset').addEventListener('click', reset);
+  }
+  function checked() { var o = []; var cbs = $('a-subs').getElementsByTagName('input'); for (var i = 0; i !== cbs.length; i++) { if (cbs[i].checked) { o.push(cbs[i].value); } } return o; }
+  function cats() { var o = []; var bs = $('a-cats').getElementsByTagName('button'); for (var i = 0; i !== bs.length; i++) { if (bs[i].classList.contains('on')) { o.push(bs[i].getAttribute('data-id')); } } return o; }
+
+  function onQual() {
+    var q = ADV.byId(META.quals, $('a-qual').value);
+    $('w-cgpa').style.display = (q && q.cgpa) ? 'block' : 'none';
+    $('w-subj').style.display = (q && q.needsSubj) ? 'block' : 'none';
+    $('w-subs').style.display = (q && q.rank >= 2) ? 'block' : 'none';
+    if (q && q.needsSubj) { $('l-subj').textContent = q.id === 'ad' ? 'Aap ke Associate Degree ka subject' : 'Aap ki degree ka subject'; }
+    var cbs = $('a-subs').getElementsByTagName('input'), def = (q && q.subjects) || [];
+    for (var i = 0; i !== cbs.length; i++) { cbs[i].checked = def.indexOf(cbs[i].value) !== -1; }
+  }
+  function raw() {
+    return { qual: $('a-qual').value, pct: $('a-pct').value, band: $('a-band').value, cgpa: $('a-cgpa').value, subj: $('a-subj').value,
+      subjects: checked(), mode: $('a-mode').value, budget: $('a-budget').value, interests: cats(), sort: $('a-sort').value };
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(raw())); } catch (e) {} }
+  function restore() {
+    try {
+      var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (!s) { return; }
+      $('a-qual').value = s.qual || ''; onQual();
+      ['pct', 'band', 'cgpa', 'subj', 'mode', 'budget', 'sort'].forEach(function (k) { if (s[k] !== undefined) { $('a-' + k).value = s[k]; } });
+      var cbs = $('a-subs').getElementsByTagName('input'); for (var i = 0; i !== cbs.length; i++) { cbs[i].checked = (s.subjects || []).indexOf(cbs[i].value) !== -1; }
+      var bs = $('a-cats').getElementsByTagName('button'); for (var j = 0; j !== bs.length; j++) { if ((s.interests || []).indexOf(bs[j].getAttribute('data-id')) !== -1) { bs[j].classList.add('on'); } }
+    } catch (e) {}
+  }
+  function reset() {
+    ['a-qual', 'a-pct', 'a-band', 'a-cgpa', 'a-subj', 'a-budget'].forEach(function (id) { $(id).value = ''; });
+    $('a-mode').value = 'any'; $('a-sort').value = 'match';
+    var bs = $('a-cats').getElementsByTagName('button'); for (var j = 0; j !== bs.length; j++) { bs[j].classList.remove('on'); }
+    onQual(); state.tab = 'ok'; state.shown = 12; state.lvl = ''; render();
+  }
+
+  function card(r, top) {
+    var p = r.p, g = META.groups[p.g];
+    var c = el('div', 'adv-card ' + r.st);
+    if (top) { c.appendChild(el('span', 'adv-top', '\u2b50 Best match')); }
+    var hd = el('div', 'adv-hd'); hd.appendChild(el('h4', '', p.t));
+    var fee = el('div', 'adv-fee', p.f ? ADV.fmt(p.f) : 'Fee list mein nahi');
+    if (p.f) { fee.appendChild(el('small', '', '1st semester')); }
+    hd.appendChild(fee); c.appendChild(hd);
+    var tags = el('div', 'adv-tags');
+    tags.appendChild(el('span', 'adv-tag', 'Code ' + p.c));
+    tags.appendChild(el('span', 'adv-tag', p.m === 'F2F' ? 'Face-to-Face' : 'ODL'));
+    tags.appendChild(el('span', 'adv-tag', g.label));
+    if (p.du || g.dur) { tags.appendChild(el('span', 'adv-tag', '\u23f1 ' + (p.du || g.dur))); }
+    c.appendChild(tags);
+    var ul = el('ul', 'adv-msg');
+    if (r.st === 'ok') { ul.appendChild(el('li', 'g', 'Aap ki qualification is program ki shart poori karti hai.')); }
+    r.warn.forEach(function (m) { ul.appendChild(el('li', 'w', m)); });
+    r.why.forEach(function (m) { ul.appendChild(el('li', 'b', m)); });
+    c.appendChild(ul);
+    var d = el('details'); d.appendChild(el('summary', '', 'AIOU ki eligibility (prospectus)'));
+    d.appendChild(el('p', '', p.e)); if (p.n) { d.appendChild(el('p', '', 'Note: ' + p.n)); }
+    c.appendChild(d);
+    return c;
+  }
+
+  function shortlistText(u, res) {
+    var lines = ['AIOU Spring 2027 \u2014 mera shortlist', 'Qualification: ' + u.qual.label + (u.pct !== null ? ' (' + u.pct + (u.pctApprox ? '\u2013' + u.pctHi : '') + '%)' : '')];
+    res.ok.slice(0, 5).forEach(function (r, i) { lines.push((i + 1) + '. ' + r.p.t + ' (' + r.p.c + ')' + (r.p.f ? ' \u2014 ' + ADV.fmt(r.p.f) : '')); });
+    return lines.join('\n');
+  }
+
+  function render() {
+    save();
+    var out = $('a-out'); out.innerHTML = '';
+    var r0 = raw();
+    if (!r0.qual) { out.appendChild(el('div', 'adv-intro', '\ud83d\udc46 Shuru karne ke liye upar apni qualification select karein.')); return; }
+    var u = ADV.toUser(r0, META), res = ADV.run(DATA, u, META);
+    last = { u: u, res: res };
+
+    var stats = el('div', 'adv-stats');
+    TABS.forEach(function (t) {
+      var n = res[t[0]].length; if ((t[0] === 'over' || t[0] === 'above') && n === 0) { return; }
+      var b = el('button', 'adv-stat ' + t[0] + (state.tab === t[0] ? ' on' : '')); b.type = 'button';
+      b.appendChild(el('b', '', String(n))); b.appendChild(el('span', '', t[1]));
+      b.addEventListener('click', function () { state.tab = t[0]; state.shown = 12; render(); });
+      stats.appendChild(b);
+    });
+    out.appendChild(stats);
+
+    var tools = el('div', 'adv-tools'); var sel = el('select'); var o0 = el('option', '', 'Sab levels'); o0.value = ''; sel.appendChild(o0);
+    Object.keys(META.groups).sort(function (a, b) { return META.groups[a].order - META.groups[b].order; }).forEach(function (k) {
+      var o = el('option', '', META.groups[k].label); o.value = k; sel.appendChild(o);
+    });
+    sel.value = state.lvl; sel.addEventListener('change', function () { state.lvl = sel.value; state.shown = 12; render(); });
+    tools.appendChild(sel);
+    var cp = el('button', 'adv-btn ghost', '\ud83d\udccb Shortlist copy karein'); cp.type = 'button';
+    cp.addEventListener('click', function () {
+      var t = shortlistText(u, res);
+      if (navigator.clipboard) { navigator.clipboard.writeText(t).then(function () { cp.textContent = '\u2705 Copy ho gaya'; }); }
+      else { window.prompt('Copy karein:', t); }
+    });
+    tools.appendChild(cp);
+    var wa = el('a', 'adv-btn wa', '\ud83d\udcac WhatsApp par guidance'); wa.target = '_blank'; wa.rel = 'noopener';
+    wa.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent('Assalam o Alaikum, ' + BRAND + ' \u2014 mujhe AIOU Spring 2027 admission ke liye guidance chahiye.\n' + shortlistText(u, res));
+    tools.appendChild(wa);
+    out.appendChild(tools);
+
+    var list = res[state.tab].filter(function (r) { return !state.lvl || r.p.g === state.lvl; });
+    var grid = el('div', 'adv-list');
+    if (!list.length) { grid.appendChild(el('div', 'adv-empty', 'Is tab / level mein koi program nahi mila.')); }
+    list.slice(0, state.shown).forEach(function (r, i) { grid.appendChild(card(r, state.tab === 'ok' && u.sort === 'match' && i < 3 && !state.lvl)); });
+    out.appendChild(grid);
+    if (list.length > state.shown) {
+      var m = el('button', 'adv-btn ghost adv-more', 'Aur dikhayein (' + (list.length - state.shown) + ' baqi)'); m.type = 'button';
+      m.addEventListener('click', function () { state.shown += 12; render(); });
+      out.appendChild(m);
+    }
+
+    var gd = el('div', 'adv-g'); gd.style.marginTop = '26px';
+    gd.appendChild(el('h3', '', '\ud83e\udded Aap ke liye guidance')); gd.firstChild.style.marginBottom = '12px';
+    ADV.advise(u, res, META, BRAND).forEach(function (b, i) {
+      var d = el('details'); if (i < 3) { d.open = true; }
+      d.appendChild(el('summary', '', b.t)); var body = el('div', 'b'); body.innerHTML = b.h; d.appendChild(body); gd.appendChild(d);
+    });
+    out.appendChild(gd);
+  }
+
+  function init() { setup(); restore(); render(); }
+  if (document.readyState === 'complete') { init(); } else { window.addEventListener('load', init); }
+})();
+//]]>
+</script>
