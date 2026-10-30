@@ -28,3 +28,22 @@ The companion app is separate from Blogger and the Blogger XML must be uploaded 
 
 ## QA
 Check GitHub Actions before claiming deployment or browser tests passed: [Browser QA](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/browser-qa.yml), [Pages deploy](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/deploy-pages.yml), [LMS security tests](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/lms-security-e2e.yml).
+
+## LMS deployment (Netlify)
+
+The student LMS is deployed separately from the public Blogger site. The configured Netlify target is [aioucoaching.netlify.app](https://aioucoaching.netlify.app/).
+
+- Deployment workflow: [netlify-deploy.yml](.github/workflows/netlify-deploy.yml)
+- GitHub Actions requires the repository secrets `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`.
+- `NETLIFY_AUTH_TOKEN` must be a valid Netlify personal access token with access to the target site; `NETLIFY_SITE_ID` must match that site's Site ID. Never commit or paste either value into source files or this README.
+- After changing either secret, rerun the Netlify deployment workflow and verify its final status in [GitHub Actions](https://github.com/nationalistacademy/AIOUN-Coaching/actions).
+- A queued or running workflow is not proof of a live deployment. Confirm a successful workflow run and open the site to verify the deployed build.
+
+## LMS dashboard and progress
+
+The dashboard and progress views use active enrollments when calculating course progress. Progress analysis distinguishes all-time quiz performance from the latest graded attempt and latest weak-topic results. Related browser tests are in `tests/dashboard-progress.spec.js`.
+
+## Current verification notes
+
+Do not treat a successful Node.js CI or Browser QA run as proof that Netlify deployment succeeded; these are separate checks. Likewise, do not claim deployment is complete until the Netlify workflow succeeds and the live site is checked. Keep LMS schema, Supabase production configuration, Blogger DNS, Cloudflare routes and Firebase credentials unchanged unless a separately verified task requires a change.
+
