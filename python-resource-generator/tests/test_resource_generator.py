@@ -68,7 +68,7 @@ class ResourceGeneratorTests(unittest.TestCase):
                 self.assertGreater(output.stat().st_size, 100)
             txt = outputs["text"].read_text(encoding="utf-8")
             self.assertIn("SOURCE & PROVENANCE", txt)
-            self.assertIn("Q1. Explain the importance", txt)
+            self.assertIn("1. Q1. Explain the importance", txt)
             docx_text = "\\n".join(p.text for p in Document(outputs["docx"]).paragraphs)
             self.assertIn("Practice Paper", docx_text)
             pdf_text = "\\n".join(page.extract_text() or "" for page in PdfReader(outputs["pdf"]).pages)
