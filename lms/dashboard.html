@@ -55,11 +55,14 @@ async function loadDashboard(){
   const enrollments=enrollRes.data||[]; progressRows=progressRes.data||[]; const courses=courseRes.data||[]; const announcements=announceRes.data||[];
   const enrolledIds=window.AIOUDashboardUtils.activeCourseIds(enrollments);
   document.getElementById('courseCount').textContent=enrollments.length;
-  document.getElementById('lessonCount').textContent=progressRows.filter(x=>x.completed).length;
+  // Lesson totals are scoped to courses in the active enrollment set below.
   renderAnnouncements(announcements, courses);
   await renderCourses(courses.filter(c=>enrolledIds.has(c.id)), enrollments);
   const allLessons=await getLessonCounts(courses.filter(c=>enrolledIds.has(c.id)).map(c=>c.id));
-  const total=allLessons.reduce((n,x)=>n+x.total,0), done=progressRows.filter(x=>x.completed).length;
+  const activeLessonIds=new Set(allLessons.flatMap(group=>group.lessons.map(lesson=>lesson.id)));
+  const done=progressRows.filter(row=>row.completed&&activeLessonIds.has(row.lesson_id)).length;
+  const total=activeLessonIds.size;
+  document.getElementById('lessonCount').textContent=String(done);
   document.getElementById('progressCount').textContent=total?Math.round(done/total*100)+'%':'0%';
 }
 
