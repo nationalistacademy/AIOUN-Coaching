@@ -47,25 +47,27 @@ for (const tool of studentTools) {
   });
 }
 
-test('student tool pages do not request camera, microphone or geolocation on load', async ({ page }) => {
-  const sensitivePermissions = [];
-  page.on('console', message => {
-    if (message.type() === 'error' && /permission|geolocation|camera|microphone/i.test(message.text())) {
-      sensitivePermissions.push(message.text());
-    }
+test('student tools do not request sensitive browser permissions on page load', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__sensitivePermissionCalls = [];
+    Object.defineProperty(navigator, 'geolocation', {
+      configurable: true,
+      value: {
+        getCurrentPosition() { window.__sensitivePermissionCalls.push('geolocation'); },
+        watchPosition() { window.__sensitivePermissionCalls.push('geolocation'); }
+      }
+    });
+    Object.defineProperty(navigator, 'mediaDevices', {
+      configurable: true,
+      value: {
+        getUserMedia() { window.__sensitivePermissionCalls.push('camera-or-microphone'); }
+      }
+    });
   });
 
   for (const tool of studentTools) {
     await page.goto(`/tools/${tool}`);
-    const permissionCalls = await page.evaluate(() => ({
-      geolocation: typeof navigator.geolocation?.getCurrentPosition === 'function',
-      mediaDevices: typeof navigator.mediaDevices?.getUserMedia === 'function'
-    }));
-    // Browser APIs being available is normal; this check is deliberately limited to
-    // unexpected permission-related console errors during passive page load.
-    expect(permissionCalls.geolocation).toBeTruthy();
-    expect(permissionCalls.mediaDevices).toBeTruthy();
+    const calls = await page.evaluate(() => window.__sensitivePermissionCalls);
+    expect(calls, `${tool} requested sensitive permissions without user action`).toEqual([]);
   }
-
-  expect(sensitivePermissions).toEqual([]);
 });
