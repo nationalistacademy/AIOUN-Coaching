@@ -221,3 +221,16 @@ test('AIOU workshop reminder saves events and generates Google Calendar and ICS 
   await page.getByRole('button', { name: 'Delete' }).click();
   await expect(page.locator('.wr-event')).toHaveCount(0);
 });
+
+
+test('AIOU workshop Student ID launcher opens only the official lookup and does not persist the ID', async ({ page, context }) => {
+  await page.goto('/tools/aiou-workshop-reminder.html');
+  await page.locator('#studentId').fill('00ABC123456');
+  const popupPromise = context.waitForEvent('page');
+  await page.getByRole('button', { name: /Copy ID & open AIOU lookup/i }).click();
+  const popup = await popupPromise;
+  await expect(popup).toHaveURL(/online\.aiou\.edu\.pk\/live_site\/WorkshopAP\/schedule\/index6\.aspx/);
+  const stored = await page.evaluate(() => JSON.stringify(localStorage));
+  expect(stored).not.toContain('00ABC123456');
+  await expect(page.locator('#lookupStatus')).toContainText(/clipboard|manually copy/i);
+});
