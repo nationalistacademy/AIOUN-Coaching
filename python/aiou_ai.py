@@ -22,7 +22,7 @@ def word_count(text: str) -> int:
 def audit_assignment(text: str) -> dict[str, Any]:
     """Return transparent, rule-based feedback; never invent a quality score."""
     cleaned = text.strip()
-    headings = re.findall(r"(?m)^\s{0,3}#{1,3}\s+.+|(?m)^\s*[A-Z][^\n]{2,70}:\s*$", cleaned)
+    headings = re.findall(r"^\s{0,3}#{1,3}\s+.+|^\s*[A-Z][^\n]{2,70}:\s*$", cleaned, flags=re.MULTILINE)
     paragraphs = [p.strip() for p in re.split(r"\n\s*\n", cleaned) if p.strip()]
     checks = [
         {"id": "has_content", "ok": bool(cleaned), "message": "Draft contains text." if cleaned else "Add your own draft before checking."},
