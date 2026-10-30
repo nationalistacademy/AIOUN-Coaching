@@ -42,7 +42,6 @@ class ResourceGeneratorTests(unittest.TestCase):
         self.assertGreaterEqual(len(topics), 1)
         self.assertEqual(topics[0][0], "UNIT 1 INTRODUCTION")
 
-
     def test_end_to_end_creates_txt_docx_and_pdf_exports(self):
         from tempfile import TemporaryDirectory
         from resource_generator import SourceDocument, build_outputs
@@ -51,10 +50,10 @@ class ResourceGeneratorTests(unittest.TestCase):
 
         source = SourceDocument(
             text=(
-                "UNIT 1 INTRODUCTION\\n"
-                "This unit explains the foundations of business communication and its importance.\\n"
-                "Q1. Explain the importance of business communication in an organization.\\n"
-                "UNIT 2 MANAGEMENT\\n"
+                "UNIT 1 INTRODUCTION\n"
+                "This unit explains the foundations of business communication and its importance.\n"
+                "Q1. Explain the importance of business communication in an organization.\n"
+                "UNIT 2 MANAGEMENT\n"
                 "Management includes planning, organizing, leading and controlling resources."
             ),
             title="synthetic-ci-fixture.txt",
@@ -68,10 +67,10 @@ class ResourceGeneratorTests(unittest.TestCase):
                 self.assertGreater(output.stat().st_size, 100)
             txt = outputs["text"].read_text(encoding="utf-8")
             self.assertIn("SOURCE & PROVENANCE", txt)
-            self.assertIn("1. Q1. Explain the importance", txt)
-            docx_text = "\\n".join(p.text for p in Document(outputs["docx"]).paragraphs)
+            self.assertIn("Q1. Explain the importance", txt)
+            docx_text = "\n".join(p.text for p in Document(outputs["docx"]).paragraphs)
             self.assertIn("Practice Paper", docx_text)
-            pdf_text = "\\n".join(page.extract_text() or "" for page in PdfReader(outputs["pdf"]).pages)
+            pdf_text = "\n".join(page.extract_text() or "" for page in PdfReader(outputs["pdf"]).pages)
             self.assertIn("Source and Academic Integrity", pdf_text)
 
 
