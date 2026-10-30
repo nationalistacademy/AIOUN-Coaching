@@ -1404,11 +1404,11 @@ width: 50%;
 <b:section cond='data:view.isLayoutMode' id='upload-image' showaddelement='no'>
   <b:widget id='Image10' locked='true' title='Upload Image' type='Image' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='displayUrl'>https://1.bp.blogspot.com/-h5fUZDgfXe8/YR87osMq6UI/AAAAAAAAAYk/18JeDAzajvYhKnMnllSf_DSWAm51cueuQCLcBGAsYHQ/s728/placeholder.jpg</b:widget-setting>
-      <b:widget-setting name='displayHeight'>425</b:widget-setting>
-      <b:widget-setting name='sectionWidth'>1067</b:widget-setting>
+      <b:widget-setting name='displayUrl'>https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhZwFVaNjOU65-nXTV2P-gCdvOC8ZQ4XKAEVTZJmsPUSpJrYsipb2W2hZ9DvKtAgeiC2DZ4a1RBwwGKukwTSYbItxiYyrbGXUZIoeoBLfbFu7jOohKqkYRRMUhYGTp2zYRq-Fp0XTlvdeI7_ZEhZvRRjCaU9wA-7PnWLfhtDrAOZgVCXDi_HUMnZS3qSK1t/s1168/FmDbB.jpg</b:widget-setting>
+      <b:widget-setting name='displayHeight'>1168</b:widget-setting>
+      <b:widget-setting name='sectionWidth'>150</b:widget-setting>
       <b:widget-setting name='shrinkToFit'>false</b:widget-setting>
-      <b:widget-setting name='displayWidth'>728</b:widget-setting>
+      <b:widget-setting name='displayWidth'>784</b:widget-setting>
       <b:widget-setting name='link'>#</b:widget-setting>
       <b:widget-setting name='caption'><![CDATA["Upload image from computer" > Save > Edit Again > Get URL]]></b:widget-setting>
     </b:widget-settings>
@@ -1416,6 +1416,40 @@ width: 50%;
       <b:include name='JetImage'/>
     </b:includable>
     <b:includable id='content'/>
+    <b:includable id='shrinkToFitStyle'>
+  <style type='text/css'>
+    .image-widget-shrink-to-fit {
+      max-width: 100%;
+      height: auto;
+      object-fit: scale-down;
+    }
+  </style>
+</b:includable>
+  </b:widget>
+  <b:widget id='Label1' locked='false' title='Categories' type='Label' version='2' visible='true'>
+    <b:widget-settings>
+      <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
+      <b:widget-setting name='display'>CLOUD</b:widget-setting>
+      <b:widget-setting name='selectedLabelsList'/>
+      <b:widget-setting name='showType'>ALL</b:widget-setting>
+      <b:widget-setting name='showFreqNumbers'>true</b:widget-setting>
+    </b:widget-settings>
+    <b:includable id='main'>
+        <p class='drawer-title' style='margin-top:22px'><data:title/></p>
+        <ul class='chips'>
+          <b:loop values='data:labels' var='label'>
+            <li>
+              <a class='chip depth' expr:href='data:label.url.canonical + &quot;?max-results=10&quot;' rel='tag'>
+                <data:label.name/>
+                <b:if cond='data:label.count'><span class='chip-count'><data:label.count/></span></b:if>
+              </a>
+            </li>
+          </b:loop>
+        </ul>
+      </b:includable>
+    <b:includable id='cloud'/>
+    <b:includable id='content'/>
+    <b:includable id='list'/>
   </b:widget>
 </b:section>
 
@@ -1425,7 +1459,7 @@ width: 50%;
 <b:section class='container position-relative px-3 flex-nowrap' id='header-main' maxwidgets='3' showaddelement='no'>
   <b:widget id='HTML10' locked='true' title='Logo' type='HTML' version='2' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='content'>https://blogger.googleusercontent.com/img/a/AVvXsEjle6YyuiSL-MKSrlA1WKRyliHvjjuV6VU-H1kSOEjs2oD1gD9cKms4jpE5QPJyIrBOn8NDE-MfBaBKfY2R2ygCGy8p627lCNM7tEM9tPxUloqbG_ZX6dvHnd14LYUMQbhp5hMu4_Q94x0V7OitNTaFUosiP6zftbyKRE0ZuOjEh-msJUfXjfotMa1SpeI=s1111</b:widget-setting>
+      <b:widget-setting name='content'>https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi4wprC9NuEEMcfRGRsSfv216DSyQwkXDonVf2k8EBwS2HVAmYxu6S4uANqJ4ktLQSl5U5ufLLg5waDMrD86ukkqr3TkhZ9y5A30ExHbYnO7AmnSSTPn9EJIGpqs3qOgP8JrVU93Ryw9m1m_OAZ-8h85MJ6lqho96MWYveQEHGv98fM6KRKywjf6X9jiKA1/s1600/Gemini_Generated_Image_1dv96k1dv96k1dv9.jpeg</b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
         <b:include name='JetLogo'/>
@@ -1435,7 +1469,7 @@ width: 50%;
     <b:widget-settings>
       <b:widget-setting name='sorting'>NONE</b:widget-setting>
       <b:widget-setting name='text-1'>instagram</b:widget-setting>
-      <b:widget-setting name='link-1'>#</b:widget-setting>
+      <b:widget-setting name='link-1'>https://www.instagram.com/taleemwaly</b:widget-setting>
       <b:widget-setting name='text-0'>facebook</b:widget-setting>
       <b:widget-setting name='link-0'>#</b:widget-setting>
     </b:widget-settings>
@@ -1446,13 +1480,14 @@ width: 50%;
   </b:widget>
   <b:widget id='LinkList11' locked='true' title='Menu' type='LinkList' version='2' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='text-10'>FAQs</b:widget-setting>
+      <b:widget-setting name='text-10'>Tools</b:widget-setting>
       <b:widget-setting name='sorting'>NONE</b:widget-setting>
       <b:widget-setting name='link-1'>/p/programmes.html</b:widget-setting>
       <b:widget-setting name='link-2'>#</b:widget-setting>
+      <b:widget-setting name='link-12'>/p/contact.html</b:widget-setting>
       <b:widget-setting name='link-0'>/p/home.html</b:widget-setting>
-      <b:widget-setting name='link-11'>/p/contact.html</b:widget-setting>
-      <b:widget-setting name='link-10'>/p/faqs.html</b:widget-setting>
+      <b:widget-setting name='link-11'>/p/faqs.html</b:widget-setting>
+      <b:widget-setting name='link-10'>/p/tools.html</b:widget-setting>
       <b:widget-setting name='text-9'>Sub Menu 1</b:widget-setting>
       <b:widget-setting name='link-9'>#sub-end</b:widget-setting>
       <b:widget-setting name='text-8'>Guess Paper</b:widget-setting>
@@ -1470,7 +1505,8 @@ width: 50%;
       <b:widget-setting name='text-4'>Admissions</b:widget-setting>
       <b:widget-setting name='text-7'>Original Books</b:widget-setting>
       <b:widget-setting name='text-6'>Academic Calandar</b:widget-setting>
-      <b:widget-setting name='text-11'>Contact</b:widget-setting>
+      <b:widget-setting name='text-11'>FAQs</b:widget-setting>
+      <b:widget-setting name='text-12'>Contact</b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
       <b:include name='JetMenu'/>
@@ -1487,15 +1523,15 @@ width: 50%;
 <div class='col-lg-8 px-3' id='main'>
 <b:if cond='data:view.isMultipleItems and !data:view.isError or !data:numPosts == 0'><b:with value='data:view.isHomepage ? &quot;Homepage &quot; + data:blog.title : data:blog.pageName ? data:blog.pageName : &quot;Latest Posts&quot;' var='auto_heading'><h1 class='d-none'><data:auto_heading/></h1></b:with></b:if>
 <b:section class='pt-4' cond='data:view.isMultipleItems and !data:view.search.query' id='before-blog' showaddelement='yes'>
-  <b:widget id='Header1' locked='false' title='AIOU Coaching  - Solved Assignment  (Header)' type='Header' visible='true'>
+  <b:widget id='Header1' locked='false' title='AIOU Coaching  - Solved Assignment Autumn 2026 | Free PDF Tools (Header)' type='Header' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='displayUrl'>https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhstDlFn2wBztrJwCbVQuhpxv9zyRYwZJYTlj5EtFK6U7kkLbJK09AGY2eQ1ChR2Ct32j1OP8WpGh8CoYszvkixf5R77jlj1uSmdukXbE8xveheh4c2B-d1MT-0HEGQIkhgCIrQsgGsrbvTlu_96vxWuOvq0ks2BEjc4dYC5zg3QIHIyiZzUjfKqOeWe7sG/s963/Header%20(2).jpg</b:widget-setting>
-      <b:widget-setting name='displayHeight'>197</b:widget-setting>
+      <b:widget-setting name='displayUrl'>https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwAWClFKI8VLSZRAfrvYLLpnzFIr29MBmcYI3DxQdA8mWFJ6I9lX8SKAq2RWZ8ylAfggmPGJQNtkx_wdW05aSXAo5porMVGFLWAbkwsxqpOLq7duTx-f1vKq_5Mw6SbohZmxCXvjk_Y3IQbXfq_5o1Co-ee4x9YHvMlI_UOXMUmpTDH0lfjgSjxVyWY3Fu/s1600/Gemini_Generated_Image_gjjklhgjjklhgjjk.jpeg</b:widget-setting>
+      <b:widget-setting name='displayHeight'>450</b:widget-setting>
       <b:widget-setting name='sectionWidth'>150</b:widget-setting>
       <b:widget-setting name='useImage'>true</b:widget-setting>
       <b:widget-setting name='shrinkToFit'>false</b:widget-setting>
       <b:widget-setting name='imagePlacement'>REPLACE</b:widget-setting>
-      <b:widget-setting name='displayWidth'>963</b:widget-setting>
+      <b:widget-setting name='displayWidth'>1600</b:widget-setting>
     </b:widget-settings>
     <b:includable id='main' var='this'>
     <div class='header-widget'>
@@ -1543,7 +1579,7 @@ width: 50%;
       <b:include name='JetHtml'/>
     </b:includable>
   </b:widget>
-  <b:widget cond='data:view.isHomepage or data:view.url.canonical == data:blog.canonicalHomepageUrl path &quot;/search?max-results=10&quot;' id='FeaturedPost1' locked='false' title='Featured Post' type='FeaturedPost' visible='true'>
+  <b:widget cond='data:view.isHomepage or data:view.url.canonical == data:blog.canonicalHomepageUrl path &quot;/search?max-results=10&quot;' id='FeaturedPost1' locked='false' title='Featured Post' type='FeaturedPost' visible='false'>
     <b:widget-settings>
       <b:widget-setting name='showSnippet'>true</b:widget-setting>
       <b:widget-setting name='showPostTitle'>true</b:widget-setting>
@@ -1788,9 +1824,223 @@ width: 50%;
 <b:section class='pt-4' id='sidebar-static' itemscope='itemscope'>
   <b:widget id='HTML1' locked='false' title='' type='HTML' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='content'><![CDATA[<!-- Elfsight Google Reviews | AIOU Coaching Google Reviews -->
-<script src="https://elfsightcdn.com/platform.js" async></script>
-<div class="elfsight-app-60c9d5c4-73bf-49b1-a221-5b552194fb47" data-elfsight-app-lazy></div>]]></b:widget-setting>
+      <b:widget-setting name='content'><![CDATA[<!-- ================================================================ -->
+<!-- AIOU MENU + SOCIAL MEDIA + DIGISKILLS — NATIONALIST ACADEMY      -->
+<!-- Optimized for Plus UI Right Sidebar | Mobile + Desktop Ready     -->
+<!-- DigiSkills.pk pinned at TOP                                       -->
+<!-- ================================================================ -->
+
+<style>
+  .na-quick-links {
+    --ql-primary: var(--linkB, #1e6f3f);
+    --ql-accent: var(--linkC, #f5b042);
+    --ql-bg: var(--contentB, #ffffff);
+    --ql-border: var(--contentL, #e2e8f0);
+    --ql-text: var(--bodyC, #1e293b);
+    --ql-radius: 12px;
+    --ql-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    --ql-shadow-hover: 0 10px 22px rgba(0, 0, 0, 0.10);
+    font-family: inherit;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .drK .na-quick-links, :root.drK .na-quick-links,
+  .dark .na-quick-links, html[data-theme='dark'] .na-quick-links {
+    --ql-bg: #252526;
+    --ql-border: #444444;
+    --ql-text: #ffffff;
+    --ql-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+    --ql-shadow-hover: 0 10px 22px rgba(0, 0, 0, 0.45);
+  }
+
+  .na-quick-links .ql-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 897px) and (max-width: 1200px) {
+    .sideB .na-quick-links .ql-grid,
+    .sideS .na-quick-links .ql-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 897px) {
+    .sideB .na-quick-links .ql-grid,
+    .sideS .na-quick-links .ql-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+
+  .na-quick-links .ql-card {
+    display: block;
+    text-decoration: none !important;
+    background: var(--ql-bg);
+    border: 1px solid var(--ql-border);
+    border-radius: var(--ql-radius);
+    overflow: hidden;
+    transition: transform 0.22s ease, box-shadow 0.25s ease, border-color 0.22s ease;
+    box-shadow: var(--ql-shadow);
+    position: relative;
+    line-height: 0;
+    box-sizing: border-box;
+  }
+
+  .na-quick-links .ql-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--ql-shadow-hover);
+    border-color: var(--ql-primary);
+    text-decoration: none !important;
+  }
+
+  .na-quick-links .ql-card:focus-visible {
+    outline: 2px solid var(--ql-primary);
+    outline-offset: 2px;
+  }
+
+  .na-quick-links .ql-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0;
+    transition: transform 0.3s ease;
+    object-fit: cover;
+  }
+
+  .na-quick-links .ql-card:hover .ql-img {
+    transform: scale(1.03);
+  }
+
+  .na-quick-links .ql-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 5px 8px;
+    background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    line-height: 1.3;
+    letter-spacing: 0.2px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .na-quick-links .ql-card:hover .ql-label,
+  .na-quick-links .ql-card:focus-visible .ql-label {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .na-quick-links .ql-label {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 896px) {
+    .na-quick-links .ql-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .na-quick-links .ql-radius { border-radius: 12px; }
+  }
+
+  @media (max-width: 420px) {
+    .na-quick-links .ql-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .na-quick-links .ql-card {
+      border-radius: 10px;
+    }
+    .na-quick-links .ql-label {
+      font-size: 0.65rem;
+      padding: 5px 8px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .na-quick-links .ql-card,
+    .na-quick-links .ql-img { transition: none; }
+    .na-quick-links .ql-card:hover { transform: none; }
+    .na-quick-links .ql-card:hover .ql-img { transform: none; }
+  }
+</style>
+
+<div class="na-quick-links" role="navigation" aria-label="AIOU quick links and social media">
+
+  <div class="ql-grid">
+
+  
+    <!-- ===== Card 2: AIOU Assignments ===== -->
+    <a class="ql-card"
+       href="/p/get-solved-assignments.html"
+       target="_blank"
+       rel="noopener"
+       aria-label="AIOU Solved Assignments">
+      <img class="ql-img" 
+ src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg0RYXQqsalGLUOjLDEvK5V3p5guGD5jcJL1t8iyNOPIi2iLPRrzeERejIHHKBQ-8cmzVnVKJc09O7Hi8B8aqP0hNWRHicUGGoFNBckgSD_rrYZZdw-x0UHSSOQd4psTVWnRMX0omBx3YtGTVPlPtnUoiqlJaMVtiizfwz5HxUwoT9tKnYYL8mE9Kbeq5Q/s320/1-2.jpg" 
+ alt="AIOU Assignments" 
+ width="1284" height="46" 
+ loading="lazy" decoding="async" />
+      <span class="ql-label">AIOU Assignments</span>
+    </a>
+
+    <!-- ===== Card 3: AIOU Original Books ===== -->
+    <a class="ql-card"
+       href="https://assignmentwaly.blogspot.com/p/aiou-original-books.html"
+       target="_blank"
+       rel="noopener"
+       aria-label="AIOU Original Soft Books">
+      <img class="ql-img" 
+ src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhWmd6AW6d36d4qnAYKD1botd2iDPi3zvG1W1Cz6v8y8LWYsp3JNRU26AmbPBo52N4Q5FjuTrC-FDwhopPPofsbISWu04KpwPERjnQDtCmEGvOsV-9uX-oRXiKeislVGhQ5sPfV3G_JSaqtqGKfUzvNKTUGm2YTuQxAZdYQ5ymy8q7nb0TX0c6CpHGLwTI/s320/1-3.jpg" 
+ alt="AIOU Original Books" 
+ width="1284" height="46" 
+ loading="lazy" decoding="async" />
+      <span class="ql-label">AIOU Soft Books</span>
+    </a>
+
+    <!-- ===== Card 4: AIOU Academic Schedule ===== -->
+    <a class="ql-card"
+       href="/p/academic-calander.html"
+       target="_blank"
+       rel="noopener"
+       aria-label="AIOU Academic Schedule">
+      <img class="ql-img" 
+ src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEinLPbvURA-qeG4gb7XjxjscawotWCMNdhhrf1i_ZaWOy2rPgUbis66WAOcYfHv5bhFUdt-277S1yg3W8Iu1oH4YVpipIOeIUmPHdT9wArMJdzYBv5bWDnP5q9NSWnWnIG-rB-73wMpAy2WZO2xJO_Jb1PlIy8Slj2v8_rj0J_RyV7bSod_YvPyOKFCg94/s320/1.jpg" 
+ alt="AIOU Academic Schedule" 
+ width="1284" height="46" 
+ loading="lazy" decoding="async" />
+      <span class="ql-label">Academic Schedule</span>
+    </a>
+
+    <!-- ===== Card 5: WhatsApp Channel ===== -->
+    <a class="ql-card"
+       href="https://whatsapp.com/channel/0029Va8EGw3InlqLVo7aak3a"
+       target="_blank"
+       rel="noopener"
+       aria-label="Join WhatsApp Channel">
+      <img class="ql-img" 
+ src="https://blogger.googleusercontent.com/img/a/AVvXsEjM897QIUZ7hpby8OcBLSgql6llcRmY0tWBciFEONnt-diMVwI6Ko2JQx7Ah7ZZWAKnxptJluMswXu4WXXlwA0fMdTu3DZMke67dCifzzCXDll6SpYE0zRVkBkim5yE_EiKb9Egmi-fo5a_le6tOIc-P0HgNba8orIPAEIfEfnVZRLJ0CPCZJS1I6KLUbzt=s215" 
+ alt="Join WhatsApp Channel" 
+ width="1284" height="46" 
+ loading="lazy" decoding="async" />
+      <span class="ql-label">WhatsApp Channel</span>
+    </a>
+
+  </div>
+
+</div>]]></b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
       <b:include name='JetHtml'/>
@@ -1798,21 +2048,185 @@ width: 50%;
   </b:widget>
   <b:widget id='HTML25' locked='false' title='About AIOU Coaching' type='HTML' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='content'><![CDATA[<div class="glass-about-card">
-  <p class="mb-3">
-    <strong>AIOU Coaching</strong> helps Allama Iqbal Open University students with 
-    admission guidance, assignment help and exam preparation. We are an 
-    independent service and are <em>not affiliated with AIOU</em>.
-  </p>
-  <p class="mb-0">
+      <b:widget-setting name='content'><![CDATA[<style>
+/* ===== AIOU About Card – matches JetTheme glass system ===== */
+.glass-about {
+  --about-accent: var(--jt-primary, #f67938);
+  --about-accent-soft: rgba(246, 121, 56, 0.12);
+  --about-accent-border: rgba(246, 121, 56, 0.28);
+  font-family: inherit;
+  margin: -0.25rem 0 0; /* tight inside sidebar widget */
+}
+
+.glass-about-inner {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--glass-radius-sm, 14px);
+  padding: 1.1rem 1.15rem 1.25rem;
+  background: var(--glass-bg-soft, rgba(255,255,255,.38));
+  border: 1px solid var(--glass-border, rgba(255,255,255,.70));
+  box-shadow: var(--glass-shadow, 0 8px 32px rgba(0,0,0,.10));
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+
+.glass-about-inner:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--glass-shadow-hover, 0 14px 40px rgba(246,121,56,.25));
+  border-color: rgba(246, 121, 56, 0.45);
+}
+
+/* soft orange glow (same family as body background) */
+.glass-about-inner::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20% auto -20%;
+  height: 120%;
+  background: radial-gradient(circle at 20% 10%, var(--glow-a, rgba(246,121,56,.30)), transparent 55%);
+  pointer-events: none;
+  opacity: .7;
+}
+
+.glass-about-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-about-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2.5px solid rgba(255,255,255,.55);
+  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  background: var(--jt-bg-light, #f3f7f9);
+}
+
+.glass-about-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--jt-heading-color, #000);
+  margin: 0;
+  line-height: 1.25;
+  letter-spacing: -0.2px;
+}
+
+.glass-about-subtitle {
+  font-size: 0.8rem;
+  color: var(--bs-body-color, #686868);
+  margin: 2px 0 0;
+  opacity: .9;
+  font-weight: 500;
+}
+
+.glass-about-text {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--bs-body-color, #686868);
+  margin: 0 0 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-about-text strong {
+  color: var(--jt-heading-color, #000);
+  font-weight: 600;
+}
+
+.glass-about-text em {
+  color: var(--about-accent);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.glass-about-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--about-accent);
+  text-decoration: none;
+  padding: 7px 14px;
+  background: var(--about-accent-soft);
+  border: 1px solid var(--about-accent-border);
+  border-radius: 999px;
+  transition: all .25s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-about-link:hover {
+  background: var(--about-accent);
+  border-color: var(--about-accent);
+  color: #fff;
+  transform: translateX(2px);
+  box-shadow: 0 6px 18px rgba(246, 121, 56, 0.35);
+}
+
+.glass-about-link svg {
+  transition: transform .25s ease;
+}
+
+.glass-about-link:hover svg {
+  transform: translateX(3px);
+}
+
+/* Dark mode (theme uses .dark-mode) */
+.dark-mode .glass-about-inner {
+  background: var(--glass-bg-soft);
+  border-color: var(--glass-border);
+}
+
+.dark-mode .glass-about-title {
+  color: var(--jt-heading-color);
+}
+
+.dark-mode .glass-about-text strong {
+  color: var(--jt-heading-color);
+}
+
+.dark-mode .glass-about-avatar {
+  border-color: rgba(255,255,255,.18);
+}
+</style>
+
+<div class="glass-about">
+  <div class="glass-about-inner">
+
+    <div class="glass-about-header">
+      <!-- Apni image URL yahan lagao (recommended 150×150 or larger) -->
+      <img class="glass-about-avatar" 
+ src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi97P2Gn7lZdj9xvckEFRAsppVg3zYOPbu7xqyt6SLCXTdakHVkxI-Grl6kpgYvgxiU_if1Gw4rgFZUtia0NJgWzAS0I5AUlxdEQb7H7HuBFiJLNPd1wMxYEYsgsgfuVSwdhaLqu_aOuhrxsPPdFNSVp531BU24KxeTV0PTwNY2FJzg7xZlk9ZdCYeccfEO/s1600/FmDbB.jpg" 
+ alt="AIOU Coaching" 
+ width="58" 
+ height="58" 
+ loading="lazy" />
+      <div>
+        <h3 class="glass-about-title">AIOU Coaching</h3>
+        <p class="glass-about-subtitle">Independent Support for Students</p>
+      </div>
+    </div>
+
+    <p class="glass-about-text">
+      <strong>AIOU Coaching</strong> helps Allama Iqbal Open University students with
+      admission guidance, assignment help and exam preparation. We are an
+      independent service and are <em>not affiliated with AIOU</em>.
+    </p>
+
     <a href="/p/about.html" class="glass-about-link">
       Read more about us
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-left:4px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <line x1="5" y1="12" x2="19" y2="12"></line>
         <polyline points="12 5 19 12 12 19"></polyline>
       </svg>
     </a>
-  </p>
+
+  </div>
 </div>]]></b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
@@ -1876,21 +2290,6 @@ width: 50%;
     <b:includable id='content'/>
     <b:includable id='list'/>
   </b:widget>
-  <b:widget id='Label11' locked='false' title='Hashtag' type='Label' visible='true'>
-    <b:widget-settings>
-      <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
-      <b:widget-setting name='display'>CLOUD</b:widget-setting>
-      <b:widget-setting name='selectedLabelsList'/>
-      <b:widget-setting name='showType'>ALL</b:widget-setting>
-      <b:widget-setting name='showFreqNumbers'>false</b:widget-setting>
-    </b:widget-settings>
-    <b:includable id='main'>
-      <b:include name='JetLabel'/>
-    </b:includable>
-    <b:includable id='cloud'/>
-    <b:includable id='content'/>
-    <b:includable id='list'/>
-  </b:widget>
   <b:widget id='BlogArchive10' locked='false' title='Blog Archive' type='BlogArchive' visible='true'>
     <b:widget-settings>
       <b:widget-setting name='showStyle'>FLAT</b:widget-setting>
@@ -1922,10 +2321,10 @@ width: 50%;
   </b:widget>
 </b:section>
 <b:section class='position-sticky py-4 top-0' id='sidebar-sticky' itemscope='itemscope'>
-  <b:widget id='HTML2' locked='false' title='' type='HTML' visible='true'>
+  <b:widget id='HTML2' locked='false' title='Free tools' type='HTML' visible='true'>
     <b:widget-settings>
       <b:widget-setting name='content'><![CDATA[<!-- Elfsight Instagram Feed | AIOU Coaching Instagram Feed -->
-<script src="https://elfsightcdn.com/platform.js" async></script>
+<script src="https://elfsightcdn.com/platform.js" async="async"></script>
 <div class="elfsight-app-5cef92ac-fafb-441d-8ad5-a895864bae99" data-elfsight-app-lazy></div>]]></b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
@@ -2028,7 +2427,7 @@ width: 50%;
 <b:section class='container px-3' id='copyright' maxwidgets='1' showaddelement='no'>
   <b:widget id='HTML23' locked='true' title='Copyright' type='HTML' version='2' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='content'><![CDATA[Copyright &copy; 2026 Design by <a href="https://www.aioucoaching.blogspot.com">AIOU-Coaching</a>]]></b:widget-setting>
+      <b:widget-setting name='content'><![CDATA[Copyright &copy; 2026 Design by <a href="https://aioucoaching.blogspot.com/p/home.html">AIOU-Coaching</a>]]></b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
       <b:include name='JetCopyRight'/>
@@ -3158,89 +3557,7 @@ function jtCallback(){
 })();
 /*]]>*/</script>
 
-<!-- AIOU Coaching installable companion PWA entry point. Blogger cannot host a same-origin service worker, so the installable app opens on GitHub Pages. -->
-<style type='text/css'><![CDATA[
-.aio-pwa-cta{position:fixed;z-index:9998;right:18px;bottom:18px;display:flex;align-items:center;gap:12px;max-width:calc(100vw - 28px);padding:12px 14px;border:1px solid #f1c4a8;border-radius:18px;background:rgba(255,255,255,.96);box-shadow:0 12px 36px rgba(24,23,22,.16);font:600 13px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;color:#181716;backdrop-filter:blur(14px)}
-.aio-pwa-cta strong{display:block;font-weight:850}.aio-pwa-cta span{display:block;color:#6d6a67;font-size:11px}.aio-pwa-cta a{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border-radius:999px;background:#f67938;color:#fff!important;text-decoration:none;padding:10px 13px;font-weight:800}.aio-pwa-cta a:hover{background:#b8470f}
-@media(max-width:520px){.aio-pwa-cta{left:10px;right:10px;bottom:10px;justify-content:space-between}.aio-pwa-cta>div{min-width:0}.aio-pwa-cta a{padding:10px 11px}}
-]]></style>
-<script type='text/javascript'><![CDATA[
-(function(){
-  if (location.hostname !== 'aioucoaching.blogspot.com' || document.querySelector('.aio-pwa-cta')) return;
-  function addAppLink(){
-    if (!document.body || document.querySelector('.aio-pwa-cta')) return;
-    var box=document.createElement('aside');box.className='aio-pwa-cta';box.setAttribute('aria-label','AIOU Coaching study app');
-    var info=document.createElement('div'),title=document.createElement('strong'),detail=document.createElement('span'),link=document.createElement('a');
-    title.textContent='AIOU Coaching App';detail.textContent='Installable study tools · offline for cached pages';link.href='https://nationalistacademy.github.io/AIOUN-Coaching/';link.textContent='Open app';link.setAttribute('aria-label','Open installable AIOU Coaching study app');
-    info.appendChild(title);info.appendChild(detail);box.appendChild(info);box.appendChild(link);document.body.appendChild(box);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addAppLink);else addAppLink();
-})();
-]]></script>
-
-
-<!-- PWA + Firebase area exposed in Blogger Layout. Edit/remove this gadget from Layout. -->
-<b:section id='pwa-firebase-layout' class='pwa-firebase-layout' maxwidgets='1' name='PWA Install and Firebase' showaddelement='yes'>
-  <b:widget id='HTML26' locked='false' title='PWA Install / Firebase Setup' type='HTML' visible='true'>
-    <b:widget-settings>
-      <b:widget-setting name='content'><![CDATA[
-<section class="aio-pwa-layout-card" aria-labelledby="aio-pwa-layout-title">
-  <div class="aio-pwa-layout-copy">
-    <span class="aio-pwa-layout-eyebrow">AIOU COACHING · STUDY APP</span>
-    <h2 id="aio-pwa-layout-title">Take your study tools with you</h2>
-    <p>Open the installable study app for a mobile-friendly experience. Offline access applies to pages already cached by the app.</p>
-    <div class="aio-pwa-layout-actions">
-      <a class="aio-pwa-layout-button" href="https://nationalistacademy.github.io/AIOUN-Coaching/">Open Study App</a>
-      <button class="aio-pwa-layout-button aio-pwa-install" type="button" hidden>Install App</button>
-    </div>
-    <p class="aio-pwa-layout-status" role="status" aria-live="polite">Install option depends on your browser and device.</p>
-  </div>
-  <details class="aio-firebase-setup">
-    <summary>Firebase connection status / setup</summary>
-    <p class="aio-firebase-status" role="status">Firebase is not connected yet. Add your Firebase Web App configuration in the template only after creating a Firebase project.</p>
-    <p class="aio-firebase-help">Do not paste service-account keys, private keys, Admin SDK credentials, or Cloudflare API tokens here. Firebase web config is intended for client apps, but access must still be protected by Firebase Security Rules and authorized domains.</p>
-  </details>
-</section>
-<script>
-(function(){
-  var card=document.querySelector('.aio-pwa-layout-card');
-  if(!card || card.dataset.ready==='1') return;
-  card.dataset.ready='1';
-  var install=card.querySelector('.aio-pwa-install');
-  var status=card.querySelector('.aio-pwa-layout-status');
-  var promptEvent=null;
-  window.addEventListener('beforeinstallprompt',function(event){
-    event.preventDefault();promptEvent=event;if(install)install.hidden=false;
-  });
-  if(install) install.addEventListener('click',async function(){
-    if(!promptEvent){status.textContent='Install is not offered by this browser. Use the browser menu → Add to Home screen.';return;}
-    promptEvent.prompt();await promptEvent.userChoice;promptEvent=null;install.hidden=true;
-  });
-  window.addEventListener('appinstalled',function(){if(install)install.hidden=true;status.textContent='Study app installed successfully.';});
-  var fbStatus=card.querySelector('.aio-firebase-status');
-  var cfg=window.AIOU_FIREBASE_CONFIG;
-  if(cfg && cfg.apiKey && cfg.authDomain && cfg.projectId && cfg.appId){
-    fbStatus.textContent='Firebase config found in this page. Firebase service initialization and security rules must be verified separately.';
-    if(window.firebase && !window.firebase.apps.length){try{window.firebase.initializeApp(cfg);fbStatus.textContent='Firebase app initialized. No authentication or database access has been enabled by this widget.';}catch(e){fbStatus.textContent='Firebase initialization failed. Check the web app configuration.';}}
-  }
-})();
-</script>
-      ]]></b:widget-setting>
-    </b:widget-settings>
-    <b:includable id='main'>
-      <b:include name='JetHtml'/>
-    </b:includable>
-  </b:widget>
-</b:section>
-<style type='text/css'><![CDATA[
-.pwa-firebase-layout{max-width:1180px;margin:24px auto;padding:0 18px}
-.aio-pwa-layout-card{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:22px;align-items:center;padding:clamp(18px,3vw,30px);border:1px solid #f1d8c8;border-radius:24px;background:linear-gradient(135deg,#fff 0%,#fff5ed 100%);box-shadow:0 12px 32px rgba(24,23,22,.06);color:#181716;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
-.aio-pwa-layout-card *{box-sizing:border-box}.aio-pwa-layout-eyebrow{font-size:11px;font-weight:850;letter-spacing:.12em;color:#a54513}.aio-pwa-layout-card h2{margin:8px 0;font-size:clamp(22px,3vw,32px);line-height:1.15;color:#181716}.aio-pwa-layout-card p{margin:8px 0;color:#6d6a67;font-size:14px;line-height:1.6}.aio-pwa-layout-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.aio-pwa-layout-button{display:inline-flex;align-items:center;justify-content:center;border:1px solid #f67938;border-radius:999px;background:#f67938;color:#fff!important;text-decoration:none;font:800 13px/1.3 system-ui,sans-serif;padding:11px 16px;cursor:pointer}.aio-pwa-layout-button:hover{background:#b8470f;border-color:#b8470f}.aio-pwa-layout-button[hidden]{display:none!important}.aio-pwa-layout-status{font-size:12px!important}.aio-firebase-setup{border:1px solid #e9e5e1;background:#fff;border-radius:16px;padding:15px}.aio-firebase-setup summary{font-weight:800;cursor:pointer;color:#181716}.aio-firebase-status{margin-top:12px!important}.aio-firebase-help{font-size:12px!important}
-@media(max-width:680px){.pwa-firebase-layout{padding:0 12px}.aio-pwa-layout-card{grid-template-columns:1fr;gap:14px;border-radius:18px}.aio-pwa-layout-actions{display:grid;grid-template-columns:1fr}.aio-pwa-layout-button{width:100%}}
-]]></style>
-<!-- Firebase web config hook: add a window.AIOU_FIREBASE_CONFIG object here only when the actual project config is available. Firebase SDK is intentionally not loaded until the needed services are selected. -->
-
-<!-- Blogger theme app entry point ends here. -->
+<!-- Your Style and Script before </body> is here -->
 
 <b:if cond='!data:view.isPreview'>&lt;textarea disabled readonly id=&quot;element-b&quot; style=&quot;display:none&quot;&gt;&lt;style&gt;/*</b:if></body><b:if cond='!data:view.isPreview'>*/&lt;/style&gt;&lt;/textarea&gt;<script>/*<![CDATA[*/const _eh=document.getElementById("element-h"),_eb=document.getElementById("element-b"),_WidgetManager={_PopupConfig:function(){}};null!==_eh&&(_eh.outerHTML=""),null!==_eb&&(_eb.outerHTML="");/*]]>*/</script>
 &lt;/body&gt;</b:if>
