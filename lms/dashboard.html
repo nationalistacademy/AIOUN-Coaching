@@ -2,30 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f67938"><meta name="description" content="Your AIOU Coaching student dashboard for courses, quizzes, learning progress and free study tools.">
 <title>AIOU Coaching LMS — Dashboard</title>
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--text:#17202a;--muted:#6b7280;--line:#e5e7eb;--brand:#f67938;--brand2:#ea580c;--soft:#fff1e9;--ok:#15803d}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}button{font:inherit}.wrap{max-width:1180px;margin:auto;padding:22px;visibility:hidden}.top{display:flex;justify-content:space-between;align-items:center;gap:18px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px 22px;box-shadow:0 12px 35px #0000000a}.brand{font-weight:800;color:var(--brand2);font-size:14px}.top h1{margin:3px 0 4px;font-size:28px}.muted{color:var(--muted)}.logout,.primary{border:0;border-radius:12px;padding:11px 16px;background:var(--brand);color:#fff;font-weight:800;cursor:pointer}.logout:disabled{opacity:.6;cursor:wait}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}.stat,.panel,.course,.lesson{background:var(--card);border:1px solid var(--line);border-radius:18px}.stat{padding:18px}.stat strong{display:block;font-size:27px;margin-top:4px}.layout{display:grid;grid-template-columns:1.6fr .9fr;gap:16px;margin-top:16px}.panel{padding:20px}.panel h2{margin:0 0 14px;font-size:19px}.courses{display:grid;gap:12px}.course{padding:16px}.course-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.course h3{margin:0 0 5px;font-size:17px}.badge{display:inline-flex;padding:5px 9px;border-radius:999px;background:var(--soft);color:var(--brand2);font-size:12px;font-weight:800}.course p{margin:9px 0;color:var(--muted);line-height:1.5}.progress{height:8px;background:#edf0f3;border-radius:99px;overflow:hidden;margin:12px 0 7px}.progress i{display:block;height:100%;background:var(--brand);border-radius:99px}.course-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px}.lessons{display:grid;gap:9px;margin-top:12px}.lesson{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px}.lesson-title{font-weight:700}.lesson small{color:var(--muted)}.complete{border:1px solid #d1d5db;background:#fff;border-radius:9px;padding:7px 10px;cursor:pointer}.complete.done{background:#ecfdf3;color:var(--ok);border-color:#bbf7d0}.announcement{padding:12px 0;border-bottom:1px solid var(--line)}.announcement:last-child{border-bottom:0}.announcement b{display:block;margin-bottom:4px}.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed #d1d5db;border-radius:14px}.error{margin-top:14px;background:#fef2f2;color:#b91c1c;padding:12px;border-radius:12px;display:none}.loading{color:var(--muted)}
-@media(max-width:800px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.wrap{padding:14px}.top h1{font-size:23px}}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#fff8f3 0,#f7f8fb 340px);color:var(--text)}button{font:inherit}.wrap{max-width:1240px;margin:auto;padding:22px;visibility:hidden}.top{display:flex;justify-content:space-between;align-items:center;gap:18px;background:linear-gradient(115deg,#a83c0c,#c64d12 52%,#f67938);color:#fff;border:1px solid #e46b31;border-radius:22px;padding:23px 25px;box-shadow:0 16px 38px #c64d1226}.top .muted{color:#ffe5d6}.brand{font-weight:900;color:#ffe6d8;font-size:12px;letter-spacing:.12em}.top h1{margin:3px 0 4px;font-size:28px}.muted{color:var(--muted)}.logout,.primary{border:0;border-radius:12px;padding:11px 16px;background:#fff;color:#a83c0c;font-weight:900;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.logout:disabled{opacity:.6;cursor:wait}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}.stat,.panel,.course,.lesson{background:var(--card);border:1px solid var(--line);border-radius:18px}.stat{padding:18px;box-shadow:0 8px 24px #15203308}.stat strong{display:block;font-size:27px;margin-top:4px}.layout{display:grid;grid-template-columns:1.6fr .9fr;gap:16px;margin-top:16px}.panel{padding:20px;box-shadow:0 8px 24px #15203308}.panel h2{margin:0 0 14px;font-size:19px}.courses{display:grid;gap:12px}.course{padding:16px}.course-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.course h3{margin:0 0 5px;font-size:17px}.badge{display:inline-flex;padding:5px 9px;border-radius:999px;background:var(--soft);color:var(--brand2);font-size:12px;font-weight:800}.course p{margin:9px 0;color:var(--muted);line-height:1.5}.progress{height:8px;background:#edf0f3;border-radius:99px;overflow:hidden;margin:12px 0 7px}.progress i{display:block;height:100%;background:var(--brand);border-radius:99px}.course-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px}.lessons{display:grid;gap:9px;margin-top:12px}.lesson{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px}.lesson-title{font-weight:700}.lesson small{color:var(--muted)}.complete{border:1px solid #d1d5db;background:#fff;border-radius:9px;padding:7px 10px;cursor:pointer}.complete.done{background:#ecfdf3;color:var(--ok);border-color:#bbf7d0}.announcement{padding:12px 0;border-bottom:1px solid var(--line)}.announcement:last-child{border-bottom:0}.announcement b{display:block;margin-bottom:4px}.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed #d1d5db;border-radius:14px}.error{margin-top:14px;background:#fef2f2;color:#b91c1c;padding:12px;border-radius:12px;display:none}.loading{color:var(--muted)}.quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.quick a{display:flex;align-items:center;gap:9px;padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff;text-decoration:none;font-size:13px;font-weight:800;color:#a83c0c}.catalog{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.catalog-item{border:1px solid var(--line);border-radius:13px;padding:13px;background:#fff}.catalog-item b{display:block;font-size:13px}.catalog-item small{display:block;color:var(--muted);margin-top:5px}.catalog-item span{display:inline-block;margin-top:8px;background:var(--soft);color:var(--brand2);padding:5px 8px;border-radius:99px;font-size:10px;font-weight:800}.section{margin-top:16px}.note{background:#fff8f2;border:1px solid #f4d4c2;color:#85411e;padding:13px;border-radius:12px;font-size:13px;line-height:1.55}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.top{align-items:flex-start;flex-direction:column}.wrap{padding:14px}.top h1{font-size:23px}.catalog{grid-template-columns:repeat(2,minmax(0,1fr))}.quick{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.stats{gap:8px}.stat{padding:13px}.stat strong{font-size:22px}.catalog,.quick{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <main class="wrap">
 <section class="top">
 <div><div class="brand">AIOU COACHING LMS</div><h1 id="welcome">Student Dashboard</h1><div class="muted" id="email"></div></div>
-<button class="logout" id="logout" type="button">Logout</button>
+<div><a class="logout" href="/programs.html">Portal Home</a> <button class="logout" id="logout" type="button">Logout</button></div>
 </section>
 <div id="error" class="error"></div>
 <section class="stats">
 <div class="stat"><span class="muted">Enrolled courses</span><strong id="courseCount">0</strong></div>
 <div class="stat"><span class="muted">Completed lessons</span><strong id="lessonCount">0</strong></div>
-<div class="stat"><span class="muted">Overall progress</span><strong id="progressCount">0%</strong></div>
+<div class="stat"><span class="muted">Overall progress</span><strong id="progressCount">0%</strong></div><div class="stat"><span class="muted">Quiz attempts</span><strong id="quizCount">0</strong></div>
 </section>
-<section class="layout">
-<div class="panel"><h2>📚 My Courses</h2><div id="courses" class="courses"><div class="loading">Loading your courses…</div></div></div>
+<section class="panel" style="margin-top:16px"><h2>⚡ Quick study tools</h2><div class="quick"><a href="/tools/Aiou-solved-assignment-builder.html">✍️ Assignment Builder</a><a href="/tools/guess-paper.html">📄 Guess Papers</a><a href="/tools/quiz-generator.html">🧠 Quiz Generator</a><a href="/tools/tools.html">🧰 All Tools</a></div></section><section class="layout">
+<div class="panel"><h2>📚 My Courses <a href="/programs.html#programs" style="float:right;color:#b74712;font-size:12px">Explore programs →</a></h2><div id="courses" class="courses"><div class="loading">Loading your courses…</div></div></div>
 <aside class="panel"><h2>📢 Announcements</h2><div id="announcements"><div class="loading">Loading announcements…</div></div></aside>
 </section>
+<section class="panel section"><h2>🎓 Available courses</h2><div id="catalog" class="catalog"><div class="loading">Loading courses…</div></div><p class="note">Course access is assigned by an LMS administrator for account security. Browse the catalogue and contact <a href="https://aioucoaching.blogspot.com/p/contact.html" target="_blank" rel="noopener">support</a> if you need enrollment.</p></section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-config.js"></script>
@@ -43,21 +44,24 @@ function progressForLesson(id){return progressRows.find(x=>x.lesson_id===id)?.co
 
 async function loadDashboard(){
   hideError();
-  const [enrollRes,progressRes,courseRes,announceRes]=await Promise.all([
+  const [enrollRes,progressRes,courseRes,announceRes,attemptRes]=await Promise.all([
     supabase.from('enrollments').select('id,course_id,status,enrolled_at').eq('student_id',currentUser.id).neq('status','cancelled'),
     supabase.from('lesson_progress').select('lesson_id,completed').eq('student_id',currentUser.id),
     supabase.from('courses').select('id,title,slug,description,thumbnail_url,published').eq('published',true).order('created_at',{ascending:false}),
-    supabase.from('course_announcements').select('id,course_id,title,body,created_at').eq('published',true).order('created_at',{ascending:false}).limit(8)
+    supabase.from('course_announcements').select('id,course_id,title,body,created_at').eq('published',true).order('created_at',{ascending:false}).limit(8),
+    supabase.from('quiz_attempts').select('id,score,percentage,submitted_at,quizzes(title)').eq('student_id',currentUser.id).order('submitted_at',{ascending:false}).limit(5)
   ]);
-  for(const result of [enrollRes,progressRes,courseRes,announceRes])if(result.error)throw result.error;
-  const enrollments=enrollRes.data||[]; progressRows=progressRes.data||[]; const courses=courseRes.data||[]; const announcements=announceRes.data||[];
+  for(const result of [enrollRes,progressRes,courseRes,announceRes,attemptRes])if(result.error)throw result.error;
+  const enrollments=enrollRes.data||[]; progressRows=progressRes.data||[]; const courses=courseRes.data||[]; const announcements=announceRes.data||[]; const attempts=attemptRes.data||[];
+  document.getElementById("quizCount").textContent=attempts.length;
+  renderCatalog(courses,new Set(enrollments.map(x=>x.course_id)));
   const enrolledIds=new Set(enrollments.map(x=>x.course_id));
   document.getElementById('courseCount').textContent=enrollments.length;
   document.getElementById('lessonCount').textContent=progressRows.filter(x=>x.completed).length;
   renderAnnouncements(announcements, courses);
   await renderCourses(courses.filter(c=>enrolledIds.has(c.id)), enrollments);
   const allLessons=await getLessonCounts(courses.filter(c=>enrolledIds.has(c.id)).map(c=>c.id));
-  const total=allLessons.reduce((n,x)=>n+x.total,0), done=progressRows.filter(x=>x.completed).length;
+  const total=allLessons.reduce((n,x)=>n+x.total,0), enrolledLessonIds=new Set(allLessons.flatMap(x=>x.lessons.map(l=>l.id))), done=progressRows.filter(x=>x.completed&&enrolledLessonIds.has(x.lesson_id)).length;
   document.getElementById('progressCount').textContent=total?Math.round(done/total*100)+'%':'0%';
 }
 
@@ -70,7 +74,7 @@ async function getLessonCounts(courseIds){
 
 async function renderCourses(courses,enrollments){
   const box=document.getElementById('courses');
-  if(!courses.length){box.innerHTML='<div class="empty">You have no active course enrollment yet.</div>';return}
+  if(!courses.length){box.innerHTML='<div class="empty">No course assigned yet. Your account is ready, but an LMS administrator must assign course access. Contact support if you need enrollment.</div>';return}
   const groups=await getLessonCounts(courses.map(c=>c.id));
   box.innerHTML=groups.map(group=>{
     const c=courses.find(x=>x.id===group.id); const done=group.lessons.filter(l=>progressForLesson(l.id)).length; const pct=group.total?Math.round(done/group.total*100):0;
@@ -78,6 +82,8 @@ async function renderCourses(courses,enrollments){
   }).join('');
   box.querySelectorAll('[data-lesson]').forEach(btn=>btn.addEventListener('click',()=>toggleLesson(btn.dataset.lesson,btn)));
 }
+
+function renderCatalog(courses,enrolled){const box=document.getElementById("catalog");if(!courses.length){box.innerHTML='<div class="empty">No published courses yet.</div>';return}box.innerHTML=courses.map(c=>`<article class="catalog-item"><b>${esc(c.title)}</b><small>${esc([c.programme,c.course_code?"Code "+c.course_code:""].filter(Boolean).join(" · ")||c.academic_level||"AIOU course")}</small><span>${enrolled.has(c.id)?"Enrolled":"Access by assignment"}</span></article>`).join("")}
 
 function renderAnnouncements(items,courses){
   const box=document.getElementById('announcements');
