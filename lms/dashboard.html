@@ -30,6 +30,7 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-config.js"></script>
+<script src="./dashboard-progress-utils.js"></script>
 <script>
 const supabase=window.supabase.createClient(window.AIOU_SUPABASE_URL,window.AIOU_SUPABASE_PUBLISHABLE_KEY);
 const signInPath='./signin-signup.html';
@@ -45,14 +46,14 @@ function progressForLesson(id){return progressRows.find(x=>x.lesson_id===id)?.co
 async function loadDashboard(){
   hideError();
   const [enrollRes,progressRes,courseRes,announceRes]=await Promise.all([
-    supabase.from('enrollments').select('id,course_id,status,enrolled_at').eq('student_id',currentUser.id).neq('status','cancelled'),
+    supabase.from('enrollments').select('id,course_id,status,enrolled_at').eq('student_id',currentUser.id).eq('status','active'),
     supabase.from('lesson_progress').select('lesson_id,completed').eq('student_id',currentUser.id),
     supabase.from('courses').select('id,title,slug,description,thumbnail_url,published').eq('published',true).order('created_at',{ascending:false}),
     supabase.from('course_announcements').select('id,course_id,title,body,created_at').eq('published',true).order('created_at',{ascending:false}).limit(8)
   ]);
   for(const result of [enrollRes,progressRes,courseRes,announceRes])if(result.error)throw result.error;
   const enrollments=enrollRes.data||[]; progressRows=progressRes.data||[]; const courses=courseRes.data||[]; const announcements=announceRes.data||[];
-  const enrolledIds=new Set(enrollments.map(x=>x.course_id));
+  const enrolledIds=window.AIOUDashboardUtils.activeCourseIds(enrollments);
   document.getElementById('courseCount').textContent=enrollments.length;
   document.getElementById('lessonCount').textContent=progressRows.filter(x=>x.completed).length;
   renderAnnouncements(announcements, courses);
