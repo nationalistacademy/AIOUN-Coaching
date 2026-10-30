@@ -4,6 +4,8 @@ File: `tools/aiou-workshop-reminder.html`
 
 ## What it does
 
+- Provides a privacy-safe Student ID launcher: validates the input locally, opens AIOU's official lookup page, and copies the ID to the clipboard when browser permission allows. The ID is not persisted or sent to AIOU Coaching.
+
 - Links students to AIOU's official Workshop Information, Face-to-Face schedule and AAGHI LMS.
 - Lets a student paste schedule text they copied from a public AIOU schedule or their own authenticated AAGHI LMS session.
 - Attempts to parse a course code, date and a 12-hour time range from pasted text; all parsed values must be checked against the official student schedule.
@@ -15,7 +17,7 @@ File: `tools/aiou-workshop-reminder.html`
 
 AIOU's public Workshop Information page publishes schedule links and embeds a student schedule lookup. AIOU's FAQ instructs students to check AAGHI LMS and the public workshop page. The actual student's schedule may require their Registration Number / Student ID or AAGHI LMS login, and online workshop join links can be per day/course.
 
-This static browser tool does not bypass AIOU authentication, scrape private student records, store student IDs/passwords, or claim that public batch-date summaries are a student's exact appointment. Students must copy their own confirmed workshop date/time and meeting details from AAGHI LMS. The tool does not send this data to a server.
+This static browser tool does not bypass AIOU authentication, scrape private student records, store student IDs/passwords, or claim that public batch-date summaries are a student's exact appointment. The Student ID launcher only opens the official lookup page and copies the ID locally; the student must paste it into AIOU's own form. Because the official lookup is hosted on a different origin and no supported public API/form contract is documented, browser same-origin protections prevent this tool from reading the private result automatically. Students must copy their own confirmed workshop date/time and meeting details from AAGHI LMS or the official lookup. The tool does not send this data to a server.
 
 Official sources:
 - https://www.aiou.edu.pk/workshop-information
@@ -40,3 +42,5 @@ Official sources:
 6. Refresh page: locally saved events remain available in the same browser.
 7. Delete event: it disappears from local browser list.
 8. Paste a sample schedule: parser is only a convenience and user must verify all values before saving.
+9. Student ID launcher rejects empty/invalid input, opens only the official AIOU lookup, and does not persist the ID.
+10. Verify no student ID is sent in a network request to AIOU Coaching.
