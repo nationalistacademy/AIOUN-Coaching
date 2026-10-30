@@ -1,2 +1,1 @@
-# Netlify-only entry point: force the portal rewrite even when index.html exists.
-/ /programs.html 200!
+/ /lms/signin-signup.html 200!
