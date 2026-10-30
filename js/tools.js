@@ -6,6 +6,7 @@
     { id:'paper',label:'Guess Papers' },{ id:'cover',label:'Cover Pages' },{ id:'files',label:'Image / PDF / Downloads' },{ id:'site',label:'Pages' }
   ];
   var LIST = [
+    {id:'workshop-reminder',icon:'📅',group:'site',name:'AIOU Workshop Reminder',file:'aiou-workshop-reminder.html',badges:['Google Calendar','ICS','Free'],desc:'Official schedule links se apni confirmed workshop date/time add karein aur calendar reminder banayein.'},
     {id:'studio',icon:'🤖',group:'ai',name:'Multi-ID AI Studio',file:'studio.html',badges:['DeepSeek','Multiple IDs','Compare'],desc:'Ek prompt kai Worker IDs ko bhejein, jawab compare karein aur Word draft banayein.'},
     {id:'humanizer',icon:'✍️',group:'ai',name:'AI Text Humanizer',file:'humanizer.html',badges:['Rewrite'],desc:'Apne draft ko natural aur clear banane ke liye rewriting help.'},
     {id:'diagram',icon:'🎨',group:'ai',name:'AI Diagram Generator',file:'diagram-generator.html',badges:['Mermaid','PNG'],desc:'Topic se flowchart/diagram generate karein.'},
