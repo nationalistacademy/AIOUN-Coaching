@@ -3,6 +3,7 @@
 Independent study-support tools, Blogger resources, and a separate Supabase-backed LMS for AIOU students. This project is not affiliated with AIOU.
 
 - Study tools: [index.html](index.html)
+- AIOU Workshop Reminder: [tools/aiou-workshop-reminder.html](tools/aiou-workshop-reminder.html) · [implementation notes](docs/AIOU-WORKSHOP-REMINDER.md)
 - AI Studio: [tools/studio.html](tools/studio.html)
 - Blogger PWA/Cloudflare/Firebase guide: [docs/BLOGGER-PWA-CLOUDFLARE-FIREBASE.md](docs/BLOGGER-PWA-CLOUDFLARE-FIREBASE.md)
 - Firebase non-LMS starter: [firebase/index.html](firebase/index.html)
