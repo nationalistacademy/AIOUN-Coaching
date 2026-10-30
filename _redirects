@@ -1,0 +1,2 @@
+# Netlify-only entry point: keep Blogger and GitHub Pages root behavior unchanged.
+/ /programs.html 200
