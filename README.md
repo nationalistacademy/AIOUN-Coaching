@@ -12,6 +12,7 @@ Independent study-support tools, Blogger resources, and a separate Supabase-back
 - Firestore rules: [firestore.rules](firestore.rules)
 - Storage rules: [storage.rules](storage.rules)
 - Blogger theme: [theme/aioucoahing.xml](theme/aioucoahing.xml)
+- Blogger SEO implementation and upload checklist: [docs/BLOGGER-SEO-IMPLEMENTATION.md](docs/BLOGGER-SEO-IMPLEMENTATION.md)
 - LMS security guide: [lms/README.md](lms/README.md)
 
 ## Firebase starter
