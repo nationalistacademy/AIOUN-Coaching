@@ -39,31 +39,50 @@ Configure provider credentials in their provider consoles and Supabase dashboard
 
 The last recorded security-advisor review reported no security warnings and one intentional informational item for the private answer-key table. Re-run the advisor after future schema or policy changes; do not assume that old results certify future changes.
 
-## 4. GitHub Pages deployment
+## 4. Netlify deployment
 
-A deployment workflow is defined in [deploy-pages.yml](../.github/workflows/deploy-pages.yml). It is intended to deploy only after Browser QA succeeds on `main`.
-
-Expected project URL, **subject to confirmation in the successful deployment run**:
+This repository can publish the static LMS on Netlify. The intended site origin is:
 
 ```text
-https://nationalistacademy.github.io/AIOUN-Coaching/
+https://aioucoaching.netlify.app
 ```
 
-LMS sign-in page:
+The Netlify site must be created/renamed to `aioucoaching` in the Netlify dashboard and connected to this GitHub repository. The repository build configuration is in the root `netlify.toml`; the root route is rewritten by `_redirects` to `/lms/signin-signup.html`. LMS routes remain under `/lms/`.
+
+### Netlify site settings
+
+- Build command: `npm install --omit=dev && npm run build:vendor`
+- Publish directory: `.`
+- Production branch: `main` (only after the reviewed changes are merged)
+- Do not add service-role keys, OAuth client secrets, or service-account JSON as browser environment variables.
+- Do not deploy a draft feature branch to production. Use a Netlify Deploy Preview for review first.
+
+### Supabase Auth URL settings
+
+After the Netlify site exists and its exact HTTPS origin is confirmed, set Supabase **Site URL** to:
 
 ```text
-https://nationalistacademy.github.io/AIOUN-Coaching/lms/signin-signup.html
+https://aioucoaching.netlify.app
 ```
 
-Setup and verification:
+Add these exact redirect URLs to the Supabase allow list:
 
-1. In GitHub, open **Settings → Pages** and select **GitHub Actions** as the publishing source if prompted.
-2. Check the [Browser QA workflow runs](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/browser-qa.yml).
-3. Check the [Pages deployment workflow runs](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/deploy-pages.yml) and confirm the latest run succeeded.
-4. Open the actual deployment URL and verify the sign-in page and assets load.
-5. Only after confirming the deployed URL, update Supabase **Site URL** and the redirect allow list to match it exactly.
+```text
+https://aioucoaching.netlify.app/lms/dashboard.html
+https://aioucoaching.netlify.app/lms/reset-password.html
+```
 
-A successful static deployment does not configure Supabase Auth or third-party OAuth providers automatically.
+The sign-up confirmation and OAuth redirects are generated from the current page URL, so they resolve to the Netlify origin when users start the flow there. Google/Facebook still require provider configuration in Supabase and their own provider consoles. Do not change Supabase Auth URL settings until the Netlify domain is confirmed active.
+
+### Deployment verification
+
+1. Create/claim the `aioucoaching` Netlify site and connect the GitHub repository.
+2. Review and merge the Netlify deployment PR only after CI and code review.
+3. Confirm Netlify's production deploy succeeds.
+4. Check `https://aioucoaching.netlify.app/` redirects internally to the LMS sign-in page and test all `/lms/*.html` pages.
+5. Only then update Supabase Site URL/redirect allow list and test email confirmation, password reset and each enabled OAuth provider.
+
+A committed Netlify configuration is not proof that the site exists, that the domain is assigned, or that a production deployment succeeded.
 
 ## 5. Browser QA
 
