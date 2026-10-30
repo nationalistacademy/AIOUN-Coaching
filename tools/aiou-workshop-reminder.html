@@ -30,7 +30,18 @@
 </header>
 
 <section class="wr-card">
-  <h2>1. Schedule details paste karein (optional)</h2>
+  <h2>1. Student ID se official schedule kholein</h2>
+  <p class="wr-muted">Apna AIOU Registration Number yahan type karein. Tool ID ko save nahi karta. Yeh aapko AIOU ke official lookup par le jayega; agar AIOU ka portal login ya verification maange to woh wahin complete karein.</p>
+  <div class="wr-grid">
+    <div class="wr-field full"><label for="studentId">Registration Number / Student ID</label><input id="studentId" autocomplete="off" maxlength="40" placeholder="e.g. 00ABC123456" inputmode="text"></div>
+  </div>
+  <div class="wr-actions"><button class="wr-btn" id="openOfficialLookup" type="button">Copy ID & open AIOU lookup ↗</button><a class="wr-btn secondary" href="https://online.aiou.edu.pk/live_site/WorkshopAP/schedule/index6.aspx" target="_blank" rel="noopener">Open lookup without ID ↗</a></div>
+  <p class="wr-small" id="lookupStatus" role="status" aria-live="polite">Privacy: ID is used only for the copy action in this tab. It is not sent to AIOU automatically, uploaded to our server, or stored.</p>
+  <div class="wr-note">AIOU ka lookup form external website par hai. Browser security (cross-origin) ki wajah se yeh page uske private result ko directly read nahi kar sakta. Official portal par result dekh kar schedule text neeche paste karein. Hum fake auto-fetch ya guessed API use nahi karte.</div>
+</section>
+
+<section class="wr-card">
+  <h2>2. Schedule details paste karein (optional)</h2>
   <p class="wr-muted">AIOU schedule ya apne AAGHI LMS se relevant workshop row/details copy karke yahan paste karein. Parser course code, title aur recognizable date/time ko form mein fill karne ki koshish karega. Hamesha official schedule se verify karein.</p>
   <label for="scheduleText">Copied schedule text</label>
   <textarea id="scheduleText" placeholder="Example: Course Code 1429 | Workshop 1 | 12 November 2026 | 10:00 AM - 11:00 AM"></textarea>
@@ -39,7 +50,7 @@
 </section>
 
 <section class="wr-card">
-  <h2>2. Confirm workshop event</h2>
+  <h2>3. Confirm workshop event</h2>
   <form id="eventForm">
     <div class="wr-grid">
       <div class="wr-field full"><label for="title">Workshop title *</label><input id="title" required maxlength="140" placeholder="e.g. AIOU Workshop — Course 1429"></div>
@@ -59,7 +70,7 @@
 </section>
 
 <section class="wr-card">
-  <h2>3. My saved reminders</h2>
+  <h2>4. My saved reminders</h2>
   <p class="wr-muted">Saved events stay in this browser only. Google Calendar button opens a pre-filled event for you to save. ICS download includes a calendar alarm where supported by your calendar app.</p>
   <div class="wr-events" id="events"><p class="wr-muted">No workshop reminders saved yet.</p></div>
 </section>
@@ -86,7 +97,7 @@ function downloadIcs(ev){var dt=eventDates(ev),uid='aiou-'+ev.id+'@aioucoaching.
 function render(){var items=read().sort(function(a,b){return (a.date+a.start).localeCompare(b.date+b.start);}),root=$('events');root.textContent='';if(!items.length){var p=document.createElement('p');p.className='wr-muted';p.textContent='No workshop reminders saved yet.';root.appendChild(p);return;}items.forEach(function(ev){var card=document.createElement('article');card.className='wr-event';var h=document.createElement('h3');h.textContent=ev.title;var p=document.createElement('p');p.className='wr-muted';p.textContent=ev.date+' · '+ev.start+(ev.end?'–'+ev.end:'')+' · '+ev.mode+(ev.course?' · '+ev.course:'');var note=document.createElement('p');note.className='wr-small';note.textContent='Reminder: '+ev.reminder+' minutes before'+(ev.semester?' · '+ev.semester:'');card.append(h,p,note);var actions=document.createElement('div');actions.className='wr-actions';var g=document.createElement('a');g.className='wr-btn';g.href=makeGoogle(ev);g.target='_blank';g.rel='noopener';g.textContent='Add to Google Calendar';var i=document.createElement('button');i.className='wr-btn secondary';i.type='button';i.textContent='Download .ics';i.addEventListener('click',function(){downloadIcs(ev);});var del=document.createElement('button');del.className='wr-btn secondary';del.type='button';del.textContent='Delete';del.addEventListener('click',function(){write(read().filter(function(x){return x.id!==ev.id;}));render();});actions.append(g,i,del);card.appendChild(actions);root.appendChild(card);});}
 function parseText(){var raw=$('scheduleText').value.trim();if(!raw){say('Pehle schedule text paste karein.','wr-error');return;}var code=raw.match(/\b(?:course\s*code\s*)?([A-Z]{2,6}\s?\d{3,5}|\d{4,6})\b/i);if(code)$('course').value=code[1].replace(/\s+/g,'').toUpperCase();var dateMatch=raw.match(/\b(\d{1,2})[\s/-]+([A-Za-z]{3,9})[\s,-]+(20\d{2})\b/)||raw.match(/\b(20\d{2})-(\d{2})-(\d{2})\b/);if(dateMatch){var iso;if(dateMatch[1].length===4)iso=dateMatch[1]+'-'+dateMatch[2]+'-'+dateMatch[3];else{var months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};var mon=months[dateMatch[2].slice(0,3).toLowerCase()];if(mon)iso=dateMatch[3]+'-'+pad(mon)+'-'+pad(+dateMatch[1]);}if(iso)$('date').value=iso;}var times=raw.match(/\b(\d{1,2})(?::(\d{2}))?\s*(AM|PM)\s*(?:-|to|–)\s*(\d{1,2})(?::(\d{2}))?\s*(AM|PM)\b/i);if(times){function cv(h,m,ap){h=+h;if(ap.toUpperCase()==='PM'&&h!==12)h+=12;if(ap.toUpperCase()==='AM'&&h===12)h=0;return pad(h)+':'+pad(+(m||0));}$('start').value=cv(times[1],times[2],times[3]);$('end').value=cv(times[4],times[5],times[6]);}if(!$('title').value){$('title').value='AIOU Workshop'+($('course').value?' — Course '+$('course').value:'');}say('Text read kar liya. Date/time aur course ko official LMS se verify karein; missing fields manually fill karein.','wr-ok');}
 form.addEventListener('submit',function(e){e.preventDefault();var ev={id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),title:$('title').value.trim(),course:$('course').value.trim(),semester:$('semester').value.trim(),date:$('date').value,start:$('start').value,end:$('end').value,reminder:+$('reminder').value,mode:$('mode').value,joinUrl:validUrl($('joinUrl').value.trim()),notes:$('notes').value.trim()};if(!ev.title||!ev.date||!ev.start){say('Title, date aur start time zaroori hain.','wr-error');return;}var d=eventDates(ev);if(isNaN(d.start.getTime())||isNaN(d.end.getTime())||d.end<=d.start){say('End time start time se baad hona chahiye.','wr-error');return;}var list=read();list.push(ev);if(write(list)){say('Reminder browser mein save ho gaya. Ab Google Calendar ya .ics option use karein.','wr-ok');render();}});
-$('parseBtn').addEventListener('click',parseText);$('clearPaste').addEventListener('click',function(){$('scheduleText').value='';});$('resetForm').addEventListener('click',function(){form.reset();say('Form reset ho gaya.','');});
+$('openOfficialLookup').addEventListener('click',function(){var id=$('studentId').value.trim();var out=$('lookupStatus');if(!id){out.textContent='Pehle apna Registration Number enter karein.';return;}if(!/^[a-zA-Z0-9-]{5,40}$/.test(id)){out.textContent='Registration Number ka format check karein.';return;}var w=window.open('https://online.aiou.edu.pk/live_site/WorkshopAP/schedule/index6.aspx','_blank','noopener');if(!w){out.textContent='Popup block ho gaya. Neeche Open lookup link use karein.';return;}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(id).then(function(){out.textContent='ID clipboard par copy ho gaya. AIOU ke official page par paste karein. ID hamare server ko nahi bheja gaya.';}).catch(function(){out.textContent='Official page khul gaya. ID manually copy/paste karein.';});}else{out.textContent='Official page khul gaya. ID manually copy/paste karein.';}});$('parseBtn').addEventListener('click',parseText);$('clearPaste').addEventListener('click',function(){$('scheduleText').value='';});$('resetForm').addEventListener('click',function(){form.reset();say('Form reset ho gaya.','');});
 render();
 })();
 </script>
