@@ -3179,6 +3179,72 @@ function jtCallback(){
 ]]></script>
 
 
+
+<!-- AIOU Coaching: static Blogger mobile navigation (markup is present in the XML; no JS injection required) -->
+<style type='text/css'><![CDATA[
+#aio-mobile-dock{display:none}
+@media(max-width:767px){
+  .aio-pwa-cta{display:none!important}
+  body{padding-bottom:calc(82px + env(safe-area-inset-bottom,0px))!important}
+  #aio-mobile-dock{position:fixed!important;z-index:2147483000!important;left:8px!important;right:8px!important;bottom:calc(7px + env(safe-area-inset-bottom,0px))!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:6px 4px;border:1px solid rgba(120,120,120,.2);border-radius:17px;background:rgba(255,255,255,.98);box-shadow:0 8px 28px rgba(20,25,30,.2);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+  .dark-mode #aio-mobile-dock{background:rgba(28,32,37,.98);border-color:rgba(255,255,255,.14)}
+  #aio-mobile-dock .aio-dock-action{appearance:none;-webkit-appearance:none;min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;border-radius:11px;background:transparent;color:#4c4c4c;text-decoration:none;font:700 10px/1.15 system-ui,-apple-system,'Segoe UI',sans-serif;cursor:pointer;padding:4px 1px;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+  .dark-mode #aio-mobile-dock .aio-dock-action{color:#f2f2f2}
+  #aio-mobile-dock svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+}
+@media(min-width:768px){#aio-mobile-dock{display:none!important}}
+]]></style>
+<nav id='aio-mobile-dock' aria-label='AIOU Coaching mobile navigation'>
+  <a class='aio-dock-action' href='/' aria-label='Home'>
+    <svg viewBox='0 0 24 24' aria-hidden='true'><path d='m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z'/></svg><span>Home</span>
+  </a>
+  <a class='aio-dock-action' href='/search' aria-label='Search'>
+    <svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='10.8' cy='10.8' r='6.8'/><path d='m16 16 5 5'/></svg><span>Search</span>
+  </a>
+  <button class='aio-dock-action' type='button' aria-label='Menu' onclick='var n=document.getElementById("navbar-toggler");if(n){n.click();}else{var m=document.getElementById("navbar");if(m){m.classList.toggle("show");}}'>
+    <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 6h16M4 12h16M4 18h16'/></svg><span>Menu</span>
+  </button>
+  <b:if cond='data:view.isPost or data:view.isPage'>
+    <button class='aio-dock-action' type='button' aria-label='Share' onclick='if(navigator.share){navigator.share({title:document.title,url:location.href}).catch(function(){});}else if(navigator.clipboard){navigator.clipboard.writeText(location.href);}else{window.prompt("Copy page link:",location.href);}'>
+      <svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='18' cy='5' r='3'/><circle cx='6' cy='12' r='3'/><circle cx='18' cy='19' r='3'/><path d='m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4'/></svg><span>Share</span>
+    </button>
+    <a class='aio-dock-action' href='#comments' aria-label='Comments'>
+      <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-2 2v-9.5A7.5 7.5 0 0 1 10.5 4H12a8 8 0 0 1 8 7.5Z'/><path d='M8 11h8M8 14h5'/></svg><span>Comments</span>
+    </a>
+  <b:else/>
+    <button class='aio-dock-action' type='button' aria-label='Dark mode' onclick='var d=document.getElementById("dark-toggler");if(d){d.click();}else{document.documentElement.classList.toggle("dark-mode");document.body.classList.toggle("dark-mode");}'>
+      <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z'/></svg><span>Dark mode</span>
+    </button>
+    <button class='aio-dock-action' type='button' aria-label='Page up' onclick='window.scrollTo({top:0,behavior:"smooth"});'>
+      <svg viewBox='0 0 24 24' aria-hidden='true'><path d='m6 14 6-6 6 6M12 8v12'/></svg><span>Page up</span>
+    </button>
+  </b:if>
+</nav>
+
+<!-- Compact sidebar widgets and fluid post/page reading layout -->
+<style type='text/css'><![CDATA[
+#sidebar .widget{padding:clamp(.65rem,1.2vw,.95rem)!important;margin-bottom:.8rem!important;border-radius:14px}
+#sidebar .widget-title{margin-bottom:.65rem!important;font-size:clamp(.92rem,1vw,1.05rem)}
+#sidebar .widget-content{font-size:clamp(.84rem,.95vw,.94rem);line-height:1.5;overflow-wrap:anywhere}
+#sidebar img{max-width:100%;height:auto}
+#sidebar iframe{max-width:100%}
+#single-content,#page-content{width:100%;min-width:0;padding:clamp(.8rem,2.2vw,1.65rem)!important}
+#post-body,.post-body{font-size:clamp(15px,1.05vw,17px);line-height:1.78;overflow-wrap:anywhere}
+#post-body img,.post-body img,#page-content img{max-width:100%;height:auto}
+#post-body table,.post-body table,#page-content table{display:block;max-width:100%;overflow-x:auto}
+@media(max-width:991.98px){
+  #sidebar{border:0!important;padding:0 .75rem!important}
+  #sidebar .widget{padding:.8rem!important;margin:.65rem 0!important}
+  #single-content,#page-content{padding:clamp(.7rem,2vw,1.1rem)!important}
+}
+@media(max-width:575.98px){
+  #sidebar .widget{padding:.7rem!important;margin:.55rem 0!important}
+  #sidebar .widget-title{font-size:.92rem}
+  #post-body,.post-body{font-size:15px;line-height:1.72}
+  #single-content,#page-content{padding:.65rem!important}
+}
+]]></style>
+
 <!-- PWA + Firebase area exposed in Blogger Layout. Edit/remove this gadget from Layout. -->
 <b:section id='pwa-firebase-layout' class='pwa-firebase-layout' maxwidgets='1' name='PWA Install and Firebase' showaddelement='yes'>
   <b:widget id='HTML26' locked='false' title='PWA Install / Firebase Setup' type='HTML' visible='true'>
