@@ -2040,7 +2040,52 @@ width: 50%;
 
 <div class='position-fixed d-none' id='back-to-top' style='right:20px;bottom:20px'><a aria-label='Back to Top' class='btn btn-sm jt-btn-light rounded-circle jt-icon-center' href='#back-to-top' onclick='window.scroll({top:0,left: 0,behavior:&apos;smooth&apos;});'><svg aria-hidden='true' class='jt-icon' height='1em' width='1em'><use xlink:href='#i-arrow-t'/></svg></a></div>
 
-<!-- NEW: Cookie / ad-personalisation notice (logic in the script near </body>) -->
+<!-- NEW: Cookie / ad-personalisation notice (logic in the script near 
+<!-- AIOU Coaching enhancements inspired by the supplied Plus UI XML -->
+<style type='text/css'><![CDATA[
+#aio-reading-progress{position:fixed;top:0;left:0;width:0;height:3px;z-index:2147483001;background:linear-gradient(90deg,#1769aa,#ff8a3d);box-shadow:0 1px 8px rgba(23,105,170,.35);pointer-events:none;transition:width .08s linear}
+#aio-scroll-control{position:fixed;right:16px;bottom:22px;z-index:2147482999;width:44px;height:44px;border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#1769aa;color:#fff;box-shadow:0 4px 16px rgba(0,0,0,.22);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;cursor:pointer}
+#aio-scroll-control.aio-visible{opacity:1;visibility:visible;transform:translateY(0)}
+#aio-scroll-control svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:767px){#aio-scroll-control{right:14px;bottom:calc(92px + env(safe-area-inset-bottom,0px))}}
+@media(prefers-reduced-motion:reduce){#aio-scroll-control{transition:none}}
+]]></style>
+<div aria-hidden='true' id='aio-reading-progress'></div>
+<button aria-label='Scroll to top' id='aio-scroll-control' type='button'>
+  <svg aria-hidden='true' viewBox='0 0 24 24'><path d='m6 14 6-6 6 6M12 8v12'/></svg>
+</button>
+<script type='text/javascript'>//<![CDATA[
+(function(){
+  var bar=document.getElementById('aio-reading-progress');
+  var btn=document.getElementById('aio-scroll-control');
+  if(!bar||!btn)return;
+  var ticking=false;
+  function update(){
+    var doc=document.documentElement;
+    var top=window.pageYOffset||doc.scrollTop||document.body.scrollTop||0;
+    var max=Math.max(1,doc.scrollHeight-window.innerHeight);
+    var pct=Math.max(0,Math.min(100,top/max*100));
+    bar.style.width=pct+'%';
+    if(top>240){btn.classList.add('aio-visible');btn.setAttribute('aria-label',pct>55?'Scroll to top':'Scroll to bottom');}
+    else{btn.classList.remove('aio-visible');}
+    btn.innerHTML=pct>55
+      ? '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 10 6 6 6-6M12 16V4"/></svg>'
+      : '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 14 6-6 6 6M12 8v12"/></svg>';
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){if(!ticking){window.requestAnimationFrame(update);ticking=true;}},{passive:true});
+  window.addEventListener('resize',update,{passive:true});
+  btn.addEventListener('click',function(){
+    var doc=document.documentElement;
+    var top=window.pageYOffset||doc.scrollTop||document.body.scrollTop||0;
+    var max=Math.max(1,doc.scrollHeight-window.innerHeight);
+    window.scrollTo({top:top/max>.55?0:doc.scrollHeight,behavior:'smooth'});
+  });
+  update();
+})();
+ //]]></script>
+
+</body>) -->
 <div aria-label='Cookie notice' aria-live='polite' class='glass-cookie' hidden='hidden' id='cookie-consent' role='dialog'>
 <p>We use cookies for analytics and for showing ads (Google AdSense). By continuing you agree to our <a href='/p/privacy.html'>Privacy Policy</a>.</p>
 <div><button class='btn btn-sm jt-btn-primary rounded-pill px-4 me-2' id='cookie-accept' type='button'>Accept</button><button class='btn btn-sm jt-btn-light rounded-pill px-4' id='cookie-decline' type='button'>Decline</button></div>
