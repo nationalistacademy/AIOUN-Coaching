@@ -3180,100 +3180,95 @@ function jtCallback(){
 
 
 
-<!-- AIOU mobile app-style bottom navigation -->
+<!-- AIOU mobile app-style bottom navigation: injected with JS to avoid Blogger view-condition rendering issues -->
 <style type='text/css'><![CDATA[
+#aio-mobile-dock{display:none}
 @media(max-width:767px){
   .aio-pwa-cta{display:none!important}
-  body{padding-bottom:calc(82px + env(safe-area-inset-bottom,0px))!important}
-  #aio-mobile-dock{position:fixed;z-index:10050;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:6px 5px;border:1px solid rgba(120,120,120,.18);border-radius:18px;background:rgba(255,255,255,.96);box-shadow:0 8px 28px rgba(20,25,30,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
-  .dark-mode #aio-mobile-dock{background:rgba(28,32,37,.96);border-color:rgba(255,255,255,.12)}
-  #aio-mobile-dock .aio-dock-action{min-width:0;min-height:51px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;border-radius:11px;background:transparent;color:#555;text-decoration:none;font:700 10px/1.15 system-ui,-apple-system,'Segoe UI',sans-serif;cursor:pointer;padding:4px 1px;-webkit-tap-highlight-color:transparent}
-  .dark-mode #aio-mobile-dock .aio-dock-action{color:#eee}
-  #aio-mobile-dock .aio-dock-action:active{background:rgba(246,121,56,.13);color:#d95b19}
-  #aio-mobile-dock svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  body{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))!important}
+  #aio-mobile-dock{position:fixed!important;z-index:2147483000!important;left:8px!important;right:8px!important;bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:6px 5px;border:1px solid rgba(120,120,120,.2);border-radius:18px;background:rgba(255,255,255,.97);box-shadow:0 8px 28px rgba(20,25,30,.2);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;visibility:visible!important;opacity:1!important;transform:none!important}
+  .dark-mode #aio-mobile-dock{background:rgba(28,32,37,.97);border-color:rgba(255,255,255,.14)}
+  #aio-mobile-dock .aio-dock-action{appearance:none;-webkit-appearance:none;min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;border-radius:11px;background:transparent;color:#4c4c4c;text-decoration:none;font:700 10px/1.15 system-ui,-apple-system,'Segoe UI',sans-serif;cursor:pointer;padding:4px 1px;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+  .dark-mode #aio-mobile-dock .aio-dock-action{color:#f2f2f2}
+  #aio-mobile-dock .aio-dock-action:active{background:rgba(246,121,56,.15);color:#d95b19}
+  #aio-mobile-dock svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
 }
 @media(min-width:768px){#aio-mobile-dock{display:none!important}}
 ]]></style>
-<b:if cond='data:view.isPost or data:view.isPage'>
-<nav id='aio-mobile-dock' aria-label='Post and page quick navigation'>
-  <a class='aio-dock-action' expr:href='data:blog.homepageUrl' aria-label='Home'>
-    <svg viewBox='0 0 24 24' aria-hidden='true'><path d='m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z'/></svg><span>Home</span>
-  </a>
-  <button class='aio-dock-action' type='button' data-aio-action='search' aria-label='Search'>
-    <svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='10.8' cy='10.8' r='6.8'/><path d='m16 16 5 5'/></svg><span>Search</span>
-  </button>
-  <button class='aio-dock-action' type='button' data-aio-action='menu' aria-label='Open menu'>
-    <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 6h16M4 12h16M4 18h16'/></svg><span>Menu</span>
-  </button>
-  <button class='aio-dock-action' type='button' data-aio-action='share' aria-label='Share this page'>
-    <svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='18' cy='5' r='3'/><circle cx='6' cy='12' r='3'/><circle cx='18' cy='19' r='3'/><path d='m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4'/></svg><span>Share</span>
-  </button>
-  <a class='aio-dock-action' href='#comments' aria-label='Comments'>
-    <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-2 2v-9.5A7.5 7.5 0 0 1 10.5 4H12a8 8 0 0 1 8 7.5Z'/><path d='M8 11h8M8 14h5'/></svg><span>Comments</span>
-  </a>
-</nav>
-<b:else/>
-<nav id='aio-mobile-dock' aria-label='Main navigation'>
-  <a class='aio-dock-action' expr:href='data:blog.homepageUrl' aria-label='Home'>
-    <svg viewBox='0 0 24 24' aria-hidden='true'><path d='m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z'/></svg><span>Home</span>
-  </a>
-  <button class='aio-dock-action' type='button' data-aio-action='search' aria-label='Search'>
-    <svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='10.8' cy='10.8' r='6.8'/><path d='m16 16 5 5'/></svg><span>Search</span>
-  </button>
-  <button class='aio-dock-action' type='button' data-aio-action='menu' aria-label='Open menu'>
-    <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 6h16M4 12h16M4 18h16'/></svg><span>Menu</span>
-  </button>
-  <button class='aio-dock-action' type='button' data-aio-action='dark' aria-label='Toggle dark mode'>
-    <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z'/></svg><span>Dark mode</span>
-  </button>
-  <button class='aio-dock-action' type='button' data-aio-action='top' aria-label='Back to top'>
-    <svg viewBox='0 0 24 24' aria-hidden='true'><path d='m6 14 6-6 6 6M12 8v12'/></svg><span>Page up</span>
-  </button>
-</nav>
-</b:if>
 <script type='text/javascript'><![CDATA[
 (function(){
-  function initAioDock(){
-    var dock=document.getElementById('aio-mobile-dock');
-    if(!dock || dock.dataset.ready==='1') return;
-    dock.dataset.ready='1';
+  function buildAioDock(){
+    if(!document.body || document.getElementById('aio-mobile-dock')) return;
+    var path=window.location.pathname || '/';
+    var isPostOrPage=(/^\/p\//i.test(path) || /^\/20\d{2}\//.test(path));
+    var items=[
+      {label:'Home',action:'home',href:'/' ,icon:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>'},
+      {label:'Search',action:'search',icon:'<circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/>'},
+      {label:'Menu',action:'menu',icon:'<path d="M4 6h16M4 12h16M4 18h16"/>'}
+    ];
+    if(isPostOrPage){
+      items.push({label:'Share',action:'share',icon:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4"/>'});
+      items.push({label:'Comments',action:'comments',icon:'<path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-2 2v-9.5A7.5 7.5 0 0 1 10.5 4H12a8 8 0 0 1 8 7.5Z"/><path d="M8 11h8M8 14h5"/>'});
+    }else{
+      items.push({label:'Dark mode',action:'dark',icon:'<path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"/>'});
+      items.push({label:'Page up',action:'top',icon:'<path d="m6 14 6-6 6 6M12 8v12"/>'});
+    }
+    var dock=document.createElement('nav');
+    dock.id='aio-mobile-dock';dock.setAttribute('aria-label','Mobile quick navigation');
+    items.forEach(function(item){
+      var el=item.action==='home'||item.action==='comments'?document.createElement('a'):document.createElement('button');
+      el.className='aio-dock-action';el.setAttribute('aria-label',item.label);
+      if(item.action==='home') el.href='/';
+      else if(item.action==='comments') el.href='#comments';
+      else {el.type='button';el.setAttribute('data-aio-action',item.action);}
+      el.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+item.icon+'</svg><span>'+item.label+'</span>';
+      dock.appendChild(el);
+    });
+    document.body.appendChild(dock);
     dock.addEventListener('click',function(event){
-      var button=event.target.closest('[data-aio-action]');
-      if(!button) return;
-      var action=button.getAttribute('data-aio-action');
+      var control=event.target.closest('[data-aio-action]');
+      if(!control) return;
+      var action=control.getAttribute('data-aio-action');
       if(action==='top'){window.scrollTo({top:0,behavior:'smooth'});return;}
-      if(action==='search'){
-        var search=document.getElementById('search-toggler');
-        if(search){search.click();return;}
-        window.location.href='/search';return;
-      }
-      if(action==='menu'){
-        var menu=document.getElementById('navbar-toggler');
-        if(menu){menu.click();return;}
-        var nav=document.getElementById('navbar');
-        if(nav){nav.classList.toggle('show');}return;
-      }
-      if(action==='dark'){
-        var dark=document.getElementById('dark-toggler');
-        if(dark){dark.click();return;}
-        document.documentElement.classList.toggle('dark-mode');
-        document.body.classList.toggle('dark-mode');return;
-      }
+      if(action==='search'){var search=document.getElementById('search-toggler');if(search){search.click();}else{window.location.href='/search';}return;}
+      if(action==='menu'){var menu=document.getElementById('navbar-toggler');if(menu){menu.click();}else{var nav=document.getElementById('navbar');if(nav)nav.classList.toggle('show');}return;}
+      if(action==='dark'){var dark=document.getElementById('dark-toggler');if(dark){dark.click();}else{document.documentElement.classList.toggle('dark-mode');document.body.classList.toggle('dark-mode');}return;}
       if(action==='share'){
-        var shareData={title:document.title,text:document.title,url:window.location.href};
-        if(navigator.share){navigator.share(shareData).catch(function(){});}
-        else if(navigator.clipboard && navigator.clipboard.writeText){
-          navigator.clipboard.writeText(window.location.href).then(function(){
-            var label=button.querySelector('span');
-            if(label){label.textContent='Copied';window.setTimeout(function(){label.textContent='Share';},1800);}
-          }).catch(function(){window.prompt('Copy this page link:',window.location.href);});
-        }else{window.prompt('Copy this page link:',window.location.href);}
+        var data={title:document.title,text:document.title,url:window.location.href};
+        if(navigator.share){navigator.share(data).catch(function(){});}
+        else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(window.location.href).then(function(){var label=control.querySelector('span');if(label){label.textContent='Copied';window.setTimeout(function(){label.textContent='Share';},1800);}}).catch(function(){window.prompt('Copy this page link:',window.location.href);});}
+        else{window.prompt('Copy this page link:',window.location.href);}
       }
     });
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initAioDock);else initAioDock();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',buildAioDock);else buildAioDock();
+  window.addEventListener('load',buildAioDock);
 })();
 ]]></script>
+
+<!-- Compact sidebar widgets and fluid post/page reading layout -->
+<style type='text/css'><![CDATA[
+#sidebar .widget{padding:clamp(.65rem,1.2vw,.95rem)!important;margin-bottom:.8rem!important;border-radius:14px}
+#sidebar .widget-title{margin-bottom:.65rem!important;font-size:clamp(.92rem,1vw,1.05rem)}
+#sidebar .widget-content{font-size:clamp(.84rem,.95vw,.94rem);line-height:1.5;overflow-wrap:anywhere}
+#sidebar img{max-width:100%;height:auto}
+#sidebar iframe{max-width:100%}
+#single-content,#page-content{width:100%;min-width:0;padding:clamp(.8rem,2.2vw,1.65rem)!important}
+#post-body,.post-body{font-size:clamp(15px,1.05vw,17px);line-height:1.78;overflow-wrap:anywhere}
+#post-body img,.post-body img,#page-content img{max-width:100%;height:auto}
+#post-body table,.post-body table,#page-content table{display:block;max-width:100%;overflow-x:auto}
+@media(max-width:991.98px){
+  #sidebar{border:0!important;padding:0 .75rem!important}
+  #sidebar .widget{padding:.8rem!important;margin:.65rem 0!important}
+  #single-content,#page-content{padding:clamp(.7rem,2vw,1.1rem)!important}
+}
+@media(max-width:575.98px){
+  #sidebar .widget{padding:.7rem!important;margin:.55rem 0!important}
+  #sidebar .widget-title{font-size:.92rem}
+  #post-body,.post-body{font-size:15px;line-height:1.72}
+  #single-content,#page-content{padding:.65rem!important}
+}
+]]></style>
 
 <!-- PWA + Firebase area exposed in Blogger Layout. Edit/remove this gadget from Layout. -->
 <b:section id='pwa-firebase-layout' class='pwa-firebase-layout' maxwidgets='1' name='PWA Install and Firebase' showaddelement='yes'>
