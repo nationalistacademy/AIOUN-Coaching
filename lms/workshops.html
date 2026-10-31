@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AIOU Workshop Reminders — AIOU Coaching</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#17202a;--muted:#667085;--line:#e5e7eb;--brand:#f67938;--soft:#fff1e9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px system-ui,sans-serif}.wrap{max-width:900px;margin:auto;padding:20px}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:14px 0}.brand{color:#c2410c;font-size:13px;font-weight:800}.muted{color:var(--muted);line-height:1.6}.links{display:flex;gap:10px;flex-wrap:wrap}.links a,.btn{display:inline-block;background:var(--brand);color:white;text-decoration:none;border:0;border-radius:10px;padding:11px 14px;font:inherit;font-weight:800;cursor:pointer}.links a.secondary{background:var(--soft);color:#9a3412}.field{margin:12px 0}.field label{display:block;font-weight:750;margin-bottom:6px}.field input,.field textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit}.field textarea{min-height:70px}.notice{padding:12px;background:var(--soft);border-radius:12px;color:#7c2d12}.status{margin-top:12px;color:#166534}@media(max-width:600px){.wrap{padding:12px}.panel{padding:16px}}
+</style></head><body><main class="wrap">
+<p><a href="./dashboard.html">← Student dashboard</a></p>
+<section class="panel"><div class="brand">AIOU COACHING LMS</div><h1>Official workshop reminders</h1><p class="muted">Use AIOU’s official schedule and your AAGHI LMS account to confirm your course, date, time and workshop link. This page does not guess workshop dates or access private AAGHI information.</p><div class="links"><a href="https://aiou.edu.pk/workshop-information" target="_blank" rel="noopener noreferrer">Official AIOU workshop schedule ↗</a><a class="secondary" href="https://aaghi.aiou.edu.pk/" target="_blank" rel="noopener noreferrer">Open AAGHI LMS ↗</a></div><p class="notice">AIOU advises students to check both the official workshop information page and their LMS account regularly. Join online sessions using the workshop link shown in AAGHI for the relevant day.</p></section>
+<section class="panel"><h2>Create a calendar reminder</h2><p class="muted">After checking the official schedule, enter the confirmed session details below. Download the calendar file and open it to add the event to Google Calendar, Apple Calendar or another calendar app. Your entered details stay in this browser and are not sent to AIOU Coaching.</p>
+<form id="reminderForm">
+<div class="field"><label for="eventTitle">Workshop / course title</label><input id="eventTitle" required maxlength="120" placeholder="e.g. Course code — Workshop Day 1"></div>
+<div class="field"><label for="eventStart">Confirmed start date and time (Pakistan time)</label><input id="eventStart" type="datetime-local" required></div>
+<div class="field"><label for="eventEnd">End date and time (Pakistan time)</label><input id="eventEnd" type="datetime-local" required></div>
+<div class="field"><label for="eventLocation">Workshop location or official link (optional)</label><input id="eventLocation" maxlength="300" placeholder="Paste the official session link if provided"></div>
+<div class="field"><label for="eventNotes">Notes (optional)</label><textarea id="eventNotes" maxlength="1000" placeholder="Course code, preparation notes, or what to bring"></textarea></div>
+<button class="btn" type="submit">Download calendar reminder (.ics)</button><div id="status" class="status" role="status"></div>
+</form></section>
+<section class="panel"><h2>Reminder checklist</h2><ul><li>Verify the schedule and course details on the official AIOU page.</li><li>Check AAGHI LMS for your assigned session and correct workshop link.</li><li>Confirm the time zone and any schedule updates before attending.</li><li>Keep your AAGHI credentials private; never share your password on this page.</li></ul></section>
+</main><script>
+const form=document.getElementById('reminderForm'),status=document.getElementById('status');
+function icsEscape(value){return String(value||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
+function parsePakistanTime(value){const d=new Date(value+':00+05:00');if(Number.isNaN(d.getTime()))throw Error('Please enter valid start and end times.');return d}function toUtcStamp(value){return parsePakistanTime(value).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z')}
+form.addEventListener('submit',event=>{event.preventDefault();status.textContent='';try{
+ const title=document.getElementById('eventTitle').value.trim(),start=document.getElementById('eventStart').value,end=document.getElementById('eventEnd').value,locationText=document.getElementById('eventLocation').value.trim(),notes=document.getElementById('eventNotes').value.trim();
+ if(!title)throw Error('Enter a workshop title.');
+ if(!start||!end||parsePakistanTime(end)<=parsePakistanTime(start))throw Error('End time must be after the start time.');
+ const now=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');
+ const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AIOU Coaching//Workshop Reminder//EN','CALSCALE:GREGORIAN','BEGIN:VEVENT','UID:'+crypto.randomUUID()+'@aioucoaching','DTSTAMP:'+now,'DTSTART:'+toUtcStamp(start),'DTEND:'+toUtcStamp(end),'SUMMARY:'+icsEscape(title)];
+ if(locationText)lines.push('LOCATION:'+icsEscape(locationText));
+ if(notes)lines.push('DESCRIPTION:'+icsEscape(notes));
+ lines.push('BEGIN:VALARM','TRIGGER:-PT30M','ACTION:DISPLAY','DESCRIPTION:Workshop starts in 30 minutes','END:VALARM','END:VEVENT','END:VCALENDAR');
+ const blob=new Blob([lines.join('\r\n')+'\r\n'],{type:'text/calendar;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='aiou-workshop-reminder.ics';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);status.textContent='Calendar file generated. Open it in your calendar app and confirm that the 30-minute alert is enabled.';
+ }catch(error){status.textContent=error.message||'Could not create calendar reminder.'}});
+</script></body></html>
