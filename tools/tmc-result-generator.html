@@ -26,7 +26,7 @@
 #tmcResultTool .tmc-btn.danger{color:#b42318;border-color:#f2c5c1}
 #tmcResultTool .tmc-panel{background:var(--tmc-glass);border:1px solid rgba(255,255,255,.9);border-radius:16px;padding:15px;margin:14px 0;box-shadow:0 5px 18px rgba(25,35,50,.05)}
 #tmcResultTool .tmc-panel h2{font-size:15px;margin:0 0 12px;color:#26364b}
-#tmcResultTool .tmc-formgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+#tmcResultTool .tmc-group-switch{display:flex;gap:9px;flex-wrap:wrap}\n#tmcResultTool .tmc-group-switch .tmc-btn{min-width:130px}\n#tmcResultTool .tmc-formgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
 #tmcResultTool input,#tmcResultTool select{font:inherit;min-width:0;width:100%;border:1px solid #dce2e9;border-radius:10px;background:#fff;padding:10px 11px;color:#243247;font-size:14px;outline:none}
 #tmcResultTool input:focus,#tmcResultTool select:focus{border-color:var(--tmc-orange);box-shadow:0 0 0 3px rgba(246,121,56,.13)}
 #tmcResultTool .tmc-field{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#526074}
@@ -106,6 +106,14 @@ html[data-theme="dark"] #tmcResultTool .tmc-status,html.dark #tmcResultTool .tmc
    <div><div class="tmc-kicker">School administration tool</div><h1>TMC School Result Generator</h1><p class="tmc-sub">Prepare, review and export a clean student result sheet.</p></div>
    <div class="tmc-actions"><button class="tmc-btn" id="clearAll" type="button">Clear all rows</button><button class="tmc-btn primary" id="addStudentTop" type="button">＋ Add student</button></div>
   </div>
+  <section class="tmc-panel tmc-no-print tmc-group-panel">
+   <h2>Choose student category</h2>
+   <div class="tmc-group-switch" role="group" aria-label="Student category">
+    <button class="tmc-btn primary" id="boysTab" type="button" aria-pressed="true">Boys Results</button>
+    <button class="tmc-btn" id="girlsTab" type="button" aria-pressed="false">Girls Results</button>
+   </div>
+   <p class="tmc-sub" id="groupDescription">You are editing the boys result sheet. Girls records remain separate.</p>
+  </section>
   <section class="tmc-panel tmc-no-print">
    <h2>Student information</h2>
    <div class="tmc-formgrid">
@@ -158,29 +166,29 @@ html[data-theme="dark"] #tmcResultTool .tmc-status,html.dark #tmcResultTool .tmc
  'use strict';
  const root=document.getElementById('tmcResultTool'),TOTAL_MARKS=550;
  const $=id=>root.querySelector('#'+id);
- let students=[];
+ const groups={boys:[],girls:[]};let activeGroup='boys';const students=()=>groups[activeGroup];
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  function status(msg){$('status').textContent=msg}
  function render(){
   const body=$('tableBody');body.textContent='';
-  students.forEach((s,i)=>{
+  students().forEach((s,i)=>{
    const pct=(s.marks/TOTAL_MARKS*100).toFixed(1),passed=Number(pct)>=33;
    const tr=document.createElement('tr');tr.dataset.passed=String(passed);
    tr.innerHTML='<td>'+String(i+1).padStart(2,'0')+'</td><td><b>'+esc(s.gr)+'</b></td><td class="tmc-name"><b>'+esc(s.name)+'</b><br><small>S/O '+esc(s.father||'N/A')+'</small></td><td><b>'+esc(s.roll)+'</b></td><td><b>'+s.marks+'</b></td><td><b>'+(passed?7:5)+'</b></td><td><b>'+pct+'%</b></td><td class="tmc-no-print"><button class="tmc-del" type="button" data-delete="'+i+'" aria-label="Delete '+esc(s.name)+'">Delete</button></td>';
    body.appendChild(tr);
   });
-  const passed=students.filter(s=>s.marks/TOTAL_MARKS*100>=33).length;
-  $('totalStudents').textContent=students.length;$('clearedStudents').textContent=passed;$('failedStudents').textContent=students.length-passed;
+  const passed=students().filter(s=>s.marks/TOTAL_MARKS*100>=33).length;
+  $('totalStudents').textContent=students().length;$('clearedStudents').textContent=passed;$('failedStudents').textContent=students().length-passed;$('schoolTitle').textContent='TMC Muhammad Ali Jinnah English Medium School';root.querySelector('.tmc-reporthead h3').textContent='Result of SSC Part I — '+(activeGroup==='boys'?'Boys':'Girls');
  }
  function add(){
   const gr=$('stdGrNo').value.trim(),name=$('stdName').value.trim(),father=$('stdFather').value.trim(),roll=$('stdRoll').value.trim(),marks=Number($('stdMarks').value);
   if(!gr||!name||!roll||$('stdMarks').value===''||!Number.isInteger(marks)||marks<0||marks>TOTAL_MARKS){status('Enter G.R., student name, roll number and marks from 0 to 550.');return}
-  students.push({gr,name,father,roll,marks});render();
+  students().push({gr,name,father,roll,marks});render();
   ['stdGrNo','stdName','stdFather','stdRoll','stdMarks'].forEach(id=>$(id).value='');
-  status('Student added. Total records: '+students.length);
+  status('Student added to '+(activeGroup==='boys'?'Boys':'Girls')+'. Total records: '+students().length);
  }
- $('addStudent').addEventListener('click',add);$('addStudentTop').addEventListener('click',()=>{$('stdName').focus();$('stdName').scrollIntoView({behavior:'smooth',block:'center'})});
- $('tableBody').addEventListener('click',e=>{const b=e.target.closest('[data-delete]');if(!b)return;students.splice(Number(b.dataset.delete),1);render();status('Student removed.')});
+ function switchGroup(group){activeGroup=group;$('boysTab').classList.toggle('primary',group==='boys');$('girlsTab').classList.toggle('primary',group==='girls');$('boysTab').setAttribute('aria-pressed',String(group==='boys'));$('girlsTab').setAttribute('aria-pressed',String(group==='girls'));$('groupDescription').textContent='You are editing the '+(group==='boys'?'boys':'girls')+' result sheet. The other category records remain separate.';render();status((group==='boys'?'Boys':'Girls')+' result sheet selected.');}\n $('boysTab').addEventListener('click',()=>switchGroup('boys'));$('girlsTab').addEventListener('click',()=>switchGroup('girls'));\n $('addStudent').addEventListener('click',add);$('addStudentTop').addEventListener('click',()=>{$('stdName').focus();$('stdName').scrollIntoView({behavior:'smooth',block:'center'})});
+ $('tableBody').addEventListener('click',e=>{const b=e.target.closest('[data-delete]');if(!b)return;students().splice(Number(b.dataset.delete),1);render();status('Student removed.')});
  $('clearAll').addEventListener('click',()=>{if(students.length&&!confirm('Remove all student rows?'))return;students=[];render();status('All rows cleared.')});
  $('headerBgColor').addEventListener('input',e=>root.querySelectorAll('#resultTable th').forEach(th=>th.style.backgroundColor=e.target.value));
  $('headerTextColor').addEventListener('input',e=>root.querySelectorAll('#resultTable th').forEach(th=>th.style.color=e.target.value));
@@ -190,19 +198,19 @@ html[data-theme="dark"] #tmcResultTool .tmc-status,html.dark #tmcResultTool .tmc
  $('watermarkUpload').addEventListener('change',e=>readImage(e.target.files[0],src=>{$('watermarkImg').src=src;$('watermarkImg').hidden=false;$('watermarkText').hidden=true}));
  $('clearWatermark').addEventListener('click',()=>{$('watermarkImg').removeAttribute('src');$('watermarkImg').hidden=true;$('watermarkText').hidden=false;$('watermarkUpload').value=''});
  function exportClone(){
-  const clone=$('reportContent').cloneNode(true);
+  const clone=$('reportContent').cloneNode(true);clone.querySelector('.tmc-reporthead h3').textContent='Result of SSC Part I — '+(activeGroup==='boys'?'Boys':'Girls');
   clone.querySelectorAll('.tmc-no-print').forEach(el=>el.remove());
   if(!$('showSummary').checked)clone.querySelector('#summaryCard').remove();
   const im=clone.querySelector('#displayLogo');if(im&&im.src)im.style.display='block';
   return clone;
  }
  function withExport(fn){const clone=exportClone();return fn(clone)}
- async function pdfBlob(clone){if(!window.html2pdf)throw Error('PDF library did not load. Check internet and retry.');return html2pdf().set({margin:[.25,.2,.25,.2],filename:'TMC_Result_Report.pdf',image:{type:'jpeg',quality:.96},html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff',scrollY:0},jsPDF:{unit:'in',format:'a4',orientation:'landscape'},pagebreak:{mode:['css','legacy']}}).from(clone).outputPdf('blob')}
+ async function pdfBlob(clone){if(!window.html2pdf)throw Error('PDF library did not load. Check internet and retry.');return html2pdf().set({margin:[.25,.2,.25,.2],filename:'TMC_'+(activeGroup==='boys'?'Boys':'Girls')+'_Result_Report.pdf',image:{type:'jpeg',quality:.96},html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff',scrollY:0},jsPDF:{unit:'in',format:'a4',orientation:'landscape'},pagebreak:{mode:['css','legacy']}}).from(clone).outputPdf('blob')}
  function saveBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
  $('downloadPDF').addEventListener('click',async()=>{try{status('Preparing PDF…');await withExport(async c=>saveBlob(await pdfBlob(c),'TMC_Result_Report.pdf'));status('PDF downloaded.')}catch(e){status(e.message)}});
- $('downloadJPG').addEventListener('click',async()=>{try{status('Preparing JPG…');await withExport(async c=>{if(!window.html2canvas)throw Error('Image export library did not load.');const canvas=await html2canvas(c,{scale:2,useCORS:true,backgroundColor:'#fff'});const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.95));saveBlob(blob,'TMC_Result_Report.jpg')});status('JPG downloaded.')}catch(e){status(e.message)}});
- $('downloadWord').addEventListener('click',()=>withExport(c=>{const html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font-family:Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #222;padding:6px;text-align:center}th{background:#1a3b5c;color:#fff}.tmc-name{text-align:left}</style></head><body>'+c.innerHTML+'</body></html>';saveBlob(new Blob(['\ufeff',html],{type:'application/msword'}),'TMC_Result_Report.doc');status('Word document downloaded.')}));
- $('downloadZIP').addEventListener('click',async()=>{try{if(!window.JSZip)throw Error('ZIP library did not load.');status('Preparing ZIP…');await withExport(async c=>{const canvas=await html2canvas(c,{scale:2,useCORS:true,backgroundColor:'#fff'});const jpg=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.95));const zip=new JSZip();zip.file('TMC_Result_Report.jpg',jpg);zip.file('TMC_Result_Report.pdf',await pdfBlob(c));saveBlob(await zip.generateAsync({type:'blob'}),'TMC_Result_Files.zip')});status('ZIP downloaded.') }catch(e){status(e.message)}});
+ $('downloadJPG').addEventListener('click',async()=>{try{status('Preparing JPG…');await withExport(async c=>{if(!window.html2canvas)throw Error('Image export library did not load.');const canvas=await html2canvas(c,{scale:2,useCORS:true,backgroundColor:'#fff'});const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.95));saveBlob(blob,'TMC_'+(activeGroup==='boys'?'Boys':'Girls')+'_Result_Report.jpg')});status('JPG downloaded.')}catch(e){status(e.message)}});
+ $('downloadWord').addEventListener('click',()=>withExport(c=>{const html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font-family:Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #222;padding:6px;text-align:center}th{background:#1a3b5c;color:#fff}.tmc-name{text-align:left}</style></head><body>'+c.innerHTML+'</body></html>';saveBlob(new Blob(['\ufeff',html],{type:'application/msword'}),'TMC_'+(activeGroup==='boys'?'Boys':'Girls')+'_Result_Report.doc');status('Word document downloaded.')}));
+ $('downloadZIP').addEventListener('click',async()=>{try{if(!window.JSZip)throw Error('ZIP library did not load.');status('Preparing ZIP…');await withExport(async c=>{const canvas=await html2canvas(c,{scale:2,useCORS:true,backgroundColor:'#fff'});const jpg=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.95));const zip=new JSZip();zip.file('TMC_Result_Report.jpg',jpg);zip.file('TMC_Result_Report.pdf',await pdfBlob(c));saveBlob(await zip.generateAsync({type:'blob'}),'TMC_'+(activeGroup==='boys'?'Boys':'Girls')+'_Result_Files.zip')});status('ZIP downloaded.') }catch(e){status(e.message)}});
  render();
 })();
 </script>
