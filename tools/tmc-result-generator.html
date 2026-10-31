@@ -178,7 +178,7 @@ html[data-theme="dark"] #tmcResultTool .tmc-status,html.dark #tmcResultTool .tmc
    body.appendChild(tr);
   });
   const passed=students().filter(s=>s.marks/TOTAL_MARKS*100>=33).length;
-  $('totalStudents').textContent=students().length;$('clearedStudents').textContent=passed;$('failedStudents').textContent=students().length-passed;$('schoolTitle').textContent='TMC Muhammad Ali Jinnah English Medium School';root.querySelector('.tmc-reporthead h3').textContent='Result of SSC Part I — '+(activeGroup==='boys'?'Boys':'Girls');
+  $('totalStudents').textContent=students().length;$('clearedStudents').textContent=passed;$('failedStudents').textContent=students().length-passed;$('schoolTitle').textContent='TMC Muhammad Ali Jinnah English Medium School';root.querySelector('.tmc-reporthead h3').textContent='Result of SSC Part I - '+(activeGroup==='boys'?'Boys':'Girls');
  }
  function add(){
   const gr=$('stdGrNo').value.trim(),name=$('stdName').value.trim(),father=$('stdFather').value.trim(),roll=$('stdRoll').value.trim(),marks=Number($('stdMarks').value);
@@ -200,7 +200,7 @@ html[data-theme="dark"] #tmcResultTool .tmc-status,html.dark #tmcResultTool .tmc
  $('watermarkUpload').addEventListener('change',e=>readImage(e.target.files[0],src=>{$('watermarkImg').src=src;$('watermarkImg').hidden=false;$('watermarkText').hidden=true}));
  $('clearWatermark').addEventListener('click',()=>{$('watermarkImg').removeAttribute('src');$('watermarkImg').hidden=true;$('watermarkText').hidden=false;$('watermarkUpload').value=''});
  function exportClone(){
-  const clone=$('reportContent').cloneNode(true);clone.querySelector('.tmc-reporthead h3').textContent='Result of SSC Part I — '+(activeGroup==='boys'?'Boys':'Girls');
+  const clone=$('reportContent').cloneNode(true);clone.querySelector('.tmc-reporthead h3').textContent='Result of SSC Part I - '+(activeGroup==='boys'?'Boys':'Girls');
   clone.querySelectorAll('.tmc-no-print').forEach(el=>el.remove());
   if(!$('showSummary').checked)clone.querySelector('#summaryCard').remove();
   const im=clone.querySelector('#displayLogo');if(im&&im.src)im.style.display='block';
