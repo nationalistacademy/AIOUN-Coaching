@@ -1394,32 +1394,38 @@ display: none;
 }
 }
 
-/* AIOU Coaching: translucent mobile app navigation */
+/* AIOU Coaching: lightweight responsive mobile navigation */
 #aiou-mobile-nav { display:none; }
 @media (max-width: 991.98px) {
-  body { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+  body { padding-bottom:calc(74px + env(safe-area-inset-bottom)); }
   #aiou-mobile-nav {
-    position:fixed; left:12px; right:12px; bottom:calc(10px + env(safe-area-inset-bottom));
-    z-index:10050; display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
-    gap:3px; padding:6px 5px; border:1px solid rgba(120,120,120,.14);
-    border-radius:20px; background:rgba(255,255,255,.58); color:rgba(36,36,36,.82);
-    -webkit-backdrop-filter:blur(24px) saturate(150%); backdrop-filter:blur(24px) saturate(150%);
-    box-shadow:0 6px 22px rgba(0,0,0,.09);
+    position:fixed; left:max(8px,env(safe-area-inset-left)); right:max(8px,env(safe-area-inset-right));
+    bottom:calc(8px + env(safe-area-inset-bottom)); z-index:10050;
+    display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:2px;
+    padding:5px 4px; border:1px solid rgba(120,120,120,.13); border-radius:17px;
+    background:rgba(255,255,255,.82); color:rgba(36,36,36,.86);
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+    contain:layout paint; -webkit-backface-visibility:hidden; backface-visibility:hidden;
   }
   #aiou-mobile-nav a, #aiou-mobile-nav button {
-    min-width:0; min-height:48px; display:flex; flex-direction:column; align-items:center;
-    justify-content:center; gap:2px; border:0; border-radius:13px; padding:4px 1px;
-    background:transparent; color:inherit; opacity:.78; text-decoration:none;
-    font:600 10px/1.2 system-ui,sans-serif; cursor:pointer; -webkit-tap-highlight-color:transparent;
+    min-width:0; min-height:46px; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; gap:2px; padding:3px 0; border:0; border-radius:11px;
+    background:transparent; color:inherit; opacity:.84; text-decoration:none;
+    font:600 10px/1.15 system-ui,-apple-system,sans-serif; white-space:nowrap;
+    cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent;
   }
-  #aiou-mobile-nav a:hover, #aiou-mobile-nav button:hover { opacity:1; }
-  #aiou-mobile-nav .aiou-nav-icon { font-size:19px; line-height:1.15; color:rgba(230,109,46,.86); }
-  #aiou-mobile-nav a:active, #aiou-mobile-nav button:active { background:rgba(230,109,46,.10); }
+  #aiou-mobile-nav .aiou-nav-icon { font-size:18px; line-height:1.1; color:#e66d2e; }
+  #aiou-mobile-nav a:active, #aiou-mobile-nav button:active { background:rgba(230,109,46,.12); opacity:1; }
   body.dark-mode #aiou-mobile-nav, .dark-mode #aiou-mobile-nav, html[data-theme='dark'] #aiou-mobile-nav {
-    background:rgba(28,30,34,.62); color:rgba(255,255,255,.86); border-color:rgba(255,255,255,.10);
-    box-shadow:0 6px 22px rgba(0,0,0,.20);
+    background:rgba(28,30,34,.86); color:rgba(255,255,255,.9);
+    border-color:rgba(255,255,255,.10); box-shadow:0 3px 12px rgba(0,0,0,.18);
   }
-  #aiou-mobile-nav button:focus-visible, #aiou-mobile-nav a:focus-visible { outline:2px solid #e66d2e; outline-offset:2px; }
+  #aiou-mobile-nav button:focus-visible, #aiou-mobile-nav a:focus-visible { outline:2px solid #e66d2e; outline-offset:1px; }
+}
+@media (max-width:380px) {
+  #aiou-mobile-nav { left:5px; right:5px; gap:0; padding:4px 2px; border-radius:14px; }
+  #aiou-mobile-nav a, #aiou-mobile-nav button { font-size:9px; min-height:44px; }
+  #aiou-mobile-nav .aiou-nav-icon { font-size:17px; }
 }
 @media (min-width: 992px) {
   body { padding-bottom:0 !important; }
@@ -3444,10 +3450,10 @@ function jtCallback(){
     if (action === 'search') {
       var searchToggle = document.getElementById('search-toggler');
       if (searchToggle) searchToggle.click();
-      window.setTimeout(function () {
+      window.requestAnimationFrame(function () {
         var input = document.getElementById('search-input');
-        if (input) input.focus();
-      }, 80);
+        if (input) input.focus({ preventScroll:true });
+      });
     } else if (action === 'menu') {
       var menuToggle = document.getElementById('navbar-toggler');
       if (menuToggle) menuToggle.click();
