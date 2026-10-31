@@ -22,3 +22,14 @@ Time examples: `10:30 AM`, `3:40 PM`, or `15:40`. Start and end must be on the s
 - Does not require, store, or transmit student IDs or AAGHI credentials.
 
 The supplied regression fixture contains 42 rows across seven course groups. Its June–August 2026 dates are historical as of 31 October 2026; they are test data, not a current timetable. Calendar notifications depend on each student's calendar app settings. Some calendar providers ignore imported VALARM notifications; users should verify reminder settings after import.
+
+## Blogger Page embed
+
+Use `tools/aiou-workshop-reminder-blogger.html` when placing the tool inside a Blogger Page:
+
+1. Open the file in GitHub and copy its complete contents.
+2. In Blogger, create/edit a Page and switch to **HTML view** (not Compose).
+3. Paste the complete file contents, preview on mobile and desktop, then publish.
+4. Confirm the official AIOU links, paste parser, saved reminders, Google Calendar links and ICS downloads in the published page.
+
+This is a self-contained embed: CSS and the parser engine are inline, IDs are namespaced, and it does not depend on repository-relative CSS, JavaScript or manifest paths. The tool stores saved reminders in the visitor's browser local storage only. The Blogger page does not fetch private AAGHI schedules; students must open the official portal and paste their own schedule. Review the page preview before publishing because Blogger themes can apply their own typography and color rules.
