@@ -4,7 +4,8 @@
   "scripts": {
     "build:vendor": "node scripts/copy-vendor.js",
     "test": "npm run build:vendor && playwright test",
-    "test:lms-security": "playwright test tests/lms-security.spec.js"
+    "test:lms-security": "playwright test tests/lms-security.spec.js",
+    "test:workshops": "node --test tests/workshop-planner.test.js"
   },
   "dependencies": {
     "docx": "9.1.0",
