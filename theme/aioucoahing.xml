@@ -3451,9 +3451,6 @@ function jtCallback(){
     } else if (action === 'menu') {
       var menuToggle = document.getElementById('navbar-toggler');
       if (menuToggle) menuToggle.click();
-    } else if (action === 'menu') {
-      var menuToggle = document.getElementById('navbar-toggler');
-      if (menuToggle) menuToggle.click();
     } else if (action === 'dark') {
       var darkToggle = document.getElementById('dark-toggler');
       if (darkToggle) darkToggle.click();
