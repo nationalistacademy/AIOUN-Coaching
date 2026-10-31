@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Practice Hub — AIOU Coaching</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#17202a;--muted:#667085;--line:#e5e7eb;--brand:#f67938;--soft:#fff1e9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px system-ui,sans-serif}.wrap{max-width:1050px;margin:auto;padding:20px}.hero,.panel,.quiz{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:14px}.brand{color:#c2410c;font-weight:800;font-size:13px}h1{font-size:clamp(28px,5vw,40px);margin:8px 0}h2{margin-top:0}p{color:var(--muted);line-height:1.55}a{color:#c2410c;font-weight:750}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.quiz{padding:16px;margin:10px 0;display:flex;justify-content:space-between;gap:14px;align-items:center}.quiz h3{margin:0 0 5px}.muted{color:var(--muted);font-size:14px}.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{display:inline-block;text-decoration:none;border-radius:10px;padding:10px 13px;background:var(--brand);color:white}.btn.secondary{background:#fff1e9;color:#9a3412}.empty,.error{padding:16px;border-radius:12px;background:#f8fafc;color:var(--muted)}.error{display:none;background:#fef2f2;color:#b91c1c}.section-title{margin:24px 0 10px}@media(max-width:650px){.wrap{padding:12px}.grid{grid-template-columns:1fr}.quiz{align-items:flex-start;flex-direction:column}.hero,.panel{padding:17px}}
+</style>
+</head>
+<body><main class="wrap">
+<p><a href="./dashboard.html">← Student dashboard</a></p>
+<section class="hero"><div class="brand">AIOU COACHING · STUDENT PRACTICE</div><h1>Practice a little every day.</h1><p>Choose a published quiz from a course you're actively enrolled in. Use Practice mode for a relaxed attempt or Mock Test mode for a timed session.</p></section>
+<div id="error" class="error" role="alert"></div>
+<section class="panel"><h2>🧠 Your available MCQs</h2><p>Only published quizzes in your active course enrollments are listed here.</p><div id="quiz-list" class="empty">Loading your quizzes…</div></section>
+<section class="grid">
+<article class="panel"><h2>📈 Track improvement</h2><p>Submit attempts to see your graded result. Your progress history is the next implementation step.</p></article>
+<article class="panel"><h2>📅 Workshop reminders</h2><p>Workshop dates must be matched against official AIOU schedules. Never share your AAGHI password with this site.</p><a href="https://aiou.edu.pk/workshop-information" target="_blank" rel="noopener noreferrer">Official workshop information →</a></article>
+</section><p>Independent study support; not affiliated with AIOU.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-config.js"></script>
+<script>
+const supabase=window.supabase.createClient(window.AIOU_SUPABASE_URL,window.AIOU_SUPABASE_PUBLISHABLE_KEY);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function showError(message){const e=document.getElementById('error');e.textContent=message;e.style.display='block'}
+async function init(){
+ try{
+  const auth=await supabase.auth.getUser();
+  if(auth.error||!auth.data.user){location.replace('./signin-signup.html');return}
+  const user=auth.data.user;
+  const en=await supabase.from('enrollments').select('course_id').eq('student_id',user.id).eq('status','active');
+  if(en.error)throw en.error;
+  const ids=[...new Set((en.data||[]).map(x=>x.course_id))];
+  if(!ids.length){document.getElementById('quiz-list').innerHTML='<div class="empty">No active course enrollments found. Contact your course teacher if this seems wrong.</div>';return}
+  const [courses,quizzes]=await Promise.all([
+   supabase.from('courses').select('id,title').in('id',ids).eq('published',true),
+   supabase.from('quizzes').select('id,title,description,course_id').in('course_id',ids).eq('published',true).order('created_at',{ascending:false})
+  ]);
+  if(courses.error)throw courses.error;if(quizzes.error)throw quizzes.error;
+  const courseMap=new Map((courses.data||[]).map(c=>[c.id,c.title]));
+  const items=(quizzes.data||[]).filter(q=>courseMap.has(q.course_id));
+  const box=document.getElementById('quiz-list');
+  if(!items.length){box.innerHTML='<div class="empty">No published quizzes are available in your enrolled courses yet.</div>';return}
+  box.className='';
+  box.innerHTML=items.map(q=>'<article class="quiz"><div><h3>'+esc(q.title)+'</h3><div class="muted">'+esc(courseMap.get(q.course_id))+'</div><p>'+esc(q.description||'MCQ practice set')+'</p></div><div class="actions"><a class="btn secondary" href="./quiz.html?id='+encodeURIComponent(q.id)+'">Practice</a><a class="btn" href="./quiz.html?id='+encodeURIComponent(q.id)+'&mode=mock">Timed mock</a></div></article>').join('');
+ }catch(e){showError(e.message||'Could not load your practice quizzes.');document.getElementById('quiz-list').textContent='Please try again later.'}
+}
+init();
+</script></body></html>
