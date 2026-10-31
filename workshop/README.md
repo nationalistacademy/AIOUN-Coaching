@@ -1,18 +1,18 @@
-# AIOU Workshop tools
+# AIOU Workshop Planner
 
-This folder contains the standalone Workshop Planner published with the AIOU Coaching static site.
+The `index.html` page restores the original orange Taleemwaly workshop planner from `workshop/workshop-planner.html` on the repository's main branch.
 
-## Files
-- `index.html` — responsive workshop details form that generates an `.ics` calendar event locally in the browser.
-- No API key, backend, account connection, or student database is required.
+## Included features
+- Student ID / course-code lookup interface (requires published workshop and roster data).
+- Paste AIOU schedule and parse class rows.
+- Quick builder for daily, weekdays, weekly, or selected-day schedules.
+- Configurable reminders and quiz reminder from the second-last class by default.
+- Calendar `.ics` export, Google Calendar event links, WhatsApp message and copy actions.
+- Responsive orange theme, suitable for mobile and desktop.
 
 ## Publish path
-The repository's GitHub Pages workflow copies repository files into the Pages artifact, so this page is published at:
-
 `https://nationalistacademy.github.io/AIOUN-Coaching/workshop/`
 
-## Safety and limitations
-- Students must verify the date, time, course and venue against the official AIOU CMS or notice.
-- The page does not scrape AIOU, read student accounts, or automatically write to Google Calendar.
-- The generated calendar file is imported by the student into Google Calendar, Apple Calendar or Outlook.
-- Do not add API keys, service-account credentials, or private student data to this folder.
+The page is self-contained. Student ID lookup needs published `PUB.items` / roster data; the standalone planner currently ships with an empty public dataset. Students can still use schedule paste and Quick Builder without that data.
+
+Verify workshop dates and times against the official AIOU portal before importing reminders. Do not commit private roster CSVs, names, or phone numbers.
