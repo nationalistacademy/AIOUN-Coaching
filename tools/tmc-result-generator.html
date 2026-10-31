@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f67938">
+<title>TMC School Result Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+/* All styles are scoped to this standalone tool. No Blogger theme selectors are changed. */
+#tmcResultTool{--tmc-orange:#f67938;--tmc-orange-dark:#e96525;--tmc-ink:#172334;--tmc-muted:#647184;--tmc-line:#e4e8ee;--tmc-glass:rgba(255,255,255,.82);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--tmc-ink);line-height:1.5;max-width:1120px;margin:0 auto;padding:clamp(10px,2.5vw,24px);isolation:isolate}
+#tmcResultTool *{box-sizing:border-box}
+#tmcResultTool .tmc-shell{background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(255,247,242,.94));border:1px solid rgba(246,121,56,.22);border-radius:22px;box-shadow:0 12px 38px rgba(32,42,55,.10);padding:clamp(12px,2.5vw,26px);overflow:hidden}
+#tmcResultTool .tmc-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+#tmcResultTool .tmc-kicker{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--tmc-orange-dark)}
+#tmcResultTool h1{font-size:clamp(20px,3vw,28px);line-height:1.2;margin:3px 0;color:#152238}
+#tmcResultTool .tmc-sub{font-size:13px;color:var(--tmc-muted);margin:0}
+#tmcResultTool .tmc-actions{display:flex;gap:8px;flex-wrap:wrap}
+#tmcResultTool button{font:inherit;cursor:pointer}
+#tmcResultTool .tmc-btn{border:1px solid #f3c4aa;background:#fff;color:#9a451d;border-radius:11px;padding:9px 13px;font-size:13px;font-weight:750;transition:.18s}
+#tmcResultTool .tmc-btn:hover{background:#fff0e8;border-color:var(--tmc-orange)}
+#tmcResultTool .tmc-btn.primary{background:var(--tmc-orange);border-color:var(--tmc-orange);color:#fff}
+#tmcResultTool .tmc-btn.primary:hover{background:var(--tmc-orange-dark)}
+#tmcResultTool .tmc-btn.danger{color:#b42318;border-color:#f2c5c1}
+#tmcResultTool .tmc-panel{background:var(--tmc-glass);border:1px solid rgba(255,255,255,.9);border-radius:16px;padding:15px;margin:14px 0;box-shadow:0 5px 18px rgba(25,35,50,.05)}
+#tmcResultTool .tmc-panel h2{font-size:15px;margin:0 0 12px;color:#26364b}
+#tmcResultTool .tmc-formgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+#tmcResultTool input,#tmcResultTool select{font:inherit;min-width:0;width:100%;border:1px solid #dce2e9;border-radius:10px;background:#fff;padding:10px 11px;color:#243247;font-size:14px;outline:none}
+#tmcResultTool input:focus,#tmcResultTool select:focus{border-color:var(--tmc-orange);box-shadow:0 0 0 3px rgba(246,121,56,.13)}
+#tmcResultTool .tmc-field{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#526074}
+#tmcResultTool .tmc-formfoot{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:11px}
+#tmcResultTool .tmc-settings{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:12px;color:#475569}
+#tmcResultTool .tmc-settings label{display:flex;align-items:center;gap:6px}
+#tmcResultTool .tmc-settings input[type=checkbox]{width:auto}
+#tmcResultTool .tmc-settings input[type=color]{width:34px;height:30px;padding:2px}
+#tmcResultTool .tmc-report{background:#fff;color:#222;padding:clamp(10px,2vw,20px);border:1px solid #d8dde4;border-radius:12px}
+#tmcResultTool .tmc-reporthead{display:flex;align-items:center;justify-content:center;gap:14px;text-align:center;border-bottom:2px solid #c8cdd4;padding:5px 0 13px;margin-bottom:14px}
+#tmcResultTool .tmc-reporthead h2{font-size:clamp(15px,2.4vw,21px);margin:0;color:#111;text-transform:uppercase}
+#tmcResultTool .tmc-reporthead h3{font-size:14px;margin:5px 0 0;color:#444;text-decoration:underline}
+#tmcResultTool .tmc-logo{width:64px;height:64px;object-fit:cover;border-radius:50%;display:none}
+#tmcResultTool .tmc-tablewrap{width:100%;overflow-x:auto;border:2px solid #111;position:relative;margin:12px 0 18px;background:#fff}
+#tmcResultTool table{width:100%;min-width:700px;border-collapse:collapse;font-size:12px;color:#222;position:relative;z-index:1}
+#tmcResultTool th,#tmcResultTool td{border:1px solid #222;padding:7px 5px;text-align:center;vertical-align:middle}
+#tmcResultTool th{background:#1a3b5c;color:#fff;font-weight:800;line-height:1.25}
+#tmcResultTool th span{display:block;font-size:10px;font-weight:500}
+#tmcResultTool td.tmc-name{text-align:left;min-width:190px}
+#tmcResultTool .tmc-watermark{position:absolute;z-index:2;pointer-events:none;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-28deg);font-size:clamp(32px,7vw,76px);font-weight:900;white-space:nowrap;color:rgba(0,0,0,.09);letter-spacing:4px}
+#tmcResultTool .tmc-watermark img{max-width:min(340px,65vw);max-height:260px;opacity:.16}
+#tmcResultTool .tmc-summary{border:2px solid var(--tmc-orange);border-radius:12px;padding:12px;margin-top:15px;break-inside:avoid}
+#tmcResultTool .tmc-summary h3{margin:-12px -12px 12px;padding:8px;text-align:center;background:var(--tmc-orange);color:#fff;font-size:15px}
+#tmcResultTool .tmc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+#tmcResultTool .tmc-stat{border:1px solid #e1e5eb;border-radius:9px;padding:9px;text-align:center}
+#tmcResultTool .tmc-stat small{display:block;color:#566273;font-weight:700}
+#tmcResultTool .tmc-stat strong{font-size:21px;color:#172334}
+#tmcResultTool .tmc-footer{text-align:center;font-style:italic;font-size:12px;margin-top:13px;color:#333}
+#tmcResultTool .tmc-del{border:0;background:#e74c3c;color:#fff;border-radius:6px;padding:4px 8px;font-size:11px}
+#tmcResultTool .tmc-status{font-size:12px;color:#657286;min-height:18px}
+#tmcResultTool .tmc-export{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin:12px 0}
+@media(max-width:760px){
+ #tmcResultTool{padding:8px}
+ #tmcResultTool .tmc-shell{border-radius:15px;padding:11px}
+ #tmcResultTool .tmc-formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #tmcResultTool .tmc-formgrid .tmc-field:nth-child(2){grid-column:span 2}
+ #tmcResultTool .tmc-actions{width:100%}
+ #tmcResultTool .tmc-actions .tmc-btn{flex:1}
+ #tmcResultTool .tmc-export{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ #tmcResultTool .tmc-export .tmc-btn{width:100%}
+ #tmcResultTool .tmc-settings{gap:9px}
+ #tmcResultTool .tmc-reporthead{gap:8px}
+ #tmcResultTool .tmc-logo{width:48px;height:48px}
+}
+@media(max-width:420px){#tmcResultTool .tmc-formgrid{grid-template-columns:1fr}#tmcResultTool .tmc-formgrid .tmc-field:nth-child(2){grid-column:auto}#tmcResultTool .tmc-stats{grid-template-columns:1fr}}
+@media print{#tmcResultTool .tmc-no-print{display:none!important}#tmcResultTool .tmc-report{border:0;padding:0}}
+</style>
+</head>
+<body>
+<div id="tmcResultTool">
+ <main class="tmc-shell">
+  <div class="tmc-top tmc-no-print">
+   <div><div class="tmc-kicker">School administration tool</div><h1>TMC School Result Generator</h1><p class="tmc-sub">Prepare, review and export a clean student result sheet.</p></div>
+   <div class="tmc-actions"><button class="tmc-btn" id="clearAll" type="button">Clear all rows</button><button class="tmc-btn primary" id="addStudentTop" type="button">＋ Add student</button></div>
+  </div>
+  <section class="tmc-panel tmc-no-print">
+   <h2>Student information</h2>
+   <div class="tmc-formgrid">
+    <label class="tmc-field">G.R. number<input id="stdGrNo" type="text" placeholder="e.g. 1720"></label>
+    <label class="tmc-field">Student name<input id="stdName" type="text" placeholder="Student full name"></label>
+    <label class="tmc-field">Father's name<input id="stdFather" type="text" placeholder="Father's full name"></label>
+    <label class="tmc-field">Roll number<input id="stdRoll" type="text" placeholder="Roll number"></label>
+    <label class="tmc-field">Obtained marks<input id="stdMarks" type="number" min="0" max="550" step="1" placeholder="Out of 550"></label>
+   </div>
+   <div class="tmc-formfoot"><button class="tmc-btn primary" id="addStudent" type="button">Add student to result</button><span class="tmc-status" id="status" aria-live="polite">No student records are preloaded.</span></div>
+  </section>
+  <section class="tmc-panel tmc-no-print">
+   <h2>Report settings</h2>
+   <div class="tmc-settings">
+    <label><input id="showSummary" type="checkbox" checked> Include summary in downloads</label>
+    <label>School logo <input id="logoUpload" type="file" accept="image/png,image/jpeg"></label>
+    <label>Header <input id="headerBgColor" type="color" value="#1a3b5c" aria-label="Header background"></label>
+    <label>Text <input id="headerTextColor" type="color" value="#ffffff" aria-label="Header text"></label>
+    <label>Watermark <input id="watermarkInput" type="text" value="TMC SCHOOL" style="max-width:130px"></label>
+    <label>Watermark image <input id="watermarkUpload" type="file" accept="image/png,image/jpeg"></label>
+    <button class="tmc-btn" id="clearWatermark" type="button">Clear watermark image</button>
+   </div>
+  </section>
+  <div class="tmc-export tmc-no-print">
+   <button class="tmc-btn primary" id="downloadPDF" type="button">↓ Download PDF</button>
+   <button class="tmc-btn" id="downloadWord" type="button">↓ Download Word</button>
+   <button class="tmc-btn" id="downloadJPG" type="button">↓ Download JPG</button>
+   <button class="tmc-btn" id="downloadZIP" type="button">↓ Download ZIP</button>
+  </div>
+  <section class="tmc-report" id="reportContent">
+   <header class="tmc-reporthead"><img class="tmc-logo" id="displayLogo" alt="School logo"><div><h2 id="schoolTitle">TMC Muhammad Ali Jinnah English Medium School</h2><h3>Result of SSC Part I</h3></div></header>
+   <div class="tmc-tablewrap">
+    <div class="tmc-watermark" id="watermarkContainer"><span id="watermarkText">TMC SCHOOL</span><img id="watermarkImg" alt="" hidden></div>
+    <table id="resultTable">
+     <thead><tr><th>S.<span>No.</span></th><th>G.R.<span>No.</span></th><th style="width:30%">Student's Name<span>Father's Name</span></th><th>Roll<span>No.</span></th><th>Obt.<span>Marks</span></th><th>Passed<span>Paper</span></th><th>Percent<span>%</span></th><th class="tmc-no-print">Action</th></tr></thead>
+     <tbody id="tableBody"></tbody>
+    </table>
+   </div>
+   <section class="tmc-summary" id="summaryCard"><h3>Result Summary</h3><div class="tmc-stats">
+    <div class="tmc-stat"><small>Total students</small><strong id="totalStudents">0</strong></div>
+    <div class="tmc-stat"><small>Cleared</small><strong id="clearedStudents" style="color:#22945b">0</strong></div>
+    <div class="tmc-stat"><small>Non-cleared</small><strong id="failedStudents" style="color:#d04444">0</strong></div>
+   </div></section>
+   <div class="tmc-footer">"Success is the result of hard work and dedication."</div>
+  </section>
+ </main>
+</div>
+<script>
+(function(){
+ 'use strict';
+ const root=document.getElementById('tmcResultTool'),TOTAL_MARKS=550;
+ const $=id=>root.querySelector('#'+id);
+ let students=[];
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function status(msg){$('status').textContent=msg}
+ function render(){
+  const body=$('tableBody');body.textContent='';
+  students.forEach((s,i)=>{
+   const pct=(s.marks/TOTAL_MARKS*100).toFixed(1),passed=Number(pct)>=33;
+   const tr=document.createElement('tr');tr.dataset.passed=String(passed);
+   tr.innerHTML='<td>'+String(i+1).padStart(2,'0')+'</td><td><b>'+esc(s.gr)+'</b></td><td class="tmc-name"><b>'+esc(s.name)+'</b><br><small>S/O '+esc(s.father||'N/A')+'</small></td><td><b>'+esc(s.roll)+'</b></td><td><b>'+s.marks+'</b></td><td><b>'+(passed?7:5)+'</b></td><td><b>'+pct+'%</b></td><td class="tmc-no-print"><button class="tmc-del" type="button" data-delete="'+i+'" aria-label="Delete '+esc(s.name)+'">Delete</button></td>';
+   body.appendChild(tr);
+  });
+  const passed=students.filter(s=>s.marks/TOTAL_MARKS*100>=33).length;
+  $('totalStudents').textContent=students.length;$('clearedStudents').textContent=passed;$('failedStudents').textContent=students.length-passed;
+ }
+ function add(){
+  const gr=$('stdGrNo').value.trim(),name=$('stdName').value.trim(),father=$('stdFather').value.trim(),roll=$('stdRoll').value.trim(),marks=Number($('stdMarks').value);
+  if(!gr||!name||!roll||$('stdMarks').value===''||!Number.isInteger(marks)||marks<0||marks>TOTAL_MARKS){status('Enter G.R., student name, roll number and marks from 0 to 550.');return}
+  students.push({gr,name,father,roll,marks});render();
+  ['stdGrNo','stdName','stdFather','stdRoll','stdMarks'].forEach(id=>$(id).value='');
+  status('Student added. Total records: '+students.length);
+ }
+ $('addStudent').addEventListener('click',add);$('addStudentTop').addEventListener('click',()=>{$('stdName').focus();$('stdName').scrollIntoView({behavior:'smooth',block:'center'})});
+ $('tableBody').addEventListener('click',e=>{const b=e.target.closest('[data-delete]');if(!b)return;students.splice(Number(b.dataset.delete),1);render();status('Student removed.')});
+ $('clearAll').addEventListener('click',()=>{if(students.length&&!confirm('Remove all student rows?'))return;students=[];render();status('All rows cleared.')});
+ $('headerBgColor').addEventListener('input',e=>root.querySelectorAll('#resultTable th').forEach(th=>th.style.backgroundColor=e.target.value));
+ $('headerTextColor').addEventListener('input',e=>root.querySelectorAll('#resultTable th').forEach(th=>th.style.color=e.target.value));
+ $('watermarkInput').addEventListener('input',e=>{$('watermarkText').textContent=e.target.value;$('watermarkText').hidden=!!$('watermarkImg').src});
+ function readImage(file,cb){if(!file)return; if(file.size>3*1024*1024){status('Please choose an image smaller than 3 MB.');return}const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(file)}
+ $('logoUpload').addEventListener('change',e=>readImage(e.target.files[0],src=>{$('displayLogo').src=src;$('displayLogo').style.display='block'}));
+ $('watermarkUpload').addEventListener('change',e=>readImage(e.target.files[0],src=>{$('watermarkImg').src=src;$('watermarkImg').hidden=false;$('watermarkText').hidden=true}));
+ $('clearWatermark').addEventListener('click',()=>{$('watermarkImg').removeAttribute('src');$('watermarkImg').hidden=true;$('watermarkText').hidden=false;$('watermarkUpload').value=''});
+ function exportClone(){
+  const clone=$('reportContent').cloneNode(true);
+  clone.querySelectorAll('.tmc-no-print').forEach(el=>el.remove());
+  if(!$('showSummary').checked)clone.querySelector('#summaryCard').remove();
+  const im=clone.querySelector('#displayLogo');if(im&&im.src)im.style.display='block';
+  return clone;
+ }
+ function withExport(fn){const clone=exportClone();return fn(clone)}
+ async function pdfBlob(clone){if(!window.html2pdf)throw Error('PDF library did not load. Check internet and retry.');return html2pdf().set({margin:[.25,.2,.25,.2],filename:'TMC_Result_Report.pdf',image:{type:'jpeg',quality:.96},html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff',scrollY:0},jsPDF:{unit:'in',format:'a4',orientation:'landscape'},pagebreak:{mode:['css','legacy']}}).from(clone).outputPdf('blob')}
+ function saveBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+ $('downloadPDF').addEventListener('click',async()=>{try{status('Preparing PDF…');await withExport(async c=>saveBlob(await pdfBlob(c),'TMC_Result_Report.pdf'));status('PDF downloaded.')}catch(e){status(e.message)}});
+ $('downloadJPG').addEventListener('click',async()=>{try{status('Preparing JPG…');await withExport(async c=>{if(!window.html2canvas)throw Error('Image export library did not load.');const canvas=await html2canvas(c,{scale:2,useCORS:true,backgroundColor:'#fff'});const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.95));saveBlob(blob,'TMC_Result_Report.jpg')});status('JPG downloaded.')}catch(e){status(e.message)}});
+ $('downloadWord').addEventListener('click',()=>withExport(c=>{const html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font-family:Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #222;padding:6px;text-align:center}th{background:#1a3b5c;color:#fff}.tmc-name{text-align:left}</style></head><body>'+c.innerHTML+'</body></html>';saveBlob(new Blob(['\ufeff',html],{type:'application/msword'}),'TMC_Result_Report.doc');status('Word document downloaded.')}));
+ $('downloadZIP').addEventListener('click',async()=>{try{if(!window.JSZip)throw Error('ZIP library did not load.');status('Preparing ZIP…');await withExport(async c=>{const canvas=await html2canvas(c,{scale:2,useCORS:true,backgroundColor:'#fff'});const jpg=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.95));const zip=new JSZip();zip.file('TMC_Result_Report.jpg',jpg);zip.file('TMC_Result_Report.pdf',await pdfBlob(c));saveBlob(await zip.generateAsync({type:'blob'}),'TMC_Result_Files.zip')});status('ZIP downloaded.') }catch(e){status(e.message)}});
+ render();
+})();
+</script>
+</body>
+</html>
