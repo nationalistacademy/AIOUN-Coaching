@@ -3308,7 +3308,7 @@ function jtCallback(){
 
 <!-- Blogger theme app entry point ends here. -->
 
-<b:if cond='!data:view.isPreview'>&lt;textarea disabled readonly id=&quot;element-b&quot; style=&quot;display:none&quot;&gt;&lt;style&gt;/*</b:if><!-- AIOU Coaching enhancements inspired by the supplied Plus UI XML -->
+<!-- AIOU Coaching enhancements inspired by the supplied Plus UI XML -->
 <style type='text/css'><![CDATA[
 #aio-reading-progress{position:fixed;top:0;left:0;width:0;height:3px;z-index:2147483001;background:linear-gradient(90deg,#1769aa,#ff8a3d);box-shadow:0 1px 8px rgba(23,105,170,.35);pointer-events:none;transition:width .08s linear}
 #aio-scroll-control{position:fixed;right:16px;bottom:22px;z-index:2147482999;width:44px;height:44px;border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#1769aa;color:#fff;box-shadow:0 4px 16px rgba(0,0,0,.22);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s;cursor:pointer}
@@ -3353,6 +3353,6 @@ function jtCallback(){
  //]]></script>
 
 
-</body><b:if cond='!data:view.isPreview'>*/&lt;/style&gt;&lt;/textarea&gt;<script>/*<![CDATA[*/const _eh=document.getElementById("element-h"),_eb=document.getElementById("element-b"),_WidgetManager={_PopupConfig:function(){}};null!==_eh&&(_eh.outerHTML=""),null!==_eb&&(_eb.outerHTML="");/*]]>*/</script>
+<b:if cond='!data:view.isPreview'>&lt;textarea disabled readonly id=&quot;element-b&quot; style=&quot;display:none&quot;&gt;&lt;style&gt;/*</b:if></body><b:if cond='!data:view.isPreview'>*/&lt;/style&gt;&lt;/textarea&gt;<script>/*<![CDATA[*/const _eh=document.getElementById("element-h"),_eb=document.getElementById("element-b"),_WidgetManager={_PopupConfig:function(){}};null!==_eh&&(_eh.outerHTML=""),null!==_eb&&(_eb.outerHTML="");/*]]>*/</script>
 &lt;/body&gt;</b:if>
 </html>
