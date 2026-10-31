@@ -29,3 +29,10 @@ The companion app is separate from Blogger and the Blogger XML must be uploaded 
 
 ## QA
 Check GitHub Actions before claiming deployment or browser tests passed: [Browser QA](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/browser-qa.yml), [Pages deploy](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/deploy-pages.yml), [LMS security tests](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/lms-security-e2e.yml).
+
+
+## Workshop Planner
+
+- Standalone planner: [workshop/](workshop/)
+- Creates a downloadable `.ics` reminder from workshop details entered by the student.
+- No account access, API key, or automatic AIOU scraping is used. Verify workshop information against the official AIOU notice before importing the reminder.
