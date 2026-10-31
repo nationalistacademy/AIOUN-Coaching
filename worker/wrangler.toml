@@ -2,12 +2,25 @@ name = "aiou-coaching-tools"
 main = "worker.js"
 compatibility_date = "2026-10-31"
 
-# Deploy this Worker from the worker/ directory.
-# Runtime secrets are configured in Cloudflare, never committed here:
-#   npx wrangler secret put OLLAMA_API_KEY
-#   npx wrangler secret put AUTH_TOKEN
+# Deploy from this directory using: npx wrangler deploy
+# Add secrets in Cloudflare Workers > Settings > Variables and Secrets:
+# Required access control:
+#   AUTH_TOKEN
+# Provider secrets:
+#   OLLAMA_API_KEY
+#   OPENROUTER_API_KEY
+#   DEEPSEEK_API_KEY
+#   CLAUDE_API_KEY
+#   CODEX_API_KEY
+#   FREEBUFF_API_KEY
 #
-# Optional runtime variables (Cloudflare Settings > Variables):
-#   OLLAMA_MODEL = "glm-5.3"
-#   ALLOWED_ORIGINS = "https://aioucoaching.blogspot.com,https://aioucoaching.netlify.app"
+# Optional plain-text Variables (not secrets):
+#   DEFAULT_MODEL = "ollama/glm-5.3"
+#   ALLOWED_ORIGINS = "https://aioucoaching.blogspot.com,https://aioucoaching.netlify.app,https://nationalistacademy.github.io"
 #   AI_TIMEOUT_MS = "120000"
+#   CODEX_API_URL = "https://your-provider.example/v1/chat/completions"
+#   FREEBUFF_BASE_URL = "https://your-freebuff-gateway.example"
+#   FREEBUFF_MODEL = "deepseek/deepseek-v4-flash"
+#
+# CODEX_API_URL must be the full OpenAI-compatible chat-completions URL.
+# FREEBUFF_BASE_URL must point to a gateway exposing /v1/chat/completions.
