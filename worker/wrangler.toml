@@ -1,11 +1,13 @@
 name = "aiou-coaching-tools"
 main = "worker.js"
-compatibility_date = "2024-01-01"
+compatibility_date = "2026-10-31"
 
-# Optional: override the upstream timeout (ms)
-# [vars]
-# AI_TIMEOUT_MS = "120000"
-
-# Secrets (never commit):
-#   npx wrangler secret put DEEPSEEK_API_KEY
-#   npx wrangler secret put AUTH_TOKEN        # one token, or many separated by commas
+# Deploy this Worker from the worker/ directory.
+# Runtime secrets are configured in Cloudflare, never committed here:
+#   npx wrangler secret put OLLAMA_API_KEY
+#   npx wrangler secret put AUTH_TOKEN
+#
+# Optional runtime variables (Cloudflare Settings > Variables):
+#   OLLAMA_MODEL = "glm-5.3"
+#   ALLOWED_ORIGINS = "https://aioucoaching.blogspot.com,https://aioucoaching.netlify.app"
+#   AI_TIMEOUT_MS = "120000"
