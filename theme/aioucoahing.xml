@@ -3180,51 +3180,44 @@ function jtCallback(){
 
 
 
-<!-- AIOU Coaching: injected glassmorphism mobile navigation -->
+<!-- AIOU Coaching: static glassmorphism mobile navigation -->
 <style type='text/css'><![CDATA[
-#aio-mobile-dock{position:fixed!important;z-index:2147483647!important;left:9px!important;right:9px!important;bottom:calc(9px + env(safe-area-inset-bottom,0px))!important;display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;align-items:center;gap:3px!important;padding:7px 5px!important;border:1px solid rgba(255,255,255,.62)!important;border-radius:22px!important;background:rgba(255,255,255,.72)!important;box-shadow:0 10px 34px rgba(15,23,42,.18),inset 0 1px 0 rgba(255,255,255,.8)!important;backdrop-filter:blur(22px) saturate(165%)!important;-webkit-backdrop-filter:blur(22px) saturate(165%)!important;font-family:system-ui,-apple-system,'Segoe UI',sans-serif!important;isolation:isolate}
-#aio-mobile-dock .aio-dock-action{appearance:none!important;-webkit-appearance:none!important;min-width:0!important;min-height:54px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:4px 1px!important;border:1px solid transparent!important;border-radius:15px!important;background:transparent!important;color:#243449!important;text-decoration:none!important;font:700 9px/1.1 system-ui,-apple-system,'Segoe UI',sans-serif!important;white-space:nowrap!important;cursor:pointer!important;-webkit-tap-highlight-color:transparent}
-#aio-mobile-dock .aio-dock-action:active{background:rgba(255,255,255,.72)!important;border-color:rgba(255,255,255,.8)!important;transform:scale(.96)}
-#aio-mobile-dock svg{display:block!important;width:20px!important;height:20px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;flex:0 0 auto!important}
-.dark-mode #aio-mobile-dock,#aio-mobile-dock.aio-dock-dark{background:rgba(20,27,38,.72)!important;border-color:rgba(255,255,255,.18)!important;box-shadow:0 10px 34px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.1)!important}
+#aio-mobile-dock{position:fixed!important;z-index:2147483647!important;left:10px!important;right:10px!important;bottom:calc(10px + env(safe-area-inset-bottom,0px))!important;display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;align-items:center!important;gap:3px!important;padding:7px 5px!important;min-height:68px!important;border:1px solid rgba(255,255,255,.72)!important;border-radius:23px!important;background:rgba(255,255,255,.78)!important;box-shadow:0 12px 34px rgba(15,23,42,.2),inset 0 1px 0 rgba(255,255,255,.9)!important;backdrop-filter:blur(22px) saturate(170%)!important;-webkit-backdrop-filter:blur(22px) saturate(170%)!important;font-family:system-ui,-apple-system,'Segoe UI',sans-serif!important;isolation:isolate!important}
+#aio-mobile-dock .aio-dock-action{appearance:none!important;-webkit-appearance:none!important;min-width:0!important;min-height:52px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:4px 1px!important;border:1px solid transparent!important;border-radius:15px!important;background:transparent!important;color:#243449!important;text-decoration:none!important;font:700 9px/1.1 system-ui,-apple-system,'Segoe UI',sans-serif!important;white-space:nowrap!important;cursor:pointer!important;-webkit-tap-highlight-color:transparent!important}
+#aio-mobile-dock .aio-dock-action svg{display:block!important;width:21px!important;height:21px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;flex:0 0 auto!important}
+#aio-mobile-dock .aio-dock-action:active{background:rgba(255,255,255,.85)!important;transform:scale(.96)}
+.dark-mode #aio-mobile-dock,#aio-mobile-dock.aio-dock-dark{background:rgba(20,27,38,.82)!important;border-color:rgba(255,255,255,.2)!important;box-shadow:0 12px 34px rgba(0,0,0,.38)!important}
 .dark-mode #aio-mobile-dock .aio-dock-action,#aio-mobile-dock.aio-dock-dark .aio-dock-action{color:#f4f7fb!important}
-@media(max-width:767px){body{padding-bottom:calc(91px + env(safe-area-inset-bottom,0px))!important}.aio-pwa-cta{display:none!important}}
+@media(max-width:767px){body{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))!important}.aio-pwa-cta{display:none!important}}
 @media(min-width:768px){#aio-mobile-dock{display:none!important}}
-@media(prefers-reduced-motion:no-preference){#aio-mobile-dock .aio-dock-action{transition:background .18s ease,border-color .18s ease,transform .18s ease}}
 ]]></style>
+<nav id='aio-mobile-dock' aria-label='AIOU Coaching mobile navigation'>
+  <a class='aio-dock-action' href='/' aria-label='Home'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z'/></svg><span>Home</span></a>
+  <a class='aio-dock-action' href='/search' aria-label='Search'><svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='10.8' cy='10.8' r='6.8'/><path d='m16 16 5 5'/></svg><span>Search</span></a>
+  <a class='aio-dock-action' href='https://nationalistacademy.github.io/AIOUN-Coaching/workshop/' aria-label='Workshop'><svg viewBox='0 0 24 24' aria-hidden='true'><rect x='3' y='4' width='18' height='17' rx='2'/><path d='M16 2v4M8 2v4M3 10h18M8 14h3M8 17h7'/></svg><span>Workshop</span></a>
+  <button class='aio-dock-action' id='aio-dock-menu' type='button' aria-label='Menu'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 6h16M4 12h16M4 18h16'/></svg><span>Menu</span></button>
+  <button class='aio-dock-action' id='aio-dock-share' type='button' aria-label='Share page'><svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='18' cy='5' r='3'/><circle cx='6' cy='12' r='3'/><circle cx='18' cy='19' r='3'/><path d='m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4'/></svg><span>Share</span></button>
+  <button class='aio-dock-action' id='aio-dock-top' type='button' aria-label='Back to top'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='m6 14 6-6 6 6M12 8v12'/></svg><span>Top</span></button>
+</nav>
 <script type='text/javascript'><![CDATA[
 (function(){
-'use strict';
-function mountAioMobileDock(){
- if(!document.body||document.getElementById('aio-mobile-dock'))return;
- var isContent=/^\/(20\d{2}\/|p\/)/.test(location.pathname);
- var nav=document.createElement('nav');nav.id='aio-mobile-dock';nav.setAttribute('aria-label','AIOU Coaching mobile navigation');
- var items=[
- {label:'Home',href:'/',icon:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>'},
- {label:'Search',href:'/search',icon:'<circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/>'},
- {label:'Workshop',href:'https://nationalistacademy.github.io/AIOUN-Coaching/workshop/',icon:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h3M8 17h7"/>'},
- {label:'Menu',action:'menu',icon:'<path d="M4 6h16M4 12h16M4 18h16"/>'},
- isContent?{label:'Share',action:'share',icon:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4"/>'}:{label:'Dark',action:'dark',icon:'<path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"/>'},
- isContent?{label:'Comments',href:'#comments',icon:'<path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l-2 2v-9.5A7.5 7.5 0 0 1 10.5 4H12a8 8 0 0 1 8 7.5Z"/><path d="M8 11h8M8 14h5"/>'}:{label:'Top',action:'top',icon:'<path d="m6 14 6-6 6 6M12 8v12"/>'}
- ];
- items.forEach(function(item){
-  var el=document.createElement(item.href?'a':'button');el.className='aio-dock-action';el.setAttribute('aria-label',item.label);
-  if(item.href)el.href=item.href;else el.type='button';
-  var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');svg.innerHTML=item.icon;el.appendChild(svg);
-  var label=document.createElement('span');label.textContent=item.label;el.appendChild(label);
-  if(item.action)el.addEventListener('click',function(){
-   if(item.action==='menu'){var t=document.querySelector('#navbar-toggler,.navbar-toggler,[data-bs-toggle="collapse"],.menu-toggle');if(t)t.click();else{var m=document.querySelector('#navbar,.navbar-collapse,.header-menu');if(m)m.classList.toggle('show');}}
-   if(item.action==='share'){if(navigator.share)navigator.share({title:document.title,url:location.href}).catch(function(){});else if(navigator.clipboard)navigator.clipboard.writeText(location.href);else window.prompt('Copy page link:',location.href);}
-   if(item.action==='dark'){var d=document.querySelector('#dark-toggler,.dark-toggler,[data-action="dark-mode"]');if(d)d.click();else{document.documentElement.classList.toggle('dark-mode');document.body.classList.toggle('dark-mode');}}
-   if(item.action==='top')window.scrollTo({top:0,behavior:'smooth'});
-  });
-  nav.appendChild(el);
+ var menu=document.getElementById('aio-dock-menu');
+ if(menu)menu.addEventListener('click',function(){
+  var t=document.querySelector('#navbar-toggler,.navbar-toggler,[data-bs-toggle="collapse"],.menu-toggle,.jt-icon-menu');
+  if(t)t.click();
+  else{var m=document.querySelector('#navbar,.navbar-collapse,.header-menu,.main-menu');if(m)m.classList.toggle('show');}
  });
- document.body.appendChild(nav);
- function syncTheme(){nav.classList.toggle('aio-dock-dark',document.documentElement.classList.contains('dark-mode')||document.body.classList.contains('dark-mode'));}
- syncTheme();new MutationObserver(syncTheme).observe(document.documentElement,{attributes:true,attributeFilter:['class']});new MutationObserver(syncTheme).observe(document.body,{attributes:true,attributeFilter:['class']});
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mountAioMobileDock,{once:true});else mountAioMobileDock();
+ var share=document.getElementById('aio-dock-share');
+ if(share)share.addEventListener('click',function(){
+  if(navigator.share)navigator.share({title:document.title,url:location.href}).catch(function(){});
+  else if(navigator.clipboard)navigator.clipboard.writeText(location.href);
+  else window.prompt('Copy page link:',location.href);
+ });
+ var top=document.getElementById('aio-dock-top');
+ if(top)top.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+ function sync(){var n=document.getElementById('aio-mobile-dock');if(n)n.classList.toggle('aio-dock-dark',document.documentElement.classList.contains('dark-mode')||document.body.classList.contains('dark-mode'));}
+ sync();
+ if(window.MutationObserver&&document.documentElement)new MutationObserver(sync).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
 })();
 ]]></script>
 
