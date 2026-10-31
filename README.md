@@ -205,6 +205,9 @@ Ready kits for the four areas:
 
 New post ka starter: [posts/post-template.html](posts/post-template.html).
 
+**Poora Blogger deploy ek page par:** [docs/BLOGGER-DEPLOY.md](docs/BLOGGER-DEPLOY.md) —
+theme upload, page-by-page paste list, live URL statuses, menu aur Search Console.
+
 ---
 
 ## Blogger theme

@@ -18,7 +18,7 @@
 <Variable name="separator" description="Separator" type="string" value=" - "/>
 [!] Title separator ( – ), ( | ), ( • )
 
-<Variable name="description" description="Description" type="string" value=""/>
+<Variable name="description" description="Description" type="string" value="AIOU Coaching — independent solved assignments, guess papers and free study tools for Allama Iqbal Open University students in Pakistan."/>
 [!] Default meta description, recommended 155–160 characters
 
 <Variable name="cover" description="Cover" type="string" value=""/>
@@ -1669,7 +1669,7 @@ width: 50%;
       <b:widget-setting name='text-10'>FAQs</b:widget-setting>
       <b:widget-setting name='sorting'>NONE</b:widget-setting>
       <b:widget-setting name='link-1'>/p/programmes.html</b:widget-setting>
-      <b:widget-setting name='link-2'>#</b:widget-setting>
+      <b:widget-setting name='link-2'>/</b:widget-setting>
       <b:widget-setting name='link-0'>/p/home.html</b:widget-setting>
       <b:widget-setting name='link-11'>/p/contact.html</b:widget-setting>
       <b:widget-setting name='link-10'>/p/faqs.html</b:widget-setting>
@@ -1677,7 +1677,7 @@ width: 50%;
       <b:widget-setting name='link-9'>#sub-end</b:widget-setting>
       <b:widget-setting name='text-8'>Guess Paper</b:widget-setting>
       <b:widget-setting name='link-7'>#</b:widget-setting>
-      <b:widget-setting name='link-8'>#</b:widget-setting>
+      <b:widget-setting name='link-8'>/p/aiou-guess-paper-generator.html</b:widget-setting>
       <b:widget-setting name='link-5'>/p/get-solved-assignments.html</b:widget-setting>
       <b:widget-setting name='link-6'>/p/academic-calander.html</b:widget-setting>
       <b:widget-setting name='link-3'>#sub-start</b:widget-setting>
@@ -1691,6 +1691,8 @@ width: 50%;
       <b:widget-setting name='text-7'>Original Books</b:widget-setting>
       <b:widget-setting name='text-6'>Academic Calandar</b:widget-setting>
       <b:widget-setting name='text-11'>Contact</b:widget-setting>
+      <b:widget-setting name='text-12'>All Tools</b:widget-setting>
+      <b:widget-setting name='link-12'>/p/tools.html</b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
       <b:include name='JetMenu'/>
