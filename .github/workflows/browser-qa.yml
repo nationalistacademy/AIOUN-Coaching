@@ -31,6 +31,8 @@ jobs:
           python-version: "3.12"
       - name: Run Python study-helper tests
         run: python -m unittest discover -s python -p "test_*.py" -v
+      - name: Run workshop planner regression tests
+        run: npm run test:workshops
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Run responsive, link and export tests
