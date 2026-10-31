@@ -1,0 +1,58 @@
+name: LMS Security E2E
+
+on:
+  workflow_dispatch:
+    inputs:
+      course_id:
+        description: UUID of a dedicated test course that both student fixtures are enrolled in
+        required: true
+        type: string
+      quiz_id:
+        description: UUID of a published test quiz with at least one attempt from each student
+        required: true
+        type: string
+      unenrolled_course_id:
+        description: UUID of a different course that Student A is not enrolled in
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  security-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      LMS_TEST_SUPABASE_URL: ${{ secrets.LMS_TEST_SUPABASE_URL }}
+      LMS_TEST_SUPABASE_ANON_KEY: ${{ secrets.LMS_TEST_SUPABASE_ANON_KEY }}
+      LMS_TEST_STUDENT_A_EMAIL: ${{ secrets.LMS_TEST_STUDENT_A_EMAIL }}
+      LMS_TEST_STUDENT_A_PASSWORD: ${{ secrets.LMS_TEST_STUDENT_A_PASSWORD }}
+      LMS_TEST_STUDENT_B_EMAIL: ${{ secrets.LMS_TEST_STUDENT_B_EMAIL }}
+      LMS_TEST_STUDENT_B_PASSWORD: ${{ secrets.LMS_TEST_STUDENT_B_PASSWORD }}
+      LMS_TEST_STAFF_EMAIL: ${{ secrets.LMS_TEST_STAFF_EMAIL }}
+      LMS_TEST_STAFF_PASSWORD: ${{ secrets.LMS_TEST_STAFF_PASSWORD }}
+      LMS_TEST_COURSE_ID: ${{ inputs.course_id }}
+      LMS_TEST_QUIZ_ID: ${{ inputs.quiz_id }}
+      LMS_TEST_UNENROLLED_COURSE_ID: ${{ inputs.unenrolled_course_id }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate test credentials and fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in LMS_TEST_SUPABASE_URL LMS_TEST_SUPABASE_ANON_KEY LMS_TEST_STUDENT_A_EMAIL LMS_TEST_STUDENT_A_PASSWORD LMS_TEST_STUDENT_B_EMAIL LMS_TEST_STUDENT_B_PASSWORD LMS_TEST_STAFF_EMAIL LMS_TEST_STAFF_PASSWORD LMS_TEST_COURSE_ID LMS_TEST_QUIZ_ID LMS_TEST_UNENROLLED_COURSE_ID; do
+            if [[ -z "${!name}" ]]; then
+              echo "::error::Missing required GitHub secret or workflow input: $name"
+              exit 1
+            fi
+          done
+      - name: Install dependencies
+        run: npm install
+      - name: Run real-account security tests
+        run: npm run test:lms-security

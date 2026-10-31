@@ -1,0 +1,11 @@
+# Keep build dependencies and QA tooling out of the published static site.
+node_modules/
+functions/node_modules/
+tests/
+scripts/
+.github/
+.git/
+.netlify/
+playwright.config.js
+package.json
+package-lock.json

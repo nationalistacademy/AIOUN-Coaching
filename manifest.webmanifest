@@ -1,0 +1,28 @@
+{
+  "id": "./",
+  "name": "AIOU Coaching — Study Tools",
+  "short_name": "AIOU Coaching",
+  "description": "AIOU Coaching study tools and academic writing utilities.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "background_color": "#f7f4f1",
+  "theme_color": "#f67938",
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

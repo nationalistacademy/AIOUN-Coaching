@@ -1,0 +1,16 @@
+{
+  "name": "aiou-coaching-qa",
+  "private": true,
+  "scripts": {
+    "build:vendor": "node scripts/copy-vendor.js",
+    "test": "npm run build:vendor && playwright test",
+    "test:lms-security": "playwright test tests/lms-security.spec.js"
+  },
+  "dependencies": {
+    "docx": "9.1.0",
+    "file-saver": "2.0.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}

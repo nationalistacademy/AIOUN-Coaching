@@ -1,97 +1,29 @@
-/* ==========================================================================
-   AIOU Coaching — tools.js
-   One list, used by index.html and by the "All Tools" section of the studio.
-   Add a new tool once here and it appears in both places.
-
-   "file" is relative to the tools/ folder; js/hub.js applies the page prefix.
-   Exposes: window.AIOU.tools
-   ========================================================================== */
+/* AIOU Coaching — central tool registry */
 (function (w) {
   'use strict';
-
   var GROUPS = [
-    { id: 'all', label: 'All Tools' },
-    { id: 'ai', label: 'AI Tools (DeepSeek)' },
-    { id: 'paper', label: 'Guess Papers' },
-    { id: 'form', label: 'Forms' },
-    { id: 'cover', label: 'Cover Pages' },
-    { id: 'doc', label: 'Files & Downloads' },
-    { id: 'site', label: 'Pages' }
+    { id:'all',label:'All Tools' },{ id:'ai',label:'AI Tools' },{ id:'academic',label:'Capstone / Internship / Thesis' },
+    { id:'paper',label:'Guess Papers' },{ id:'cover',label:'Cover Pages' },{ id:'files',label:'Image / PDF / Downloads' },{ id:'site',label:'Pages' }
   ];
-
   var LIST = [
-    {
-      id: 'studio', icon: '🤖', group: 'ai', name: 'Multi-ID AI Studio',
-      file: 'studio.html', badges: ['DeepSeek', 'Multiple IDs', 'Compare'],
-      desc: 'Ek sawal kai Worker IDs ko bhejein, sab ke jawab sath dekhein, best jawab chunein aur Word file banayein.'
-    },
-    {
-      id: 'humanizer', icon: '✍️', group: 'ai', name: 'AI Text Humanizer',
-      file: 'humanizer.html', badges: ['DeepSeek', 'Rewrite'],
-      desc: 'Paste ki hui text ko natural, insani andaaz me dobara likhein — academic ya casual tone me.'
-    },
-    {
-      id: 'diagram', icon: '🎨', group: 'ai', name: 'AI Diagram Generator',
-      file: 'diagram-generator.html', badges: ['DeepSeek', 'Mermaid', 'PNG'],
-      desc: 'Chhota sa topic likhein aur flowchart ya diagram bana kar download karein.'
-    },
-    {
-      id: 'writer', icon: '📝', group: 'ai', name: 'AI Assignment Writer',
-      file: 'assignment-writer.html', badges: ['DeepSeek', 'Draft'],
-      desc: 'Assignment ke sawal paste karein, poora draft (title page + references) generate karein.'
-    },
-    {
-      id: 'generator', icon: '🗂️', group: 'ai', name: 'Blog Post Generator',
-      file: 'generator.html', badges: ['DeepSeek', 'JSON-LD', 'SEO'],
-      desc: 'Blogger post ka draft, meta tags aur schema markup ek sath likhne wala tool.'
-    },
-    {
-      id: 'guess-paper', icon: '📄', group: 'paper', name: 'Guess Paper Generator',
-      file: 'guess-paper.html', badges: ['PDF', 'Word', 'JPG', 'PNG'],
-      desc: 'Urdu ya English guess paper banayein, logo aur watermark lagayein, multi-page export karein.'
-    },
-    {
-      id: 'bs-bba', icon: '✅', group: 'paper', name: 'BS & BBA Guess Paper',
-      file: 'bs-bba-guess-paper.html', badges: ['MCQ', 'PDF', 'Word', 'SVG'],
-      desc: 'Part I MCQs, Part II aur Part III subjective sawalon ka tayyar paper.'
-    },
-    {
-      id: 'cover-page', icon: '📕', group: 'cover', name: 'Assignment Cover Page',
-      file: 'assignment-cover-page.html', badges: ['19 templates', 'PDF', 'JPG'],
-      desc: 'Programme, course aur student details ke saath khoobsurat cover page, random design bhi.'
-    },
-    {
-      id: 'cover-sheet', icon: '📋', group: 'cover', name: 'Assignment Cover Sheet',
-      file: 'assignment-cover-sheet.html', badges: ['Simple', 'Print'],
-      desc: 'Sada aur saaf cover sheet — sirf zaroori maloomat, ek click me print.'
-    },
-    {
-      id: 'front-page', icon: '🖼️', group: 'cover', name: 'AIOU Front Page',
-      file: 'front-page.html', badges: ['A4', 'PDF'],
-      desc: 'A4 style assignment front page, ready to print ya PDF me save karne ke liye.'
-    },
-    {
-      id: 'bulk', icon: '📦', group: 'doc', name: 'Bulk Word / ZIP Downloader',
-      file: 'bulk-downloader.html', badges: ['Word', 'ZIP'],
-      desc: 'Kai students ke assignments ek sath Word files me banayein aur ZIP me download karein.'
-    },
-    {
-      id: 'tools-page', icon: '🧰', group: 'site', name: 'Tools Page Markup',
-      file: 'tools.html', badges: ['Blogger widget'],
-      desc: 'Blogger tools page ka HTML — filter chips, cards aur FAQ schema ke saath.'
-    },
-    {
-      id: 'aiou-tool-kit', icon: '🎒', group: 'site', name: 'AIOU Tool Kit (Blogger page body)',
-      file: '../pages/aiou-tool-kit.html', badges: ['Blogger page', 'All tools', 'ItemList schema'],
-      desc: 'Page body me paste karne wala AIOU Tool Kit — saare tools, filter, FAQ aur schema ke saath.'
-    },
-    {
-      id: 'home', icon: '🏠', group: 'site', name: 'Blogger Homepage Markup',
-      file: '../theme/home.html', badges: ['Blogger'],
-      desc: 'Blog ka homepage section markup (theme/home.html).'
-    }
+    {id:'studio',icon:'🤖',group:'ai',name:'Multi-ID AI Studio',file:'studio.html',badges:['DeepSeek','Multiple IDs','Compare'],desc:'Ek prompt kai Worker IDs ko bhejein, jawab compare karein aur Word draft banayein.'},
+    {id:'humanizer',icon:'✍️',group:'ai',name:'AI Text Humanizer',file:'humanizer.html',badges:['Rewrite'],desc:'Apne draft ko natural aur clear banane ke liye rewriting help.'},
+    {id:'diagram',icon:'🎨',group:'ai',name:'AI Diagram Generator',file:'diagram-generator.html',badges:['Mermaid','PNG'],desc:'Topic se flowchart/diagram generate karein.'},
+    {id:'writer',icon:'📝',group:'ai',name:'AI Assignment Writer',file:'assignment-writer.html',badges:['Draft','Word'],desc:'Assignment structure aur draft assistance.'},
+    {id:'report-builder',icon:'📚',group:'academic',name:'AIOU Capstone / Internship / Thesis Builder',file:'report-builder.html',badges:['AI','Word','PDF'],desc:'Quick section-based report builder.'},
+    {id:'academic-report',icon:'🎓',group:'academic',name:'Complete Academic Report Generator',file:'academic-report-generator.html',badges:['Capstone','Internship','Thesis','Word','PDF'],desc:'Complete workspace: setup, structure, chapters, AI assistance and final document export.'},
+    {id:'report-engine',icon:'🏛️',group:'academic',name:'AIOU Policy-Aware Complete Report Engine',file:'aiou-report-engine.html',badges:['Programme','Capstone','Internship','Thesis','Word','PDF'],desc:'Programme profile → report type → topic → student details → complete document sections → Word/PDF.'},
+    {id:'guess-paper',icon:'📄',group:'paper',name:'Guess Paper Generator',file:'guess-paper.html',badges:['PDF','Word','JPG','PNG'],desc:'Revision ke liye guess papers banayein.'},
+    {id:'bs-bba',icon:'✅',group:'paper',name:'BS & BBA Guess Paper',file:'bs-bba-guess-paper.html',badges:['MCQ','PDF','Word'],desc:'MCQs aur subjective paper builder.'},
+    {id:'cover-page',icon:'📕',group:'cover',name:'Assignment Cover Page',file:'assignment-cover-page.html',badges:['Templates','PDF','JPG'],desc:'Assignment cover designs.'},
+    {id:'cover-sheet',icon:'📋',group:'cover',name:'Assignment Cover Sheet',file:'assignment-cover-sheet.html',badges:['Print'],desc:'Simple printable cover sheet.'},
+    {id:'front-page',icon:'🖼️',group:'cover',name:'AIOU Front Page',file:'front-page.html',badges:['A4','PDF'],desc:'A4 assignment front page.'},
+    {id:'image-tools',icon:'🖼️',group:'files',name:'Image Tools',file:'image-tools.html',badges:['JPG','PNG','WebP','Compress'],desc:'Image convert, resize, compress aur download — browser-side.'},
+    {id:'pdf-tools',icon:'📑',group:'files',name:'PDF Tools',file:'pdf-tools.html',badges:['Images→PDF','Text→Word'],desc:'Images to PDF aur selectable PDF text extraction to Word.'},
+    {id:'bulk',icon:'📦',group:'files',name:'Bulk Word / ZIP Downloader',file:'bulk-downloader.html',badges:['Word','ZIP'],desc:'Multiple generated documents ko bulk download karein.'},
+    {id:'tools-page',icon:'🧰',group:'site',name:'All Tools Page',file:'tools.html',badges:['Blogger'],desc:'Complete searchable/filterable tool hub.'},
+    {id:'aiou-tool-kit',icon:'🎒',group:'site',name:'AIOU Tool Kit — Blogger Page Body',file:'../pages/aiou-tool-kit.html',badges:['Blogger','Schema'],desc:'Blogger page me paste/use karne wala tool kit markup.'},
+    {id:'home',icon:'🏠',group:'site',name:'Blogger Homepage Markup',file:'../theme/home.html',badges:['Blogger'],desc:'Homepage section markup.'}
   ];
-
-  w.AIOU = w.AIOU || {};
-  w.AIOU.tools = { groups: GROUPS, list: LIST };
+  w.AIOU=w.AIOU||{};w.AIOU.tools={groups:GROUPS,list:LIST};
 })(window);

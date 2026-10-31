@@ -31,7 +31,12 @@ textarea{resize:vertical;min-height:60px}
 .sc{font-size:30px;font-weight:800}.ck{font-size:12px;line-height:1.7}.ok{color:#16a34a}.no{color:#dc2626}
 iframe{width:100%;height:520px;border:1px solid var(--bd);border-radius:8px;background:#fff;margin-top:8px}
 .os li{font-size:12px;margin:2px 0}.os b{color:var(--g)}
-</style></head>
+</style><meta name="theme-color" content="#f67938">
+<meta name="application-name" content="AIOU Coaching">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/brand.css">
+</head>
 <body><div class="w">
 <h1>🎓 AIOU Coaching — AI SEO Post Studio</h1>
 <p class="s">DeepSeek Worker · OSINT Research · SEO Score · JSON-LD @graph · Live Preview · <b>aioucoaching.blogspot.com</b></p>
@@ -215,4 +220,5 @@ $('workerUrl').value=localStorage.getItem('aw_worker')||DEF.w;$('authToken').val
 try{load(JSON.parse(localStorage.getItem('ac_draft')||'{}'))}catch{load({})}
 if(!v('homeUrl'))$('homeUrl').value=SITE+'/';if(!v('pubDate'))$('pubDate').value=today();
 score();links();
-</script></body></html>
+</script><script src="../js/pwa.js" defer></script>
+</body></html>

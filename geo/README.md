@@ -1,45 +1,55 @@
-# `geo/` — GEO kit (Generative Engine Optimization)
+# GEO guide — Generative Engine Optimization
 
-GEO ka matlab: aap ka content **AI answers** me cite ho — Google AI Overviews, ChatGPT,
-Gemini, Perplexity. Ye tools page ko rank karne se alag khel hai: yahan **ek saaf jawab** jeetta hai,
-lambi story nahi.
+This guide helps make AIOU Coaching pages clear and useful to readers and potentially easier for search and answer engines to interpret. GEO does **not** guarantee citations, rankings, or inclusion in AI-generated answers.
 
-Theme me GEO ka hook pehle se mojood hai: `.key-takeaways` (glass “Quick answer” box), aur
-`theme/AIOUCOACHING.XML` ke aakhir me GEO quick-answer + cookie notice ka script.
+The Blogger theme includes styling for the `.key-takeaways` quick-answer block. Check the current theme before relying on a particular style or script.
 
-## 1. GEO ka formula (har page/post par)
+## 1. Recommended page structure
 
-1. **Seedha jawab sab se pehle.** Pehli 2-3 line me poora jawab, phir tafseel.
-2. **Ek sawal = ek heading.** Heading me wahi alfaz jo student search me likhta hai
-   (“AIOU assignment cover page kaise banayein”).
-3. **Numbers, dates, steps** — jo cheez AI utha sake aur student verify kar sake.
-4. **Table ya list** — AI engines list/table ko asaan uthate hain.
-5. **Author + updated date** — E-E-A-T ke liye. AI sources ko trust karta hai.
-6. **Public, indexable page** — noindex page AI bhi nahi uthata.
+1. **Answer the question first.** Use the first two or three sentences to give a direct, accurate answer.
+2. **Use descriptive headings.** Phrase headings around the actual question or task, not a list of repeated keywords.
+3. **Show verifiable steps.** Include dates, numbers, eligibility rules, or examples only when they can be checked.
+4. **Use lists and tables when helpful.** They should clarify information, not pad the page.
+5. **Show authorship and freshness.** Add an author/editor and a reviewed or updated date where appropriate; do not invent review credentials.
+6. **Keep important content accessible.** Avoid putting essential information only in images, scripts, or inaccessible widgets.
+7. **Link to primary sources.** For university policies, fees, dates, and results, link to the official AIOU source and state when details were checked.
 
-## 2. Quick answer block (paste karein)
+## 2. Quick-answer block
 
-Ready snippet: [quick-answer.html](quick-answer.html) — page ya post ke **sab se upar** paste karein.
+The ready-to-copy snippet is [quick-answer.html](quick-answer.html). Place it near the top of the Blogger page or post and adapt its claim to match the tool's actual behaviour.
 
 ```html
 <div class="key-takeaways" role="note">
   <strong>Quick answer</strong>
-  <p>AIOU Coaching par assignment cover page free banta hai: details bharein, template chunein
-  aur PDF ya Word me download karein. Koi account nahi chahiye, sab kuch browser me chalta hai.</p>
+  <p>Write a short, direct answer to the page's main question. Explain any important limitations and link to a primary source when appropriate.</p>
 </div>
 ```
 
-## 3. FAQ + schema (AI engines isay pasand karte hain)
+Do not claim that a tool is free, private, account-free, or entirely browser-based unless that is accurate for that specific tool. AI-enabled tools may send prompts to a configured external service.
 
-Aakhir me 3-5 sawal rkhein aur sath `FAQPage` schema lagayein — snippet
-[../google-search/README.md](../google-search/README.md) me hai. Schema ke bina bhi
-`<details><summary>` FAQ log aur AI dono ke liye parhne layak rehta hai.
+## 3. FAQs and structured data
 
-## 4. Checklist
+Use a short FAQ when it answers real questions readers have. The [Google Search guide](../google-search/README.md) includes example structured data. Structured data must accurately match visible page content; it does not guarantee a rich result or AI citation. Do not add fabricated testimonials, ratings, authors, dates, or FAQs.
 
-- [ ] Har page/post ka pehla paragraph ek seedha jawab hai (quick answer box me).
-- [ ] Page par kam az kam ek table ya list.
-- [ ] “Updated: <month year>” line mojood.
-- [ ] Sitemap + robots theek (dekhein [../seo/README.md](../seo/README.md)) — GEO se pehle SEO.
-- [ ] Har tool ka apna page hai (AIOU Tool Kit) taake link share ho sake.
-- [ ] Guides ka apna naam/author page — [../pages/about.html](../pages/about.html).
+## 4. Publishing checklist
+
+- [ ] The opening paragraph answers the main question directly.
+- [ ] Headings are descriptive and in a logical order.
+- [ ] Claims, dates, fees, and requirements are supported by reliable sources.
+- [ ] At least one useful list, table, or step sequence is included where appropriate.
+- [ ] Internal links point to relevant live Blogger pages or tools.
+- [ ] A reviewed/updated date is shown only when the page was actually reviewed.
+- [ ] Images have meaningful alternative text.
+- [ ] The page is mobile-readable and does not require horizontal scrolling unnecessarily.
+- [ ] SEO basics and indexing are checked using [the SEO guide](../seo/README.md).
+- [ ] The final published URL is opened and checked after editing Blogger.
+
+## 5. Related project guides
+
+- [SEO checklist](../seo/README.md)
+- [Google Search Console and structured data](../google-search/README.md)
+- [Blogger Pages](../pages/README.md)
+- [Blogger Posts](../posts/README.md)
+- [AIOU Coaching About page source](../pages/about.html)
+
+**Reminder:** GEO is a content-quality practice, not a promise of ranking or AI search visibility.

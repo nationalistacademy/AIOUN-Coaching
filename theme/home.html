@@ -1,523 +1,64 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* Hide Blogger default elements on this page */
-.post-title, .post-header, .entry-header, .post-footer, .post-meta, .breadcrumb { display: none !important; }
-.post-body { font-size: 16px !important; background: transparent !important; }
-
-/* ==========================================
-   ROOT — fully inherits JetTheme variables
-   ========================================== */
-.aq {
-  --ac: #f67938;
-  --ac2: #b8470f;
-
-  --ink: var(--bs-body-color, #686868);
-  --head: var(--jt-heading-color, #000000);
-  --mut: var(--bs-body-color, #686868);
-  --soft: var(--jt-bg-light, #f3f7f9);
-  --line: var(--jt-border-light, #efefef);
-  --bg: var(--bs-body-bg, #ffffff);
-  --card: var(--jt-archive-bg, #ffffff);
-  --mut-alpha: rgba(104, 104, 104, .82);
-
-  width: 100%;
-  position: relative;
-  color: var(--ink);
-  background: transparent;
-  line-height: 1.6;
-  font-family: inherit;
-  box-sizing: border-box;
-  text-align: left;
-  transition: color .3s ease;
-}
-.dark-mode .aq,
-:root.dark-mode .aq,
-html.dark-mode .aq,
-body.dark-mode .aq {
-  --mut-alpha: rgba(184, 184, 184, .88);
-}
-
-.aq *, .aq *:before, .aq *:after { box-sizing: border-box; }
-.aq a { color: var(--head); text-decoration: none; transition: color .25s; }
-.aq a:hover { color: var(--ac); }
-.aq a:focus-visible, .aq summary:focus-visible { outline: 3px solid var(--ac); outline-offset: 3px; }
-.aq h1, .aq h2, .aq h3 {
-  font-family: 'Bricolage Grotesque', Arial, sans-serif !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  letter-spacing: -.01em;
-  color: var(--head);
-  line-height: 1.1;
-  transition: color .3s ease;
-}
-.aq p { margin: 0; }
-.aq ul, .aq ol { margin: 0; padding: 0; list-style: none; }
-.aq li { margin: 0 !important; }
-.aq-wrap { max-width: 1160px; margin: 0 auto; padding: 0 32px; }
-.aq-eyebrow { font-weight: 600; font-size: 14px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; color: var(--mut-alpha); }
-.aq-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ac); display: inline-block; flex: none; }
-.aq-sec { padding-top: 96px; }
-.aq-title { font-size: clamp(30px, 4vw, 48px) !important; font-weight: 800 !important; max-width: 760px; color: var(--head); }
-
-.aq-btn { display: inline-block; background: var(--ac); color: #fff !important; font-weight: 600; padding: 15px 30px; border-radius: 999px; font-size: 17px; border: 2px solid var(--ac); transition: transform .25s, box-shadow .25s, background .25s; }
-.aq-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 26px -14px rgba(246,121,56,.5); color: #fff !important; background: var(--ac2); border-color: var(--ac2); }
-.aq-ghost { background: transparent; border-color: var(--line); color: var(--head) !important; }
-.aq-ghost:hover { background: var(--ac); border-color: var(--ac); color: #fff !important; }
-.aq-darkbtn { background: var(--ac); border-color: var(--ac); color: #fff !important; }
-
-#aq-progress { position: fixed; top: 0; left: 0; height: 4px; width: 0; background: var(--ac); z-index: 99999; transition: width .08s linear; pointer-events: none; }
-.aq-top { position: fixed; right: 20px; bottom: 20px; width: 46px; height: 46px; border-radius: 50%; background: var(--ac); display: flex; align-items: center; justify-content: center; font-size: 20px; opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s; transform: translateY(10px); z-index: 99998; color: #fff; cursor: pointer; text-decoration: none; box-shadow: 0 8px 20px rgba(246,121,56,.35); }
-.aq-top.aq-show { opacity: 1; pointer-events: auto; transform: none; }
-
-.aq.js .rv { opacity: 0; transform: translateY(40px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0s); }
-.aq.js .rv.in { opacity: 1; transform: none; }
-
-@keyframes aqfloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-@keyframes aqmq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@keyframes aqpulse { 0% { box-shadow: 0 0 0 0 rgba(246,121,56,.6); } 100% { box-shadow: 0 0 0 16px rgba(246,121,56,0); } }
-
-.aq-fl { animation: aqfloat 6s ease-in-out infinite; }
-.aq-fl2 { animation: aqfloat 7.5s ease-in-out -2s infinite; }
-.aq-pulse { animation: aqpulse 2s infinite; }
-
-.aq-hero-in { display: flex; flex-wrap: wrap; gap: 56px; align-items: center; padding-top: 72px; }
-.aq-hero-l { flex: 1 1 480px; min-width: 0; }
-.aq-hero-r { flex: 1 1 380px; min-width: 0; position: relative; min-height: 400px; }
-.aq-hero h1 { font-size: clamp(36px, 5.5vw, 68px) !important; line-height: 1.05; font-weight: 800 !important; letter-spacing: -.02em; color: var(--head); }
-.aq-lead { font-size: 19px; line-height: 1.55; color: var(--mut-alpha); max-width: 560px; margin: 26px 0 34px !important; }
-.aq-row { display: flex; flex-wrap: wrap; gap: 14px; }
-
-.aq-plan { background: #1b1a19; color: #fff; border-radius: 28px; padding: 28px; max-width: 420px; margin-left: auto; box-shadow: 0 30px 60px -30px rgba(27,26,25,.5); }
-.dark-mode .aq-plan { background: rgba(255,255,255,.04); border: 1px solid var(--line); box-shadow: none; }
-.aq-plan small { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: #cfc8c0; display: block; }
-.aq-plan b { display: block; font: 800 28px 'Bricolage Grotesque', Arial, sans-serif; margin: 6px 0 22px; color: #fff; }
-.aq-br { display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 8px; color: #fff; }
-.aq-bar { height: 8px; background: rgba(255,255,255,.1); border-radius: 99px; margin-bottom: 18px; overflow: hidden; }
-.aq-bar i { display: block; height: 8px; border-radius: 99px; background: var(--ac); width: 0; transition: width 1.4s cubic-bezier(.2,.7,.2,1) .5s; }
-.aq.js .rv.in .aq-bar i, .aq:not(.js) .aq-bar i { width: var(--w); }
-
-.aq-badge { position: absolute; left: 0; bottom: 6px; background: var(--ac); border-radius: 20px; padding: 18px 22px; max-width: 230px; box-shadow: 0 20px 40px -22px rgba(246,121,56,.5); }
-.aq-badge b { display: block; font: 800 22px/1.15 'Bricolage Grotesque', Arial, sans-serif; color: #fff; }
-.aq-badge span { font-size: 14px; color: #fff; }
-
-.aq-ticker { background: #1b1a19; color: #fff; overflow: hidden; padding: 22px 0; margin-top: 72px; }
-.dark-mode .aq-ticker { background: rgba(255,255,255,.03); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.aq-mq { display: flex; gap: 56px; width: max-content; animation: aqmq 38s linear infinite; font: 600 24px 'Bricolage Grotesque', Arial, sans-serif; }
-.aq-mq span { display: inline-flex; align-items: center; gap: 56px; white-space: nowrap; color: #fff; }
-.aq-ticker:hover .aq-mq { animation-play-state: paused; }
-
-.aq-glance { display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start; }
-.aq-glance .aq-c { flex: 1 1 380px; min-width: 0; }
-.aq-def { font-size: 21px; line-height: 1.55; margin-bottom: 26px !important; color: var(--ink); }
-.aq-facts { display: flex; flex-wrap: wrap; gap: 14px; }
-.aq-fact { flex: 1 1 180px; border: 1px solid var(--line); border-radius: 18px; padding: 16px 20px; background: var(--card); transition: background .3s ease, border-color .3s ease; }
-.aq-fact small { display: block; font-size: 13px; color: var(--mut-alpha); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
-.aq-fact b { font-weight: 700; color: var(--head); }
-
-.aq-grid { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 40px; }
-.aq-card {
-  flex: 1 1 320px;
-  min-width: 0;
-  background: var(--card);
-  border-radius: 24px;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s, border-color .35s, background .3s ease;
-  border: 1px solid var(--line);
-  position: relative;
-  overflow: hidden;
-}
-.aq-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 3px;
-  background: var(--ac);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .4s ease;
-}
-.aq-card:hover::before { transform: scaleX(1); }
-.aq-card:hover { transform: translateY(-6px); box-shadow: 0 22px 40px -18px rgba(0,0,0,.2); border-color: var(--ac); }
-.dark-mode .aq-card:hover { box-shadow: 0 22px 40px -18px rgba(0,0,0,.5); }
-.aq-card h3 { font-size: 26px !important; font-weight: 800 !important; color: var(--head); }
-.aq-card p { color: var(--mut-alpha); font-size: 15px; line-height: 1.6; }
-.aq-tag { align-self: flex-start; background: var(--ac); font-weight: 700; font-size: 12px; padding: 5px 14px; border-radius: 999px; color: #fff; letter-spacing: .04em; text-transform: uppercase; }
-.aq-more { font-weight: 700; margin-top: auto; color: var(--ac); font-size: 14px; }
-
-.aq-dark {
-  background: var(--soft);
-  border: 1px solid var(--line);
-  color: var(--head);
-  margin-top: 96px;
-  padding: 72px 0;
-  border-radius: 28px;
-  transition: background .3s ease, border-color .3s ease;
-}
-.dark-mode .aq-dark { background: rgba(255,255,255,.02); }
-.aq-dark h2, .aq-dark h3 { color: var(--head) !important; }
-.aq-dark .aq-eyebrow { color: var(--mut-alpha); }
-.aq-dark .aq-card { background: var(--card); border-color: var(--line); }
-.aq-dark .aq-card p { color: var(--mut-alpha); }
-.aq-dark .aq-card:hover { border-color: var(--ac); }
-.aq-dark svg { stroke: var(--ac); }
-
-.aq-steps { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 44px !important; }
-.aq-step { flex: 1 1 230px; min-width: 0; border-top: 4px solid var(--ac); padding-top: 22px; }
-.aq-n { font: 800 56px/1 'Bricolage Grotesque', Arial, sans-serif; color: var(--ac); }
-.aq-step h3 { font-size: 20px !important; font-weight: 800 !important; margin: 14px 0 8px !important; color: var(--head); }
-.aq-step p { color: var(--mut-alpha); font-size: 15px; }
-
-.aq-faq { max-width: 900px; margin: 0 auto; }
-.aq-faq details { border-bottom: 1px solid var(--line); padding: 22px 0; }
-.aq-faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 20px; font: 600 20px 'Bricolage Grotesque', Arial, sans-serif; color: var(--head); }
-.aq-faq summary::-webkit-details-marker { display: none; }
-.aq-pl { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--ac); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; line-height: 1; transition: transform .3s; }
-.aq-faq details[open] .aq-pl { transform: rotate(45deg); }
-.aq-faq details p { margin-top: 16px; color: var(--mut-alpha); font-size: 16px; max-width: 720px; line-height: 1.65; }
-
-.aq-cta {
-  background: linear-gradient(135deg, var(--ac), var(--ac2));
-  border-radius: 36px;
-  padding: 56px 44px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
-  align-items: center;
-  justify-content: space-between;
-  color: #fff;
-  box-shadow: 0 20px 40px -20px rgba(246,121,56,.4);
-}
-.aq-cta h2 { font-size: clamp(28px, 4vw, 44px) !important; font-weight: 800 !important; flex: 1 1 420px; color: #fff !important; }
-.aq-cta p { font-size: 18px; margin-top: 16px; max-width: 520px; color: rgba(255,255,255,.92); }
-.aq-cta .aq-btn { background: #fff; color: var(--ac2) !important; border-color: #fff; }
-.aq-cta .aq-btn:hover { background: #f5f5f5; color: var(--ac2) !important; border-color: #f5f5f5; }
-
-.aq-foot {
-  background: #1b1a19;
-  color: #d9d2ca;
-  margin-top: 96px;
-  border-radius: 28px 28px 0 0;
-  padding: 40px 0 0;
-}
-.dark-mode .aq-foot { background: rgba(255,255,255,.02); border-top: 1px solid var(--line); }
-.aq-ft { display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-between; padding-top: 24px; padding-bottom: 56px; }
-.aq-ft .aq-c { flex: 1 1 240px; min-width: 0; }
-.aq-ft a { color: #d9d2ca; display: block; padding: 4px 0; font-size: 14px; }
-.aq-ft a:hover { color: var(--ac); }
-.aq-ft b { color: #fff; display: block; font: 800 20px 'Bricolage Grotesque', Arial, sans-serif; margin-bottom: 8px; }
-.aq-ft p { color: #d9d2ca; font-size: 14px; line-height: 1.6; }
-.dark-mode .aq-foot a,
-.dark-mode .aq-foot p { color: #b8b8b8; }
-
-@media (max-width: 900px) {
-  .aq-hero-in { gap: 40px; padding-top: 48px; }
-  .aq-hero-r { min-height: auto; }
-  .aq-plan { margin: 0 auto; }
-  .aq-badge { position: relative; bottom: auto; margin: 16px auto 0; display: block; }
-}
-@media (max-width: 640px) {
-  .aq-wrap { padding: 0 20px; }
-  .aq-sec { padding-top: 64px; }
-  .aq-cta { padding: 40px 26px; border-radius: 20px; }
-  .aq-hero-in { padding-top: 32px; gap: 32px; }
-  .aq-hero h1 { font-size: clamp(28px, 7vw, 42px) !important; }
-  .aq-lead { font-size: 16px; }
-  .aq-title { font-size: clamp(22px, 5vw, 32px) !important; }
-  .aq-n { font-size: 40px; }
-  .aq-step h3 { font-size: 18px !important; }
-  .aq-faq summary { font-size: 17px; }
-  .aq-dark { margin-top: 64px; padding: 48px 0; border-radius: 20px; }
-  .aq-foot { margin-top: 64px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .aq.js .rv { opacity: 1; transform: none; transition: none; }
-  .aq-fl, .aq-fl2, .aq-mq, .aq-pulse { animation: none; }
-  .aq-bar i { transition: none; }
-  .aq-card, .aq-card::before { transition: none; }
-}
+.post-title,.post-header,.entry-header,.post-footer,.post-meta,.breadcrumb{display:none!important}.post-body{padding:0!important;background:transparent!important}
+.aio-home{--orange:#f67938;--orange-dark:#b8470f;--ink:#181716;--muted:#6d6a67;--line:#e9e5e1;--soft:#f7f4f1;--card:#fff;max-width:1180px;margin:auto;padding:0 22px 70px;font-family:inherit;color:var(--ink);line-height:1.6}.aio-home *{box-sizing:border-box}.aio-home a{text-decoration:none;color:inherit}.aio-home h1,.aio-home h2,.aio-home h3{font-family:'Bricolage Grotesque',Arial,sans-serif;color:var(--ink);line-height:1.08;margin:0}.aio-home p{margin:0;color:var(--muted)}
+.aio-hero{padding:72px 0 55px;display:grid;grid-template-columns:1.08fr .92fr;gap:55px;align-items:center}.aio-kicker{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--orange-dark);margin-bottom:17px}.aio-kicker i{width:9px;height:9px;background:var(--orange);border-radius:50%;display:block}.aio-hero h1{font-size:clamp(42px,6vw,70px);font-weight:800;letter-spacing:-.035em}.aio-hero h1 span{color:var(--orange)}.aio-lead{font-size:18px;max-width:620px;margin:22px 0 28px!important}.aio-actions{display:flex;flex-wrap:wrap;gap:12px}.aio-btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 23px;border-radius:999px;background:var(--orange);border:2px solid var(--orange);color:#fff!important;font-weight:800;transition:.25s}.aio-btn:hover{background:var(--orange-dark);border-color:var(--orange-dark);transform:translateY(-2px)}.aio-btn.alt{background:transparent;border-color:var(--line);color:var(--ink)!important}.aio-btn.alt:hover{border-color:var(--orange);color:var(--orange)!important}
+.aio-panel{background:#191817;color:#fff;border-radius:30px;padding:29px;box-shadow:0 28px 60px -35px rgba(0,0,0,.55);position:relative;overflow:hidden}.aio-panel:after{content:'';position:absolute;width:190px;height:190px;border-radius:50%;background:var(--orange);right:-90px;top:-95px;opacity:.85}.aio-panel small{display:block;color:#c9c4bf;text-transform:uppercase;letter-spacing:.09em;font-size:12px;font-weight:800}.aio-panel h3{color:#fff;font-size:27px;margin:6px 0 22px}.aio-progress{margin:16px 0}.aio-progress b{display:flex;justify-content:space-between;font-size:14px;color:#fff;margin-bottom:7px}.aio-track{height:8px;border-radius:20px;background:rgba(255,255,255,.12);overflow:hidden}.aio-track i{display:block;height:100%;width:var(--w);background:var(--orange);border-radius:20px}.aio-mini{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:20px}.aio-mini div{border:1px solid rgba(255,255,255,.12);border-radius:15px;padding:13px}.aio-mini strong{display:block;color:#fff;font-size:19px}.aio-mini span{font-size:12px;color:#bdb7b2}
+.aio-strip{background:#191817;color:#fff;border-radius:18px;padding:17px 20px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;justify-content:center;font-weight:700;margin-bottom:20px}.aio-strip span{color:#ddd7d2}.aio-strip b{color:var(--orange)}
+.aio-section{padding-top:72px}.aio-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:27px}.aio-head h2{font-size:clamp(30px,4vw,45px);font-weight:800}.aio-head p{max-width:520px}.aio-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.aio-card{background:var(--card);border:1px solid var(--line);border-radius:23px;padding:24px;min-height:205px;display:flex;flex-direction:column;transition:.3s;position:relative;overflow:hidden}.aio-card:before{content:'';height:3px;background:var(--orange);position:absolute;left:0;right:0;top:0;transform:scaleX(0);transform-origin:left;transition:.35s}.aio-card:hover{transform:translateY(-5px);border-color:var(--orange);box-shadow:0 20px 40px -26px rgba(0,0,0,.35)}.aio-card:hover:before{transform:scaleX(1)}.aio-icon{width:44px;height:44px;border-radius:14px;background:#fff1e9;display:grid;place-items:center;font-size:21px;margin-bottom:18px}.aio-card h3{font-size:20px;margin-bottom:7px}.aio-card p{font-size:14px;line-height:1.55}.aio-link{margin-top:auto;padding-top:17px;color:var(--orange-dark);font-size:13px;font-weight:800}
+.aio-feature{margin-top:72px;background:var(--soft);border:1px solid var(--line);border-radius:30px;padding:35px;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}.aio-feature h2{font-size:clamp(30px,4vw,46px);margin-bottom:14px}.aio-list{display:grid;gap:11px;margin-top:22px}.aio-list div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 15px;font-weight:700;font-size:14px}.aio-list b{color:var(--orange);margin-right:8px}.aio-quote{background:#191817;color:#fff;border-radius:25px;padding:28px}.aio-quote h3{color:#fff;font-size:25px;margin-bottom:10px}.aio-quote p{color:#d4ceca;font-size:14px}.aio-quote .aio-btn{margin-top:20px}
+.aio-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.aio-step{border-top:4px solid var(--orange);padding:21px 5px 0}.aio-step strong{font:800 48px/1 'Bricolage Grotesque';color:var(--orange)}.aio-step h3{font-size:20px;margin:13px 0 7px}.aio-step p{font-size:14px}
+.aio-faq{max-width:850px;margin:auto}.aio-faq details{border-bottom:1px solid var(--line);padding:19px 0}.aio-faq summary{cursor:pointer;list-style:none;font-family:'Bricolage Grotesque';font-weight:700;font-size:18px;display:flex;justify-content:space-between;gap:15px}.aio-faq summary::-webkit-details-marker{display:none}.aio-faq summary:after{content:'+';color:var(--orange);font-size:25px}.aio-faq details[open] summary:after{content:'−'}.aio-faq p{padding:12px 35px 4px 0;font-size:14px}
+.aio-note{margin-top:55px;padding:20px 22px;border:1px solid var(--line);border-radius:18px;background:var(--soft);font-size:13px;color:var(--muted)}.aio-note b{color:var(--ink)}
+@media(max-width:950px){.aio-hero{grid-template-columns:1fr;gap:32px}.aio-grid{grid-template-columns:repeat(2,1fr)}.aio-feature{grid-template-columns:1fr}.aio-steps{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.aio-home{padding:0 15px 45px}.aio-hero{padding-top:42px}.aio-hero h1{font-size:42px}.aio-grid{grid-template-columns:1fr}.aio-steps{grid-template-columns:1fr}.aio-feature{padding:24px}.aio-panel{padding:23px}.aio-head{display:block}.aio-head p{margin-top:10px}.aio-actions .aio-btn{width:100%}}
 </style>
 
-<div id="aq-progress"></div>
-
-<div class="aq" id="aq-top">
-
-  <!-- HERO -->
-  <section class="aq-hero">
-    <div class="aq-wrap aq-hero-in">
-      <div class="aq-hero-l">
-        <p class="aq-eyebrow rv"><span class="aq-dot aq-pulse"></span>Admissions open · Spring 2026</p>
-        <h1 class="rv">AIOU coaching online for assignments, exams and admission.</h1>
-        <p class="aq-lead rv">Allama Iqbal Open University ke students ke liye clear study plans, assignment guidance aur exam preparation. Aap kahin bhi parhein, hum structure dete hain.</p>
-        <div class="aq-row rv">
-          <a class="aq-btn" href="https://wa.me/923702388998?text=Assalam-o-Alaikum!%20AIOU%20coaching%20chahiye" rel="noopener" target="_blank">Start with WhatsApp</a>
-          <a class="aq-btn aq-ghost" href="#aq-programs">See programs</a>
-        </div>
+<div class="aio-home">
+  <section class="aio-hero">
+    <div>
+      <div class="aio-kicker"><i></i>AIOU Coaching · Student Hub</div>
+      <h1>Study smarter.<br><span>Prepare better.</span></h1>
+      <p class="aio-lead">All-in-one AIOU student support for assignments, exam preparation, study guides and practical AI-powered tools — simple, fast and mobile friendly.</p>
+      <div class="aio-actions"><a class="aio-btn" href="https://nationalistacademy.github.io/AIOUN-Coaching/">Open / Install Study App ↗</a>
+        <a class="aio-btn" href="/p/aiou-tool-kit.html">Open Student Toolkit →</a>
+        <a class="aio-btn alt" href="/p/programmes.html">Explore Programmes</a>
+        <a class="aio-btn alt" href="https://nationalistacademy.github.io/AIOUN-Coaching/lms/signin-signup.html" target="_blank" rel="noopener">LMS Sign In</a>
       </div>
-      <div class="aq-hero-r rv">
-        <div class="aq-plan aq-fl">
-          <small>This semester</small>
-          <b>Your Program</b>
-          <div class="aq-br"><span>Assignment 1</span><span>Done</span></div>
-          <div class="aq-bar" style="--w:100%"><i></i></div>
-          <div class="aq-br"><span>Assignment 2</span><span>In progress</span></div>
-          <div class="aq-bar" style="--w:60%"><i></i></div>
-          <div class="aq-br"><span>Exam revision</span><span>Next</span></div>
-          <div class="aq-bar" style="--w:25%"><i></i></div>
-        </div>
-        <div class="aq-badge aq-fl2">
-          <b>Study plan fast</b>
-          <span>Within 24 hours</span>
-        </div>
-      </div>
+    </div>
+    <div class="aio-panel">
+      <small>Student dashboard</small>
+      <h3>Your AIOU preparation plan</h3>
+      <div class="aio-progress"><b><span>Assignments</span><span>80%</span></b><div class="aio-track"><i style="--w:80%"></i></div></div>
+      <div class="aio-progress"><b><span>Exam preparation</span><span>65%</span></b><div class="aio-track"><i style="--w:65%"></i></div></div>
+      <div class="aio-progress"><b><span>Study revision</span><span>55%</span></b><div class="aio-track"><i style="--w:55%"></i></div></div>
+      <div class="aio-mini"><div><strong>24/7</strong><span>Study access</span></div><div><strong>AI</strong><span>Smart tools</span></div></div>
     </div>
   </section>
 
-  <!-- TICKER -->
-  <div class="aq-ticker" aria-label="Programs we support">
-    <div class="aq-mq">
-      <span>Matric<i class="aq-dot"></i></span>
-      <span>FA / F.Sc<i class="aq-dot"></i></span>
-      <span>BA / B.Sc<i class="aq-dot"></i></span>
-      <span>B.Ed<i class="aq-dot"></i></span>
-      <span>MA / M.Sc<i class="aq-dot"></i></span>
-      <span>M.Ed<i class="aq-dot"></i></span>
-      <span>MPhil<i class="aq-dot"></i></span>
-      <span>Matric<i class="aq-dot"></i></span>
-      <span>FA / F.Sc<i class="aq-dot"></i></span>
-      <span>BA / B.Sc<i class="aq-dot"></i></span>
-      <span>B.Ed<i class="aq-dot"></i></span>
-      <span>MA / M.Sc<i class="aq-dot"></i></span>
-      <span>M.Ed<i class="aq-dot"></i></span>
-      <span>MPhil<i class="aq-dot"></i></span>
-    </div>
-  </div>
+  <div class="aio-strip"><span>Assignments</span><b>•</b><span>Guess Papers</span><b>•</b><span>AI Tools</span><b>•</b><span>Guides</span><b>•</b><span>Exam Prep</span></div>
 
-  <!-- AT A GLANCE -->
-  <section class="aq-wrap aq-sec">
-    <div class="aq-glance">
-      <div class="aq-c rv">
-        <p class="aq-eyebrow">At a glance</p>
-        <h2 class="aq-title">What is AIOU coaching?</h2>
-      </div>
-      <div class="aq-c rv">
-        <p class="aq-def">AIOU coaching is guided academic support for students of Allama Iqbal Open University: help with course planning, assignment writing, workshops and exam preparation, delivered online or in class.</p>
-        <div class="aq-facts">
-          <div class="aq-fact"><small>City</small><b>Online (All Pakistan)</b></div>
-          <div class="aq-fact"><small>Mode</small><b>WhatsApp + Video Call</b></div>
-          <div class="aq-fact"><small>Fees</small><b>From PKR 999</b></div>
-        </div>
-      </div>
+  <section class="aio-section">
+    <div class="aio-head"><div><div class="aio-kicker"><i></i>Popular tools</div><h2>Everything students need</h2></div><p>Direct access to the most useful tools and resources inside AIOU Coaching.</p></div>
+    <div class="aio-grid">
+      <a class="aio-card" href="/tools/studio.html"><div class="aio-icon">✦</div><h3>AI Study Studio</h3><p>Create study help, summaries and learning material with AI.</p><span class="aio-link">Open Studio →</span></a>
+      <a class="aio-card" href="/tools/guess-paper.html"><div class="aio-icon">✓</div><h3>Guess Papers</h3><p>Focus your revision with subject-wise exam preparation resources.</p><span class="aio-link">Prepare for exams →</span></a>
+      <a class="aio-card" href="/tools/assignment-writer.html"><div class="aio-icon">✎</div><h3>Assignment Writer</h3><p>Organise ideas, improve structure and build better assignment drafts.</p><span class="aio-link">Start assignment →</span></a>
+      <a class="aio-card" href="/tools/diagram-generator.html"><div class="aio-icon">◇</div><h3>Diagram Generator</h3><p>Turn difficult concepts into clear diagrams and visual notes.</p><span class="aio-link">Create diagram →</span></a>
     </div>
   </section>
 
-  <!-- PROGRAMS -->
-  <section class="aq-wrap aq-sec" id="aq-programs">
-    <div class="rv">
-      <p class="aq-eyebrow">Programs</p>
-      <h2 class="aq-title">AIOU programs we coach, from Matric to MPhil.</h2>
-    </div>
-    <div class="aq-grid">
-      <a class="aq-card rv" href="#aq-contact"><span class="aq-tag">Secondary</span><h3>Matric</h3><p>Core subjects, assignment help and exam practice for the secondary school certificate.</p><span class="aq-more">Ask about Matric →</span></a>
-      <a class="aq-card rv" href="#aq-contact"><span class="aq-tag">Intermediate</span><h3>FA / F.Sc</h3><p>Subject-wise planning for arts and science tracks, with notes and revision tests.</p><span class="aq-more">Ask about FA / F.Sc →</span></a>
-      <a class="aq-card rv" href="#aq-contact"><span class="aq-tag">Bachelor</span><h3>BA / B.Sc</h3><p>Semester planner, assignment structure and exam preparation for associate and bachelor degrees.</p><span class="aq-more">Ask about BA / B.Sc →</span></a>
-      <a class="aq-card rv" href="#aq-contact"><span class="aq-tag">Teacher training</span><h3>B.Ed</h3><p>Assignments, teaching practice files and workshop preparation for education programs.</p><span class="aq-more">Ask about B.Ed →</span></a>
-      <a class="aq-card rv" href="#aq-contact"><span class="aq-tag">Master</span><h3>MA / M.Sc</h3><p>Research-minded guidance for course work, term papers and final exams.</p><span class="aq-more">Ask about MA / M.Sc →</span></a>
-      <a class="aq-card rv" href="#aq-contact"><span class="aq-tag">Research</span><h3>M.Ed / MPhil</h3><p>Synopsis, literature review and thesis structure guidance with regular check-ins.</p><span class="aq-more">Ask about M.Ed / MPhil →</span></a>
-    </div>
+  <section class="aio-feature">
+    <div><div class="aio-kicker"><i></i>Exam preparation</div><h2>Make revision more focused.</h2><p>Use practical resources to identify important topics, revise efficiently and keep your preparation organised.</p><div class="aio-list"><div><b>01</b> Subject-wise preparation</div><div><b>02</b> Quick revision resources</div><div><b>03</b> Smart AI assistance</div><div><b>04</b> Mobile-first student experience</div></div></div>
+    <div class="aio-quote"><h3>Need the full toolkit?</h3><p>Open the AIOU Tool Kit for the complete collection of student utilities, guides and resources.</p><a class="aio-btn" href="/p/aiou-tool-kit.html">View Full Toolkit →</a></div>
   </section>
 
-  <!-- WHY US -->
-  <section class="aq-dark" id="aq-why">
-    <div class="aq-wrap">
-      <div class="rv">
-        <p class="aq-eyebrow">Why students choose us</p>
-        <h2 class="aq-title">Clear guidance, so open-university study never feels like going alone.</h2>
-      </div>
-      <div class="aq-grid">
-        <div class="aq-card rv">
-          <svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
-          <h3>Assignment guidance</h3>
-          <p>Understand the question, structure your answer and submit before the deadline, in your own words.</p>
-        </div>
-        <div class="aq-card rv">
-          <svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          <h3>Exam-focused revision</h3>
-          <p>Short notes, past-paper practice and a revision calendar built around your date sheet.</p>
-        </div>
-        <div class="aq-card rv">
-          <svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>
-          <h3>Reply on WhatsApp</h3>
-          <p>Ask a question any day and get a clear answer from a tutor, not an automated message.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <section class="aio-section"><div class="aio-head"><div><div class="aio-kicker"><i></i>Simple workflow</div><h2>From topic to preparation</h2></div></div><div class="aio-steps"><div class="aio-step"><strong>01</strong><h3>Find your resource</h3><p>Select your subject, programme or the tool that matches your task.</p></div><div class="aio-step"><strong>02</strong><h3>Build your notes</h3><p>Use guides and AI tools to understand concepts and organise your work.</p></div><div class="aio-step"><strong>03</strong><h3>Revise & prepare</h3><p>Use exam resources and focused revision to prepare with confidence.</p></div></div></section>
 
-  <!-- PROCESS -->
-  <section class="aq-wrap aq-sec" id="aq-process">
-    <div class="rv">
-      <p class="aq-eyebrow">How it works</p>
-      <h2 class="aq-title">Four steps from admission to exam day.</h2>
-    </div>
-    <ol class="aq-steps">
-      <li class="aq-step rv"><div class="aq-n">01</div><h3>Choose your program</h3><p>Share your program, semester and course codes so we know what you need.</p></li>
-      <li class="aq-step rv"><div class="aq-n">02</div><h3>Get a study plan</h3><p>We map assignments, workshops and exams onto a week-by-week calendar.</p></li>
-      <li class="aq-step rv"><div class="aq-n">03</div><h3>Learn and submit</h3><p>Work through each assignment with a tutor and submit before the deadline.</p></li>
-      <li class="aq-step rv"><div class="aq-n">04</div><h3>Prepare for exams</h3><p>Revise with short notes and past-paper practice until exam day.</p></li>
-    </ol>
-  </section>
+  <section class="aio-section"><div class="aio-head"><div><div class="aio-kicker"><i></i>Student questions</div><h2>Frequently asked</h2></div></div><div class="aio-faq"><details><summary>Is AIOU Coaching officially affiliated with AIOU?</summary><p>No. AIOU Coaching is an independent student-support platform and is not an official website of Allama Iqbal Open University.</p></details><details><summary>Can I use the tools on mobile?</summary><p>Yes. The homepage and student tools are designed to work across phones, tablets and desktop browsers.</p></details><details><summary>Where can I find the complete toolkit?</summary><p>Use the Student Toolkit button above or open the AIOU Tool Kit page from the site navigation.</p></details><details><summary>Can AI-generated work be submitted directly?</summary><p>AI output should be checked, personalised and used responsibly. Follow your course instructions and academic-integrity requirements before submitting any work.</p></details></div></section>
 
-  <!-- FAQ -->
-  <section class="aq-wrap aq-sec" id="aq-faq">
-    <div class="aq-faq">
-      <div class="rv">
-        <p class="aq-eyebrow">FAQ</p>
-        <h2 class="aq-title">Common questions about AIOU coaching.</h2>
-      </div>
-      <div style="margin-top:32px">
-        <details class="rv">
-          <summary><span>What is AIOU coaching?</span><span class="aq-pl" aria-hidden="true">+</span></summary>
-          <p>AIOU coaching is guided support for Allama Iqbal Open University students. It covers study planning, assignment guidance, workshop preparation and exam revision.</p>
-        </details>
-        <details class="rv">
-          <summary><span>Which AIOU programs do you coach?</span><span class="aq-pl" aria-hidden="true">+</span></summary>
-          <p>We coach Matric, FA and F.Sc, BA and B.Sc, B.Ed, MA and M.Sc, M.Ed and MPhil. Message us your program and course codes to confirm availability.</p>
-        </details>
-        <details class="rv">
-          <summary><span>Is AIOU coaching available online?</span><span class="aq-pl" aria-hidden="true">+</span></summary>
-          <p>Yes. Sessions and replies run online, so you can study from any city in Pakistan.</p>
-        </details>
-        <details class="rv">
-          <summary><span>How much does it cost?</span><span class="aq-pl" aria-hidden="true">+</span></summary>
-          <p>Fees depend on your program and semester. Starting from PKR 999. We share the exact amount before you start, with no hidden charges.</p>
-        </details>
-        <details class="rv">
-          <summary><span>Will you write my assignments for me?</span><span class="aq-pl" aria-hidden="true">+</span></summary>
-          <p>No. We explain the questions and help you structure answers so the work you submit is your own.</p>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="aq-wrap aq-sec" id="aq-contact">
-    <div class="aq-cta rv">
-      <div style="flex:1 1 420px;min-width:0">
-        <h2>Talk to a tutor before you pay for anything.</h2>
-        <p>Tell us your program and semester. We reply with a study Roadmap and what to expect.</p>
-      </div>
-      <a class="aq-btn aq-darkbtn" href="https://wa.me/923702388998" rel="noopener" target="_blank">WhatsApp</a>
-    </div>
-  </section>
-
-
-
-<!-- SCHEMA -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "EducationalOrganization",
-      "name": "AIOU Coaching — Taleemwaly",
-      "description": "Online coaching for Allama Iqbal Open University students: study planning, assignment guidance and exam preparation.",
-      "url": "https://taleemwaly.blogspot.com/p/aiou-coaching.html",
-      "areaServed": {"@type": "Country", "name": "Pakistan"},
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+92-370-2388998",
-        "contactType": "customer service",
-        "availableLanguage": ["English", "Urdu"]
-      }
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {"@type": "Question", "name": "What is AIOU coaching?", "acceptedAnswer": {"@type": "Answer", "text": "AIOU coaching is guided support for Allama Iqbal Open University students. It covers study planning, assignment guidance, workshop preparation and exam revision."}},
-        {"@type": "Question", "name": "Which AIOU programs do you coach?", "acceptedAnswer": {"@type": "Answer", "text": "We coach Matric, FA and F.Sc, BA and B.Sc, B.Ed, MA and M.Sc, M.Ed and MPhil. Message us your program and course codes to confirm availability."}},
-        {"@type": "Question", "name": "Is AIOU coaching available online?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Sessions and replies run online, so you can study from any city in Pakistan."}},
-        {"@type": "Question", "name": "Will you write my assignments for me?", "acceptedAnswer": {"@type": "Answer", "text": "No. We explain the questions and help you structure answers so the work you submit is your own."}}
-      ]
-    }
-  ]
-}
-</script>
-
-<!-- SCROLL PROGRESS + REVEAL ANIMATIONS + DARK MODE WATCHER -->
-<script>
-(function(){
-  var d = document;
-  var root = d.getElementById('aq-top');
-  if(!root) return;
-  root.className += ' js';
-
-  var els = d.querySelectorAll('.aq .rv');
-  var i;
-  for(i = 0; i < els.length; i++){
-    els[i].style.setProperty('--d', ((i % 4) * 0.08) + 's');
-  }
-
-  if(!('IntersectionObserver' in window)){
-    for(i = 0; i < els.length; i++){ els[i].className += ' in'; }
-  } else {
-    var io = new IntersectionObserver(function(en){
-      var k;
-      for(k = 0; k < en.length; k++){
-        if(en[k].isIntersecting){
-          en[k].target.className += ' in';
-          io.unobserve(en[k].target);
-        }
-      }
-    }, { threshold: 0.12 });
-    for(i = 0; i < els.length; i++){ io.observe(els[i]); }
-  }
-
-  var bar = d.getElementById('aq-progress');
-  var up = d.getElementById('aq-totop');
-  var busy = false;
-
-  function upd(){
-    var h = d.documentElement;
-    var st = h.scrollTop || d.body.scrollTop;
-    var max = h.scrollHeight - h.clientHeight;
-    bar.style.width = (max === 0 ? 0 : st / max * 100) + '%';
-    if(st > 600){ up.className = 'aq-top aq-show'; }
-    else { up.className = 'aq-top'; }
-    busy = false;
-  }
-
-  window.addEventListener('scroll', function(){
-    if(!busy){ busy = true; window.requestAnimationFrame(upd); }
-  }, { passive: true });
-
-  upd();
-
-  // Dark mode watcher
-  function applyDarkFix(){
-    var isDark = d.documentElement.classList.contains('dark-mode') ||
-                 d.body.classList.contains('dark-mode') ||
-                 (d.documentElement.dataset && d.documentElement.dataset.theme === 'dark');
-    if(isDark){
-      d.documentElement.classList.add('dark-mode');
-    }
-  }
-  applyDarkFix();
-
-  var obs = new MutationObserver(function(muts){
-    muts.forEach(function(m){
-      if(m.attributeName === 'class' || m.attributeName === 'data-theme'){
-        applyDarkFix();
-      }
-    });
-  });
-  obs.observe(d.documentElement, { attributes: true });
-  obs.observe(d.body, { attributes: true });
-})();
-</script>
+  <div class="aio-note"><b>Important:</b> AIOU Coaching is an independent educational support platform. Always verify official dates, admissions, results, assignments and examination information through the official AIOU channels.</div>
+</div>

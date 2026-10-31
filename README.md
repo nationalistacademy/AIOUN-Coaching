@@ -1,242 +1,32 @@
-<div align="center">
-
 # AIOU Coaching
 
-### Independent study help and standalone tools for AIOU students
+Independent study-support tools, Blogger resources, and a separate Supabase-backed LMS for AIOU students. This project is not affiliated with AIOU.
 
-[![Repo](https://img.shields.io/badge/GitHub-AIOUN--Coaching-181717?style=for-the-badge&logo=github)](https://github.com/nationalistacademy/AIOUN-Coaching)
-[![DeepSeek](https://img.shields.io/badge/Powered_by-DeepSeek_API-7c3aed?style=for-the-badge)](https://platform.deepseek.com)
-[![Cloudflare](https://img.shields.io/badge/Security-Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare)](https://workers.cloudflare.com)
-[![License](https://img.shields.io/badge/License-MIT-10b981?style=for-the-badge)](LICENSE)
-[![Made in Pakistan](https://img.shields.io/badge/Made_in_Pakistan-success?style=for-the-badge)](#)
+- Study tools: [index.html](index.html)
+- AI Studio: [tools/studio.html](tools/studio.html)
+- Blogger PWA/Cloudflare/Firebase guide: [docs/BLOGGER-PWA-CLOUDFLARE-FIREBASE.md](docs/BLOGGER-PWA-CLOUDFLARE-FIREBASE.md)
+- Firebase non-LMS starter: [firebase/index.html](firebase/index.html)
+- Firebase guide: [firebase/README.md](firebase/README.md)
+- Firebase Cloud Functions: [functions/index.js](functions/index.js)
+- Firebase CLI manifest: [firebase.json](firebase.json)
+- Firestore rules: [firestore.rules](firestore.rules)
+- Storage rules: [storage.rules](storage.rules)
+- Blogger theme: [theme/aioucoahing.xml](theme/aioucoahing.xml)
+- LMS security guide: [lms/README.md](lms/README.md)
 
-**Each tool is a standalone HTML file. Open one. Use it. You do not need the others.**
+## Firebase starter
+The Firebase starter provides email/password Auth, profile documents, password reset, private uploads, notification reads and FCM token registration. Copy `firebase/config.example.js` to `firebase/config.js` and fill values from the actual Firebase project. The local config is ignored by Git. Push sending is implemented as a callable Cloud Function requiring the trusted `admin: true` custom claim and targeting one user per call; never put Admin SDK credentials in browser code.
 
-</div>
+## PWA and Cloudflare
+The companion app is separate from Blogger and the Blogger XML must be uploaded manually. A custom domain being connected does not verify DNS, Worker routing or origin configuration; no DNS or Worker route was changed. Verify the exact domain and rollback plan before same-origin service-worker routing.
 
----
+## Security boundaries
+- LMS pages, enrollment, quizzes, scores and Supabase authorization are not changed by the Firebase starter.
+- LMS/authenticated routes remain excluded from public PWA caching.
+- Admin access must be enforced by trusted server-side claims and Security Rules, not client-side roles.
+- Never commit service-account JSON, private keys, API secrets or Cloudflare tokens.
 
-## Overview
+## QA
+Check GitHub Actions before claiming deployment or browser tests passed: [Browser QA](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/browser-qa.yml), [Pages deploy](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/deploy-pages.yml), [LMS security tests](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/lms-security-e2e.yml).
 
-**AIOU Coaching** is an independent resource for Allama Iqbal Open University students. It is **not affiliated with AIOU** and does not issue degrees, results, or official documents.
-
-New here? Open [index.html](index.html) — it lists every tool. The flagship is the
-**[Multi-ID AI Studio](tools/studio.html)**: send one question to several DeepSeek Worker
-IDs (URL + token + model), compare all answers side by side, mark the best one, and export the
-assignment as a Word file.
-
-No account is required. Anthromes that call DeepSeek go through the Cloudflare Worker in
-[worker/worker.js](worker/worker.js), so the API key stays off the page.
-
----
-
-## Repository structure
-
-```text
-.
-├── index.html                 # landing page: every tool in one grid
-├── css/
-│   ├── theme.css              # shared dark-glass theme (buttons, panels, cards, chips)
-│   └── studio.css             # studio layout (stepper, ID rows, response cards)
-├── js/                        # shared JavaScript (classic scripts, no build step)
-│   ├── store.js               # the list of AI IDs + settings, saved in localStorage
-│   ├── ai.js                  # DeepSeek client: askAll / askFirst / ask (multi-ID + fallback)
-│   ├── ui.js                  # DOM, status, toast, copy and download helpers
-│   ├── tools.js               # ONE registry of every tool (used by index.html + studio)
-│   ├── hub.js                 # renders the filterable tool grid
-│   └── studio.js              # studio app: multi-ID compare, helper, diagram, docx
-├── tools/                     # every standalone tool
-│   ├── studio.html            # ⭐ Multi-ID AI Studio (5 sections)
-│   ├── guess-paper.html
-│   ├── bs-bba-guess-paper.html
-│   ├── assignment-cover-page.html
-│   ├── assignment-cover-sheet.html
-│   ├── assignment-writer.html
-│   ├── humanizer.html
-│   ├── diagram-generator.html
-│   ├── front-page.html
-│   ├── bulk-downloader.html
-│   ├── generator.html         # blog post generator (SEO + JSON-LD)
-│   └── tools.html             # Blogger widget markup for the tools page
-├── pages/                     # PAGE body (Blogger Pages): about, contact, faqs, how-it-works,
-│                              #   privacy, terms, disclaimer, dmca, aiou-tool-kit
-├── posts/                     # POST body (Blogger Posts): post-template.html
-├── seo/                       # SEO kit — theme audit + checklist + paste-in snippets
-├── geo/                       # GEO kit — quick-answer block for AI search
-├── google-search/             # Google Search kit — Search Console, schema, indexing
-├── theme/
-│   ├── AIOUCOACHING.XML       # Blogger theme
-│   └── home.html              # Blogger homepage markup
-├── worker/
-│   ├── worker.js              # Cloudflare Worker: DeepSeek proxy (multi-token)
-│   └── wrangler.toml
-└── .github/workflows/batch-generate.yml
-```
-
-### Where files moved
-
-| Old path | New path |
-| --- | --- |
-| `studio.html` | [tools/studio.html](tools/studio.html) |
-| `generator.html` | [tools/generator.html](tools/generator.html) |
-| `aiou-humanizer.html` | [tools/humanizer.html](tools/humanizer.html) |
-| `aiou-diagram-generator.html` | [tools/diagram-generator.html](tools/diagram-generator.html) |
-| `aiou-front-page.html` | [tools/front-page.html](tools/front-page.html) |
-| `aiou-bulk-downloader.html` | [tools/bulk-downloader.html](tools/bulk-downloader.html) |
-| `Tool/*.html` | `tools/*.html` (prefix dropped: `aiou-guess-paper-generator.html` → `guess-paper.html`) |
-| `Legal/*.html` | `pages/*.html` |
-| `home.html` | [theme/home.html](theme/home.html) |
-| `Theme/AIOUCOACHING.XML` | [theme/AIOUCOACHING.XML](theme/AIOUCOACHING.XML) |
-| `worker.js`, `wrangler.toml` | `worker/worker.js`, `worker/wrangler.toml` |
-
-Blogger pages link tools with `/p/...` URLs, so moving the source files does not change the live
-site. Publish the updated markup when you are ready.
-
----
-
-## Standalone tools
-
-| Tool | File | What it does |
-| --- | --- | --- |
-| Multi-ID AI Studio | [tools/studio.html](tools/studio.html) | One prompt to many Worker IDs, answers side by side, best pick, Word export |
-| Guess paper | [tools/guess-paper.html](tools/guess-paper.html) | Build a paper, add a logo or watermark, download PDF / Word / image |
-| BS and BBA guess paper | [tools/bs-bba-guess-paper.html](tools/bs-bba-guess-paper.html) | MCQ plus short and long questions, multi-page export |
-| Assignment cover page | [tools/assignment-cover-page.html](tools/assignment-cover-page.html) | Cover layouts with student, programme, and course details |
-| Cover sheet | [tools/assignment-cover-sheet.html](tools/assignment-cover-sheet.html) | Simple assignment cover sheet |
-| Assignment writer | [tools/assignment-writer.html](tools/assignment-writer.html) | Draft help from pasted questions |
-| Humanizer | [tools/humanizer.html](tools/humanizer.html) | Rewrite text so it reads more naturally |
-| Diagram generator | [tools/diagram-generator.html](tools/diagram-generator.html) | Flowcharts and diagrams from a short prompt |
-| Front page | [tools/front-page.html](tools/front-page.html) | A4-style assignment front page, print to PDF |
-| Bulk downloader | [tools/bulk-downloader.html](tools/bulk-downloader.html) | Several Word files packed into one ZIP |
-| Blog post generator | [tools/generator.html](tools/generator.html) | Post draft, meta tags and JSON-LD schema |
-
-Blogger widget markup for the tools page lives in [tools/tools.html](tools/tools.html).
-Homepage markup for the blog is [theme/home.html](theme/home.html).
-
-Guess papers are for revision only. They are not the real exam.
-
----
-
-## How the AI tools run
-
-```text
-Browser (one HTML file + the shared js/ modules)
-        |
-        | POST  (X-Auth-Token)
-        v
-Cloudflare Worker  (worker/worker.js)
-        |
-        | HTTPS  (DeepSeek key stays here)
-        v
-DeepSeek API  (deepseek-chat / deepseek-reasoner)
-```
-
-### Multiple IDs (multi-key mode)
-
-An "ID" is one Worker URL plus its Auth token and the model it should use. The studio stores the
-whole list in your browser only (`localStorage`, key `aiou_ids_v2`) — nothing is uploaded.
-
-- **Sab IDs ko bhejein** — the same prompt goes to every enabled ID at the same time. Each answer
-  lands in its own card with status, latency and length. Mark the best with ⭐, copy it or push it
-  into the assignment draft.
-- **Fallback** — tries IDs in list order and stops at the first answer, so a dead or rate-limited
-  key never blocks the work.
-- **Export / import** — back the ID list up as JSON (`AIOU ids` never leave the browser).
-- **Test** — `🔌 Sab IDs test karein` sends a one-word prompt to each ID to check which ones work.
-
-The Worker accepts **one token or many**: set `AUTH_TOKEN` to a comma separated list
-(`tokenA,tokenB`) and any of them will be accepted. That is how one deployment serves several IDs.
-
-### Worker setup
-
-1. Install [Wrangler](https://developers.cloudflare.com/workers/wrangler/) and log in.
-2. From this repo, set secrets (do not commit them):
-
-```bash
-cd worker
-npx wrangler secret put DEEPSEEK_API_KEY
-npx wrangler secret put AUTH_TOKEN          # tokenA,tokenB — one or many
-npx wrangler deploy
-```
-
-Optional: `AI_TIMEOUT_MS` (a `[vars]` entry) changes the upstream timeout; the default is 120000.
-
-Endpoints: `POST /` with `{ messages, model, temperature, max_tokens, json }` and an
-`X-Auth-Token` header, plus `GET /` for a small health check (`ok`, `models`, `tokens`).
-
-After deploy, open the studio, add one ID per Worker URL + token, and press
-`🔌 Sab IDs test karein`.
-
-### Editing the shared code
-
-- Add a tool: append it to the list in [js/tools.js](js/tools.js) — it then shows up on
-  `index.html` and in the studio's **All Tools** section automatically.
-- Theme: [css/theme.css](css/theme.css) for shared look, [css/studio.css](css/studio.css) for the
-  studio layout.
-- The `js/` files are plain classic scripts exposing `window.AIOU.*`, so the tools also work when
-  opened straight from disk. Pages load them with relative paths (`../js/…`), so keep the folder
-  structure when you paste a page into Blogger — or host the files and use their full URLs.
-
----
-
-## Where each HTML goes in Blogger
-
-The theme is unchanged (`theme/AIOUCOACHING.XML`) — instead every file here is labelled by the
-place you paste it.
-
-| Folder | Paste target | Body only? |
-| --- | --- | --- |
-| [`pages/`](pages/README.md) | Blogger → **Pages** → HTML view | yes, no `<html>`/`<head>` |
-| [`posts/`](posts/README.md) | Blogger → **Posts** → HTML view | yes |
-| [`tools/`](tools) | standalone apps (served from this repo, or used as Page content) | full documents |
-| [`theme/`](theme) | Blogger → **Theme** → Edit HTML | the theme itself |
-| `tools/tools.html` | HTML widget content (tools page / sidebar) | body only |
-
-Ready kits for the four areas:
-
-- **SEO** → [seo/README.md](seo/README.md) — what the theme already handles (robots directives,
-  canonical, Organization JSON-LD, sitemap template) plus the content checklist.
-- **GEO** → [geo/README.md](geo/README.md) and [geo/quick-answer.html](geo/quick-answer.html) —
-  the `.key-takeaways` quick-answer block that AI answers pick up.
-- **Google Search** → [google-search/README.md](google-search/README.md) — Search Console setup,
-  sitemap submission, and FAQ / Article / SoftwareApplication schema snippets.
-- **AIOU Tool Kit** → [pages/aiou-tool-kit.html](pages/aiou-tool-kit.html) — every tool as one
-  Blogger page (filter chips, crystal glass cards, FAQ + ItemList schema).
-
-New post ka starter: [posts/post-template.html](posts/post-template.html).
-
-**Poora Blogger deploy ek page par:** [docs/BLOGGER-DEPLOY.md](docs/BLOGGER-DEPLOY.md) —
-theme upload, page-by-page paste list, live URL statuses, menu aur Search Console.
-
----
-
-## Blogger theme
-
-`theme/AIOUCOACHING.XML` is the live Blogger theme (JetTheme core + the glassmorphism
-layer). Two things changed to it:
-
-- **Fixed:** it used `xlink:href` for the SVG icon sprite without declaring the `xlink`
-  namespace, so the file was **not well-formed XML** (45 uses). `xmlns:xlink='http://www.w3.org/1999/xlink'`
-  is now declared on `<html>`.
-- **Fixed:** two icon-sprite attributes used a double prefix, `expr:xlink:href`, which strict XML
-  parsers reject; they now use `expr:href`, matching the 64 other `expr:href` attributes already in
-  the theme. The file now parses as well-formed XML end to end.
-- **Added:** a crystal-glassmorphism hover layer (section `B15`) on cards, widgets, nav
-  links and buttons, plus a glass shop-cart icon button in the navbar. The cart points at
-  `/p/get-solved-assignments.html` — change that one `href` if your shop lives elsewhere.
-
-The same crystal treatment is in [css/theme.css](css/theme.css) (for pages served from
-this repo) and in the tools widget [tools/tools.html](tools/tools.html). Theme and pages
-share the `--glass-*` tokens, so the blog and the studio look like one product.
-
----
-
-## Independence
-
-AIOU Coaching is not Allama Iqbal Open University. Confirm fees, dates, eligibility, and results on the university website before you submit anything.
-
----
-
-## License
-
-[MIT](LICENSE)
+**Poora Blogger deploy ek page par:** [docs/BLOGGER-DEPLOY.md](docs/BLOGGER-DEPLOY.md) — theme upload, page-by-page paste list, live URL statuses, menu aur Search Console.

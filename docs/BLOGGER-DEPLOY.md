@@ -10,7 +10,7 @@ Har URL ka status **live blog par check** kiya gaya hai (October 2026).
 Repo ki theme me SEO layer mojood hai, magar live HTML me wo nahi hai. Live homepage par ye
 missing mile:
 
-| Cheez | Live homepage | Repo theme (`theme/AIOUCOACHING.XML`) |
+| Cheez | Live homepage | Repo theme (`theme/aioucoahing.xml`) |
 | --- | --- | --- |
 | `<meta name='robots'>` | missing | `index,follow` + search/archive par `noindex` |
 | `<meta name='description'>` | missing (len 0) | `data:view.description ?: theme description` |
@@ -27,7 +27,7 @@ hover aur shop cart icon bhi live honge.
 ## 1. Theme upload (5 minute)
 
 1. Blogger → **Theme** → right side **Backup** → purani theme download kar lein (safety).
-2. **Edit HTML** → poora code select → `theme/AIOUCOACHING.XML` ka poora content paste → **Save**.
+2. **Edit HTML** → poora code select → `theme/aioucoahing.xml` ka poora content paste → **Save**.
 3. **Customise → Advanced → Description** — agar khali ho to bhar dein (theme me default description
    bhi set hai, ~150 chars).
 4. Homepage khol kar check karein: page source me `name='robots'`, `og:title`, `canonical`,
@@ -86,7 +86,7 @@ label/link theek karein.
 
 ## 4. Menu (theme ke andar hi set hai)
 
-`theme/AIOUCOACHING.XML` me menu widget theek kar diya gaya hai:
+`theme/aioucoahing.xml` me menu widget theek kar diya gaya hai:
 
 | Menu item | Link | Note |
 | --- | --- | --- |

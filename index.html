@@ -2,10 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>AIOU Coaching — Free Study Tools for AIOU Students</title>
 <meta name="description" content="AIOU Coaching ke free tools: multi-ID AI studio, guess paper, cover page, assignment builder, diagram generator aur bulk Word downloader.">
 <link rel="stylesheet" href="css/theme.css">
+<meta name="theme-color" content="#f67938">
+<meta name="application-name" content="AIOU Coaching">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/brand.css">
 </head>
 <body>
 <div class="blob b1"></div><div class="blob b2"></div>
@@ -14,7 +19,8 @@
   <a class="brand" href="index.html">AIOU <span>Coaching</span></a>
   <div class="topnav-links">
     <a class="txt" href="tools/studio.html">AI Studio</a>
-    <a class="txt" href="tools/tools.html">All Tools</a>
+    <a class="txt" href="tools/tools.html">All Tools</a>\n    <button class="pwa-install" id="pwa-install" type="button" hidden>Install app</button>
+    <a class="txt" href="lms/signin-signup.html">LMS Sign In</a>
     <a class="icobtn" href="https://wa.me/923702388998?text=Assalam-o-Alaikum!%20AIOU%20notes%2Fassignment%20order%20karna%20hai"
        target="_blank" rel="noopener" title="Shop — WhatsApp par order karein" aria-label="Shop cart — order on WhatsApp">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2.5 3h2.1l2.3 11.2h11.6L21 7.2H5.4"/></svg>
@@ -23,11 +29,18 @@
   </div>
 </nav>
 
-<header class="site">
+<div id="pwa-status" class="pwa-status" role="status" aria-live="polite" hidden></div>\n\n<header class="site">
   <h1>AIOU <span>Coaching</span></h1>
   <div class="sub">Samjho · Khud likho · Guess paper banao · Cover page lagao · Word file download karo</div>
   <div class="note">Independent study help. Not affiliated with AIOU.</div>
 </header>
+
+<div class="panel pwa-promo"><div><p class="eyebrow">STUDY TOOLS, READY WHEN YOU ARE</p><h2>Install AIOU Coaching</h2><p class="muted">Home-screen shortcut aur previously visited pages ke liye limited offline support. LMS login aur AI requests ko internet chahiye.</p></div><button class="btn" id="pwa-install-card" type="button">Install / Add to Home screen</button></div>
+<div class="panel">
+  <h2>🔐 Firebase Account, Files & Notifications</h2>
+  <p class="muted">Separate study-tools account, private file uploads, profile and opt-in browser notifications. This is not the LMS sign-in, and Firebase stays disconnected until a real project configuration is supplied.</p>
+  <a class="btn" href="firebase/index.html">Open Firebase workspace →</a>
+</div>
 
 <div class="panel">
   <h2>🤖 Multi-ID AI Studio</h2>
@@ -35,6 +48,13 @@
     dikhata hai, best jawab chunne deta hai aur assignment ki Word file bana deta hai. Ek ID fail ho to baqi IDs se kaam chalta rehta hai.</p>
   <a class="btn" href="tools/studio.html">Studio kholein →</a>
   <div class="ib">DeepSeek API key sirf Cloudflare Worker ke secret me rehti hai — browser me kabhi nahi.</div>
+</div>
+
+<div class="panel">
+  <h2>🏛️ Complete AIOU Report Engine</h2>
+  <p class="muted">Capstone, Internship, Thesis aur Research Proposal ke liye editable report sections, Questionnaire Builder, Methodology Builder, APA reference drafts, charts/tables aur Word/PDF export.</p>
+  <div class="actions"><a class="btn" href="tools/aiou-report-engine.html">Report Engine kholein →</a><a class="btn ghost" href="tools/academic-report-generator.html">Chapter Workspace →</a></div>
+  <p class="muted">Manual requirements programme ke mutabiq verify karein. Tool academic evidence, real data aur genuine references ki jagah nahi leta.</p>
 </div>
 
 <div class="panel">
@@ -67,5 +87,6 @@ npx wrangler deploy</code></pre>
 <script>
   AIOU.hub.render(document.getElementById('hub'), { base: 'tools/' });
 </script>
+<script src="js/pwa.js" defer></script>\n<script>document.getElementById("pwa-install-card")?.addEventListener("click",function(){var b=document.getElementById("pwa-install");if(b&&!b.hidden)b.click();var s=document.getElementById("pwa-status");if(s){s.hidden=false;s.textContent="If install prompt is unavailable, use your browser menu → Install app / Add to Home screen."}});</script>
 </body>
 </html>
