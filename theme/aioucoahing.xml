@@ -3182,16 +3182,12 @@ function jtCallback(){
 
 <!-- AIOU Coaching: static Blogger mobile navigation (markup is present in the XML; no JS injection required) -->
 <style type='text/css'><![CDATA[
-#aio-mobile-dock{display:none}
-@media(max-width:767px){
-  .aio-pwa-cta{display:none!important}
-  body{padding-bottom:calc(82px + env(safe-area-inset-bottom,0px))!important}
-  #aio-mobile-dock{position:fixed!important;z-index:2147483000!important;left:8px!important;right:8px!important;bottom:calc(7px + env(safe-area-inset-bottom,0px))!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:6px 4px;border:1px solid rgba(120,120,120,.2);border-radius:17px;background:rgba(255,255,255,.98);box-shadow:0 8px 28px rgba(20,25,30,.2);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
-  .dark-mode #aio-mobile-dock{background:rgba(28,32,37,.98);border-color:rgba(255,255,255,.14)}
-  #aio-mobile-dock .aio-dock-action{appearance:none;-webkit-appearance:none;min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;border-radius:11px;background:transparent;color:#4c4c4c;text-decoration:none;font:700 10px/1.15 system-ui,-apple-system,'Segoe UI',sans-serif;cursor:pointer;padding:4px 1px;white-space:nowrap;-webkit-tap-highlight-color:transparent}
-  .dark-mode #aio-mobile-dock .aio-dock-action{color:#f2f2f2}
-  #aio-mobile-dock svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
-}
+#aio-mobile-dock{position:fixed!important;z-index:2147483000!important;left:8px!important;right:8px!important;bottom:calc(7px + env(safe-area-inset-bottom,0px))!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:6px 4px;border:1px solid rgba(120,120,120,.2);border-radius:17px;background:rgba(255,255,255,.98);box-shadow:0 8px 28px rgba(20,25,30,.2);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+.dark-mode #aio-mobile-dock{background:rgba(28,32,37,.98);border-color:rgba(255,255,255,.14)}
+#aio-mobile-dock .aio-dock-action{appearance:none;-webkit-appearance:none;min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;border-radius:11px;background:transparent;color:#4c4c4c;text-decoration:none;font:700 10px/1.15 system-ui,-apple-system,'Segoe UI',sans-serif;cursor:pointer;padding:4px 1px;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.dark-mode #aio-mobile-dock .aio-dock-action{color:#f2f2f2}
+#aio-mobile-dock svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+@media(max-width:767px){.aio-pwa-cta{display:none!important}body{padding-bottom:calc(82px + env(safe-area-inset-bottom,0px))!important}}
 @media(min-width:768px){#aio-mobile-dock{display:none!important}}
 ]]></style>
 <nav id='aio-mobile-dock' aria-label='AIOU Coaching mobile navigation'>
