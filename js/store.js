@@ -15,9 +15,17 @@
   };
 
   var MODELS = [
-    { value: 'glm-5.3', label: 'GLM 5.3 (Ollama Cloud)' },
-    { value: 'gpt-oss:120b-cloud', label: 'GPT-OSS 120B (Ollama Cloud)' },
-    { value: 'deepseek-v4-pro', label: 'DeepSeek V4 Pro (Ollama Cloud)' }
+    { value: 'ollama/glm-5.3', label: 'GLM 5.3 — Ollama Cloud' },
+    { value: 'ollama/gpt-oss:120b-cloud', label: 'GPT-OSS 120B — Ollama Cloud' },
+    { value: 'ollama/deepseek-v4-pro', label: 'DeepSeek V4 Pro — Ollama Cloud' },
+    { value: 'openrouter/auto', label: 'Auto — OpenRouter' },
+    { value: 'openrouter/openai/gpt-4.1', label: 'GPT-4.1 — OpenRouter' },
+    { value: 'deepseek/deepseek-chat', label: 'DeepSeek Chat' },
+    { value: 'deepseek/deepseek-reasoner', label: 'DeepSeek Reasoner' },
+    { value: 'claude/claude-sonnet-4-5', label: 'Claude Sonnet 4.5' },
+    { value: 'claude/claude-haiku-4-5', label: 'Claude Haiku 4.5' },
+    { value: 'codex/gpt-5-codex', label: 'GPT-5 Codex (configure API URL)' },
+    { value: 'freebuff/deepseek/deepseek-v4-flash', label: 'DeepSeek V4 Flash — Freebuff (configure URL)' }
   ];
 
   var DEFAULT_SYSTEM =
@@ -80,7 +88,7 @@
       name: name.slice(0, 40),
       url: url,
       token: String(o.token || '').trim(),
-      model: isModel(o.model) ? o.model : 'glm-5.3',
+      model: isModel(o.model) ? o.model : 'ollama/glm-5.3',
       enabled: o.enabled !== false
     };
   }
