@@ -1,9 +1,7 @@
 /* ==========================================================================
    AIOU Coaching — store.js
-   Keeps the list of AI "IDs" (Worker URL + Auth token + model) plus studio
-   settings in localStorage. Nothing is ever sent anywhere except your own
-   Cloudflare Worker.
-
+   Keeps Worker URL + access token + model settings in localStorage.
+   The Ollama API key remains server-side in Cloudflare.
    Exposes: window.AIOU.store
    ========================================================================== */
 (function (w) {
@@ -12,13 +10,14 @@
   var KEYS = {
     ids: 'aiou_ids_v2',
     settings: 'aiou_settings_v2',
-    legacyUrl: 'aw_worker',      // written by the older single-worker tools
+    legacyUrl: 'aw_worker',
     legacyToken: 'aw_token'
   };
 
   var MODELS = [
-    { value: 'deepseek-chat', label: 'deepseek-chat (V3 — tez, sasta)' },
-    { value: 'deepseek-reasoner', label: 'deepseek-reasoner (R1 — soch kar jawab)' }
+    { value: 'glm-5.3', label: 'GLM 5.3 (Ollama Cloud)' },
+    { value: 'gpt-oss:120b-cloud', label: 'GPT-OSS 120B (Ollama Cloud)' },
+    { value: 'deepseek-v4-pro', label: 'DeepSeek V4 Pro (Ollama Cloud)' }
   ];
 
   var DEFAULT_SYSTEM =
@@ -34,7 +33,6 @@
     timeoutMs: 120000
   };
 
-  /* --- low level --------------------------------------------------------- */
   function read(key, fallback) {
     try {
       var raw = w.localStorage.getItem(key);
@@ -66,7 +64,9 @@
   }
 
   function isModel(m) {
-    for (var i = 0; i < MODELS.length; i++) { if (MODELS[i].value === m) return true; }
+    for (var i = 0; i < MODELS.length; i++) {
+      if (MODELS[i].value === m) return true;
+    }
     return false;
   }
 
@@ -80,12 +80,11 @@
       name: name.slice(0, 40),
       url: url,
       token: String(o.token || '').trim(),
-      model: isModel(o.model) ? o.model : 'deepseek-chat',
+      model: isModel(o.model) ? o.model : 'glm-5.3',
       enabled: o.enabled !== false
     };
   }
 
-  /* --- ids --------------------------------------------------------------- */
   function migrate() {
     var url = '';
     var token = '';
@@ -102,8 +101,7 @@
   function getIds() {
     var list = read(KEYS.ids, null);
     if (!Array.isArray(list)) list = migrate();
-    list = (list || []).map(normalizeId);
-    return list;
+    return (list || []).map(normalizeId);
   }
 
   function setIds(list) {
@@ -148,7 +146,6 @@
     return setIds(list);
   }
 
-  /* --- settings ---------------------------------------------------------- */
   function getSettings() {
     var s = read(KEYS.settings, {}) || {};
     return Object.assign({}, DEFAULT_SETTINGS, s);
