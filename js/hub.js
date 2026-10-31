@@ -1,6 +1,6 @@
 /* ==========================================================================
    AIOU Coaching — hub.js
-   Renders the list from js/tools.js as a filterable card grid.
+   Renders the list from js/tools.js as a searchable, filterable card grid.
 
    Usage:
      AIOU.hub.render(document.getElementById('hub'), { base: 'tools/' });
@@ -14,20 +14,32 @@
   var T = (w.AIOU && w.AIOU.tools) || { groups: [{ id: 'all', label: 'All' }], list: [] };
   var ui = (w.AIOU && w.AIOU.ui) || {};
 
+  function norm(s) { return String(s === undefined || s === null ? '' : s).toLowerCase(); }
+
   function render(mount, opts) {
     opts = opts || {};
     var base = opts.base || '';
     if (!mount) return;
 
+    var bar = ui.el('div', 'hubbar');
+    var search = ui.el('input', '', null, {
+      type: 'search',
+      placeholder: 'Tool dhoondein… (guess paper, cover page, humanizer)',
+      'aria-label': 'Search tools'
+    });
+    ui.add(bar, search);
+
     var chips = ui.el('div', 'chips');
+    var count = ui.el('div', 'count', null, { 'aria-live': 'polite' });
     var grid = ui.el('div', 'tgrid');
-    var count = ui.el('div', 'count');
     var current = 'all';
+    var query = '';
 
     function matches(item) {
-      if (current === 'all') return true;
-      if (current === 'ai') return item.group === 'ai';
-      return item.group === current;
+      if (current !== 'all' && item.group !== current) return false;
+      if (!query) return true;
+      var hay = norm([item.name, item.desc, item.id, (item.badges || []).join(' ')].join(' '));
+      return query.split(/\s+/).every(function (part) { return hay.indexOf(part) > -1; });
     }
 
     function card(item) {
@@ -47,20 +59,41 @@
     function paint() {
       ui.empty(grid);
       var shown = T.list.filter(matches);
-      shown.forEach(function (item) { ui.add(grid, card(item)); });
-      count.textContent = shown.length + ' tool' + (shown.length === 1 ? '' : 's') + ' dikh rahe hain';
+      if (!shown.length) {
+        ui.add(grid, ui.el('p', 'hub-empty', 'Kuch nahi mila — doosra lafz try karein.'));
+      } else {
+        shown.forEach(function (item) { ui.add(grid, card(item)); });
+      }
+      count.textContent = shown.length + ' / ' + T.list.length + ' tools dikh rahe hain';
       Array.prototype.forEach.call(chips.children, function (ch) {
-        ch.className = 'chip' + (ch.dataset.group === current ? ' on' : '');
+        var on = ch.dataset.group === current;
+        ch.className = 'chip' + (on ? ' on' : '');
+        ch.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
     }
 
     T.groups.forEach(function (g) {
-      var ch = ui.el('button', 'chip', g.label, { type: 'button', dataset: { group: g.id } });
+      var ch = ui.el('button', 'chip', g.label, {
+        type: 'button', dataset: { group: g.id }, 'aria-pressed': 'false'
+      });
       ch.addEventListener('click', function () { current = g.id; paint(); });
       ui.add(chips, ch);
     });
 
+    search.addEventListener('input', function () {
+      query = norm(this.value).trim();
+      paint();
+    });
+    // "/" focuses the search box, like GitHub
+    w.document.addEventListener('keydown', function (e) {
+      if (e.key === '/' && e.target !== search && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) {
+        e.preventDefault();
+        search.focus();
+      }
+    });
+
     ui.empty(mount);
+    ui.add(mount, bar);
     ui.add(mount, chips);
     ui.add(mount, count);
     ui.add(mount, grid);

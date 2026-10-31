@@ -47,6 +47,15 @@ export default {
       return json({ error: 'Unauthorized — X-Auth-Token galat hai ya missing' }, 401);
     }
 
+    // Best-effort abuse guard: per isolate (no KV needed), 40 calls / minute / IP.
+    const limit = rateLimited(request);
+    if (limit.blocked) {
+      return new Response(JSON.stringify({ error: 'Bohat zyada requests — ek minute baad try karein' }), {
+        status: 429,
+        headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': String(limit.retryAfter) }
+      });
+    }
+
     let body;
     try {
       body = await request.json();
@@ -62,13 +71,15 @@ export default {
     const payload = {
       model,
       messages: body.messages,
-      temperature: clamp(num(body.temperature, 0.7), 0, 2),
       max_tokens: clamp(num(body.max_tokens, 4000), 16, 8192),
       stream: false
     };
 
-    if (body.json === true) {
-      payload.response_format = { type: 'json_object' };
+    // deepseek-reasoner rejects temperature (and JSON response_format) with
+    // "unsupported parameter", so send them only for deepseek-chat.
+    if (model !== 'deepseek-reasoner') {
+      payload.temperature = clamp(num(body.temperature, 0.7), 0, 2);
+      if (body.json === true) payload.response_format = { type: 'json_object' };
     }
 
     try {
@@ -108,6 +119,32 @@ export default {
     }
   }
 };
+
+// ---- light rate limit (per isolate; resets with the worker instance) --------
+const HITS = new Map();
+const WINDOW_MS = 60000;
+const MAX_PER_WINDOW = 40;
+
+function rateLimited(request) {
+  const ip =
+    request.headers.get('CF-Connecting-IP') ||
+    request.headers.get('X-Forwarded-For') ||
+    'unknown';
+  const now = Date.now();
+  const entry = HITS.get(ip);
+
+  if (!entry || now - entry.start > WINDOW_MS) {
+    HITS.set(ip, { start: now, count: 1 });
+    if (HITS.size > 5000) HITS.clear(); // keep memory bounded
+    return { blocked: false };
+  }
+
+  entry.count += 1;
+  if (entry.count > MAX_PER_WINDOW) {
+    return { blocked: true, retryAfter: Math.ceil((WINDOW_MS - (now - entry.start)) / 1000) };
+  }
+  return { blocked: false };
+}
 
 function authorized(request, env) {
   const configured = String(env.AUTH_TOKEN || '')

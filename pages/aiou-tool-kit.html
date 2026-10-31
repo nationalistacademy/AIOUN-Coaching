@@ -7,6 +7,10 @@
 <style>
 .atk{--atk-ac:var(--jt-primary,#f67938);--atk-line:var(--glass-border,rgba(255,255,255,.7));--atk-card:var(--glass-bg,rgba(255,255,255,.55));margin:0 0 1.6rem}
 .atk-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 1.2rem}
+.atk-search{width:100%;padding:11px 16px;border-radius:999px;border:1px solid var(--atk-line);background:var(--glass-bg-soft,rgba(255,255,255,.38));color:inherit;font-size:15px;margin:0 0 10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5);transition:border-color .2s,box-shadow .2s}
+.atk-search:focus{outline:none;border-color:var(--atk-ac);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 0 0 3px rgba(246,121,56,.2)}
+.atk-count{font-size:13px;opacity:.8;margin:0 0 1rem}
+.atk-empty{text-align:center;padding:24px 10px;border:1px dashed var(--atk-line);border-radius:16px}
 .atk-chip{border:1px solid var(--atk-line);background:var(--glass-bg-soft,rgba(255,255,255,.38));color:inherit;border-radius:999px;padding:7px 18px;font-weight:700;font-size:14px;cursor:pointer;transition:background-color .22s,color .22s,border-color .22s,transform .22s,box-shadow .22s}
 .atk-chip:hover,.atk-chip.on{background:var(--atk-ac);border-color:var(--atk-ac);color:#fff;transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 8px 20px rgba(0,0,0,.18)}
 .atk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:1.1rem;margin:0 0 1.6rem}
@@ -22,6 +26,7 @@
 .atk-tag{font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:999px;background:var(--glass-bg-soft,rgba(255,255,255,.38));border:1px solid var(--atk-line)}
 .atk-go{display:inline-block;text-align:center;background:linear-gradient(135deg,var(--atk-ac),#b8470f);color:#fff!important;font-weight:700;border-radius:999px;padding:9px 22px;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 6px 18px rgba(246,121,56,.3);transition:transform .2s,box-shadow .2s}
 .atk-go:hover{transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 12px 30px rgba(246,121,56,.4)}
+.atk-soon{display:inline-block;text-align:center;border-radius:999px;padding:9px 22px;font-weight:700;font-size:14px;border:1px dashed var(--atk-line);background:var(--glass-bg-soft,rgba(255,255,255,.38));cursor:not-allowed;opacity:.85}
 .atk-steps{counter-reset:s;list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem}
 .entry-text .atk-steps li{counter-increment:s;margin:0;padding:1rem 1rem 1rem 3.4rem;position:relative;background:var(--glass-bg-soft,rgba(255,255,255,.38));border:1px solid var(--atk-line);border-radius:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
 .atk-steps li:before{content:counter(s);position:absolute;left:1rem;top:1rem;width:30px;height:30px;border-radius:50%;background:var(--atk-ac);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
@@ -41,6 +46,8 @@
   <p>Neeche filter se apna kaam chunein. Har tool alag page hai, jo bhi chahiye wo khol lein — baqi
   ki zarurat nahi. Tools mobile par bhi chalte hain.</p>
 
+  <label for="atk-search" class="atk-count" style="display:block">Tool dhoondein</label>
+  <input class="atk-search" id="atk-search" type="search" placeholder="guess paper, cover page, humanizer…" autocomplete="off">
   <div class="atk-chips" role="group" aria-label="Filter tools">
     <button class="atk-chip on" data-f="all" type="button">All Tools</button>
     <button class="atk-chip" data-f="ai" type="button">AI Tools</button>
@@ -49,85 +56,89 @@
     <button class="atk-chip" data-f="form" type="button">Forms</button>
   </div>
 
+  <!-- Sirf wahi tools link hain jo Blogger par live hain. Jo publish nahi hui un par
+       "Jald aa raha hai" likha hai — page banane ke baad us card par link laga dein. -->
   <div class="atk-grid" id="atk-grid">
     <article class="atk-card" data-c="ai">
       <div class="atk-ic">🤖</div>
       <h3>Multi-ID AI Studio</h3>
       <p>Ek sawal kai Worker IDs ko bhejein, sab ke jawab sath dekhein, best jawab chunein aur Word file banayein.</p>
       <div class="atk-tags"><span class="atk-tag">DeepSeek</span><span class="atk-tag">Word</span></div>
-      <a class="atk-go" href="/p/studio.html">Studio kholein</a>
+      <span class="atk-soon">Jald aa raha hai</span>
     </article>
     <article class="atk-card" data-c="paper">
       <div class="atk-ic">📄</div>
       <h3>Guess Paper Generator</h3>
       <p>Urdu ya English guess paper banayein, logo aur watermark lagayein, PDF / Word / JPG me export karein.</p>
       <div class="atk-tags"><span class="atk-tag">PDF</span><span class="atk-tag">Word</span><span class="atk-tag">JPG</span></div>
-      <a class="atk-go" href="/p/guess-paper-generator.html">Tool kholein</a>
+      <a class="atk-go" href="/p/aiou-guess-paper-generator.html">Tool kholein</a>
     </article>
     <article class="atk-card" data-c="paper">
       <div class="atk-ic">✅</div>
       <h3>BS &amp; BBA Guess Paper</h3>
       <p>Part I MCQs, Part II aur Part III subjective sawalon ka tayyar paper, multi-page export ke sath.</p>
       <div class="atk-tags"><span class="atk-tag">MCQ</span><span class="atk-tag">PDF</span><span class="atk-tag">SVG</span></div>
-      <a class="atk-go" href="/p/bs-bba-guess-paper.html">Tool kholein</a>
+      <a class="atk-go" href="/p/aiou-bsbba-guess-paper-generator.html">Tool kholein</a>
     </article>
     <article class="atk-card" data-c="cover">
       <div class="atk-ic">📕</div>
       <h3>Assignment Cover Page</h3>
       <p>19 templates, student aur programme details, colour aur font badalne ki sahulat, logo pehle se laga hua.</p>
       <div class="atk-tags"><span class="atk-tag">19 templates</span><span class="atk-tag">PDF</span></div>
-      <a class="atk-go" href="/p/assignment-cover-page.html">Tool kholein</a>
+      <a class="atk-go" href="/p/aiou-assignment-cover-page-generator.html">Tool kholein</a>
     </article>
     <article class="atk-card" data-c="cover">
       <div class="atk-ic">📋</div>
       <h3>Assignment Cover Sheet</h3>
       <p>Sada aur saaf cover sheet — sirf zaroori maloomat, ek click me print ya PDF.</p>
       <div class="atk-tags"><span class="atk-tag">Print</span><span class="atk-tag">PDF</span></div>
-      <a class="atk-go" href="/p/assignment-cover-sheet.html">Tool kholein</a>
+      <a class="atk-go" href="/p/aiou-assignment-cover-sheet-generator.html">Tool kholein</a>
     </article>
     <article class="atk-card" data-c="cover">
       <div class="atk-ic">🖼️</div>
       <h3>AIOU Front Page</h3>
       <p>A4 style assignment front page, ready to print ya PDF me save karne ke liye.</p>
       <div class="atk-tags"><span class="atk-tag">A4</span><span class="atk-tag">PDF</span></div>
-      <a class="atk-go" href="/p/front-page.html">Tool kholein</a>
+      <span class="atk-soon">Jald aa raha hai</span>
     </article>
     <article class="atk-card" data-c="ai">
       <div class="atk-ic">📝</div>
       <h3>AI Assignment Writer</h3>
       <p>Assignment ke sawal paste karein aur poora draft (title page + answers + references) banayein.</p>
       <div class="atk-tags"><span class="atk-tag">DeepSeek</span><span class="atk-tag">Draft</span></div>
-      <a class="atk-go" href="/p/assignment-writer.html">Tool kholein</a>
+      <span class="atk-soon">Jald aa raha hai</span>
     </article>
     <article class="atk-card" data-c="ai">
       <div class="atk-ic">✍️</div>
       <h3>AI Text Humanizer</h3>
       <p>Text ko natural, insani andaaz me dobara likhein — academic ya casual tone me.</p>
       <div class="atk-tags"><span class="atk-tag">DeepSeek</span><span class="atk-tag">Rewrite</span></div>
-      <a class="atk-go" href="/p/humanizer.html">Tool kholein</a>
+      <span class="atk-soon">Jald aa raha hai</span>
     </article>
     <article class="atk-card" data-c="ai">
       <div class="atk-ic">🎨</div>
       <h3>AI Diagram Generator</h3>
       <p>Chhota topic likhein aur flowchart / diagram bana kar PNG me download karein.</p>
       <div class="atk-tags"><span class="atk-tag">Mermaid</span><span class="atk-tag">PNG</span></div>
-      <a class="atk-go" href="/p/diagram-generator.html">Tool kholein</a>
+      <span class="atk-soon">Jald aa raha hai</span>
     </article>
     <article class="atk-card" data-c="form">
       <div class="atk-ic">🧾</div>
       <h3>Mashqi Form Generator</h3>
       <p>Student aur tutor details ke saath mashqi form bharein, 10 khanon wala Student ID, A4 print.</p>
       <div class="atk-tags"><span class="atk-tag">A4</span><span class="atk-tag">Print</span></div>
-      <a class="atk-go" href="/p/mashqi-form.html">Tool kholein</a>
+      <span class="atk-soon">Jald aa raha hai</span>
     </article>
     <article class="atk-card" data-c="form">
       <div class="atk-ic">📦</div>
       <h3>Bulk Word / ZIP Downloader</h3>
       <p>Kai assignments ek sath Word files me banayein aur ZIP me download karein.</p>
       <div class="atk-tags"><span class="atk-tag">Word</span><span class="atk-tag">ZIP</span></div>
-      <a class="atk-go" href="/p/bulk-downloader.html">Tool kholein</a>
+      <span class="atk-soon">Jald aa raha hai</span>
     </article>
   </div>
+  <p class="atk-empty" id="atk-empty" hidden>Kuch nahi mila — doosra lafz try karein.</p>
+  <p class="atk-count" id="atk-count" aria-live="polite"></p>
 
   <h2>Tool kaise istemal karein</h2>
   <ol class="atk-steps">
@@ -156,31 +167,44 @@
   if (!wrap) return;
   var chips = wrap.querySelectorAll('.atk-chip');
   var cards = wrap.querySelectorAll('.atk-card');
-  for (var i = 0; i < chips.length; i++) {
-    chips[i].addEventListener('click', function () {
-      var f = this.getAttribute('data-f');
-      for (var a = 0; a < chips.length; a++) chips[a].className = 'atk-chip' + (chips[a].getAttribute('data-f') === f ? ' on' : '');
-      for (var b = 0; b < cards.length; b++) {
-        var show = f === 'all' || cards[b].getAttribute('data-c') === f;
-        if (show) cards[b].removeAttribute('hidden'); else cards[b].setAttribute('hidden', 'hidden');
-      }
-    });
+  var search = document.getElementById('atk-search');
+  var count = document.getElementById('atk-count');
+  var empty = document.getElementById('atk-empty');
+  var filter = 'all', query = '';
+
+  function apply() {
+    var shown = 0;
+    for (var i = 0; i < cards.length; i++) {
+      var c = cards[i];
+      var okGroup = filter === 'all' || c.getAttribute('data-c') === filter;
+      var okText = !query || (c.textContent || '').toLowerCase().indexOf(query) > -1;
+      var show = okGroup && okText;
+      if (show) { c.removeAttribute('hidden'); shown++; } else { c.setAttribute('hidden', 'hidden'); }
+    }
+    for (var k = 0; k < chips.length; k++) {
+      var on = chips[k].getAttribute('data-f') === filter;
+      chips[k].className = 'atk-chip' + (on ? ' on' : '');
+      chips[k].setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+    if (count) count.textContent = shown + ' / ' + cards.length + ' tools dikh rahe hain';
+    if (empty) { if (shown) empty.setAttribute('hidden', 'hidden'); else empty.removeAttribute('hidden'); }
   }
+
+  for (var i = 0; i < chips.length; i++) {
+    chips[i].addEventListener('click', function () { filter = this.getAttribute('data-f'); apply(); });
+  }
+  if (search) search.addEventListener('input', function () { query = (this.value || '').toLowerCase().trim(); apply(); });
+  apply();
 })();
 //]]>
 </script>
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ItemList","name":"AIOU Tool Kit","itemListElement":[
- {"@type":"ListItem","position":1,"name":"Multi-ID AI Studio","url":"/p/studio.html"},
- {"@type":"ListItem","position":2,"name":"Guess Paper Generator","url":"/p/guess-paper-generator.html"},
- {"@type":"ListItem","position":3,"name":"BS and BBA Guess Paper","url":"/p/bs-bba-guess-paper.html"},
- {"@type":"ListItem","position":4,"name":"Assignment Cover Page","url":"/p/assignment-cover-page.html"},
- {"@type":"ListItem","position":5,"name":"AI Assignment Writer","url":"/p/assignment-writer.html"},
- {"@type":"ListItem","position":6,"name":"Humanizer","url":"/p/humanizer.html"},
- {"@type":"ListItem","position":7,"name":"Diagram Generator","url":"/p/diagram-generator.html"},
- {"@type":"ListItem","position":8,"name":"Mashqi Form Generator","url":"/p/mashqi-form.html"},
- {"@type":"ListItem","position":9,"name":"Bulk Word ZIP Downloader","url":"/p/bulk-downloader.html"}]}
+ {"@type":"ListItem","position":1,"name":"Guess Paper Generator","url":"/p/aiou-guess-paper-generator.html"},
+ {"@type":"ListItem","position":2,"name":"BS and BBA Guess Paper","url":"/p/aiou-bsbba-guess-paper-generator.html"},
+ {"@type":"ListItem","position":3,"name":"Assignment Cover Page","url":"/p/aiou-assignment-cover-page-generator.html"},
+ {"@type":"ListItem","position":4,"name":"Assignment Cover Sheet","url":"/p/aiou-assignment-cover-sheet-generator.html"}]}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[

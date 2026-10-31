@@ -26,6 +26,6 @@ build/
 *.local.html
 test-*.html
 
-# Generated posts (keep .gitkeep)
-posts/*.json
-!posts/.gitkeep
+# Generated posts from the batch workflow (posts/ itself holds tracked HTML)
+posts/generated/*.json
+!posts/generated/.gitkeep

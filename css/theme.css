@@ -190,5 +190,15 @@ summary{cursor:pointer;font-size:.8rem;color:var(--mut)}
   .tcard>.sheen{display:none}
 }
 
+/* hub toolbar (search + live count) --------------------------------------- */
+.hubbar{margin:0 0 10px}
+.hubbar input[type=search]{width:100%;padding:11px 16px;border-radius:999px;background:rgba(0,0,0,.28);
+  border:1px solid rgba(255,255,255,.22);color:#fff;font-size:.88rem;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16);transition:border-color .2s,box-shadow .2s}
+.hubbar input[type=search]::-webkit-search-cancel-button{cursor:pointer}
+.hubbar input[type=search]:focus{outline:none;border-color:var(--ac);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 0 0 3px rgba(246,121,56,.22)}
+.hub-empty{grid-column:1/-1;text-align:center;color:var(--mut);font-size:.85rem;padding:26px 10px;
+  border:1px dashed var(--line);border-radius:14px}
+
 footer.site{text-align:center;color:var(--mut);font-size:.78rem;padding:26px 10px 10px}
 footer.site a{color:var(--ac);text-decoration:none}

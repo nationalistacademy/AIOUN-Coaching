@@ -236,7 +236,32 @@ select option { background: #1e293b; color: #fff; }
 // 🔑 WORKER CONFIGURATION
 // ==========================================
 const WORKER_URL = "https://aiou-tools.httpsnationalistacademygithubioassignmentwaly-toolsgener.workers.dev/";
-const AUTH_TOKEN = ""; 
+const AUTH_TOKEN = "";
+
+/* ---- AIOU multi-ID: pehle studio ki shared ID list, warna built-in URL ---- */
+function aiouIDs() {
+  try {
+    var raw = JSON.parse(localStorage.getItem('aiou_ids_v2') || '[]');
+    var list = (Array.isArray(raw) ? raw : (raw && raw.ids) || []).filter(function (x) {
+      return x && x.enabled !== false && /^https?:\/\//.test(String(x.url || ''));
+    }).map(function (x) { return { name: x.name || 'ID', url: x.url, token: x.token || '' }; });
+    if (list.length) return list;
+  } catch (e) { /* localStorage band ho to built-in */ }
+  return [{ name: 'built-in', url: WORKER_URL, token: AUTH_TOKEN }];
+}
+async function aiouFetch(url, init) {
+  var ids = aiouIDs(), errs = [];
+  for (var i = 0; i < ids.length; i++) {
+    var id = ids[i];
+    var headers = Object.assign({}, (init && init.headers) || {}, { 'X-Auth-Token': id.token });
+    try {
+      var r = await fetch(id.url || url, Object.assign({}, init, { headers: headers }));
+      if (r.ok) return r;
+      errs.push(id.name + ': Worker ' + r.status);
+    } catch (e) { errs.push(id.name + ': ' + e.message); }
+  }
+  throw new Error('Koi ID kaam nahi kiya (' + errs.join(' | ') + '). Studio me Worker URL save karein.');
+} 
 
 // ==========================================
 // AI HUMANIZER PROMPT
@@ -300,7 +325,7 @@ async function humanizeText() {
     `;
 
     try {
-        const response = await fetch(WORKER_URL, {
+        const response = await aiouFetch(WORKER_URL, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
