@@ -3,7 +3,7 @@
 Independent study-support tools, Blogger resources, and a separate Supabase-backed LMS for AIOU students. This project is not affiliated with AIOU.
 
 - Study tools: [index.html](index.html)
-- AIOU Workshop Reminder: [tools/aiou-workshop-reminder.html](tools/aiou-workshop-reminder.html) · [implementation notes](docs/AIOU-WORKSHOP-REMINDER.md) · [schedule parser engine](docs/WORKSHOPS.md)
+- AIOU Workshop Reminder: [standalone app](tools/aiou-workshop-reminder.html) · [single-file Blogger embed](tools/aiou-workshop-reminder-blogger.html) · [implementation notes](docs/AIOU-WORKSHOP-REMINDER.md) · [schedule parser engine](docs/WORKSHOPS.md)
 - Workshop planner tests: run `npm run test:workshops` (42-row supplied schedule fixture).
 - AI Studio: [tools/studio.html](tools/studio.html)
 - Blogger PWA/Cloudflare/Firebase guide: [docs/BLOGGER-PWA-CLOUDFLARE-FIREBASE.md](docs/BLOGGER-PWA-CLOUDFLARE-FIREBASE.md)
