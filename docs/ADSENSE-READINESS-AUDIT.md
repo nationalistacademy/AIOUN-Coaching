@@ -159,3 +159,13 @@ Submit only when all are true:
    - Action: describe only legitimate tutoring, concept explanation, outlining, feedback on student-authored drafts, proofreading, citation-format guidance and document formatting. State clearly that students retain authorship; no one writes assessed assignments, dissertations or theses for submission on a student's behalf; no fabricated research/data/citations; no guaranteed marks or outcomes. Remove '100% quality', 'complete package' and delivery promises unless they refer to a legitimate, accurately described service.
 
 These are high-priority live corrections because they affect trust, factual accuracy and academic integrity, not merely SEO.
+13. **Several prominent live pages are stale, overclaiming or internally inconsistent.**
+   - The live Home page still says 'Admissions open · Spring 2026' even though the audit date is 2 November 2026.
+   - The live Programmes page claims '30+' programmes, '200+' course codes and '10K+' students helped, advertises 24/7 tutor support and says solved assignments are available for every programme/course code. These figures and service claims were not substantiated in this audit.
+   - The live Admissions page presents exact program-specific windows, late-fee deadlines and fee ranges as facts. The general AIOU calendar is a proposed schedule and programme-specific dates vary; every claim needs its own official source and semester context.
+   - A public guess-paper tool page exposes a search description that reads like an internal developer note ('complete code prepared') rather than a student-facing explanation.
+   - Action: replace stale Spring 2026 labels, remove unsupported numbers/availability/24-7 claims, source each admission/fee/course detail, and rewrite developer-facing metadata. Do not publish a universal date/fee table unless it is directly supported by the exact official prospectus/notice.
+
+14. **The live student-facing pages contain commercial claims that need substantiation.**
+   - The live Home page advertises a starting price of PKR 999 and says there are no hidden charges; the Programmes page advertises paid past papers starting PKR 199 and 24/7 support. The current public audit did not verify those prices, what is included, availability, refunds or who provides the service.
+   - Action: publish clear, current pricing and scope only if those services are actually offered and can be delivered. Do not use unsubstantiated social proof, volume metrics, urgency or guaranteed outcomes. Keep the independent AIOU notice and do not imply the service is an official university channel.
