@@ -40,6 +40,13 @@ Build and maintain AIOU Coaching as an independent, student-first learning-suppo
 - Any legal information must be general information, date-aware, jurisdiction-specific, sourced from authoritative current material, and accompanied by a recommendation to consult a qualified Pakistani lawyer for case-specific advice.
 - OSINT must use lawful public sources, proportionate collection, privacy minimization, and documented purpose. No doxxing, credential harvesting, unauthorized access, stalking, or sensitive personal-data profiling.
 
+## Blogger Page/Post source and theme rules
+- Canonical Blogger Page body HTML lives in repository-root `p/`; filenames match Blogger slugs, e.g. `p/tool.html` maps to `/p/tool.html` after manual publication.
+- Canonical Blogger Post body HTML lives in repository-root `post/`; use `post/<topic>/post.html` for individual post sources. Blogger controls the public permalink.
+- Standalone app documents stay in `tools/`; do not move them into `p/` merely because they are `.html` files.
+- Before writing Blogger HTML, read `docs/BLOGGER-THEME-COMPATIBILITY.md` and `docs/BLOGGER-HTML-CODING-RULES.md`. Match the current `theme/aioucoahing.xml` and create body fragments only, not full documents.
+- Do not publish or update live Blogger pages/posts or upload theme XML without explicit approval. Repository commits do not publish Blogger content.
+
 ## Engineering expectations
 - Follow the repository's existing stack, style, folder structure, and package manager.
 - Prefer semantic HTML, progressive enhancement, responsive layouts, keyboard accessibility, visible focus, reduced-motion support, and low-bandwidth performance.
