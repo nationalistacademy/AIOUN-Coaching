@@ -154,7 +154,7 @@
 
   function addId(partial) {
     var list = getIds();
-    var item = normalizeId(partial || {});
+    var item = normalizeId(partial || {}, true);
     item.name = item.name === 'ID' ? 'Worker ' + (list.length + 1) : item.name;
     list.push(item);
     setIds(list);
@@ -164,7 +164,7 @@
   function updateId(id, patch) {
     var list = getIds();
     for (var i = 0; i < list.length; i++) {
-      if (list[i].id === id) list[i] = normalizeId(Object.assign({}, list[i], patch, { id: id }));
+      if (list[i].id === id) list[i] = normalizeId(Object.assign({}, list[i], patch, { id: id }), true);
     }
     return setIds(list);
   }
