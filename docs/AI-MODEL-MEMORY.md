@@ -19,3 +19,12 @@
 - **Workflow:** Inspect first, branch, small change, test, PR, report evidence. No merge/deploy by default.
 - **Owner communication:** Roman Urdu is usually helpful.
 - **Source of truth:** Current code and explicit latest owner instructions override stale memory notes.
+
+
+## Blogger source and theme rules
+- Blogger Page HTML body fragments: repository-root `p/<exact-slug>.html` → Blogger `/p/<exact-slug>.html` after manual publishing.
+- Blogger Post HTML sources: repository-root `post/<topic>/post.html`; Blogger controls the public permalink.
+- Standalone web-app HTML stays in `tools/`.
+- Read `docs/BLOGGER-THEME-COMPATIBILITY.md` and `docs/BLOGGER-HTML-CODING-RULES.md`; inspect `theme/aioucoahing.xml` before writing page/post code.
+- Write fragments only (no html/head/body wrappers); scope CSS; preserve theme tokens, dark mode, responsive layout, accessibility and RTL/LTR.
+- A repo commit does not publish Blogger. Never publish or upload XML without explicit owner approval.
