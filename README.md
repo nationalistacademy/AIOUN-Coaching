@@ -11,7 +11,11 @@ Independent study-support tools, Blogger resources, and a separate Supabase-back
 - Firebase CLI manifest: [firebase.json](firebase.json)
 - Firestore rules: [firestore.rules](firestore.rules)
 - Storage rules: [storage.rules](storage.rules)
+- Blogger Page HTML sources: [p/](p/README.md) (maps to Blogger `/p/<slug>.html` after manual publication)
+- Blogger Post HTML sources: [post/](post/README.md) (Blogger controls public post permalinks)
 - Blogger theme: [theme/aioucoahing.xml](theme/aioucoahing.xml)
+- Blogger theme compatibility: [docs/BLOGGER-THEME-COMPATIBILITY.md](docs/BLOGGER-THEME-COMPATIBILITY.md)
+- Blogger HTML coding and QA rules: [docs/BLOGGER-HTML-CODING-RULES.md](docs/BLOGGER-HTML-CODING-RULES.md)
 - LMS security guide: [lms/README.md](lms/README.md)
 
 ## Firebase starter
@@ -31,6 +35,10 @@ Check GitHub Actions before claiming deployment or browser tests passed: [Browse
 
 **Poora Blogger deploy ek page par:** [docs/BLOGGER-DEPLOY.md](docs/BLOGGER-DEPLOY.md) — theme upload, page-by-page paste list, live URL statuses, menu aur Search Console.
 
+
+## Blogger source folders
+
+Use `p/<slug>.html` for Blogger Page body fragments and `post/<topic>/post.html` for Blogger Post sources. Keep standalone application documents in `tools/`. Read the compatibility and QA rules before generating page/post HTML. Commits do not publish to Blogger.
 
 ## AI agent memory and contribution rules
 Start with the copy/paste [AI prompt](AI-PROMPT.md) when handing this repository to another AI model.
