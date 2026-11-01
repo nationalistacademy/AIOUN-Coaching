@@ -3,7 +3,7 @@
 Read this file before making any change. Then read `docs/AI-PROJECT-MEMORY.md`, `docs/AI-DECISIONS-AND-STATUS.md`, and the task-specific documentation.
 
 ## Mission
-Build and maintain AIOU Coaching as an independent, student-first learning-support platform. Help AIOU learners understand course material, practise, plan, and produce their own work. Prioritize reliable, accessible, mobile-first free tools and useful educational resources over infrastructure expansion.
+The immediate top-level mission is to make the existing public Blogger site genuinely AdSense-ready through original, accurate, useful, transparent, accessible, navigable and policy-compliant content and page experience, then grow its trusted reach among students across Pakistan. Approval and rankings are never guaranteed. Help AIOU learners understand course material, practise, plan, and produce their own work. Do not chase word counts, mass-publish AI pages, buy traffic, use click exchanges, fabricate trust signals or encourage ad clicks.
 
 ## Product identity
 - Public-facing brand: **AIOU Coaching**.
@@ -14,10 +14,12 @@ Build and maintain AIOU Coaching as an independent, student-first learning-suppo
 - Do not rebrand public pages as Nationalist Academy unless the owner explicitly asks.
 
 ## Priority order
-1. Make existing student-facing free tools useful, correct, accessible, and mobile-responsive.
-2. Improve the AI Content Studio as a supervised drafting/learning aid with clear academic-integrity boundaries.
-3. Improve educational content quality, discoverability, accessibility, privacy, and AdSense suitability.
-4. Only after the above are stable, revisit optional infrastructure and the LMS when explicitly requested.
+1. Resolve public Blogger identity, About/contact trust signals, accurate Privacy/Terms/Disclaimer and other AdSense/policy blockers; use `docs/ADSENSE-READINESS-AUDIT.md` as the active gate.
+2. Audit every public page/post for originality, accuracy, copyright, academic integrity, thin/duplicate content and official AIOU sourcing; improve, consolidate, noindex or remove as evidence supports.
+3. Ensure Blogger theme, navigation, mobile/desktop accessibility, page speed, SEO metadata, canonical/robots/sitemap and working tools meet a high user-experience standard.
+4. Build genuinely useful free student tools and original learning resources; improve AI Content Studio only as a supervised drafting/learning aid.
+5. Grow Pakistan-wide reach using real Search Console/GA4 evidence and opt-in distribution; no paid traffic, spam, click exchange or incentivized ad clicks.
+6. Only after the Blogger mission is stable, revisit optional infrastructure and LMS when explicitly requested.
 
 ## Non-negotiable working rules
 - Inspect the current repository, relevant files, workflows, tests, and branch before editing. Do not assume a remembered status is still current.
