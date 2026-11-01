@@ -147,3 +147,15 @@ Submit only when all are true:
 - Repository source edits do not update live Blogger pages. Live page/theme changes and AdSense review submissions require explicit owner action/approval.
 - Do not purchase Ahrefs/Windsor or any paid plan/API. Connect optional analytics/SEO integrations only after the owner chooses and confirms any cost.
 - No DNS, Cloudflare, Firebase/Supabase production, LMS, student records or authentication changes as part of this AdSense mission.
+## Supplemental urgent findings — admissions and academic-services claims
+
+11. **Spring 2027 admission pages currently claim 'Admissions Open' without a located official announcement.**
+   - Live examples include the Diplomas/Short Courses, PhD and Matric posts dated 30 October 2026. They state Spring 2027 admissions are open, show fee/eligibility/course-code tables, and include calls to confirm admission or purchase/support packages.
+   - At this audit time, the official AIOU Admission Open page did not surface a Spring 2027 advertisement. The official general ODL calendar shows a proposed Spring admission window of 01 January to 05 March, 2027; it is not itself a programme-specific admission advertisement. Programme-specific calendars and official notices take precedence.
+   - Action: immediately correct each live post so it clearly says **Spring 2027 admission announcement not yet verified / expected**, not 'open', unless the exact official programme notice is available. Remove or mark unverified every fee, eligibility, programme availability, course-code and deadline claim. Link the exact official notice when published. Preserve a useful URL if possible, but do not leave a false open-admissions claim live.
+
+12. **Some public academic-services wording can be read as ghostwriting or contract cheating.**
+   - The 2 November 2026 assignment-services post says 'Plan • Write • Excel', 'from planning to final submission', '100% Quality Work' and 'On-Time Delivery'. The PhD post advertises complete research support, synopsis/literature-review/thesis packages and 24/7 support. These claims need careful boundary-setting.
+   - Action: describe only legitimate tutoring, concept explanation, outlining, feedback on student-authored drafts, proofreading, citation-format guidance and document formatting. State clearly that students retain authorship; no one writes assessed assignments, dissertations or theses for submission on a student's behalf; no fabricated research/data/citations; no guaranteed marks or outcomes. Remove '100% quality', 'complete package' and delivery promises unless they refer to a legitimate, accurately described service.
+
+These are high-priority live corrections because they affect trust, factual accuracy and academic integrity, not merely SEO.
