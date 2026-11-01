@@ -1,7 +1,7 @@
 /* ==========================================================================
    AIOU Coaching — store.js
    Keeps Worker URL + model settings in localStorage; access tokens remain memory-only.
-   The Ollama API key remains server-side in Cloudflare.
+   Provider API keys remain server-side in Cloudflare.
    Exposes: window.AIOU.store
    ========================================================================== */
 (function (w) {
