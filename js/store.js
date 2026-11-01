@@ -1,6 +1,6 @@
 /* ==========================================================================
    AIOU Coaching — store.js
-   Keeps Worker URL + access token + model settings in localStorage.
+   Keeps Worker URL + model settings in localStorage; access tokens remain memory-only.
    The Ollama API key remains server-side in Cloudflare.
    Exposes: window.AIOU.store
    ========================================================================== */
@@ -14,6 +14,8 @@
     legacyToken: 'aw_token'
   };
 
+  var sessionTokens = Object.create(null);
+
   var MODELS = [
     { value: 'ollama/glm-5.3', label: 'GLM 5.3 — Ollama Cloud' },
     { value: 'ollama/gpt-oss:120b-cloud', label: 'GPT-OSS 120B — Ollama Cloud' },
@@ -25,7 +27,6 @@
     { value: 'claude/claude-sonnet-4-5', label: 'Claude Sonnet 4.5' },
     { value: 'claude/claude-haiku-4-5', label: 'Claude Haiku 4.5' },
     { value: 'codex/gpt-5-codex', label: 'GPT-5 Codex (configure API URL)' },
-    { value: 'freebuff/deepseek/deepseek-v4-flash', label: 'DeepSeek V4 Flash — Freebuff (configure URL)' }
   ];
 
   var DEFAULT_SYSTEM =
@@ -78,44 +79,78 @@
     return false;
   }
 
-  function normalizeId(o) {
+  function normalizeId(o, acceptSessionToken) {
     o = o || {};
+    var id = String(o.id || uid());
     var url = String(o.url || '').trim();
     var name = String(o.name || '').trim();
     if (!name) name = validUrl(url) ? host(url).split('.')[0] : 'ID';
+    if (acceptSessionToken && typeof o.token === 'string' && o.token.trim()) {
+      sessionTokens[id] = o.token.trim();
+    }
     return {
-      id: String(o.id || uid()),
+      id: id,
       name: name.slice(0, 40),
       url: url,
-      token: String(o.token || '').trim(),
-      model: isModel(o.model) ? o.model : 'ollama/glm-5.3',
+      token: sessionTokens[id] || '',
+      model: isModel(o.model) ? o.model : 'deepseek/deepseek-chat',
       enabled: o.enabled !== false
     };
   }
 
+  function persistedIds(list) {
+    return (list || []).map(function (o) {
+      return {
+        id: o.id, name: o.name, url: o.url,
+        model: o.model, enabled: o.enabled
+      };
+    });
+  }
+
   function migrate() {
     var url = '';
-    var token = '';
     try {
       url = (w.localStorage.getItem(KEYS.legacyUrl) || '').trim();
-      token = (w.localStorage.getItem(KEYS.legacyToken) || '').trim();
+      // Deliberately ignore and remove legacy browser-stored access tokens.
+      w.localStorage.removeItem(KEYS.legacyToken);
     } catch (e) { /* ignore */ }
     if (!validUrl(url)) return [];
-    var list = [normalizeId({ name: 'Worker 1', url: url, token: token })];
-    write(KEYS.ids, list);
+    var list = [normalizeId({ name: 'Worker 1', url: url }, false)];
+    write(KEYS.ids, persistedIds(list));
     return list;
   }
 
   function getIds() {
     var list = read(KEYS.ids, null);
     if (!Array.isArray(list)) list = migrate();
-    return (list || []).map(normalizeId);
+    var clean = (list || []).map(function (item) { return normalizeId(item, false); });
+    // Strip tokens saved by older versions from localStorage on first read.
+    write(KEYS.ids, persistedIds(clean));
+    try { w.localStorage.removeItem(KEYS.legacyToken); } catch (e) { /* ignore */ }
+    return clean;
   }
 
   function setIds(list) {
-    var clean = (list || []).map(normalizeId);
-    write(KEYS.ids, clean);
+    var clean = (list || []).map(function (item) { return normalizeId(item, true); });
+    write(KEYS.ids, persistedIds(clean));
     return clean;
+  }
+
+  function exportIds() {
+    return JSON.stringify({ version: 2, ids: persistedIds(getIds()) }, null, 2);
+  }
+
+  function importIds(text) {
+    var data = JSON.parse(text);
+    var list = Array.isArray(data) ? data : (data && data.ids);
+    if (!Array.isArray(list)) throw new Error('File me "ids" array nahi mila');
+    // Imported tokens are never restored; enter a fresh token in this browser session.
+    sessionTokens = Object.create(null);
+    return setIds(list.map(function (item) {
+      var clean = Object.assign({}, item);
+      delete clean.token;
+      return clean;
+    }));
   }
 
   function addId(partial) {
@@ -136,6 +171,7 @@
   }
 
   function removeId(id) {
+    delete sessionTokens[id];
     return setIds(getIds().filter(function (x) { return x.id !== id; }));
   }
 
