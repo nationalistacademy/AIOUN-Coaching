@@ -47,3 +47,9 @@
 - [Blogger Help — Fix mixed content on your blog](https://support.google.com/blogger/answer/6286127): review HTML in Blogger's post/page editor and use secure HTTPS resources.
 
 The tool's character and structure checks are editorial prompts only. There is no preferred word count and no SEO score or ranking guarantee.
+
+## Optional AI Worker connection
+
+The Studio now includes an optional Cloudflare Worker connection panel. It requires the editor to enter a verified HTTPS `workers.dev` root URL and a fresh `AUTH_TOKEN` for a single generation request. The endpoint is not prefilled, and the token is not saved in localStorage, saved drafts or exports. The connection test checks the hardened AIOU Coaching Worker service response and dynamically loads only the enabled model list. The Worker must be deployed with its mandatory rate-limit binding and exact origin allowlist before generation will work. See the [AI Worker security audit](https://github.com/nationalistacademy/AIOUN-Coaching/blob/feature/ollama-cloud-worker/docs/AI-WORKER-SECURITY-AUDIT.md).
+
+The legacy multi-ID store has also been changed on the Worker feature branch to keep tokens in page memory only, purge historical browser-stored tokens when read, and exclude tokens from import/export. Existing AI tools that depended on persistent browser tokens may require a fresh token entry each page session.
