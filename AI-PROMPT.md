@@ -37,6 +37,15 @@ The public brand is **AIOU Coaching**. The repository is hosted under **national
 - Use lawful, proportionate OSINT only; no doxxing, stalking, unauthorized access, or sensitive profiling.
 - Do not claim AIOU endorsement, legal-practice status, registrations, licences, or professional qualifications unless verified.
 
+## Blogger HTML and theme rules
+
+- Blogger Page body sources belong in `p/<exact-slug>.html` and map to `/p/<exact-slug>.html` after manual publication.
+- Blogger Post sources belong in `post/<topic>/post.html`; Blogger controls each public permalink.
+- Standalone app HTML stays in `tools/`.
+- Before writing Blogger HTML, read `docs/BLOGGER-THEME-COMPATIBILITY.md` and `docs/BLOGGER-HTML-CODING-RULES.md`, then inspect the current `theme/aioucoahing.xml`.
+- Write body fragments only; never add `html/head/body` wrappers or duplicate global theme elements. Scope CSS, support dark mode, mobile, accessibility and Urdu/English RTL/LTR.
+- Do not publish live Blogger pages/posts or upload theme XML without explicit approval.
+
 ## How to work
 
 1. Explain the task goal, scope, assumptions, and files you intend to change.
