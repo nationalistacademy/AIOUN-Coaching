@@ -23,6 +23,14 @@ The main goal is to give students free, practical tools that help them understan
 - Never commit secrets or personal/student data.
 - Verify current repository state; these notes may be stale.
 
+## Blogger HTML and theme rules
+- Blogger Page body sources: `p/<exact-slug>.html` → public `/p/<exact-slug>.html` after manual publication.
+- Blogger Post sources: `post/<topic>/post.html`; Blogger controls the public permalink.
+- Standalone app HTML remains in `tools/`.
+- Read `docs/BLOGGER-THEME-COMPATIBILITY.md` and `docs/BLOGGER-HTML-CODING-RULES.md`; inspect `theme/aioucoahing.xml` before coding.
+- Write body fragments only, never full document wrappers. Scope CSS and preserve JetTheme tokens, dark mode, responsive behaviour, accessibility and RTL/LTR.
+- Never publish Blogger content or upload XML without explicit owner approval.
+
 ## Work method
 1. Inspect repository and identify the smallest safe change that achieves the request.
 2. Summarize goal, scope, assumptions, and files to touch.
