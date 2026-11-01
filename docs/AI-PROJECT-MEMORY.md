@@ -11,6 +11,13 @@ AIOU Coaching is an independent educational support website and tools project fo
 **Repository owner/organization:** nationalistacademy  
 **Affiliation:** Independent; not an official AIOU website and not endorsed by AIOU.
 
+## 2. Current top-level mission: AdSense readiness and national reach
+- Immediate priority: make the public Blogger site genuinely AdSense-ready with original, accurate, helpful content; truthful identity and legal/privacy disclosures; clear navigation; excellent mobile UX; accessible working tools; and clean SEO/technical foundations.
+- Long-term objective: become a trusted, widely useful independent AIOU student resource across Pakistan, growing from actual student needs and measured search demand.
+- Approval, rankings and traffic are never guaranteed. Do not manufacture trust signals, publish thin mass-generated pages, buy traffic, use click exchanges, or encourage ad clicks.
+- Use `docs/ADSENSE-READINESS-AUDIT.md` as the current evidence-based checklist. Public Blogger content and repository source files can differ; verify both.
+- No AdSense review request, live Blogger publication, or live XML upload without explicit owner approval.
+
 ## 2. Owner's product philosophy
 - Build useful tools for students first, not infrastructure for its own sake.
 - Keep the essential student-facing experience free wherever practical.
