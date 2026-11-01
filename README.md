@@ -37,3 +37,6 @@ AIOU Coaching is an education and professional-coaching project operated by Nati
 Phase 1 business documents: [Business plan](business/business-plan.md), [Service catalog](business/service-catalog.md), [Pricing policy](business/pricing-policy.md), [Client workflow](business/client-workflow.md), [Professional and legal boundaries](business/legal-boundaries.md), and [Phase 1 checklist](docs/PHASE-1-BUSINESS-FOUNDATION.md).
 
 The business is not represented as an incorporated company, law firm, university, NGO, charity or government institution. Legal content is limited to general information unless appropriately qualified and authorized professionals are separately engaged. Public publishing and client-facing automation require human approval.
+
+## AIOU Coaching AI Content Studio
+The new [AI Content Studio](tools/ai-content-studio.html) is a browser-first editorial workspace for AIOU Coaching. It builds structured prompts, supports Urdu-English content planning, provides an HTML editor and preview, runs basic SEO/editorial checks, and exports Blogger-ready draft HTML. See [its scope and safeguards](docs/AI-CONTENT-STUDIO.md). It does not call a paid AI API, auto-publish, or change the live Blogger site; manual human review remains required.
