@@ -6,6 +6,22 @@ This folder contains **Blogger Page body HTML**. Its file names are intentionall
 - `p/tools.html` is the All Tools page body and maps to `/p/tools.html`.
 - `p/about.html` maps to `/p/about.html`.
 
+## Current source inventory
+
+| File | Purpose |
+|---|---|
+| `about.html` | About and independence statement |
+| `contact.html` | Contact page body (external form configuration must be verified) |
+| `faqs.html` | Frequently asked questions |
+| `how-it-works.html` | Service/process explainer |
+| `privacy.html` | Privacy notice (verify processors and data practices) |
+| `terms.html` | Terms of use |
+| `disclaimer.html` | Independence and educational-use disclaimer |
+| `dmca.html` | Copyright notice contact instructions |
+| `aiou-tool-kit.html` | Tool directory page |
+| `tools.html` | All tools directory page |
+| `tool-template.html` | Reusable tool-page body starter; not a live page by itself |
+
 ## Publishing workflow
 
 1. Open the AIOU Coaching Blogger dashboard → **Pages**.
