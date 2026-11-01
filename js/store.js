@@ -178,17 +178,6 @@
     return getIds().filter(function (x) { return x.enabled && validUrl(x.url); });
   }
 
-  function exportIds() {
-    return JSON.stringify({ version: 2, ids: getIds() }, null, 2);
-  }
-
-  function importIds(text) {
-    var data = JSON.parse(text);
-    var list = Array.isArray(data) ? data : (data && data.ids);
-    if (!Array.isArray(list)) throw new Error('File me "ids" array nahi mila');
-    return setIds(list);
-  }
-
   function getSettings() {
     var s = read(KEYS.settings, {}) || {};
     return Object.assign({}, DEFAULT_SETTINGS, s);
