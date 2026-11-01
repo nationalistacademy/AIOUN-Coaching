@@ -1,0 +1,55 @@
+# AIOU Coaching AI Content Studio — Phase 3 MVP
+
+**Status:** Draft implementation on `feat/professional-coaching-business-foundation`  
+**Public brand:** AIOU Coaching  
+**Publishing:** Manual approval only  
+**Runtime:** Static browser app; no paid API, database, external AI endpoint or auto-publishing.
+
+## What this MVP does
+
+- Builds a structured writing prompt for an AI assistant chosen by the editor.
+- Supports AIOU guides, exam-preparation content, free-tool guides, research-skills explainers, service pages, general legal information and education updates.
+- Supports Urdu, English, Roman Urdu and mixed-language briefs.
+- Provides a browser-based HTML draft editor, FAQ input, internal-link input and rendered preview.
+- Runs basic editorial checks for title/meta length, keyword presence, headings, slug, source notes, FAQs and local approval reminder.
+- Exports Blogger-compatible article-body HTML or copies it to the clipboard.
+- Saves a draft only in the current browser's local storage when the user chooses Save.
+
+## What it deliberately does not do
+
+- It does not call an AI provider or require an API key. The prompt is copied to an AI assistant selected by the editor.
+- It does not crawl websites, run OSINT, verify citations, check live AIOU deadlines or guarantee factual correctness.
+- It does not publish to Blogger, update the Blogger XML theme, submit URLs to Search Console or send messages.
+- It does not claim that its heuristic checks predict rankings, indexing or AdSense approval.
+- It does not store drafts on a server. Browser storage may be cleared by the user or browser.
+
+## Editorial safeguards
+
+1. Verify university notices, course codes, dates and policies against current official AIOU sources.
+2. Use primary government or court sources for legal-information content; state jurisdiction and source date. Do not present the tool as legal advice.
+3. Preserve academic integrity: students remain authors of assessed work; no plagiarism, impersonation or fabricated research.
+4. Remove confidential student/client information before using any third-party AI service.
+5. Review HTML, links, accessibility and mobile rendering before manual Blogger publication.
+6. Use only schema that accurately matches visible page content; this MVP does not generate structured data.
+
+## Suggested next increments
+
+- Add a human-reviewed official-source research panel using a separately approved research provider.
+- Add accessible DOCX export and a saved draft library only after privacy and storage requirements are approved.
+- Add optional AI-provider integration only after endpoint ownership, authentication, privacy, rate limits, cost and secret handling are verified.
+- Add automated HTML linting and browser QA. Keep Blogger publishing manual unless a separate explicit approval and secure workflow are established.
+
+## Official editorial references
+
+- [Google Search Central — SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide): useful, original, well-organized, reliable, people-first content; headings should help readers navigate.
+- [Google Search Essentials](https://developers.google.com/search/docs/essentials): best practices do not guarantee crawling, indexing or serving in results.
+- [Google Search Central — helpful, people-first content](https://developers.google.com/search/blog/2022/08/helpful-content-update): do not mass-produce search-first content or write to an assumed preferred word count.
+- [Blogger Help — Fix mixed content on your blog](https://support.google.com/blogger/answer/6286127): review HTML in Blogger's post/page editor and use secure HTTPS resources.
+
+The tool's character and structure checks are editorial prompts only. There is no preferred word count and no SEO score or ranking guarantee.
+
+## Optional AI Worker connection
+
+The Studio now includes an optional Cloudflare Worker connection panel. It requires the editor to enter a verified HTTPS `workers.dev` root URL and a fresh `AUTH_TOKEN` for a single generation request. The endpoint is not prefilled, and the token is not saved in localStorage, saved drafts or exports. The connection test checks the hardened AIOU Coaching Worker service response and dynamically loads only the enabled model list. The Worker must be deployed with its mandatory rate-limit binding and exact origin allowlist before generation will work. See the [AI Worker security audit](https://github.com/nationalistacademy/AIOUN-Coaching/blob/feature/ollama-cloud-worker/docs/AI-WORKER-SECURITY-AUDIT.md).
+
+The legacy multi-ID store has also been changed on the Worker feature branch to keep tokens in page memory only, purge historical browser-stored tokens when read, and exclude tokens from import/export. Existing AI tools that depended on persistent browser tokens may require a fresh token entry each page session.
