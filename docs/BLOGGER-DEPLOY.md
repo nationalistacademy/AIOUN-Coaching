@@ -46,6 +46,7 @@ Page ka URL waisa hi rakhein jo neeche table me hai.
 | Page | URL | File to paste | Abhi live? |
 | --- | --- | --- | --- |
 | AIOU Tool Kit (all tools) | `/p/aiou-tool-kit.html` | `pages/aiou-tool-kit.html` | ❌ 404 — **ye pehle banayein** |
+| Services (professional coaching) | `/p/services.html` | `pages/services.html` | 📝 Draft in PR #19 — proprietor approval required; not published |
 | About | `/p/about.html` | `pages/about.html` | ✅ 200 (already) |
 | Contact | `/p/contact.html` | `pages/contact.html` | ✅ 200 |
 | FAQs | `/p/faqs.html` | `pages/faqs.html` | ✅ 200 |
@@ -56,6 +57,8 @@ Page ka URL waisa hi rakhein jo neeche table me hai.
 | DMCA | `/p/dmca.html` | `pages/dmca.html` | ✅ 200 |
 
 ---
+
+**Business page note:** `pages/services.html`, `pages/about.html` and `pages/disclaimer.html` contain draft revisions on the feature branch. Do not paste or publish them until the proprietor approves the service scope, pricing approach, contact channel and legal wording.
 
 ## 3. Tools — live URLs aur jo baqi hain
 
