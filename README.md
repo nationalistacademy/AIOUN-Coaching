@@ -30,3 +30,14 @@ The companion app is separate from Blogger and the Blogger XML must be uploaded 
 Check GitHub Actions before claiming deployment or browser tests passed: [Browser QA](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/browser-qa.yml), [Pages deploy](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/deploy-pages.yml), [LMS security tests](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/lms-security-e2e.yml).
 
 **Poora Blogger deploy ek page par:** [docs/BLOGGER-DEPLOY.md](docs/BLOGGER-DEPLOY.md) — theme upload, page-by-page paste list, live URL statuses, menu aur Search Console.
+
+
+## AI agent memory and contribution rules
+To hand this project to another AI assistant or developer, start with [AGENTS.md](AGENTS.md), then read:
+- [Project memory](docs/AI-PROJECT-MEMORY.md)
+- [Quick model memory card](docs/AI-MODEL-MEMORY.md)
+- [Decisions and current priorities](docs/AI-DECISIONS-AND-STATUS.md)
+- [Academic integrity, legal and privacy guardrails](docs/ACADEMIC-INTEGRITY-AND-LEGAL-GUARDRAILS.md)
+- [Copy/paste AI handoff prompt](docs/AI-HANDOFF-PROMPT.md)
+
+These files preserve product intent and safety boundaries across AI models. Always verify live code, branches, deployments, and provider configuration because memory notes can become stale.
