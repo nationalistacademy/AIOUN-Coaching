@@ -34,7 +34,16 @@ The shared theme is [`../theme/aioucoahing.xml`](../theme/aioucoahing.xml). It i
 
 ## File readiness
 
-Files migrated from the former `pages/` directory are preserved as source snapshots. A source file is **not automatically approved for publishing**. Review its placeholders, factual claims, contact details, forms, external scripts, and live URL before publishing. See `docs/BLOGGER-HTML-CODING-RULES.md`.
+Files migrated from the former `pages/` directory are preserved as source snapshots. A source file is **not automatically approved for publishing**. Review its placeholders, factual claims, contact details, forms, external scripts, and live URL before publishing. See [the coding rules](../docs/BLOGGER-HTML-CODING-RULES.md).
+
+### Known manual review items
+- `about.html`: confirm the operator/organization description and structured data are still accurate.
+- `contact.html`: verify the public email/WhatsApp details, response-time promises, Google Fonts dependency, and Formspree endpoint before enabling the form.
+- `privacy.html`: verify that each named processor/service (Analytics, AdSense, WhatsApp, Formspree, JazzCash and Easypaisa) is actually used and that the data/retention statements match reality.
+- `faqs.html` and `how-it-works.html`: verify phone details, service descriptions, prices, availability and response promises.
+- `dmca.html`: obtain jurisdiction-specific legal review before treating the notice process as a complete legal policy.
+
+These checks were not represented as complete by the folder migration. Do not publish a source snapshot until its specific checks pass.
 
 ## New page naming
 
