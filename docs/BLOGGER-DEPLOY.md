@@ -1,7 +1,7 @@
 # Blogger deploy — sab kuch ek jagah
 
 Ye page poora kaam ek jagah rakhta hai: theme, pages, tools, menu aur Search Console.
-Har URL ka status **live blog par check** kiya gaya hai (October 2026).
+Live URL status neeche October 2026 ke pichhle audit ka snapshot hai; is change mein live Blogger URLs dobara verify nahi kiye gaye.
 
 ---
 
@@ -40,20 +40,22 @@ hover aur shop cart icon bhi live honge.
 
 ## 2. Pages banayein — **Page body**
 
+Canonical source folder: repository-root `p/`. File names match the Blogger `/p/<slug>.html` page slug. See [`../p/README.md`](../p/README.md) and [`BLOGGER-HTML-CODING-RULES.md`](BLOGGER-HTML-CODING-RULES.md).
+
 Har file ke liye: Blogger → **Pages** → New page → right **HTML view** → paste → **Publish**.
 Page ka URL waisa hi rakhein jo neeche table me hai.
 
 | Page | URL | File to paste | Abhi live? |
 | --- | --- | --- | --- |
-| AIOU Tool Kit (all tools) | `/p/aiou-tool-kit.html` | `pages/aiou-tool-kit.html` | ❌ 404 — **ye pehle banayein** |
-| About | `/p/about.html` | `pages/about.html` | ✅ 200 (already) |
-| Contact | `/p/contact.html` | `pages/contact.html` | ✅ 200 |
-| FAQs | `/p/faqs.html` | `pages/faqs.html` | ✅ 200 |
-| How it works | `/p/how-it-works.html` | `pages/how-it-works.html` | ✅ 200 |
-| Privacy | `/p/privacy.html` | `pages/privacy.html` | ✅ 200 |
-| Terms | `/p/terms.html` | `pages/terms.html` | ✅ 200 |
-| Disclaimer | `/p/disclaimer.html` | `pages/disclaimer.html` | ✅ 200 |
-| DMCA | `/p/dmca.html` | `pages/dmca.html` | ✅ 200 |
+| AIOU Tool Kit (all tools) | `/p/aiou-tool-kit.html` | `p/aiou-tool-kit.html` | ❌ 404 — **ye pehle banayein** |
+| About | `/p/about.html` | `p/about.html` | ✅ 200 (already) |
+| Contact | `/p/contact.html` | `p/contact.html` | ✅ 200 |
+| FAQs | `/p/faqs.html` | `p/faqs.html` | ✅ 200 |
+| How it works | `/p/how-it-works.html` | `p/how-it-works.html` | ✅ 200 |
+| Privacy | `/p/privacy.html` | `p/privacy.html` | ✅ 200 |
+| Terms | `/p/terms.html` | `p/terms.html` | ✅ 200 |
+| Disclaimer | `/p/disclaimer.html` | `p/disclaimer.html` | ✅ 200 |
+| DMCA | `/p/dmca.html` | `p/dmca.html` | ✅ 200 |
 
 ---
 
@@ -76,7 +78,7 @@ hai (page par “mashqi” ka zikr 0 baar hai). Fix: ya Mashqi Form page banayei
 label/link theek karein.
 
 **Tools page update karne ka tareeqa:** Blogger → Pages → `tools.html` → HTML view → repo ki
-`tools/tools.html` paste karein. Is me links ab verified URLs par hain, Mashqi button par
+`p/tools.html` paste karein. Is me links ab verified URLs par hain, Mashqi button par
 “jald aa raha hai” likha hai, aur crystal glass hover bhi shamil hai.
 
 > Chhote purane naam (`/p/guess-paper-generator.html`, `/p/bs-bba-guess-paper.html`,
@@ -111,9 +113,11 @@ Detail: [`../google-search/README.md`](../google-search/README.md).
 
 ## 6. Naya post likhna
 
-`posts/post-template.html` copy karein → Blogger → Posts → HTML view → paste → apna content
-bharein. Isme GEO quick-answer box, in-article ad slot, FAQ + BlogPosting schema pehle se hain.
-Qawaid: [`../posts/README.md`](../posts/README.md).
+Canonical source folder: repository-root `post/`. New post source folders may use `post/<topic>/post.html`; Blogger still controls the public permalink.
+
+`post/post-template.html` copy karein → Blogger → Posts → HTML view → paste → apna content
+bharein. Is template mein quick-answer block aur theme-friendly body structure hai. FAQ/Article schema ya AdSense code tabhi add karein jab theme output aur exact approved configuration verify ho.
+Qawaid: [`../post/README.md`](../post/README.md).
 
 ---
 

@@ -48,8 +48,8 @@ Use a short FAQ when it answers real questions readers have. The [Google Search 
 
 - [SEO checklist](../seo/README.md)
 - [Google Search Console and structured data](../google-search/README.md)
-- [Blogger Pages](../pages/README.md)
-- [Blogger Posts](../posts/README.md)
-- [AIOU Coaching About page source](../pages/about.html)
+- [Blogger Pages](../p/README.md)
+- [Blogger Posts](../post/README.md)
+- [AIOU Coaching About page source](../p/about.html)
 
 **Reminder:** GEO is a content-quality practice, not a promise of ranking or AI search visibility.
