@@ -116,7 +116,7 @@ Detail: [`../google-search/README.md`](../google-search/README.md).
 Canonical source folder: repository-root `post/`. New post source folders may use `post/<topic>/post.html`; Blogger still controls the public permalink.
 
 `post/post-template.html` copy karein → Blogger → Posts → HTML view → paste → apna content
-bharein. Isme GEO quick-answer box, in-article ad slot, FAQ + BlogPosting schema pehle se hain.
+bharein. Is template mein quick-answer block aur theme-friendly body structure hai. FAQ/Article schema ya AdSense code tabhi add karein jab theme output aur exact approved configuration verify ho.
 Qawaid: [`../post/README.md`](../post/README.md).
 
 ---
