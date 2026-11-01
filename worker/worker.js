@@ -1,146 +1,338 @@
-// AIOU Coaching AI Worker — DeepSeek API proxy
-// Deploy from the worker/ folder on Cloudflare Workers.
-//
-// Secrets (Cloudflare dashboard or `wrangler secret put`):
-//   DEEPSEEK_API_KEY   required — your DeepSeek key, stays server side
-//   AUTH_TOKEN         required — one token, or many separated by commas
-//
-// The browser never sees the DeepSeek key. Tools send an X-Auth-Token header
-// that must match one of the tokens above; kai "IDs" = kai tokens.
+// AIOU Coaching AI Worker — hardened multi-provider gateway.
+// Provider keys and AUTH_TOKEN must exist only as Cloudflare Worker Secrets.
+// AI requests fail closed unless the Cloudflare AI_RATE_LIMITER binding exists.
 
-const DEEPSEEK_URL = 'https://api.deepseek.com/v1/chat/completions';
-const MODELS = ['deepseek-chat', 'deepseek-reasoner'];
-
-const cors = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS, GET',
-  'Access-Control-Allow-Headers': 'Content-Type, X-Auth-Token',
-  'Access-Control-Max-Age': '86400'
-};
+const DEFAULT_ORIGINS = [
+  'https://aioucoaching.blogspot.com',
+  'https://aioucoaching.netlify.app',
+  'https://nationalistacademy.github.io'
+];
+const DEFAULT_MODELS = ['deepseek/deepseek-chat', 'deepseek/deepseek-reasoner'];
+const MAX_BODY_BYTES = 16384;
+const MAX_MESSAGES = 12;
+const MAX_MESSAGE_CHARS = 6000;
+const MAX_TOTAL_CHARS = 14000;
 
 export default {
   async fetch(request, env) {
+    const origin = request.headers.get('Origin') || '';
+    const allowedOrigins = getAllowedOrigins(env);
+    const originAllowed = !!origin && allowedOrigins.includes(origin);
+    const cors = originAllowed ? {
+      'Access-Control-Allow-Origin': origin,
+      'Vary': 'Origin',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, X-Auth-Token',
+      'Access-Control-Max-Age': '600'
+    } : {};
+
     if (request.method === 'OPTIONS') {
-      return new Response(null, { headers: cors });
+      if (!originAllowed) return json({ error: 'Origin not allowed' }, 403);
+      return new Response(null, { status: 204, headers: securityHeaders(cors) });
     }
 
-    // Health check: useful when the studio tests several Worker URLs at once.
     if (request.method === 'GET') {
       return json({
         ok: true,
-        service: 'aiou-coaching-tools',
-        models: MODELS,
+        service: 'aiou-coaching-multi-provider',
         authRequired: true,
-        tokens: countTokens(env)
-      }, 200);
+        models: getAvailableModels(env)
+      }, 200, cors);
     }
 
-    if (request.method !== 'POST') {
-      return json({ error: 'Method not allowed. Use POST.' }, 405);
+    if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405, cors);
+    if (!originAllowed) return json({ error: 'Origin not allowed' }, 403);
+    if (!/^application\/json(?:\s*;|$)/i.test(request.headers.get('Content-Type') || '')) {
+      return json({ error: 'Content-Type must be application/json' }, 415, cors);
     }
+    if (!hasTokens(env)) return json({ error: 'Worker authentication is not configured' }, 503, cors);
+    if (!authorized(request, env)) return json({ error: 'Unauthorized' }, 401, cors);
 
-    if (!env.DEEPSEEK_API_KEY) {
-      return json({ error: 'Server setup incomplete: DEEPSEEK_API_KEY secret missing' }, 500);
+    // Fail closed: configure this binding in Cloudflare before enabling paid/provider traffic.
+    if (!env.AI_RATE_LIMITER || typeof env.AI_RATE_LIMITER.limit !== 'function') {
+      return json({ error: 'AI service is not enabled: rate-limit binding is missing' }, 503, cors);
     }
-
-    if (!String(env.AUTH_TOKEN || '').split(',').some((t) => t.trim())) {
-      return json({ error: 'Server setup incomplete: AUTH_TOKEN secret missing. Configure it before enabling AI requests.' }, 503);
-    }
-
-    if (!authorized(request, env)) {
-      return json({ error: 'Unauthorized — X-Auth-Token galat hai ya missing' }, 401);
+    const ip = request.headers.get('CF-Connecting-IP') || '';
+    if (!ip) return json({ error: 'Client network identity unavailable' }, 403, cors);
+    try {
+      const rate = await env.AI_RATE_LIMITER.limit({ key: 'ai-content-studio:' + ip });
+      if (!rate || rate.success !== true) {
+        return json({ error: 'Rate limit reached. Please try again later.' }, 429, cors, { 'Retry-After': '60' });
+      }
+    } catch (_) {
+      return json({ error: 'AI service is temporarily unavailable' }, 503, cors);
     }
 
     let body;
     try {
-      body = await request.json();
-    } catch {
-      return json({ error: 'Invalid JSON body' }, 400);
+      body = await readBoundedJson(request, MAX_BODY_BYTES);
+    } catch (error) {
+      return json({ error: error && error.status === 413 ? 'Request too large' : 'Invalid JSON request' },
+        error && error.status ? error.status : 400, cors);
     }
 
-    if (!Array.isArray(body.messages) || body.messages.length === 0) {
-      return json({ error: 'messages[] array is required' }, 400);
+    const messagesResult = validateMessages(body && body.messages);
+    if (!messagesResult.ok) return json({ error: messagesResult.error }, 400, cors);
+
+    const availableModels = getAvailableModels(env);
+    const requestedModel = String((body && body.model) || env.DEFAULT_MODEL || availableModels[0] || '');
+    const parsed = parseModel(requestedModel);
+    if (!availableModels.includes(requestedModel)) {
+      return json({ error: 'Model is not enabled for this Worker' }, 400, cors);
     }
 
-    const model = MODELS.includes(body.model) ? body.model : MODELS[0];
-    const payload = {
-      model,
-      messages: body.messages,
-      temperature: clamp(num(body.temperature, 0.7), 0, 2),
-      max_tokens: clamp(num(body.max_tokens, 4000), 16, 8192),
-      stream: false
-    };
-
-    if (body.json === true) {
-      payload.response_format = { type: 'json_object' };
-    }
+    const timeoutMs = clamp(num(env.AI_TIMEOUT_MS, 60000), 10000, 90000);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), Number(env.AI_TIMEOUT_MS) || 120000);
-
-      const r = await fetch(DEEPSEEK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${env.DEEPSEEK_API_KEY}`
-        },
-        body: JSON.stringify(payload),
-        signal: controller.signal
-      }).finally(() => clearTimeout(timeout));
-
-      const raw = await r.text();
-      let data;
-      try {
-        data = JSON.parse(raw);
-      } catch {
-        return json({ error: 'DeepSeek ne JSON ke ilawa jawab diya', detail: raw.slice(0, 300) }, 502);
-      }
-
-      if (!r.ok) {
-        return json({
-          error: data.error?.message || 'DeepSeek API error',
-          model,
-          status: r.status
-        }, r.status);
-      }
-
-      return json(data, 200);
-    } catch (e) {
-      const msg = e && e.name === 'AbortError' ? 'DeepSeek timeout' : 'Upstream error: ' + (e && e.message);
-      return json({ error: msg }, 504);
+      const result = await callProvider(parsed.provider, parsed.model, body, env, controller.signal);
+      return json(toOpenAIResponse(parsed.provider, parsed.model, result), 200, cors);
+    } catch (error) {
+      const status = error && error.name === 'AbortError' ? 504 :
+        (Number(error && error.status) >= 400 && Number(error && error.status) < 600 ? Number(error.status) : 502);
+      return json({
+        error: error && error.name === 'AbortError' ? 'AI provider timeout' : 'AI provider request failed',
+        provider: parsed.provider,
+        status: status
+      }, status, cors);
+    } finally {
+      clearTimeout(timer);
     }
   }
 };
 
+function parseModel(value) {
+  const raw = String(value || '');
+  const i = raw.indexOf('/');
+  if (i < 1) return { provider: 'deepseek', model: raw };
+  return { provider: raw.slice(0, i).toLowerCase(), model: raw.slice(i + 1) };
+}
+
+function getAllowedModels(env) {
+  const configured = String(env.ALLOWED_MODELS || DEFAULT_MODELS.join(','))
+    .split(',').map(x => x.trim()).filter(Boolean);
+  return configured.filter(x => {
+    const parsed = parseModel(x);
+    return ['ollama', 'openrouter', 'deepseek', 'claude'].includes(parsed.provider) &&
+      !!parsed.model && parsed.model.length <= 120;
+  });
+}
+
+function getAvailableModels(env) {
+  return getAllowedModels(env).filter(value => {
+    const provider = parseModel(value).provider;
+    if (provider === 'ollama') return !!env.OLLAMA_API_KEY;
+    if (provider === 'openrouter') return !!env.OPENROUTER_API_KEY;
+    if (provider === 'deepseek') return !!env.DEEPSEEK_API_KEY;
+    if (provider === 'claude') return !!env.CLAUDE_API_KEY;
+    return false;
+  });
+}
+
+async function callProvider(provider, model, body, env, signal) {
+  const messages = body.messages;
+  const maxTokens = clamp(num(body.max_tokens, 1800), 16, 2048);
+  const temperature = clamp(num(body.temperature, 0.4), 0, 1.2);
+
+  if (provider === 'ollama') {
+    requireSecret(env.OLLAMA_API_KEY);
+    return fetchJson('https://ollama.com/api/chat', {
+      model: model, messages: messages, stream: false,
+      options: { temperature: temperature, num_predict: maxTokens }
+    }, { Authorization: 'Bearer ' + env.OLLAMA_API_KEY }, signal);
+  }
+
+  if (provider === 'deepseek') {
+    requireSecret(env.DEEPSEEK_API_KEY);
+    const payload = { model: model, messages: messages, stream: false, max_tokens: maxTokens };
+    if (model !== 'deepseek-reasoner') {
+      payload.temperature = temperature;
+      if (body.json === true) payload.response_format = { type: 'json_object' };
+    }
+    return fetchJson('https://api.deepseek.com/chat/completions', payload, {
+      Authorization: 'Bearer ' + env.DEEPSEEK_API_KEY
+    }, signal);
+  }
+
+  if (provider === 'openrouter') {
+    requireSecret(env.OPENROUTER_API_KEY);
+    return fetchJson('https://openrouter.ai/api/v1/chat/completions', {
+      model: model, messages: messages, stream: false,
+      temperature: temperature, max_tokens: maxTokens,
+      ...(body.json === true ? { response_format: { type: 'json_object' } } : {})
+    }, {
+      Authorization: 'Bearer ' + env.OPENROUTER_API_KEY,
+      'HTTP-Referer': 'https://aioucoaching.blogspot.com/',
+      'X-Title': 'AIOU Coaching'
+    }, signal);
+  }
+
+  if (provider === 'claude') {
+    requireSecret(env.CLAUDE_API_KEY);
+    const messagesForClaude = messages.filter(m => m.role !== 'system');
+    const system = messages.filter(m => m.role === 'system').map(m => m.content).join('\n\n');
+    const data = await fetchJson('https://api.anthropic.com/v1/messages', {
+      model: model, messages: messagesForClaude, system: system,
+      max_tokens: maxTokens, temperature: temperature
+    }, {
+      'x-api-key': env.CLAUDE_API_KEY,
+      'anthropic-version': '2023-06-01'
+    }, signal);
+    return {
+      model: data.model || model,
+      choices: [{
+        message: {
+          role: 'assistant',
+          content: (data.content || []).filter(x => x.type === 'text').map(x => x.text).join('\n')
+        },
+        finish_reason: data.stop_reason || 'stop'
+      }],
+      usage: data.usage || {}
+    };
+  }
+
+  throw httpError(400, 'Unsupported provider');
+}
+
+async function fetchJson(url, payload, headers, signal) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: Object.assign({ 'Content-Type': 'application/json' }, headers || {}),
+    body: JSON.stringify(payload),
+    signal,
+    redirect: 'error'
+  });
+  const raw = await response.text();
+  let data;
+  try { data = JSON.parse(raw); } catch (_) { throw httpError(502, 'Invalid provider response'); }
+  if (!response.ok) throw httpError(response.status, 'Provider request failed');
+  return data;
+}
+
+function toOpenAIResponse(provider, model, data) {
+  if (data && Array.isArray(data.choices) && data.choices[0]) return data;
+  if (provider === 'ollama') {
+    const message = data && data.message ? data.message : {};
+    const content = String(message.content || '');
+    if (!content.trim()) throw httpError(502, 'Empty provider response');
+    return {
+      id: data.id || ('ollama-' + Date.now()),
+      object: 'chat.completion',
+      created: Math.floor(Date.now() / 1000),
+      model: data.model || model,
+      choices: [{
+        index: 0,
+        message: { role: 'assistant', content: content },
+        finish_reason: data.done_reason || 'stop'
+      }],
+      usage: {
+        prompt_tokens: num(data.prompt_eval_count, 0),
+        completion_tokens: num(data.eval_count, 0),
+        total_tokens: num(data.prompt_eval_count, 0) + num(data.eval_count, 0)
+      }
+    };
+  }
+  throw httpError(502, 'Unexpected provider response');
+}
+
+async function readBoundedJson(request, maxBytes) {
+  const headerLength = Number(request.headers.get('Content-Length') || 0);
+  if (headerLength > maxBytes) throw httpError(413, 'Request too large');
+  if (!request.body) throw httpError(400, 'Missing request body');
+  const reader = request.body.getReader();
+  const chunks = [];
+  let total = 0;
+  while (true) {
+    const part = await reader.read();
+    if (part.done) break;
+    total += part.value.byteLength;
+    if (total > maxBytes) {
+      try { await reader.cancel(); } catch (_) {}
+      throw httpError(413, 'Request too large');
+    }
+    chunks.push(part.value);
+  }
+  const merged = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) { merged.set(chunk, offset); offset += chunk.byteLength; }
+  return JSON.parse(new TextDecoder().decode(merged));
+}
+
+function validateMessages(messages) {
+  if (!Array.isArray(messages) || messages.length < 1 || messages.length > MAX_MESSAGES) {
+    return { ok: false, error: 'messages must contain 1–12 items' };
+  }
+  let total = 0;
+  let hasUser = false;
+  for (const message of messages) {
+    if (!message || !['system', 'user', 'assistant'].includes(message.role) ||
+        typeof message.content !== 'string' || message.content.length > MAX_MESSAGE_CHARS) {
+      return { ok: false, error: 'Each message must have an allowed role and plain-text content' };
+    }
+    if (message.role === 'user') hasUser = true;
+    total += message.content.length;
+    if (total > MAX_TOTAL_CHARS) return { ok: false, error: 'Combined message content is too long' };
+  }
+  if (!hasUser) return { ok: false, error: 'At least one user message is required' };
+  return { ok: true };
+}
+
+function getAllowedOrigins(env) {
+  const configured = String(env.ALLOWED_ORIGINS || '').split(',').map(x => x.trim()).filter(Boolean);
+  const candidates = configured.length ? configured : DEFAULT_ORIGINS;
+  return candidates.filter(value => {
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && url.origin === value && url.username === '' && url.password === '';
+    } catch (_) { return false; }
+  });
+}
+
 function authorized(request, env) {
-  const configured = String(env.AUTH_TOKEN || '')
-    .split(',')
-    .map((t) => t.trim())
-    .filter(Boolean);
-  if (configured.length === 0) return false; // fail closed: never expose an unauthenticated API proxy
-  const sent = String(request.headers.get('X-Auth-Token') || '').trim();
-  return !!sent && configured.includes(sent);
+  const sent = String(request.headers.get('X-Auth-Token') || '');
+  if (!sent || sent.length > 256) return false;
+  const configured = String(env.AUTH_TOKEN || '').split(',').map(x => x.trim()).filter(Boolean);
+  return configured.some(token => constantTimeEqual(sent, token));
 }
 
-function countTokens(env) {
-  return String(env.AUTH_TOKEN || '')
-    .split(',')
-    .map((t) => t.trim())
-    .filter(Boolean).length;
+function constantTimeEqual(a, b) {
+  const left = new TextEncoder().encode(String(a));
+  const right = new TextEncoder().encode(String(b));
+  let diff = left.length ^ right.length;
+  const length = Math.max(left.length, right.length);
+  for (let i = 0; i < length; i++) diff |= (left[i] || 0) ^ (right[i] || 0);
+  return diff === 0;
 }
 
+function hasTokens(env) {
+  return String(env.AUTH_TOKEN || '').split(',').some(x => x.trim().length > 0);
+}
+function requireSecret(value) {
+  if (!value) throw httpError(503, 'Provider is not configured');
+}
 function num(value, fallback) {
   return typeof value === 'number' && isFinite(value) ? value : fallback;
 }
-
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
-
-function json(obj, status) {
-  return new Response(JSON.stringify(obj), {
+function httpError(status, message) {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+}
+function securityHeaders(extra) {
+  return Object.assign({
+    'Content-Type': 'application/json; charset=utf-8',
+    'Cache-Control': 'no-store',
+    'X-Content-Type-Options': 'nosniff',
+    'Referrer-Policy': 'no-referrer'
+  }, extra || {});
+}
+function json(value, status, cors, extra) {
+  return new Response(JSON.stringify(value), {
     status: status || 200,
-    headers: { ...cors, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+    headers: securityHeaders(Object.assign({}, cors || {}, extra || {}))
   });
 }

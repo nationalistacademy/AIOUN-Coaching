@@ -1,11 +1,32 @@
 name = "aiou-coaching-tools"
 main = "worker.js"
-compatibility_date = "2024-01-01"
+compatibility_date = "2026-10-31"
 
-# Optional: override the upstream timeout (ms)
-# [vars]
-# AI_TIMEOUT_MS = "120000"
-
-# Secrets (never commit):
-#   npx wrangler secret put DEEPSEEK_API_KEY
-#   npx wrangler secret put AUTH_TOKEN        # one token, or many separated by commas
+# Provider API keys and AUTH_TOKEN must be Cloudflare Worker Secrets.
+# Never put their values in this file, source code, browser storage, or HTML.
+#
+# Required secrets:
+#   AUTH_TOKEN
+#   DEEPSEEK_API_KEY (default model allowlist uses DeepSeek Chat / Reasoner)
+# Optional provider secrets:
+#   OLLAMA_API_KEY
+#   OPENROUTER_API_KEY
+#   CLAUDE_API_KEY
+#
+# Optional plain-text variables:
+#   ALLOWED_ORIGINS = "https://aioucoaching.blogspot.com,https://aioucoaching.netlify.app,https://nationalistacademy.github.io"
+#   ALLOWED_MODELS = "deepseek/deepseek-chat,deepseek/deepseek-reasoner"
+#   DEFAULT_MODEL = "deepseek/deepseek-chat"
+#   AI_TIMEOUT_MS = "60000"
+#
+# MANDATORY BEFORE AI REQUESTS:
+# Configure a Cloudflare Workers Rate Limiting binding named AI_RATE_LIMITER.
+# Use a unique positive-integer namespace_id assigned for this Worker in your
+# Cloudflare account and a simple limit such as 5 requests per 60 seconds.
+# The Worker fails closed (503) if this binding is missing.
+#
+# Cloudflare Rate Limiting is approximate and per Cloudflare location.
+# Set provider-side spend/usage limits as an additional cost-control measure.
+#
+# Deploy only after the security checklist in ../docs/AI-WORKER-SECURITY-AUDIT.md
+# has been completed and a fresh AUTH_TOKEN has been created in Cloudflare.
