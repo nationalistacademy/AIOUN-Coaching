@@ -48,6 +48,30 @@ Use current official primary sources and have local counsel review public terms 
 
 These links are research starting points, not a legal opinion or a complete compliance assessment. Confirm current consolidated texts, amendments, commencement and applicability before relying on any provision.
 
+
+## Legacy contact and privacy audit — blockers found
+
+The existing `main` branch pages were inspected before planning contact/privacy changes:
+
+- `pages/contact.html` submits form data to a Formspree endpoint (`formspree.io/f/mvzyozvr`) using JavaScript `fetch()`. The account owner, recipient routing, access controls, retention and current deliverability have not been verified. Do not test by submitting a real message or assume the endpoint is configured correctly.
+- The contact page currently displays a 24-hour response promise. No approved service-level commitment is recorded in the business policy; remove or confirm this before publishing a revised contact page.
+- The contact page's displayed email differs from the proprietor-confirmed official email in the business foundation. Reconcile this before changing it; the verified official address for new business-page drafts is `faiezbinhafeez@gmail.com`.
+- The contact page contains a WhatsApp contact number. Ownership, business use, consent to continue displaying it and monitoring arrangements need proprietor confirmation. Do not repeat or promote it in new materials until confirmed.
+- The privacy page lists Google/Blogger, WhatsApp, Formspree and payment services (JazzCash, EasyPaisa and banks). It also describes payment screenshots and a 90-day retention period. The current business foundation does not enable payment processing, and the actual operational use, account ownership, data access and retention for each named provider have not been independently verified.
+- The privacy page includes data-collection, payment, retention, security and user-rights statements. These must be reconciled with actual live services and reviewed before being represented as current policy.
+
+### Required verification before contact/privacy publication
+
+1. Confirm the one official public email and whether the older email remains monitored.
+2. Confirm whether the Formspree form should remain; if yes, verify account ownership, destination, spam controls, data access and deletion/retention settings from the provider account.
+3. Confirm whether the existing WhatsApp number is an authorized business contact and who monitors it.
+4. Remove or approve the 24-hour response-time commitment.
+5. Confirm whether any payments are currently accepted, by which methods, and whether any payment screenshots or transaction records are stored.
+6. Inventory actual Blogger/Google, AdSense, analytics, embedded tools, form, messaging, hosting and other data processors.
+7. Set retention periods only after reviewing actual business/accounting needs and applicable requirements; do not carry forward the unverified 90-day statement by default.
+
+No live contact, privacy or terms page has been changed in this phase.
+
 ## Before any Blogger publication
 
 - [ ] Proprietor approves exact launch services and service availability.
