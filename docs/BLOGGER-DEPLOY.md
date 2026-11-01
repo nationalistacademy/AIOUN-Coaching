@@ -1,7 +1,7 @@
 # Blogger deploy — sab kuch ek jagah
 
 Ye page poora kaam ek jagah rakhta hai: theme, pages, tools, menu aur Search Console.
-Har URL ka status **live blog par check** kiya gaya hai (October 2026).
+Live URL status neeche October 2026 ke pichhle audit ka snapshot hai; is change mein live Blogger URLs dobara verify nahi kiye gaye.
 
 ---
 
