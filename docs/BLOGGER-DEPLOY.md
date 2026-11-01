@@ -60,6 +60,8 @@ Page ka URL waisa hi rakhein jo neeche table me hai.
 
 **Business page note:** `pages/services.html`, `pages/about.html` and `pages/disclaimer.html` contain draft revisions on the feature branch. Do not paste or publish them until the proprietor approves the service scope, pricing approach, contact channel and legal wording.
 
+**Contact/legal page drafts:** `pages/contact-draft.html` and `pages/terms-draft.html` are repository drafts only. Do not overwrite or publish the existing contact/privacy/terms pages until provider ownership, data flows, fees, refunds and final wording are approved. See `business/privacy-data-inventory.md` and `business/enquiry-workflow.md`.
+
 ## 3. Tools — live URLs aur jo baqi hain
 
 Live blog par abhi sirf 4 tool pages hain:
