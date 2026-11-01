@@ -38,3 +38,12 @@
 - Add accessible DOCX export and a saved draft library only after privacy and storage requirements are approved.
 - Add optional AI-provider integration only after endpoint ownership, authentication, privacy, rate limits, cost and secret handling are verified.
 - Add automated HTML linting and browser QA. Keep Blogger publishing manual unless a separate explicit approval and secure workflow are established.
+
+## Official editorial references
+
+- [Google Search Central — SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide): useful, original, well-organized, reliable, people-first content; headings should help readers navigate.
+- [Google Search Essentials](https://developers.google.com/search/docs/essentials): best practices do not guarantee crawling, indexing or serving in results.
+- [Google Search Central — helpful, people-first content](https://developers.google.com/search/blog/2022/08/helpful-content-update): do not mass-produce search-first content or write to an assumed preferred word count.
+- [Blogger Help — Fix mixed content on your blog](https://support.google.com/blogger/answer/6286127): review HTML in Blogger's post/page editor and use secure HTTPS resources.
+
+The tool's character and structure checks are editorial prompts only. There is no preferred word count and no SEO score or ranking guarantee.
