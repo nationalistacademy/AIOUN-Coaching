@@ -26,7 +26,6 @@
     { value: 'deepseek/deepseek-reasoner', label: 'DeepSeek Reasoner' },
     { value: 'claude/claude-sonnet-4-5', label: 'Claude Sonnet 4.5' },
     { value: 'claude/claude-haiku-4-5', label: 'Claude Haiku 4.5' },
-    { value: 'codex/gpt-5-codex', label: 'GPT-5 Codex (configure API URL)' },
   ];
 
   var DEFAULT_SYSTEM =
