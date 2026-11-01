@@ -28,3 +28,11 @@
 - Read `docs/BLOGGER-THEME-COMPATIBILITY.md` and `docs/BLOGGER-HTML-CODING-RULES.md`; inspect `theme/aioucoahing.xml` before writing page/post code.
 - Write fragments only (no html/head/body wrappers); scope CSS; preserve theme tokens, dark mode, responsive layout, accessibility and RTL/LTR.
 - A repo commit does not publish Blogger. Never publish or upload XML without explicit owner approval.
+
+
+## Immediate mission: AdSense readiness and Pakistan-wide reach
+- Make the public Blogger site genuinely useful, original, accurate, transparent, accessible, mobile-friendly and compliant before requesting AdSense review.
+- Use `docs/ADSENSE-READINESS-AUDIT.md` as the active audit and submission gate.
+- Compare live Blogger content with repository sources; GitHub edits do not publish to Blogger.
+- Never fabricate operator identity, authorship, credentials, tutor reviews, privacy/security practices or official AIOU affiliation.
+- No thin mass-generated posts, bought traffic, click exchanges, fake clicks, or ad-click incentives. No AdSense review or live publication without owner approval.
