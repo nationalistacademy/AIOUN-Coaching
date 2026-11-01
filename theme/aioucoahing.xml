@@ -1419,8 +1419,13 @@ display: none;
     font:600 10px/1.15 system-ui,-apple-system,sans-serif; white-space:nowrap;
     cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent;
   }
-  #aiou-mobile-nav .aiou-nav-icon { width:21px; height:21px; fill:none; stroke:#e66d2e; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex:none; }
-  #aiou-mobile-nav a:active, #aiou-mobile-nav button:active { background:rgba(230,109,46,.12); opacity:1; }
+  #aiou-mobile-nav .aiou-nav-icon { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; flex:none; color:#e66d2e; transition:transform .16s ease,color .16s ease; }
+  #aiou-mobile-nav a:active, #aiou-mobile-nav button:active { background:rgba(230,109,46,.13); opacity:1; }
+  #aiou-mobile-nav a:active .aiou-nav-icon, #aiou-mobile-nav button:active .aiou-nav-icon { transform:scale(.9); }
+  #aiou-mobile-nav a:focus-visible, #aiou-mobile-nav button:focus-visible { outline:2px solid #e66d2e; outline-offset:1px; opacity:1; }
+  #aiou-share-sheet { max-height: min(70vh, 420px); overflow:auto; gap:9px; }
+  #aiou-share-sheet strong { font-size:16px; padding:3px 2px 7px; }
+  #aiou-share-sheet button:active, #aiou-share-sheet a:active { background:rgba(230,109,46,.12); }
   body.dark-mode #aiou-mobile-nav, .dark-mode #aiou-mobile-nav, html[data-theme='dark'] #aiou-mobile-nav {
     background:rgba(28,30,34,.86); color:rgba(255,255,255,.9);
     border-color:rgba(255,255,255,.10); box-shadow:0 3px 12px rgba(0,0,0,.18);
@@ -3460,46 +3465,88 @@ function jtCallback(){
   var sheet = document.getElementById('aiou-share-sheet');
   var pageUrl = window.location.href.split('#')[0];
   var pageTitle = document.title || 'AIOU Coaching';
-  function openShare() {
-    if (sheet) {
-      sheet.style.display = 'flex';
-      sheet.setAttribute('aria-hidden', 'false');
-    }
-    var wa = sheet && sheet.querySelector("[data-aiou-share='whatsapp']");
+
+  function showShare() {
+    if (!sheet) return;
+    sheet.style.display = 'flex';
+    sheet.setAttribute('aria-hidden', 'false');
+    var wa = sheet.querySelector("[data-aiou-share='whatsapp']");
     if (wa) wa.href = 'https://wa.me/?text=' + encodeURIComponent(pageTitle + ' ' + pageUrl);
+    var firstAction = sheet.querySelector("[data-aiou-share='native']");
+    if (firstAction) firstAction.focus();
   }
-  function closeShare() {
-    if (sheet) { sheet.style.display = 'none'; sheet.setAttribute('aria-hidden', 'true'); }
+  function hideShare() {
+    if (!sheet) return;
+    sheet.style.display = 'none';
+    sheet.setAttribute('aria-hidden', 'true');
   }
+  function copyPageLink(button) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(pageUrl).then(function () {
+        if (button) button.textContent = 'Link copied!';
+      }).catch(function () { fallbackCopy(button); });
+    } else {
+      fallbackCopy(button);
+    }
+  }
+  function fallbackCopy(button) {
+    var field = document.createElement('textarea');
+    field.value = pageUrl;
+    field.setAttribute('readonly', 'readonly');
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.appendChild(field);
+    field.select();
+    try {
+      var copied = document.execCommand('copy');
+      if (button) button.textContent = copied ? 'Link copied!' : 'Select and copy the page URL';
+    } catch (e) {
+      if (button) button.textContent = 'Copy unavailable - use address bar';
+    }
+    document.body.removeChild(field);
+  }
+
   nav.addEventListener('click', function (event) {
     var button = event.target.closest('[data-aiou-nav]');
     if (!button) return;
     var action = button.getAttribute('data-aiou-nav');
+
     if (action === 'search') {
-      var toggle = document.getElementById('search-toggle');
-      var input = document.getElementById('search-input');
-      if (toggle) {
-        toggle.checked = true;
-        toggle.dispatchEvent(new Event('change', { bubbles:true }));
-      }
-      window.setTimeout(function () {
-        if (input) { input.focus(); input.scrollIntoView({ behavior:'smooth', block:'center' }); }
-      }, 120);
+      var searchToggle = document.getElementById('search-toggle');
+      var searchLabel = document.getElementById('search-toggler');
+      var searchInput = document.getElementById('search-input');
+      if (searchToggle && !searchToggle.checked && searchLabel) searchLabel.click();
+      window.requestAnimationFrame(function () {
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
     } else if (action === 'menu') {
-      var menuToggle = document.getElementById('navbar-toggler');
-      if (menuToggle) menuToggle.click();
+      var menuToggle = document.getElementById('navbar-toggle');
+      var menuLabel = document.getElementById('navbar-toggler');
+      if (menuToggle && menuLabel) menuLabel.click();
     } else if (action === 'comments') {
-      var comments = document.getElementById('comments') || document.querySelector('.comments');
-      if (comments) {
-        comments.scrollIntoView({ behavior:'smooth', block:'start' });
-        if (window.history && window.history.replaceState) window.history.replaceState(null, '', '#comments');
-        var frame = comments.querySelector('iframe');
-        if (frame && !frame.getAttribute('src') && frame.getAttribute('data-src')) frame.setAttribute('src', frame.getAttribute('data-src'));
+      var comments = document.getElementById('comments');
+      var addComment = document.getElementById('add-comment');
+      var commentButton = document.getElementById('comment-button');
+      var destination = comments || addComment;
+      if (destination) {
+        destination.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', '#comments');
+        }
+        if (comments) {
+          comments.setAttribute('tabindex', '-1');
+          window.setTimeout(function () { comments.focus({ preventScroll: true }); }, 350);
+        } else if (commentButton) {
+          commentButton.focus({ preventScroll: true });
+        }
       } else {
-        window.location.hash = 'comments';
+        window.alert('Comments are available inside individual posts. Please open a post first.');
       }
     } else if (action === 'share') {
-      openShare();
+      showShare();
     } else if (action === 'dark') {
       var darkToggle = document.getElementById('dark-toggler');
       if (darkToggle) darkToggle.click();
@@ -3507,20 +3554,30 @@ function jtCallback(){
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   });
-  if (sheet) sheet.addEventListener('click', function (event) {
-    var action = event.target.closest('[data-aiou-share]');
-    if (!action) { if (event.target === sheet) closeShare(); return; }
-    var type = action.getAttribute('data-aiou-share');
-    if (type === 'close') closeShare();
-    if (type === 'native') {
-      if (navigator.share) navigator.share({ title:pageTitle, url:pageUrl }).catch(function () {});
-      else if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(pageUrl).then(function () { action.textContent = 'Link copied'; });
-    }
-    if (type === 'copy' && navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(pageUrl).then(function () { action.textContent = 'Link copied'; });
-    }
-  });
-})();
+
+  if (sheet) {
+    sheet.addEventListener('click', function (event) {
+      var action = event.target.closest('[data-aiou-share]');
+      if (!action) {
+        if (event.target === sheet) hideShare();
+        return;
+      }
+      var type = action.getAttribute('data-aiou-share');
+      if (type === 'close') hideShare();
+      if (type === 'native') {
+        if (navigator.share) {
+          navigator.share({ title: pageTitle, text: pageTitle, url: pageUrl }).then(hideShare).catch(function () {});
+        } else {
+          copyPageLink(action);
+        }
+      }
+      if (type === 'copy') copyPageLink(action);
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && sheet.getAttribute('aria-hidden') === 'false') hideShare();
+    });
+  }
+})();;
  /*]]>*/</script>
 
 <b:if cond='!data:view.isPreview'>&lt;textarea disabled readonly id=&quot;element-b&quot; style=&quot;display:none&quot;&gt;&lt;style&gt;/*</b:if></body><b:if cond='!data:view.isPreview'>*/&lt;/style&gt;&lt;/textarea&gt;<script>/*<![CDATA[*/const _eh=document.getElementById("element-h"),_eb=document.getElementById("element-b"),_WidgetManager={_PopupConfig:function(){}};null!==_eh&&(_eh.outerHTML=""),null!==_eb&&(_eb.outerHTML="");/*]]>*/</script>
