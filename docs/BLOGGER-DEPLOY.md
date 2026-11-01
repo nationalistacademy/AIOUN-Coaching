@@ -126,3 +126,19 @@ Qawaid: [`../posts/README.md`](../posts/README.md).
 - [ ] Search Console verified + sitemap submitted
 - [ ] Worker deploy hua aur studio me ID save kar ke “🔌 Sab IDs test karein” chalaya
 - [ ] Ek post template se publish kiya
+
+---
+
+## 8. Theme me kya theek hua (is round me)
+
+| Masla | Wajah | Fix |
+| --- | --- | --- |
+| Mobile menu button kaam nahi karta tha | JetTheme ki JS `<script src='…main.js'/>` **self-closing** tag se load ho rahi thi — browser uske baad ka poora script ignore kar deta hai | tag band kiya (`></script>`) |
+| Menu open/close control nahi hota tha | sirf CSS checkbox par bharosa tha | apna JS: open/close, dobara click par band, Escape, bahar click, link click par band, `aria-expanded` |
+| Search bar khulta nahi tha | dropdown mobile par off-screen/`.d-block-check` par depend karta tha | `#search-header.search-open` state + position/size CSS + auto-focus input |
+| Mobile menu me kuch items dead (`#`) | LinkList me `#sub-start`, `#sub-end`, `#` placeholders | "Tools" → `/p/tools.html`, "Blog" → `/`, "Original Books" → `/search/label/Books` |
+| Share buttons nahi thay | `postShareButtons` includable khaali thi | WhatsApp, Facebook, X, Telegram, LinkedIn + copy-link (inline SVG icons, post ke neeche) |
+| Comments nahi dikhte thay | `comments` includable khaali thi | comment list + Blogger comment form (`data:post.commentSrc`) + legacy counts |
+
+Share bar aur comments dono sirf **post** par aate hain, page par nahi. Theme upload ke baad ek post
+khol kar check karein: share icons, "Comments" heading aur comment box.

@@ -1199,6 +1199,76 @@ body { background: #fff !important; }
 /*Your custom CSS is here*/
 
 /* ======================================================
+   B16. Mobile menu + search open states, share bar, comments
+   Self-contained: works even if the theme's own JS never loads.
+   ====================================================== */
+#search-header { position: relative; }
+#search-header.search-open .dropdown-menu,
+#search-header #search-toggle:checked ~ .dropdown-menu { display: block !important; }
+#search-header .dropdown-menu {
+right: 0;
+left: auto;
+min-width: min(92vw, 340px);
+z-index: 10050;
+}
+#search-toggler[aria-expanded="true"] { color: var(--jt-primary); }
+@media (max-width: 991.98px) {
+#navbar { display: none; }
+#navbar.is-open { display: block; }
+body.nav-open { overflow: hidden; }
+#navbar.is-open { max-height: calc(100vh - 80px); overflow-y: auto; }
+}
+/* Share bar */
+.post-share {
+display: flex;
+align-items: center;
+gap: .5rem;
+flex-wrap: wrap;
+margin: 0 0 1.5rem;
+padding: .7rem .9rem;
+border-radius: 18px;
+}
+.post-share-label {
+font-size: .78rem;
+font-weight: 800;
+letter-spacing: .08em;
+text-transform: uppercase;
+opacity: .7;
+margin-right: .15rem;
+}
+.post-share a,
+.post-share button {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+width: 38px;
+height: 38px;
+border-radius: 12px;
+border: 1px solid var(--glass-border);
+background: var(--glass-bg-soft);
+color: inherit;
+text-decoration: none;
+cursor: pointer;
+transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+}
+.post-share svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.post-share a:hover, .post-share button:hover { transform: translateY(-2px); background: var(--jt-primary); border-color: var(--jt-primary); color: #fff; }
+.post-share .share-btn.copied { background: #16a34a; border-color: #16a34a; color: #fff; }
+/* Comments */
+.comments { margin-top: 1.5rem; padding: 1.25rem; }
+.comments-title { font-size: 1.15rem; font-weight: 800; margin: 0 0 .9rem; }
+.comment { padding: .85rem 0; border-bottom: 1px solid var(--glass-border); }
+.comment:last-child { border-bottom: 0; }
+.comment-head { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; font-weight: 700; font-size: .92rem; }
+.comment-head a { color: inherit; text-decoration: none; }
+.comment-head a:hover { color: var(--jt-primary); }
+.comment-time { font-weight: 400; font-size: .76rem; opacity: .68; }
+.comment-body { margin-top: .35rem; font-size: .95rem; line-height: 1.65; }
+.comment-form-wrap { margin-top: 1rem; }
+.blogger-comment-form { width: 100%; border: 0; border-radius: 14px; background: transparent; }
+.comment-hint { font-size: .9rem; opacity: .8; }
+
+/* ======================================================
    B15. CRYSTAL GLASSMORPHISM — hover / specular layer
    Brighter rim + inset top highlight + sheen sweep on hover.
    Reuses the existing --glass-* tokens, changes no brand colour.
@@ -1673,26 +1743,24 @@ width: 50%;
       <b:widget-setting name='link-0'>/p/home.html</b:widget-setting>
       <b:widget-setting name='link-11'>/p/contact.html</b:widget-setting>
       <b:widget-setting name='link-10'>/p/faqs.html</b:widget-setting>
-      <b:widget-setting name='text-9'>Sub Menu 1</b:widget-setting>
-      <b:widget-setting name='link-9'>#sub-end</b:widget-setting>
+      <b:widget-setting name='text-9'>Blog</b:widget-setting>
+      <b:widget-setting name='link-9'>/</b:widget-setting>
       <b:widget-setting name='text-8'>Guess Paper</b:widget-setting>
-      <b:widget-setting name='link-7'>#</b:widget-setting>
+      <b:widget-setting name='link-7'>/search/label/Books</b:widget-setting>
       <b:widget-setting name='link-8'>/p/aiou-guess-paper-generator.html</b:widget-setting>
       <b:widget-setting name='link-5'>/p/get-solved-assignments.html</b:widget-setting>
       <b:widget-setting name='link-6'>/p/academic-calander.html</b:widget-setting>
-      <b:widget-setting name='link-3'>#sub-start</b:widget-setting>
+      <b:widget-setting name='link-3'>/p/tools.html</b:widget-setting>
       <b:widget-setting name='link-4'>/p/aiou-admissions.html</b:widget-setting>
       <b:widget-setting name='text-1'>Programmes</b:widget-setting>
       <b:widget-setting name='text-0'>Home</b:widget-setting>
-      <b:widget-setting name='text-3'>Sub Menu 1</b:widget-setting>
+      <b:widget-setting name='text-3'>Tools</b:widget-setting>
       <b:widget-setting name='text-2'>AIOUN</b:widget-setting>
       <b:widget-setting name='text-5'>Solved Assignments</b:widget-setting>
       <b:widget-setting name='text-4'>Admissions</b:widget-setting>
       <b:widget-setting name='text-7'>Original Books</b:widget-setting>
       <b:widget-setting name='text-6'>Academic Calandar</b:widget-setting>
       <b:widget-setting name='text-11'>Contact</b:widget-setting>
-      <b:widget-setting name='text-12'>All Tools</b:widget-setting>
-      <b:widget-setting name='link-12'>/p/tools.html</b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
       <b:include name='JetMenu'/>
@@ -1845,6 +1913,42 @@ width: 50%;
       <b:widget-setting name='showInlineAds'>false</b:widget-setting>
       <b:widget-setting name='showReactions'>false</b:widget-setting>
     </b:widget-settings>
+    <b:includable id='postShareButtons' var='post'>
+<div class='post-share' expr:data-url='data:post.url.canonical'>
+<span class='post-share-label'>Share</span>
+<a class='share-btn wa' expr:href='&quot;https://api.whatsapp.com/send?text=&quot; + data:post.url.canonical' aria-label='Share on WhatsApp' rel='noopener nofollow' target='_blank' title='WhatsApp'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20.5 3.5A11 11 0 0 0 3.2 16.7L2 22l5.5-1.2A11 11 0 1 0 20.5 3.5z'/><path d='M8.4 8.7c.2-.4.4-.4.7-.4h.5c.2 0 .4 0 .6.5l.7 1.6c.1.2 0 .4-.1.6l-.5.6c-.1.2-.2.3 0 .6.5.9 1.3 1.7 2.3 2.2.2.1.4.1.6-.1l.6-.6c.2-.2.4-.2.6-.1l1.5.7c.2.1.3.2.3.4 0 .8-.6 1.5-1.3 1.7-.6.2-1.3.2-2.1-.1-1.6-.5-3-1.8-3.8-3.3-.4-.8-.6-1.6-.4-2.2.1-.4.2-.7.4-1z'/></svg></a>
+<a class='share-btn fb' expr:href='&quot;https://www.facebook.com/sharer/sharer.php?u=&quot; + data:post.url.canonical' aria-label='Share on Facebook' rel='noopener nofollow' target='_blank' title='Facebook'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H7v3h3v7h3v-7h2.5l.5-3H13v-2c0-.6.4-1 1-1z'/></svg></a>
+<a class='share-btn x' expr:href='&quot;https://twitter.com/intent/tweet?url=&quot; + data:post.url.canonical' aria-label='Share on X' rel='noopener nofollow' target='_blank' title='X (Twitter)'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 4l7.2 9.2L4.4 20h2.3l5.5-5.5 4.3 5.5H20l-7.5-9.6L19.5 4h-2.3l-5.1 5.1L8 4H4z'/></svg></a>
+<a class='share-btn tg' expr:href='&quot;https://t.me/share/url?url=&quot; + data:post.url.canonical' aria-label='Share on Telegram' rel='noopener nofollow' target='_blank' title='Telegram'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M21 4L3 11l5 1.6L10 20l3-3.6 4.5 3L21 4z'/><path d='M8 12.6L18 6l-7.5 8.5'/></svg></a>
+<a class='share-btn li' expr:href='&quot;https://www.linkedin.com/sharing/share-offsite/?url=&quot; + data:post.url.canonical' aria-label='Share on LinkedIn' rel='noopener nofollow' target='_blank' title='LinkedIn'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 9h3v11H4zM5.5 4.5a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6zM10 9h3v1.6c.5-.9 1.6-1.8 3.3-1.8 2.6 0 3.7 1.6 3.7 4.4V20h-3v-6c0-1.5-.6-2.3-1.8-2.3-1.3 0-2.2.9-2.2 2.4V20h-3z'/></svg></a>
+<button class='share-btn copy' type='button' aria-label='Copy link' title='Copy link'><svg viewBox='0 0 24 24' aria-hidden='true'><rect x='9' y='9' width='11' height='11' rx='2'/><path d='M15 5H6a2 2 0 0 0-2 2v9'/></svg></button>
+</div>
+    </b:includable>
+    <b:includable id='comments' var='post'>
+<section class='comments' id='comments'>
+<h3 class='comments-title'>Comments<b:if cond='data:post.numberOfComments gt 0'> (<data:post.numberOfComments/>)</b:if></h3>
+<b:if cond='data:post.comments'>
+<div class='comment-list'>
+<b:loop values='data:post.comments' var='comment'>
+<article class='comment'>
+<div class='comment-head'>
+<span class='comment-author'><b:if cond='data:comment.authorUrl'><a expr:href='data:comment.authorUrl' rel='nofollow noopener'><data:comment.author/></a><b:else/><data:comment.author/></b:if></span>
+<time class='comment-time'><data:comment.timestamp/></time>
+</div>
+<div class='comment-body'><data:comment.body/></div>
+</article>
+</b:loop>
+</div>
+</b:if>
+<b:if cond='data:post.commentSrc'>
+<div class='comment-form-wrap'>
+<iframe allowtransparency='true' class='blogger-comment-form' frameborder='0' height='430' id='comment-editor' expr:src='data:post.commentSrc' scrolling='no' title='Comment form' width='100%'></iframe>
+</div>
+<b:else/>
+<p class='comment-hint'><a expr:href='data:post.url.canonical'>Open the post to leave a comment</a></p>
+</b:if>
+</section>
+    </b:includable>
     <b:includable id='main' var='top'>
       <b:include name='JetBlog'/>
     </b:includable>
@@ -2879,6 +2983,8 @@ width: 50%;
 </div>
 </div>
 </b:if>
+<b:include data='post' name='postShareButtons'/>
+<b:include data='post' name='comments'/>
 </article>
 <div expr:class='&quot;position-fixed start-0 top-50 &quot; + data:post.adminClass'>
 <a class='d-block btn btn-sm jt-btn-light rounded-0' expr:href='&quot;https://www.blogger.com/blog/posts/&quot; + data:blog.blogId' rel='nofollow noopener noreferrer' target='_blank' title='Dashboard'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-menu'/></svg></a><a class='d-block btn btn-sm jt-btn-light rounded-0' expr:href='&quot;https://www.blogger.com/blog/post/edit/&quot; + data:blog.blogId + &quot;/&quot; + data:post.id' rel='nofollow noopener noreferrer' target='_blank' title='Edit post'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-edit'/></svg></a>
@@ -3333,7 +3439,94 @@ function jtCallback(){
 
 }
 /*]]>*/</script>
-<script src='https://cdn.jsdelivr.net/gh/jettheme/js@0.5.5/main.js'/>
+<script src='https://cdn.jsdelivr.net/gh/jettheme/js@0.5.5/main.js'></script>
+<script>/*<![CDATA[*/
+(function () {
+  'use strict';
+  var nav = document.getElementById('navbar');
+  var navCheck = document.getElementById('navbar-toggle');
+  var searchWrap = document.getElementById('search-header');
+  var searchCheck = document.getElementById('search-toggle');
+  var searchInput = document.getElementById('search-input');
+
+  function labels() { return document.querySelectorAll('label[for="navbar-toggle"]'); }
+
+  function setMenu(open) {
+    if (!nav) return;
+    nav.classList.toggle('is-open', open);
+    if (navCheck) navCheck.checked = open;
+    document.body.classList.toggle('nav-open', open);
+    Array.prototype.forEach.call(labels(), function (l) {
+      l.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+
+  function setSearch(open) {
+    if (!searchWrap) return;
+    searchWrap.classList.toggle('search-open', open);
+    if (searchCheck) searchCheck.checked = open;
+    var t = document.getElementById('search-toggler');
+    if (t) t.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open && searchInput) {
+      try { searchInput.focus({ preventScroll: true }); } catch (err) { searchInput.focus(); }
+    }
+  }
+
+  function closeAll() { setMenu(false); setSearch(false); }
+
+  Array.prototype.forEach.call(labels(), function (label) {
+    label.setAttribute('role', 'button');
+    label.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      setMenu(!(nav && nav.classList.contains('is-open')));
+    });
+  });
+
+  var searchToggler = document.getElementById('search-toggler');
+  if (searchToggler) {
+    searchToggler.setAttribute('role', 'button');
+    searchToggler.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      setSearch(!(searchWrap && searchWrap.classList.contains('search-open')));
+    });
+  }
+
+  if (nav) {
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('a')) setMenu(false);
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (nav && nav.classList.contains('is-open') && !nav.contains(t) &&
+        !(t.closest && t.closest('label[for="navbar-toggle"]'))) setMenu(false);
+    if (searchWrap && searchWrap.classList.contains('search-open') && !searchWrap.contains(t) &&
+        !(t.closest && t.closest('#search-toggler'))) setSearch(false);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.keyCode === 27) closeAll();
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.post-share'), function (bar) {
+    var btn = bar.querySelector('.share-btn.copy');
+    if (!btn) return;
+    var url = bar.getAttribute('data-url') || location.href;
+    btn.addEventListener('click', function () {
+      var done = function () {
+        btn.classList.add('copied');
+        setTimeout(function () { btn.classList.remove('copied'); }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done, function () {});
+      }
+    });
+  });
+})();
+/*]]>*/</script>
 
 <!-- NEW: GEO "Quick answer" box + cookie notice (plain JS, no dependencies) -->
 <script>/*<![CDATA[*/
