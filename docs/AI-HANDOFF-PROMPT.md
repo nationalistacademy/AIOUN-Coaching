@@ -23,6 +23,13 @@ The main goal is to give students free, practical tools that help them understan
 - Never commit secrets or personal/student data.
 - Verify current repository state; these notes may be stale.
 
+## Primary mission: Blogger AdSense readiness and national reach
+- Use `docs/ADSENSE-READINESS-AUDIT.md` as the current evidence-based gate.
+- Prioritize truthful brand/operator identity, accurate privacy/terms, verified contact details, original people-first content, academic integrity, copyright, mobile UX, navigation, metadata, speed and measured Search Console/GA4 growth.
+- Never promise approval/rankings, fabricate reviews/credentials, mass-generate thin pages, buy traffic, use click exchanges or encourage ad clicks.
+- Compare the live Blogger site with repository sources; GitHub edits do not publish Blogger.
+- Never publish or request AdSense review without explicit owner approval.
+
 ## Blogger HTML and theme rules
 - Blogger Page body sources: `p/<exact-slug>.html` → public `/p/<exact-slug>.html` after manual publication.
 - Blogger Post sources: `post/<topic>/post.html`; Blogger controls the public permalink.
