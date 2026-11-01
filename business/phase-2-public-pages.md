@@ -72,6 +72,25 @@ The existing `main` branch pages were inspected before planning contact/privacy 
 
 No live contact, privacy or terms page has been changed in this phase.
 
+## Phase 2 implementation — enquiry and privacy foundation
+
+Additional draft artifacts have now been added:
+
+- `pages/contact-draft.html` — email-only contact page; no Formspree or WhatsApp calls, no response-time promise, and no sensitive-document request.
+- `pages/terms-draft.html` — terms draft with service fees, payment channels, cancellations and refunds explicitly left for approval.
+- `business/enquiry-workflow.md` — human-reviewed enquiry triage, written proposal, delivery and closure process.
+- `business/privacy-data-inventory.md` — provider/data-flow inventory, unverified statements, minimization controls and approval checklist.
+
+### Why the old contact/privacy pages were not overwritten
+
+The existing contact page sends name, email, optional phone, topic and message to a Formspree endpoint; its account ownership, recipient and retention settings are not verified. It also contains a WhatsApp link and a 24-hour reply promise that require confirmation. The privacy page names several vendors and payment providers and claims a 90-day retention period for payment screenshots, none of which should be represented as current without an operational check.
+
+The Malwarebytes reputation connector did not return a readable verdict in this review. No safety or legitimacy conclusion is recorded for the Formspree endpoint or email. A threat-intelligence reputation check would not establish account ownership or data-handling compliance in any case.
+
+### Official-source research update
+
+The Sindh Judicial Academy source identifies the Sindh Consumer Protection Act, 2014 / Rules, 2017 with amendment through Sindh Act No. XXIX of 2023. The Ministry of IT & Telecommunication register lists Personal Data Protection Bills from 2020 and 2023 as drafts in that register. This is not a definitive statement that no later law exists; re-check current official Gazette and consolidated texts before publication. See `business/privacy-data-inventory.md` for source links and cautions.
+
 ## Before any Blogger publication
 
 - [ ] Proprietor approves exact launch services and service availability.
