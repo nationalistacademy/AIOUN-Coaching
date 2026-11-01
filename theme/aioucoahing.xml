@@ -3322,7 +3322,6 @@ width: 50%;
     <b:includable id='commentItem'/>
     <b:includable id='commentList'/>
     <b:includable id='commentPicker'/>
-    <b:includable id='comments'/>
     <b:includable id='commentsLink'/>
     <b:includable id='commentsLinkIframe'/>
     <b:includable id='commentsTitle'/>
@@ -3359,7 +3358,6 @@ width: 50%;
     <b:includable id='postMetadataJSONPublisher'/>
     <b:includable id='postPagination'/>
     <b:includable id='postReactions'/>
-    <b:includable id='postShareButtons'/>
     <b:includable id='postTimestamp'/>
     <b:includable id='postTitle'/>
     <b:includable id='previousPageLink'/>
