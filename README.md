@@ -30,3 +30,10 @@ The companion app is separate from Blogger and the Blogger XML must be uploaded 
 Check GitHub Actions before claiming deployment or browser tests passed: [Browser QA](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/browser-qa.yml), [Pages deploy](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/deploy-pages.yml), [LMS security tests](https://github.com/nationalistacademy/AIOUN-Coaching/actions/workflows/lms-security-e2e.yml).
 
 **Poora Blogger deploy ek page par:** [docs/BLOGGER-DEPLOY.md](docs/BLOGGER-DEPLOY.md) — theme upload, page-by-page paste list, live URL statuses, menu aur Search Console.
+
+## Professional coaching and business foundation
+AIOU Coaching is an education and professional-coaching project operated by Nationalist Academy, a sole proprietorship operated by Faiez Mehmood in Karachi, Pakistan. Official contact: faiezbinhafeez@gmail.com. The proprietor has stated that NTN status is registered; the identifier is not published here.
+
+Phase 1 business documents: [Business plan](business/business-plan.md), [Service catalog](business/service-catalog.md), [Pricing policy](business/pricing-policy.md), [Client workflow](business/client-workflow.md), [Professional and legal boundaries](business/legal-boundaries.md), and [Phase 1 checklist](docs/PHASE-1-BUSINESS-FOUNDATION.md).
+
+The business is not represented as an incorporated company, law firm, university, NGO, charity or government institution. Legal content is limited to general information unless appropriately qualified and authorized professionals are separately engaged. Public publishing and client-facing automation require human approval.
