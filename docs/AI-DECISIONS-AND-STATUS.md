@@ -17,6 +17,10 @@ _Last updated: 2026-11-02. Re-check repository and deployment state before relyi
 | Cloudflare | Paused until owner explicitly resumes |
 | LMS | Deprioritized; do not expand without explicit request |
 | Production changes | No DNS, Blogger live edits, Worker routes, auth, student data, or production config without explicit approval |
+| Blogger Page sources | Root `p/<slug>.html`; body fragments mapped to `/p/<slug>.html` after manual publication |
+| Blogger Post sources | Root `post/<topic>/post.html`; Blogger controls public post permalinks |
+| Standalone app HTML | Keep in `tools/`; do not mix with Blogger body fragments |
+| Blogger theme contract | Read `docs/BLOGGER-THEME-COMPATIBILITY.md` and `docs/BLOGGER-HTML-CODING-RULES.md` before writing HTML |
 
 ## Current work priority
 1. Audit and improve existing free tools; fix actual broken student-facing flows.
@@ -49,3 +53,4 @@ Before a PR is considered ready:
 ### 2026-11-02
 - Added cross-model project memory and agent operating instructions on a dedicated documentation branch.
 - Reaffirmed free student-facing tools as the first priority; Cloudflare paused; LMS not to be expanded without request.
+- Standardized Blogger Page/Post source folders and added cross-model theme-compatibility and HTML QA rules.
