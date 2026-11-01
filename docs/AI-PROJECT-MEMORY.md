@@ -68,7 +68,17 @@ Known prior owner direction:
 - Do not change DNS, Cloudflare routes, Blogger live theme, Firebase/Supabase production configuration, or deploy without explicit approval.
 - Do not assume an old PR or branch is merged or current; verify live GitHub state.
 
-## 6. Content and SEO principles
+## 6. Blogger source structure and theme compatibility
+- Canonical Blogger Page body files are in repository-root `p/`; `p/tool.html` is the source for Blogger `/p/tool.html` after manual publication.
+- Canonical Blogger Post sources are in repository-root `post/`; individual topics may use `post/<topic>/post.html`. Blogger controls each public permalink.
+- Standalone browser application pages remain in `tools/`; do not mix full app documents with Blogger body fragments.
+- The theme is `theme/aioucoahing.xml`, a JetTheme 2.9-derived Blogger XML theme. Its page/post body is rendered inside `.entry-text` / `#page-content` (posts also use `#post-body`).
+- Reuse theme tokens such as `--jt-primary`, `--jt-heading-color`, `--jt-bg-light`, `--jt-border-light`, `--glass-bg`, `--glass-bg-soft`, `--glass-border`, `--glass-shadow`, and `--glass-radius` only after rechecking the current XML.
+- Blogger HTML must be body fragments only; no `html/head/body` wrappers. Scope CSS under unique root classes; avoid duplicate `h1`, global resets, broken IDs, unverified scripts and duplicated JSON-LD.
+- Read `docs/BLOGGER-THEME-COMPATIBILITY.md` and `docs/BLOGGER-HTML-CODING-RULES.md` before creating or editing Blogger page/post code.
+- Repository commits do not publish Blogger content. Manual Blogger publishing and live URL QA remain separate steps.
+
+## 7. Content and SEO principles
 - Helpful-first, human-readable Urdu/English mix where appropriate.
 - Accurate titles and descriptions; clear headings; useful navigation; internal links that genuinely help.
 - Explain source, date, and uncertainty for time-sensitive AIOU information.
@@ -77,14 +87,14 @@ Known prior owner direction:
 - Avoid keyword stuffing, doorway pages, thin pages, copied content, fake reviews, fabricated author expertise, or guaranteed ranking claims.
 - AdSense compliance is a goal, not a guaranteed outcome. No ads should obstruct navigation or essential learning content.
 
-## 7. Privacy and data minimization
+## 8. Privacy and data minimization
 - Collect only information needed for a clearly stated student-facing purpose.
 - Do not expose student records, marks, enrollment status, contact details, or uploads publicly.
 - Do not put personal contact information into public repository documentation unless the owner explicitly approves that exact information for publication.
 - Do not put inbox contents, legal case details, account identifiers, tokens, or credentials in project memory files.
 - Provide clear privacy notice, retention/deletion process, contact channel, and third-party AI disclosure before collecting personal data.
 
-## 8. How another AI should begin
+## 9. How another AI should begin
 1. Read `AGENTS.md`, this file, and `docs/AI-DECISIONS-AND-STATUS.md`.
 2. Read the current task-specific code and recent commits/PRs. These memory notes can be stale.
 3. Restate the goal, boundaries, and assumptions briefly.
