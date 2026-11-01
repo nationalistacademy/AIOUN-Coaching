@@ -94,3 +94,13 @@ The health check verifies the service response shape, not ownership of the hostn
 - [Anthropic Messages API](https://docs.anthropic.com/en/api/messages)
 - [Ollama Chat API](https://docs.ollama.com/api/chat)
 - [OpenRouter API reference](https://openrouter.ai/docs/api-reference/overview)
+
+## Legacy standalone tools still requiring separate refactor
+
+The default-branch versions of `tools/humanizer.html`, `tools/diagram-generator.html` and `tools/assignment-writer.html` contain their own inline Worker URL/token lookup logic and read the `aiou_ids_v2` browser-storage key. Their inline `AUTH_TOKEN` declarations were empty placeholders in the source inspected; no non-empty token literal was found. However, the standalone pages can still read any old token that a previous version/user stored in localStorage. Do not enter a shared production token into these legacy pages. They are not connected to the new Content Studio session-only connector and need a separate UI refactor before being enabled with the hardened Worker.
+
+The updated `js/store.js` in this branch strips tokens from its own persisted `aiou_ids_v2` records on first read, removes the legacy `aw_token` key, keeps tokens in page memory only, and omits them from export/import. This does not retroactively purge localStorage on devices that have not loaded the updated store script, nor does it rewrite standalone HTML pages that bypass the shared store.
+
+## Endpoint verification status
+
+Repository files have historically used different Worker labels/hostnames, while the Wrangler service name is `aiou-coaching-tools`. The exact deployed Worker URL, account ownership, current deployment version, runtime secrets, and provider health were not verifiable from repository access. A direct public health check did not return a readable response in this audit. Therefore the Studio intentionally has no prefilled endpoint and accepts only a URL the owner copies from the Cloudflare dashboard.
