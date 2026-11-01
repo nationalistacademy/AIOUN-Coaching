@@ -25,8 +25,8 @@ The HTML files in this folder are **page-body snippets** intended for Blogger Pa
 
 | File | Intended content |
 | --- | --- |
-| `about.html` | Project purpose, independence, and editorial context |
-| `contact.html` | Contact options and contact form area |
+| `about.html` | Operator identity, project purpose, independence, and editorial context |
+| `contact.html` | Contact options and contact form area (verify its destination and data handling) |
 | `faqs.html` | Frequently asked questions |
 | `how-it-works.html` | How the service and tools work |
 | `privacy.html` | Privacy information |
@@ -34,8 +34,9 @@ The HTML files in this folder are **page-body snippets** intended for Blogger Pa
 | `disclaimer.html` | Independence and accuracy disclaimer |
 | `dmca.html` | Copyright/DMCA contact process |
 | `aiou-tool-kit.html` | Tool directory page |
+| `services.html` | Professional coaching and education-support service overview (draft; approval required) |
 
-Always compare this list against the current repository tree before relying on a path; file names and live Blogger slugs can differ.
+Always compare this list against the current repository tree before relying on a path; file names and live Blogger slugs can differ. All new or revised business pages remain drafts until the proprietor approves them. Repository commits do not publish Blogger pages.
 
 ## Shared theme hooks
 
