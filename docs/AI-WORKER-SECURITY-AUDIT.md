@@ -6,7 +6,7 @@
 
 ## Executive summary
 
-The prior multi-provider Worker source was not ready for an untrusted public browser client. It accepted any non-empty messages array, trusted the `Content-Length` header for its size check, exposed configured-provider flags in its unauthenticated health response, returned upstream error detail, and had no enforced Cloudflare rate-limit binding. The browser-side `js/store.js` also persists configured Worker tokens in localStorage.
+The prior multi-provider Worker source was not ready for an untrusted public browser client. It accepted any non-empty messages array, trusted the `Content-Length` header for its size check, exposed configured-provider flags in its unauthenticated health response, returned upstream error detail, and had no enforced Cloudflare rate-limit binding. The prior browser-side `js/store.js` persisted configured Worker tokens in localStorage; this branch now keeps tokens in page memory only, strips old saved tokens on read, and excludes tokens from exports.
 
 This revision adds strict origin checks, session-token authentication, bounded streaming request reads, message/model allowlists, output-token caps, sanitized provider errors, a mandatory Cloudflare Rate Limiting binding, and non-cacheable security headers. It removes arbitrary Codex/Freebuff endpoint URL support; those integrations remain disabled until a documented, verified endpoint is supplied and reviewed.
 
@@ -80,6 +80,7 @@ The health check verifies the service response shape, not ownership of the hostn
 ## Validation completed
 
 - JavaScript syntax parsing passed for the hardened Worker source.
+- A local store test confirmed tokens are available during the current page session but absent from localStorage and exported JSON, and are empty after a new page load.
 - JavaScript syntax parsing passed for the Content Studio source after adding the optional connector.
 - No provider API call, Cloudflare deployment, secret read, DNS change, or production configuration change was made.
 - Runtime smoke tests against a deployed Worker remain pending because no verified deployment endpoint or Cloudflare account configuration is available in this repository audit.
