@@ -33,6 +33,8 @@ Check GitHub Actions before claiming deployment or browser tests passed: [Browse
 
 
 ## AI agent memory and contribution rules
+Start with the copy/paste [AI prompt](AI-PROMPT.md) when handing this repository to another AI model.
+
 To hand this project to another AI assistant or developer, start with [AGENTS.md](AGENTS.md), then read:
 - [Project memory](docs/AI-PROJECT-MEMORY.md)
 - [Quick model memory card](docs/AI-MODEL-MEMORY.md)
