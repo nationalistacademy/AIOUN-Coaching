@@ -37,6 +37,10 @@ The public brand is **AIOU Coaching**. The repository is hosted under **national
 - Use lawful, proportionate OSINT only; no doxxing, stalking, unauthorized access, or sensitive profiling.
 - Do not claim AIOU endorsement, legal-practice status, registrations, licences, or professional qualifications unless verified.
 
+## Primary mission: Blogger AdSense readiness and national reach
+
+Treat `docs/ADSENSE-READINESS-AUDIT.md` as the active evidence-based checklist. Prioritize truthful identity, accurate Privacy/Terms/Disclaimer, verified contact details, original people-first content, academic integrity, copyright, mobile UX, navigation, SEO metadata, page speed and Search Console/GA4 measurement. Never promise approval/rankings, fabricate reviews/credentials, mass-generate thin pages, buy traffic, use click exchanges or encourage ad clicks. Public live-site observations and repository sources may differ; inspect both and do not assume a GitHub change updated Blogger. Never publish or submit an AdSense review without owner approval.
+
 ## Blogger HTML and theme rules
 
 - Blogger Page body sources belong in `p/<exact-slug>.html` and map to `/p/<exact-slug>.html` after manual publication.
