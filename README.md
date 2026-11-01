@@ -40,3 +40,5 @@ The business is not represented as an incorporated company, law firm, university
 
 ## AIOU Coaching AI Content Studio
 The new [AI Content Studio](tools/ai-content-studio.html) is a browser-first editorial workspace for AIOU Coaching. It builds structured prompts, supports Urdu-English content planning, provides an HTML editor and preview, runs basic SEO/editorial checks, and exports Blogger-ready draft HTML. See [its scope and safeguards](docs/AI-CONTENT-STUDIO.md). It does not call a paid AI API, auto-publish, or change the live Blogger site; manual human review remains required.
+
+The optional AI connection requires a separately reviewed and hardened Cloudflare Worker; see [AI Content Studio documentation](docs/AI-CONTENT-STUDIO.md). It is not preconfigured with a Worker URL or token.
