@@ -1,0 +1,121 @@
+<!--
+AIOU Coaching — Blogger tool page BODY TEMPLATE
+Suggested source path: p/<exact-blogger-slug>.html
+Suggested public URL: https://aioucoaching.blogspot.com/p/<exact-blogger-slug>.html
+Paste only this body fragment into Blogger Pages → HTML view.
+Do not paste a full html/head/body document.
+-->
+<div class="aio-tool-page" id="aio-tool-page">
+  <div class="key-takeaways" role="note">
+    <strong>Quick answer</strong>
+    <p>Ek ya do jumlon mein batayein ke tool kya karta hai, kis ke liye hai, aur kya output deta hai.</p>
+  </div>
+
+  <style>
+    .aio-tool-page {
+      --aio-accent: var(--jt-primary, #f67938);
+      --aio-heading: var(--jt-heading-color, #343a40);
+      --aio-card: var(--glass-bg, rgba(255,255,255,.55));
+      --aio-soft: var(--glass-bg-soft, rgba(255,255,255,.38));
+      --aio-border: var(--glass-border, rgba(0,0,0,.12));
+      color: inherit;
+      line-height: 1.65;
+      max-width: 100%;
+    }
+    .aio-tool-page *,
+    .aio-tool-page *::before,
+    .aio-tool-page *::after { box-sizing: border-box; }
+    .aio-tool-page .aio-tool-card {
+      padding: clamp(16px, 3vw, 24px);
+      border: 1px solid var(--aio-border);
+      border-radius: var(--glass-radius, 18px);
+      background: var(--aio-card);
+      box-shadow: var(--glass-shadow, 0 8px 24px rgba(0,0,0,.08));
+    }
+    .aio-tool-page h2,
+    .aio-tool-page h3 { color: var(--aio-heading); }
+    .aio-tool-page .aio-field {
+      display: grid;
+      gap: 6px;
+      margin-block: 12px;
+    }
+    .aio-tool-page input,
+    .aio-tool-page select,
+    .aio-tool-page textarea {
+      width: 100%;
+      min-width: 0;
+      padding: 11px 13px;
+      border: 1px solid var(--aio-border);
+      border-radius: 10px;
+      background: var(--bs-body-bg, #fff);
+      color: inherit;
+      font: inherit;
+    }
+    .aio-tool-page :focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--aio-accent) 35%, transparent);
+      outline-offset: 2px;
+    }
+    .aio-tool-page .aio-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 18px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--aio-accent);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .aio-tool-page .aio-button:disabled { opacity: .6; cursor: not-allowed; }
+    .aio-tool-page .aio-result { overflow-wrap: anywhere; }
+    @media (max-width: 600px) {
+      .aio-tool-page .aio-tool-card { padding: 15px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .aio-tool-page *, .aio-tool-page *::before, .aio-tool-page *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+
+  <section class="aio-tool-card" aria-labelledby="aio-tool-heading">
+    <h2 id="aio-tool-heading">Tool ka naam</h2>
+    <p>Tool ka maqsad aur sahi istemal wazeh karein.</p>
+
+    <div class="aio-field">
+      <label for="aio-tool-input">Apni maloomat likhein</label>
+      <textarea id="aio-tool-input" rows="4" placeholder="Yahan likhein..."></textarea>
+    </div>
+
+    <button class="aio-button" id="aio-tool-run" type="button">Generate / Check</button>
+    <div class="aio-result" id="aio-tool-result" role="status" aria-live="polite"></div>
+  </section>
+</div>
+
+<script>
+//<![CDATA[
+(function () {
+  var root = document.getElementById('aio-tool-page');
+  if (!root || root.dataset.initialized === 'true') return;
+  root.dataset.initialized = 'true';
+
+  var input = root.querySelector('#aio-tool-input');
+  var button = root.querySelector('#aio-tool-run');
+  var result = root.querySelector('#aio-tool-result');
+
+  if (!input || !button || !result) return;
+
+  button.addEventListener('click', function () {
+    // Replace this safe demo with the tested tool logic.
+    result.textContent = input.value.trim()
+      ? 'Input mil gaya. Yahan verified tool result show hoga.'
+      : 'Pehle required maloomat likhein.';
+  });
+})();
+ //]]>
+</script>
