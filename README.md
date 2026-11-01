@@ -14,6 +14,7 @@ Independent study-support tools, Blogger resources, and a separate Supabase-back
 - Blogger Page HTML sources: [p/](p/README.md) (maps to Blogger `/p/<slug>.html` after manual publication)
 - Blogger Post HTML sources: [post/](post/README.md) (Blogger controls public post permalinks)
 - Blogger theme: [theme/aioucoahing.xml](theme/aioucoahing.xml)
+- AdSense readiness audit and approval gate: [docs/ADSENSE-READINESS-AUDIT.md](docs/ADSENSE-READINESS-AUDIT.md)
 - Blogger theme compatibility: [docs/BLOGGER-THEME-COMPATIBILITY.md](docs/BLOGGER-THEME-COMPATIBILITY.md)
 - Blogger HTML coding and QA rules: [docs/BLOGGER-HTML-CODING-RULES.md](docs/BLOGGER-HTML-CODING-RULES.md)
 - LMS security guide: [lms/README.md](lms/README.md)
