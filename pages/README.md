@@ -26,11 +26,13 @@ The HTML files in this folder are **page-body snippets** intended for Blogger Pa
 | File | Intended content |
 | --- | --- |
 | `about.html` | Operator identity, project purpose, independence, and editorial context |
-| `contact.html` | Contact options and contact form area (verify its destination and data handling) |
+| `contact.html` | Legacy contact page; do not publish changes until form, email and WhatsApp ownership are verified |
+| `contact-draft.html` | Email-only privacy-first contact page draft; approval required |
 | `faqs.html` | Frequently asked questions |
 | `how-it-works.html` | How the service and tools work |
 | `privacy.html` | Privacy information |
-| `terms.html` | Terms of use |
+| `terms.html` | Existing terms page; contains placeholder date and needs review |
+| `terms-draft.html` | Updated draft terms with fee/refund fields left for approval |
 | `disclaimer.html` | Independence and accuracy disclaimer |
 | `dmca.html` | Copyright/DMCA contact process |
 | `aiou-tool-kit.html` | Tool directory page |
@@ -50,6 +52,12 @@ The theme may provide styles for the following selectors. Confirm they still exi
 | `.ad-slot`, `.ad-header`, `.ad-in-article` | Reserved ad layout zones |
 | `.accordion-item`, `.accordion-header` | Accordion content |
 | `table`, `blockquote`, `pre`, `img` | Common content elements |
+
+## Business workflow and privacy review
+
+- [Enquiry workflow](../business/enquiry-workflow.md)
+- [Privacy/data-flow inventory](../business/privacy-data-inventory.md)
+- [Phase 2 public-page implementation](../business/phase-2-public-pages.md)
 
 ## Related guides
 
