@@ -1463,6 +1463,55 @@ transform: none !important;
 display: none;
 }
 }
+
+/* AIOU Coaching: lightweight responsive mobile navigation */
+#aiou-share-sheet { display:none; position:fixed; z-index:10060; left:12px; right:12px; bottom:calc(86px + env(safe-area-inset-bottom)); padding:16px; gap:10px; flex-direction:column; border:1px solid rgba(120,120,120,.2); border-radius:18px; background:#fff; color:#252525; box-shadow:0 10px 35px rgba(0,0,0,.2); }
+#aiou-share-sheet button, #aiou-share-sheet a { display:block; width:100%; padding:11px 13px; border:1px solid rgba(120,120,120,.18); border-radius:10px; background:transparent; color:inherit; text-align:left; font:600 14px system-ui,sans-serif; cursor:pointer; }
+#aiou-share-sheet [data-aiou-share='close'] { width:34px; align-self:flex-end; text-align:center; padding:4px; font-size:20px; }
+.dark-mode #aiou-share-sheet { background:#202328; color:#f5f5f5; border-color:rgba(255,255,255,.14); }
+@media (min-width:992px) { #aiou-share-sheet { display:none !important; } }
+#aiou-mobile-nav { display:none; }
+@media (max-width: 991.98px) {
+  body { padding-bottom:calc(74px + env(safe-area-inset-bottom)); }
+  #aiou-mobile-nav {
+    position:fixed; left:max(8px,env(safe-area-inset-left)); right:max(8px,env(safe-area-inset-right));
+    bottom:calc(8px + env(safe-area-inset-bottom)); z-index:10050;
+    display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:1px;
+    padding:5px 4px; border:1px solid rgba(120,120,120,.13); border-radius:17px;
+    background:rgba(255,255,255,.82); color:rgba(36,36,36,.86);
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+    contain:layout paint; -webkit-backface-visibility:hidden; backface-visibility:hidden;
+  }
+  #aiou-mobile-nav a, #aiou-mobile-nav button {
+    min-width:0; min-height:46px; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; gap:2px; padding:3px 0; border:0; border-radius:11px;
+    background:transparent; color:inherit; opacity:.84; text-decoration:none;
+    font:600 10px/1.15 system-ui,-apple-system,sans-serif; white-space:nowrap;
+    cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent;
+  }
+  #aiou-mobile-nav .aiou-nav-icon { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; flex:none; color:#e66d2e; transition:transform .16s ease,color .16s ease; }
+  #aiou-mobile-nav a:active, #aiou-mobile-nav button:active { background:rgba(230,109,46,.13); opacity:1; }
+  #aiou-mobile-nav a:active .aiou-nav-icon, #aiou-mobile-nav button:active .aiou-nav-icon { transform:scale(.9); }
+  #aiou-mobile-nav a:focus-visible, #aiou-mobile-nav button:focus-visible { outline:2px solid #e66d2e; outline-offset:1px; opacity:1; }
+  #aiou-share-sheet { max-height: min(70vh, 420px); overflow:auto; gap:9px; }
+  #aiou-share-sheet strong { font-size:16px; padding:3px 2px 7px; }
+  #aiou-share-sheet button:active, #aiou-share-sheet a:active { background:rgba(230,109,46,.12); }
+  body.dark-mode #aiou-mobile-nav, .dark-mode #aiou-mobile-nav, html[data-theme='dark'] #aiou-mobile-nav {
+    background:rgba(28,30,34,.86); color:rgba(255,255,255,.9);
+    border-color:rgba(255,255,255,.10); box-shadow:0 3px 12px rgba(0,0,0,.18);
+  }
+  #aiou-mobile-nav button:focus-visible, #aiou-mobile-nav a:focus-visible { outline:2px solid #e66d2e; outline-offset:1px; }
+}
+@media (max-width:380px) {
+  #aiou-mobile-nav { left:5px; right:5px; gap:0; padding:4px 2px; border-radius:14px; }
+  #aiou-mobile-nav a, #aiou-mobile-nav button { font-size:9px; min-height:44px; }
+  #aiou-mobile-nav .aiou-nav-icon { width:19px; height:19px; }
+}
+@media (min-width: 992px) {
+  body { padding-bottom:0 !important; }
+  #aiou-mobile-nav { display:none !important; }
+}
+
 ]]></b:skin>
 </b:if>
 <b:if cond='data:view.isLayoutMode'>
@@ -3581,6 +3630,148 @@ function jtCallback(){
 /*]]>*/</script>
 
 <!-- Your Style and Script before </body> is here -->
+
+
+<!-- AIOU Coaching mobile bottom navigation: same five actions across views -->
+<b:if cond='data:view.isHomepage or data:view.isPost or data:view.isPage'>
+<nav aria-label='Mobile navigation' id='aiou-mobile-nav'>
+  <a href='/' aria-label='Home'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><path d='m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z'/></svg><span>Home</span></a>
+  <button aria-label='Open search' data-aiou-nav='search' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><circle cx='10.8' cy='10.8' r='6.8'/><path d='m16 16 5 5'/></svg><span>Search</span></button>
+  <button aria-label='Open menu' data-aiou-nav='menu' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><path d='M4 6h16M4 12h16M4 18h16'/></svg><span>Menu</span></button>
+  <button aria-label='Open comments' data-aiou-nav='comments' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><path d='M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z'/><path d='M8 11h8M8 14h5'/></svg><span>Comments</span></button>
+  <button aria-label='Share this page' data-aiou-nav='share' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><circle cx='18' cy='5' r='3'/><circle cx='6' cy='12' r='3'/><circle cx='18' cy='19' r='3'/><path d='m8.7 10.6 6.6-4.2M8.7 13.4l6.6 4.2'/></svg><span>Share</span></button>
+  <button aria-label='Toggle dark mode' data-aiou-nav='dark' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><path d='M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z'/></svg><span>Theme</span></button>
+  <button aria-label='Scroll to top' data-aiou-nav='top' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><path d='m5 12 7-7 7 7M12 5v14'/></svg><span>Top</span></button>
+</nav>
+<div aria-hidden='true' aria-label='Share this page' id='aiou-share-sheet' role='dialog'>
+  <button aria-label='Close share panel' data-aiou-share='close' type='button'>×</button>
+  <strong>Share this page</strong>
+  <button data-aiou-share='native' type='button'>Share link</button>
+  <button data-aiou-share='copy' type='button'>Copy page link</button>
+  <a data-aiou-share='whatsapp' rel='noopener' target='_blank'>WhatsApp</a>
+</div>
+</b:if>
+<script>/*<![CDATA[*/
+(function () {
+  var nav = document.getElementById('aiou-mobile-nav');
+  if (!nav) return;
+  var sheet = document.getElementById('aiou-share-sheet');
+  var pageUrl = window.location.href.split('#')[0];
+  var pageTitle = document.title || 'AIOU Coaching';
+
+  function showShare() {
+    if (!sheet) return;
+    sheet.style.display = 'flex';
+    sheet.setAttribute('aria-hidden', 'false');
+    var wa = sheet.querySelector("[data-aiou-share='whatsapp']");
+    if (wa) wa.href = 'https://wa.me/?text=' + encodeURIComponent(pageTitle + ' ' + pageUrl);
+    var firstAction = sheet.querySelector("[data-aiou-share='native']");
+    if (firstAction) firstAction.focus();
+  }
+  function hideShare() {
+    if (!sheet) return;
+    sheet.style.display = 'none';
+    sheet.setAttribute('aria-hidden', 'true');
+  }
+  function copyPageLink(button) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(pageUrl).then(function () {
+        if (button) button.textContent = 'Link copied!';
+      }).catch(function () { fallbackCopy(button); });
+    } else {
+      fallbackCopy(button);
+    }
+  }
+  function fallbackCopy(button) {
+    var field = document.createElement('textarea');
+    field.value = pageUrl;
+    field.setAttribute('readonly', 'readonly');
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.appendChild(field);
+    field.select();
+    try {
+      var copied = document.execCommand('copy');
+      if (button) button.textContent = copied ? 'Link copied!' : 'Select and copy the page URL';
+    } catch (e) {
+      if (button) button.textContent = 'Copy unavailable - use address bar';
+    }
+    document.body.removeChild(field);
+  }
+
+  nav.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-aiou-nav]');
+    if (!button) return;
+    var action = button.getAttribute('data-aiou-nav');
+
+    if (action === 'search') {
+      var searchToggle = document.getElementById('search-toggle');
+      var searchLabel = document.getElementById('search-toggler');
+      var searchInput = document.getElementById('search-input');
+      if (searchToggle && !searchToggle.checked && searchLabel) searchLabel.click();
+      window.requestAnimationFrame(function () {
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    } else if (action === 'menu') {
+      var menuToggle = document.getElementById('navbar-toggle');
+      var menuLabel = document.getElementById('navbar-toggler');
+      if (menuToggle && menuLabel) menuLabel.click();
+    } else if (action === 'comments') {
+      var comments = document.getElementById('comments');
+      var addComment = document.getElementById('add-comment');
+      var commentButton = document.getElementById('comment-button');
+      var destination = comments || addComment;
+      if (destination) {
+        destination.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', '#comments');
+        }
+        if (comments) {
+          comments.setAttribute('tabindex', '-1');
+          window.setTimeout(function () { comments.focus({ preventScroll: true }); }, 350);
+        } else if (commentButton) {
+          commentButton.focus({ preventScroll: true });
+        }
+      } else {
+        window.alert('Comments are available inside individual posts. Please open a post first.');
+      }
+    } else if (action === 'share') {
+      showShare();
+    } else if (action === 'dark') {
+      var darkToggle = document.getElementById('dark-toggler');
+      if (darkToggle) darkToggle.click();
+    } else if (action === 'top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+
+  if (sheet) {
+    sheet.addEventListener('click', function (event) {
+      var action = event.target.closest('[data-aiou-share]');
+      if (!action) {
+        if (event.target === sheet) hideShare();
+        return;
+      }
+      var type = action.getAttribute('data-aiou-share');
+      if (type === 'close') hideShare();
+      if (type === 'native') {
+        if (navigator.share) {
+          navigator.share({ title: pageTitle, text: pageTitle, url: pageUrl }).then(hideShare).catch(function () {});
+        } else {
+          copyPageLink(action);
+        }
+      }
+      if (type === 'copy') copyPageLink(action);
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && sheet.getAttribute('aria-hidden') === 'false') hideShare();
+    });
+  }
+})();;
+ /*]]>*/</script>
 
 <b:if cond='!data:view.isPreview'>&lt;textarea disabled readonly id=&quot;element-b&quot; style=&quot;display:none&quot;&gt;&lt;style&gt;/*</b:if></body><b:if cond='!data:view.isPreview'>*/&lt;/style&gt;&lt;/textarea&gt;<script>/*<![CDATA[*/const _eh=document.getElementById("element-h"),_eb=document.getElementById("element-b"),_WidgetManager={_PopupConfig:function(){}};null!==_eh&&(_eh.outerHTML=""),null!==_eb&&(_eb.outerHTML="");/*]]>*/</script>
 &lt;/body&gt;</b:if>
