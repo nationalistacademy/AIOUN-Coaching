@@ -132,7 +132,7 @@
           <button type="button" data-cmd="removeFormat" title="Clear inline formatting">Clear</button>
         </div>
         <div id="s-editor" class="sab-editor" contenteditable="true" dir="auto" role="textbox" aria-label="Editable answer" aria-multiline="true" data-placeholder="Yahan answer likhein ya ChatGPT / DeepSeek ka formatted answer paste karein..."></div>
-        <p class="sab-note">Formatting, tables aur LaTeX maths supported. ∑ Math par click karke expression likhein, jaise \\frac{a+b}{c}, \\sqrt{x}, x^2 ya \\int_0^1 x^2 dx. Preview mein equation render hogi; Word export mein equation markup bhi rakha jayega.</p>
+        <p class="sab-note">Formatting, tables, Urdu RTL/LTR, images (PNG/JPG/WebP up to 250 KB; max 4 per answer), flow diagrams aur LaTeX maths supported. RTL/LTR buttons selected paragraph par direction apply karte hain. ∑ Math par click karke expression likhein, jaise \\frac{a+b}{c}, \\sqrt{x}, x^2 ya \\int_0^1 x^2 dx. Preview mein equation render hogi; Word export mein equation markup bhi rakha jayega.</p>
         <input type="file" id="s-inline-image" accept="image/png,image/jpeg,image/webp" style="display:none" aria-label="Choose an image to insert">
         <textarea id="s-a" style="display:none" aria-hidden="true"></textarea>
       </div>
@@ -214,7 +214,7 @@
           S.a[n].qs = Array.isArray(saved.qs) ? saved.qs.slice(0, 50).filter(function (q) {
             return q && typeof q.q === 'string' && typeof q.a === 'string';
           }).map(function (q) {
-            return { q: q.q.slice(0, 3000), a: q.a.slice(0, 50000), m: typeof q.m === 'string' ? q.m.slice(0, 30) : '' };
+            return { q: q.q.slice(0, 3000), a: q.a.slice(0, 1500000), m: typeof q.m === 'string' ? q.m.slice(0, 30) : '' };
           }) : [];
         });
         S.cur = o.S.cur === 2 ? 2 : 1;
@@ -259,7 +259,9 @@
   function addQ() {
     var q = v('s-q'), a = $('s-a').value.trim();
     if (!q) { alert('Pehle sawal likhein.'); return; }
-    if (q.length > 3000 || a.length > 50000) { alert('Question 3,000 aur answer 50,000 characters se chhota rakhein.'); return; }
+    if (q.length > 3000 || a.length > 1500000) { alert('Question 3,000 aur answer 1,500,000 characters se chhota rakhein.'); return; }
+    var oldAnswer = editIdx >= 0 && cur().qs[editIdx] ? cur().qs[editIdx].a.length : 0;
+    if (JSON.stringify(S).length - oldAnswer + a.length > 3500000) { alert('Browser draft storage limit ke liye answer/media size kam karein (total 3.5 MB).'); return; }
     if (editIdx < 0 && cur().qs.length >= 50) { alert('Ek assignment mein maximum 50 questions add kar sakte hain.'); return; }
     var o = { q: q, a: a, m: v('s-m').slice(0, 30) };
     if (editIdx >= 0) { cur().qs[editIdx] = o; editIdx = -1; } else { cur().qs.push(o); }
@@ -284,7 +286,7 @@
           var name = a.name.toLowerCase(), keep = false;
           if (name === 'title' && a.value.length <= 200) { keep = true; }
           if (name === 'alt' && el.tagName === 'IMG' && a.value.length <= 160) { keep = true; }
-          if (name === 'src' && el.tagName === 'IMG' && a.value.length <= 500000 && /^data:image\/(png|jpeg|webp);base64,[a-z0-9+/]+=*$/i.test(a.value)) { keep = true; }
+          if (name === 'src' && el.tagName === 'IMG' && a.value.length <= 350000 && /^data:image\/(png|jpeg|webp);base64,[a-z0-9+/]+=*$/i.test(a.value)) { keep = true; }
           if ((name === 'width' || name === 'height') && el.tagName === 'IMG' && /^(?:[1-9][0-9]{0,3})$/.test(a.value) && Number(a.value) <= 1600) { keep = true; }
           if (name === 'dir' && /^(ltr|rtl|auto)$/i.test(a.value)) { keep = true; }
           if ((name === 'colspan' || name === 'rowspan') && /^(?:[1-9]|1[0-9]|20)$/.test(a.value) && /^(TD|TH)$/.test(el.tagName)) { keep = true; }
@@ -499,7 +501,7 @@
     if (node.nodeType !== 1) { return runs; }
     if (node.tagName === 'IMG') {
       var src = node.getAttribute('src') || '';
-      if (/^data:image\/(png|jpeg|webp);base64,/i.test(src) && src.length <= 500000) {
+      if (/^data:image\/(png|jpeg|webp);base64,/i.test(src) && src.length <= 350000) {
         try {
           var raw = atob(src.split(',')[1]), bytes = new Uint8Array(raw.length);
           for (var z = 0; z < raw.length; z++) { bytes[z] = raw.charCodeAt(z); }
@@ -636,10 +638,10 @@
   }
   function addImageFile(file) {
     if (!file) { return; }
-    if (!/^image\/(png|jpeg|webp)$/i.test(file.type) || file.size > 350 * 1024) { alert('Image PNG, JPG ya WebP honi chahiye aur 350 KB se chhoti.'); return; }
+    if (!/^image\/(png|jpeg|webp)$/i.test(file.type) || file.size > 250 * 1024) { alert('Image PNG, JPG ya WebP honi chahiye aur 250 KB se chhoti.'); return; }
     if ($('s-editor').querySelectorAll('img').length >= 4) { alert('Ek answer mein maximum 4 images add kar sakte hain.'); return; }
     var reader = new FileReader();
-    reader.onload = function (ev) { var data = String(ev.target.result || ''); if (data.length > 500000) { alert('Image size limit se barh gayi.'); return; } editorInsert('<p><img class="sab-inline-image" src="' + data + '" alt="Student inserted image" width="520"></p><p><br></p>'); schedule(); };
+    reader.onload = function (ev) { var data = String(ev.target.result || ''); if (data.length > 350000) { alert('Image size limit se barh gayi.'); return; } editorInsert('<p><img class="sab-inline-image" src="' + data + '" alt="Student inserted image" width="520"></p><p><br></p>'); schedule(); };
     reader.onerror = function () { alert('Image read nahi ho saki. Dobara try karein.'); };
     reader.readAsDataURL(file);
   }
