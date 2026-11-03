@@ -532,8 +532,15 @@
     ed.addEventListener('keyup', rememberEditorRange);
     ed.addEventListener('mouseup', rememberEditorRange);
     ed.addEventListener('blur', rememberEditorRange);
-    ed.addEventListener('paste', function () {
-      setTimeout(syncEditor, 0);
+    ed.addEventListener('paste', function (e) {
+      // Sanitize clipboard HTML before it is ever inserted into the live editor DOM.
+      e.preventDefault();
+      rememberEditorRange();
+      var clipboard = e.clipboardData;
+      var html = clipboard ? clipboard.getData('text/html') : '';
+      var plain = clipboard ? clipboard.getData('text/plain') : '';
+      var safe = html ? safeRich(html) : plainToEditor(plain);
+      if (safe) { editorInsert(safe); }
     });
     document.querySelectorAll('.sab-editorbar [data-cmd]').forEach(function (button) {
       button.addEventListener('mousedown', function (e) { e.preventDefault(); rememberEditorRange(); });
