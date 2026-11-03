@@ -28,11 +28,11 @@ Improve the existing `tools/Aiou-solved-assignment-builder.html` rather than cre
 4. Paste the fragment into the page body, preview on desktop and mobile, and verify the PDF libraries load.
 5. Publish only when you are ready. This branch does not publish or change Blogger.
 
-Do not paste the fragment into the global Blogger theme. The page uses external MathJax, html2canvas and jsPDF libraries for equation rendering and PDF export; if those libraries are unavailable, those optional features may not work.
+Do not paste the fragment into the global Blogger theme. The page uses external MathJax, html2canvas and jsPDF libraries for equation rendering/PDF export, plus the pinned docx 9.1.0 browser bundle from jsDelivr for native DOCX export. If a required library is unavailable, that export or rendering feature may not work.
 
 ## Known limitations
 
-- The Word export is an HTML-based `.doc` file, **not a native DOCX**.
+- The initial MVP used an HTML-based `.doc` file. The Phase 2 branch replaces that with a browser-generated native `.docx` export; see `docs/ASSIGNMENT-BUILDER-PHASE-2.md`.
 - PDF pages are rasterized from the page preview.
 - Similarity checking compares only 5-word phrases against text the user pastes and the other assignment answers. It is not Turnitin, does not query external databases and cannot verify citations or originality.
 - Draft data is stored in browser local storage on the same browser/device. Shared-device users should clear it after use. Clearing site data in the browser also removes drafts.
