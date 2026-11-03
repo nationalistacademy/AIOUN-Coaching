@@ -111,4 +111,60 @@ test.describe('AIOU Solved Assignment Builder', () => {
     await expect(page.locator('#s-editor img.sab-inline-image')).toHaveCount(1);
     await expect(page.locator('#s-editor img.sab-inline-image')).toHaveCount(1);
   });
+
+  test('exports and restores a versioned JSON backup without losing either assignment', async ({ page }) => {
+    await page.locator('#s-code').fill('260');
+    await page.locator('#s-q').fill('Explain data communication.');
+    await page.locator('#s-editor').fill('Data communication transfers information between devices.');
+    await page.locator('#s-add').click();
+    await page.locator('#s-t2').click();
+    await page.locator('#s-q').fill('Define a computer network.');
+    await page.locator('#s-editor').fill('A network connects two or more devices.');
+    await page.locator('#s-add').click();
+
+    const backup = await page.evaluate(() => {
+      const saved = JSON.parse(localStorage.getItem('sab_v1'));
+      return JSON.stringify({ ...saved, schemaVersion: 2, exportedAt: new Date().toISOString() });
+    });
+    await page.evaluate(() => localStorage.removeItem('sab_v1'));
+    await page.reload();
+
+    page.once('dialog', dialog => dialog.accept());
+    await page.locator('#s-backup-file').setInputFiles({
+      name: 'assignment-backup.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from(backup)
+    });
+    await expect(page.locator('#sab-backup-status')).toContainText('Backup restored successfully');
+    await expect(page.locator('#s-code')).toHaveValue('260');
+    await expect(page.locator('#s-list')).toContainText('Explain data communication.');
+    await page.locator('#s-t2').click();
+    await expect(page.locator('#s-list')).toContainText('Define a computer network.');
+    const restored = await page.evaluate(() => JSON.parse(localStorage.getItem('sab_v1')));
+    expect(restored.schemaVersion).toBe(2);
+  });
+
+  test('rejects malformed and unsupported JSON backups without changing the draft', async ({ page }) => {
+    await page.locator('#s-code').fill('KEEP-ME');
+    const unsupported = JSON.stringify({ schemaVersion: 99, S: { cur: 1, a: { 1: { qs: [], refs: '' }, 2: { qs: [], refs: '' } } } });
+    page.once('dialog', dialog => dialog.accept());
+    await page.locator('#s-backup-file').setInputFiles({
+      name: 'unsupported.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from(unsupported)
+    });
+    await expect(page.locator('#sab-backup-status')).toContainText('Unsupported backup version');
+    await expect(page.locator('#s-code')).toHaveValue('KEEP-ME');
+  });
+
+  test('does not overwrite corrupted local storage during autosave', async ({ page }) => {
+    await page.evaluate(() => localStorage.setItem('sab_v1', '{broken-json'));
+    await page.reload();
+    await expect(page.locator('#sab-backup-status')).toContainText('Autosave is paused');
+    await page.locator('#s-code').fill('SHOULD-NOT-OVERWRITE');
+    await page.waitForTimeout(350);
+    const raw = await page.evaluate(() => localStorage.getItem('sab_v1'));
+    expect(raw).toBe('{broken-json');
+  });
+
 });
