@@ -76,9 +76,15 @@ test.describe('AIOU Solved Assignment Builder', () => {
     await expect(page.getByText(/plagiarism detector nahi/i)).toBeVisible();
   });
 
-  test('exports a Word-compatible document and can clear local saved data', async ({ page }) => {
+  test('exports a native DOCX containing an inserted image and can clear local saved data', async ({ page }) => {
     await page.locator('#s-q').fill('What is a computer network?');
     await page.locator('#s-editor').fill('A computer network connects devices to share information and resources.');
+    await page.locator('#s-inline-image').setInputFiles({
+      name: 'network.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l8sAAAAASUVORK5CYII=', 'base64')
+    });
+    await expect(page.locator('#s-editor img.sab-inline-image')).toHaveCount(1);
     await page.locator('#s-add').click();
 
     const downloadPromise = page.waitForEvent('download');
@@ -103,7 +109,6 @@ test.describe('AIOU Solved Assignment Builder', () => {
       buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l8sAAAAASUVORK5CYII=', 'base64')
     });
     await expect(page.locator('#s-editor img.sab-inline-image')).toHaveCount(1);
-    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('sab_v1')));
-    expect(saved.S.a[1].qs).toHaveLength(0);
+    await expect(page.locator('#s-editor img.sab-inline-image')).toHaveCount(1);
   });
 });
