@@ -21,6 +21,7 @@
 
 New Playwright tests cover:
 - Export/restore round trip for both assignments and metadata.
+- Recovery of an unfinished answer after reload and independent in-progress drafts across Assignment 1/2.
 - Rejection of unsupported backup schema versions without changing the current draft.
 - Preservation of malformed local storage when autosave is attempted.
 
