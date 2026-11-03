@@ -89,13 +89,13 @@
   <div id="sab-busy">File ban rahi hai...</div>
   <div class="sab-card">
     <h3>Student Details (Cover Page)</h3>
-    <div class="sab-btns" style="margin:0 0 12px"><button type="button" class="sab-btn" id="s-rnd">Random Student Details</button></div>
+    <p class="sab-note">Apni asli assignment details khud enter karein. Demo/random student identity generate nahi hoti. Data sirf isi browser ke local storage mein rehta hai; shared device par kaam ke baad draft clear karein.</p>
     <div class="sab-row">
-      <div><label for="s-name">Student Name</label><input type="text" id="s-name" value="Muhammad Waseem"></div>
-      <div><label for="s-id">Student ID</label><input type="text" id="s-id" value="0001189718"></div>
+      <div><label for="s-name">Student Name</label><input type="text" id="s-name" autocomplete="name" placeholder="Apna naam (optional)"></div>
+      <div><label for="s-id">Roll Number / Student ID</label><input type="text" id="s-id" autocomplete="off" placeholder="Sirf jab assignment format mein zaroori ho"></div>
       <div><label for="s-prog">Programme</label><select id="s-prog"><option>BBA</option><option>BS</option><option>ADC</option><option>ADA</option><option>B.Com</option><option>MBA</option></select></div>
-      <div><label for="s-code">Course Code</label><input type="text" id="s-code" value="AIOU 0402"></div>
-      <div><label for="s-title">Course Title</label><input type="text" id="s-title" value="Economics"></div>
+      <div><label for="s-code">Course Code</label><input type="text" id="s-code" placeholder="Course code"></div>
+      <div><label for="s-title">Course Title</label><input type="text" id="s-title" placeholder="Course title"></div>
       <div><label for="s-tut">Tutor (optional)</label><input type="text" id="s-tut" placeholder="Tutor name"></div>
       <div class="full"><label for="s-uni">University Line</label><input type="text" id="s-uni" value="(Allama Iqbal Open University)"></div>
       <div><label for="s-semt">Semester</label><select id="s-semt"><option>Autumn</option><option>Spring</option></select></div>
@@ -139,11 +139,11 @@
     <div class="sab-row" style="margin-top:12px"><div class="full"><label for="s-refs">References (har line ek reference, APA style)</label><textarea id="s-refs" placeholder="Author, A. (Year). Title. Publisher."></textarea></div></div>
   </div>
   <div class="sab-card">
-    <h3>Originality Self-Check</h3>
+    <h3>Text Similarity Self-Check</h3>
     <div class="sab-row"><div class="full"><label for="s-src">Source text (optional): jis kitab ya website se parha, uska text yahan paste karein</label><textarea id="s-src" style="min-height:110px"></textarea></div></div>
-    <div class="sab-btns"><button type="button" class="sab-btn" id="s-check">Check Originality</button></div>
+    <div class="sab-btns"><button type="button" class="sab-btn" id="s-check">Compare Text</button></div>
     <div id="s-res"></div>
-    <p class="sab-note">Yeh check sirf aap ke paste kiye hue source text aur aap ke apne jawabat ke darmiyan 5 alfaz ke milte julte hisse dhoondta hai. Turnitin jaise tool ke database se muqabla nahi karta, is liye "plagiarism free" ki guarantee nahi di ja sakti. Behtareen tareeqa: samajh kar apne alfaz mein likhein, aur jahan se maloomat li wahan reference zaroor dein.</p>
+    <p class="sab-note">Yeh browser-side check sirf diye gaye source text aur Assignment 1/2 ke jawabat mein 5-word phrase overlap ka andaza deta hai. Yeh plagiarism detector nahi, kisi external database se compare nahi karta aur originality, citation accuracy ya academic integrity certify nahi karta. Matches ko manually review karein, concepts samajh kar apne alfaaz mein likhein aur sources cite karein.</p>
   </div>
   <div class="sab-card">
     <h3>Download</h3>
@@ -152,6 +152,7 @@
       <button type="button" class="sab-btn" id="s-both">PDF Assignment 1 and 2</button>
       <button type="button" class="sab-btn" id="s-doc">Word (current)</button>
       <button type="button" class="sab-btn gray" id="s-print">Print</button>
+      <button type="button" class="sab-btn red" id="s-clear-data">Clear all saved data on this device</button>
     </div>
   </div>
   <div class="sab-stage" id="sab-stage"><div class="sab-holder" id="sab-holder"><div class="sab-host" id="sab-host"></div></div></div>
@@ -194,10 +195,27 @@
   function load() {
     try {
       var o = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if (!o) { return; }
-      if (o.S && o.S.a) { S = o.S; }
-      FIELDS.forEach(function (id) { if (o.f && o.f[id] !== undefined) { $(id).value = o.f[id]; } });
-    } catch (e) {}
+      if (!o || typeof o !== 'object') { return; }
+      if (o.S && o.S.a && typeof o.S.a === 'object') {
+        [1, 2].forEach(function (n) {
+          var saved = o.S.a[n];
+          if (!saved || typeof saved !== 'object') { return; }
+          S.a[n].refs = typeof saved.refs === 'string' ? saved.refs.slice(0, 10000) : '';
+          S.a[n].qs = Array.isArray(saved.qs) ? saved.qs.slice(0, 50).filter(function (q) {
+            return q && typeof q.q === 'string' && typeof q.a === 'string';
+          }).map(function (q) {
+            return { q: q.q.slice(0, 3000), a: q.a.slice(0, 50000), m: typeof q.m === 'string' ? q.m.slice(0, 30) : '' };
+          }) : [];
+        });
+        S.cur = o.S.cur === 2 ? 2 : 1;
+      }
+      FIELDS.forEach(function (id) {
+        var value = o.f && o.f[id];
+        if (typeof value === 'string') { $(id).value = value.slice(0, id === 's-src' ? 50000 : 500); }
+      });
+    } catch (e) {
+      S = { cur: 1, a: { 1: { qs: [], refs: '' }, 2: { qs: [], refs: '' } } };
+    }
   }
   function cur() { return S.a[S.cur]; }
   function renderList() {
@@ -231,7 +249,9 @@
   function addQ() {
     var q = v('s-q'), a = $('s-a').value.trim();
     if (!q) { alert('Pehle sawal likhein.'); return; }
-    var o = { q: q, a: a, m: v('s-m') };
+    if (q.length > 3000 || a.length > 50000) { alert('Question 3,000 aur answer 50,000 characters se chhota rakhein.'); return; }
+    if (editIdx < 0 && cur().qs.length >= 50) { alert('Ek assignment mein maximum 50 questions add kar sakte hain.'); return; }
+    var o = { q: q, a: a, m: v('s-m').slice(0, 30) };
     if (editIdx >= 0) { cur().qs[editIdx] = o; editIdx = -1; } else { cur().qs.push(o); }
     $('s-q').value = ''; $('s-a').value = ''; $('s-editor').innerHTML = ''; $('s-m').value = '';
     setEdit(); save(); renderList(); schedule();
@@ -239,12 +259,37 @@
   function wc(t) { var m = t.trim().match(/\S+/g); return m ? m.length : 0; }
   function safeRich(html) {
     var doc = new DOMParser().parseFromString(String(html || ''), 'text/html');
-    doc.querySelectorAll('script,style,iframe,object,embed,form,link,meta').forEach(function (el) { el.remove(); });
-    doc.body.querySelectorAll('*').forEach(function (el) {
-      Array.prototype.slice.call(el.attributes).forEach(function (a) {
-        if (/^on/i.test(a.name) || (a.name === 'href' && /^\s*javascript:/i.test(a.value))) { el.removeAttribute(a.name); }
+    var allowed = /^(A|B|STRONG|I|EM|U|S|DEL|INS|P|DIV|BR|H1|H2|H3|H4|H5|H6|UL|OL|LI|BLOCKQUOTE|TABLE|THEAD|TBODY|TFOOT|TR|TH|TD|SPAN|SUB|SUP|HR|CODE|PRE)$/;
+    var blocked = /^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|FORM|INPUT|BUTTON|TEXTAREA|SELECT|OPTION|LINK|META|SVG|MATH|AUDIO|VIDEO|SOURCE|PICTURE|IMG|TEMPLATE|NOSCRIPT)$/;
+    function clean(parent) {
+      Array.prototype.slice.call(parent.children).forEach(function (el) {
+        if (blocked.test(el.tagName)) { el.remove(); return; }
+        if (!allowed.test(el.tagName)) {
+          clean(el);
+          while (el.firstChild) { parent.insertBefore(el.firstChild, el); }
+          el.remove();
+          return;
+        }
+        Array.prototype.slice.call(el.attributes).forEach(function (a) {
+          var name = a.name.toLowerCase(), keep = false;
+          if (name === 'title' && a.value.length <= 200) { keep = true; }
+          if (name === 'dir' && /^(ltr|rtl|auto)$/i.test(a.value)) { keep = true; }
+          if ((name === 'colspan' || name === 'rowspan') && /^(?:[1-9]|1[0-9]|20)$/.test(a.value) && /^(TD|TH)$/.test(el.tagName)) { keep = true; }
+          if (name === 'class' && el.tagName === 'SPAN' && a.value.split(/\s+/).every(function (c) { return c === 'sab-math'; })) { keep = true; }
+          if (name === 'data-latex' && el.tagName === 'SPAN' && a.value.length <= 500) { keep = true; }
+          if (name === 'href' && el.tagName === 'A') {
+            try {
+              var u = new URL(a.value, document.baseURI);
+              keep = /^(https?:|mailto:)$/.test(u.protocol);
+              if (keep) { el.setAttribute('rel', 'noopener noreferrer'); }
+            } catch (e) { keep = false; }
+          }
+          if (!keep) { el.removeAttribute(a.name); }
+        });
+        clean(el);
       });
-    });
+    }
+    clean(doc.body);
     return doc.body.innerHTML;
   }
   function blocks(text) {
@@ -388,8 +433,8 @@
         for (var j = 0; j < all.length; j++) { if (all[j] !== it && all[j].sh[k]) { om++; break; } }
       });
       var sp = tot ? Math.round(sm * 100 / tot) : 0, op = tot ? Math.round(om * 100 / tot) : 0, mx = Math.max(sp, op);
-      var cls = mx < 10 ? 'sab-ok' : (mx < 25 ? 'sab-mid' : 'sab-bad'), lab = mx < 10 ? 'Looks original' : (mx < 25 ? 'Review' : 'Rewrite');
-      if (wc(it.q.a) > 150 && !S.a[it.n].refs.trim()) { lab += ' (reference add karein)'; }
+      var cls = mx < 10 ? 'sab-ok' : (mx < 25 ? 'sab-mid' : 'sab-bad'), lab = mx < 10 ? 'Low overlap' : (mx < 25 ? 'Review overlap' : 'High overlap — review sources');
+      if (wc(it.q.a) > 150 && !S.a[it.n].refs.trim()) { lab += ' · add references'; }
       var r = mk('div', 'sab-rr');
       r.appendChild(mk('span', '', 'A' + it.n + ' Q' + (it.i + 1)));
       r.appendChild(mk('span', '', String(wc(it.q.a))));
@@ -440,16 +485,6 @@
     a.href = URL.createObjectURL(new Blob(['\ufeff', doc], { type: 'application/msword;charset=utf-8' }));
     a.download = 'Assignment_' + S.cur + '.doc'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }
-  var FN = ['Muhammad', 'Ahmed', 'Ali', 'Hassan', 'Usman', 'Bilal', 'Hamza', 'Ayesha', 'Fatima', 'Maryam', 'Sana', 'Hira', 'Zainab', 'Iqra', 'Noor'], LN = ['Khan', 'Ahmed', 'Siddiqui', 'Malik', 'Raza', 'Hussain', 'Sheikh', 'Qureshi', 'Ansari', 'Mirza', 'Shah', 'Iqbal'];
-  var CT = { BBA: ['Principles of Management', 'Financial Accounting', 'Business Mathematics', 'Principles of Marketing', 'Microeconomics', 'Business Statistics'], BS: ['Introduction to Computing', 'English Composition', 'Pakistan Studies', 'Calculus', 'Statistics', 'Economics'] };
-  function p1(a) { return a[Math.floor(Math.random() * a.length)]; }
-  function dg(n) { var s = ''; for (var i = 0; i < n; i++) { s += Math.floor(Math.random() * 10); } return s; }
-  function rnd() {
-    var p = CT[$('s-prog').value] ? $('s-prog').value : p1(['BBA', 'BS']);
-    $('s-name').value = p1(FN) + ' ' + p1(LN); $('s-id').value = '000' + dg(7);
-    $('s-title').value = p1(CT[p]); $('s-code').value = 'AIOU 0' + dg(3); $('s-semt').value = p1(['Autumn', 'Spring']);
-    schedule();
-  }
   function sample() {
     var s1 = { q: 'What is economics? Explain its basic concept.', m: '10', a: 'Economics studies how people, firms and governments use limited resources to satisfy unlimited wants.\n\n# Key ideas\n\n- Scarcity forces every society to make choices.\n- Every choice has an opportunity cost.\n- Resources are land, labour, capital and enterprise.\n\nIn simple words, economics is the science of choice under scarcity, and it helps us decide how to use what we have in the best possible way.' };
     var s2 = { q: 'Explain the law of demand.', m: '10', a: 'The law of demand says that when the price of a good rises, the quantity people want to buy usually falls, if other things stay the same.\n\nThis is why the demand curve slopes downward from left to right.' };
@@ -497,8 +532,15 @@
     ed.addEventListener('keyup', rememberEditorRange);
     ed.addEventListener('mouseup', rememberEditorRange);
     ed.addEventListener('blur', rememberEditorRange);
-    ed.addEventListener('paste', function () {
-      setTimeout(syncEditor, 0);
+    ed.addEventListener('paste', function (e) {
+      // Sanitize clipboard HTML before it is ever inserted into the live editor DOM.
+      e.preventDefault();
+      rememberEditorRange();
+      var clipboard = e.clipboardData;
+      var html = clipboard ? clipboard.getData('text/html') : '';
+      var plain = clipboard ? clipboard.getData('text/plain') : '';
+      var safe = html ? safeRich(html) : plainToEditor(plain);
+      if (safe) { editorInsert(safe); }
     });
     document.querySelectorAll('.sab-editorbar [data-cmd]').forEach(function (button) {
       button.addEventListener('mousedown', function (e) { e.preventDefault(); rememberEditorRange(); });
@@ -537,7 +579,8 @@
     $('s-tpl').addEventListener('change', function () { var c = COL[$('s-tpl').value]; $('s-c1').value = c[0]; $('s-c2').value = c[1]; schedule(); });
     $('s-logo').addEventListener('change', function (e) {
       var f = e.target.files[0]; if (!f) { return; }
-      var r = new FileReader(); r.onload = function (ev) { $('s-logoimg').src = ev.target.result; schedule(); }; r.readAsDataURL(f);
+      if (!/^image\/(png|jpeg|webp)$/i.test(f.type) || f.size > 3 * 1024 * 1024) { alert('Logo ke liye PNG, JPG ya WebP file 3 MB se chhoti honi chahiye.'); e.target.value = ''; return; }
+      var r = new FileReader(); r.onload = function (ev) { $('s-logoimg').src = ev.target.result; schedule(); }; r.onerror = function () { alert('Image read nahi ho saki. Dobara try karein.'); }; r.readAsDataURL(f);
     });
     $('s-refs').addEventListener('input', function () { cur().refs = $('s-refs').value; schedule(); });
     $('s-t1').addEventListener('click', function () { S.cur = 1; editIdx = -1; setEdit(); renderList(); schedule(); });
@@ -546,12 +589,16 @@
     $('s-cancel').addEventListener('click', function () { editIdx = -1; $('s-q').value = ''; $('s-a').value = ''; $('s-m').value = ''; setEdit(); });
     $('s-sample').addEventListener('click', sample);
     $('s-clear').addEventListener('click', function () { if (confirm('Is assignment ke saray sawalat delete kar dein?')) { S.a[S.cur] = { qs: [], refs: '' }; save(); renderList(); schedule(); } });
-    $('s-rnd').addEventListener('click', rnd);
     $('s-check').addEventListener('click', check);
     $('s-pdf').addEventListener('click', function () { exportFor([S.cur]); });
     $('s-both').addEventListener('click', function () { exportFor([1, 2]); });
     $('s-doc').addEventListener('click', exportDoc);
     $('s-print').addEventListener('click', function () { window.print(); });
+    $('s-clear-data').addEventListener('click', function () {
+      if (!confirm('Is browser par saved assignment details aur drafts delete kar dein?')) { return; }
+      try { localStorage.removeItem(KEY); } catch (e) {}
+      window.location.reload();
+    });
     window.addEventListener('resize', fit);
     renderList(); setEdit(); render();
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(render); }
