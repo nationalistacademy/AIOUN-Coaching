@@ -167,4 +167,24 @@ test.describe('AIOU Solved Assignment Builder', () => {
     expect(raw).toBe('{broken-json');
   });
 
+
+  test('recovers an in-progress answer after reload and keeps each assignment draft separate', async ({ page }) => {
+    await page.locator('#s-q').fill('Unfinished question for assignment one');
+    await page.locator('#s-editor').fill('This answer has not been added to the question list yet.');
+    await page.waitForTimeout(350);
+    await page.reload();
+    await expect(page.locator('#s-q')).toHaveValue('Unfinished question for assignment one');
+    await expect(page.locator('#s-editor')).toContainText('This answer has not been added');
+
+    await page.locator('#s-t2').click();
+    await page.locator('#s-q').fill('Assignment two in-progress question');
+    await page.locator('#s-editor').fill('Second assignment draft text.');
+    await page.waitForTimeout(350);
+    await page.locator('#s-t1').click();
+    await expect(page.locator('#s-q')).toHaveValue('Unfinished question for assignment one');
+    await page.locator('#s-t2').click();
+    await expect(page.locator('#s-q')).toHaveValue('Assignment two in-progress question');
+    await expect(page.locator('#s-editor')).toContainText('Second assignment draft text.');
+  });
+
 });
