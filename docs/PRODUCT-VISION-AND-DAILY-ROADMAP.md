@@ -127,9 +127,10 @@ A daily increment is complete only when:
 - Feature branch: `feat/assignment-builder-draft-recovery`, based on the verified Phase 2 head commit.
 - Added versioned local draft format (`schemaVersion: 2`) while retaining compatibility with the existing unversioned/v1 browser draft shape.
 - Added explicit JSON backup export and restore controls. Restore requires user confirmation because it replaces the two open assignments and metadata.
+- Autosaves unfinished question/answer text and edit state independently for Assignment 1 and Assignment 2, including recovery after reload.
 - Imported answer HTML passes through the existing strict rich-content sanitizer; imported fields and question counts/lengths are bounded.
 - Malformed/unsupported backups are rejected. Corrupted local storage pauses autosave instead of silently replacing the damaged value.
 - Storage quota and unavailable-storage errors are surfaced in an accessible status message.
 - Backup privacy warning explains that JSON may contain names, roll numbers and assignment answers.
-- Automated coverage added for round-trip restore of both assignments, unsupported backup rejection and corrupted local-storage preservation.
+- Automated coverage added for round-trip restore of both assignments, unsupported backup rejection, corrupted local-storage preservation and in-progress answer recovery across reload/tab switches.
 - CI is pending; this is not a release-ready claim. No Blogger publishing, merge, Firebase deployment or production setting change occurred.
