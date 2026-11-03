@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test');
+const path = require('node:path');
 
 test.describe('AIOU Solved Assignment Builder', () => {
   test.beforeEach(async ({ page }) => {
@@ -7,6 +8,9 @@ test.describe('AIOU Solved Assignment Builder', () => {
     await page.route('**/*', route => {
       const url = new URL(route.request().url());
       if (url.origin === 'http://127.0.0.1:4173') return route.continue();
+      if (url.hostname === 'cdn.jsdelivr.net' && url.pathname === '/npm/docx@9.1.0/build/index.umd.js') {
+        return route.fulfill({ path: path.join(__dirname, '../vendor/docx.min.js'), contentType: 'application/javascript' });
+      }
       return route.abort();
     });
     await page.goto('/tools/Aiou-solved-assignment-builder.html');
@@ -72,19 +76,39 @@ test.describe('AIOU Solved Assignment Builder', () => {
     await expect(page.getByText(/plagiarism detector nahi/i)).toBeVisible();
   });
 
-  test('exports a Word-compatible document and can clear local saved data', async ({ page }) => {
+  test('exports a native DOCX containing an inserted image and can clear local saved data', async ({ page }) => {
     await page.locator('#s-q').fill('What is a computer network?');
     await page.locator('#s-editor').fill('A computer network connects devices to share information and resources.');
+    await page.locator('#s-inline-image').setInputFiles({
+      name: 'network.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l8sAAAAASUVORK5CYII=', 'base64')
+    });
+    await expect(page.locator('#s-editor img.sab-inline-image')).toHaveCount(1);
     await page.locator('#s-add').click();
 
     const downloadPromise = page.waitForEvent('download');
     await page.locator('#s-doc').click();
     const download = await downloadPromise;
-    expect(download.suggestedFilename()).toMatch(/\.doc$/);
+    expect(download.suggestedFilename()).toMatch(/\.docx$/);
 
     page.once('dialog', dialog => dialog.accept());
     await page.locator('#s-clear-data').click();
     await expect.poll(() => page.evaluate(() => localStorage.getItem('sab_v1'))).toBeNull();
     await expect(page.locator('#s-name')).toHaveValue('');
+  });
+
+  test('applies Urdu RTL direction and inserts a safe image into the answer', async ({ page }) => {
+    await page.locator('#s-editor').fill('یہ ایک اردو جواب ہے۔');
+    await page.locator('#sab-dir-rtl').click();
+    await expect(page.locator('#s-editor [dir="rtl"]')).toHaveCount(1);
+
+    await page.locator('#s-inline-image').setInputFiles({
+      name: 'diagram.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l8sAAAAASUVORK5CYII=', 'base64')
+    });
+    await expect(page.locator('#s-editor img.sab-inline-image')).toHaveCount(1);
+    await expect(page.locator('#s-editor img.sab-inline-image')).toHaveCount(1);
   });
 });

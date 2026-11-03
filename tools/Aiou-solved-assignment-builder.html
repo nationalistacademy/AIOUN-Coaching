@@ -38,6 +38,10 @@
 .sab-editorbar button:hover,.sab-editorbar button:focus-visible{outline:2px solid var(--ag-p)}
 .sab-editor{min-height:190px;max-height:520px;overflow:auto;padding:12px;border:1px solid var(--ag-bd);border-radius:0 0 10px 10px;background:var(--ag-glass);outline:none;white-space:normal;overflow-wrap:anywhere}
 .sab-editor:focus{box-shadow:0 0 0 2px var(--ag-p)}
+.sab-editor [dir=rtl],.sab-rich [dir=rtl]{direction:rtl;text-align:right;unicode-bidi:plaintext}
+.sab-editor [dir=ltr],.sab-rich [dir=ltr]{direction:ltr;text-align:left}
+.sab-inline-image{display:block;max-width:100%;height:auto;margin:10px auto;border:1px solid #cbd5e1;border-radius:8px}
+.sab-pg .sab-rich img{max-width:100%;height:auto;object-fit:contain;margin:8px auto;display:block}
 .sab-editor:empty:before{content:attr(data-placeholder);opacity:.55}
 .sab-editor p{margin:.45em 0}.sab-editor table{border-collapse:collapse;width:100%;margin:10px 0}
 .sab-editor th,.sab-editor td{border:1px solid #64748b;padding:6px;min-width:50px;text-align:left;vertical-align:top}
@@ -121,10 +125,15 @@
           <button type="button" data-cmd="formatBlock" data-value="h3" title="Heading">Heading</button>
           <button type="button" id="sab-insert-table" title="Insert table">▦ Table</button>
           <button type="button" id="sab-insert-math" title="Insert maths/equation">∑ Math</button>
+          <button type="button" id="sab-dir-rtl" title="Right-to-left Urdu text">RTL اردو</button>
+          <button type="button" id="sab-dir-ltr" title="Left-to-right English text">LTR</button>
+          <button type="button" id="sab-add-image" title="Insert an image">Image</button>
+          <button type="button" id="sab-add-diagram" title="Create a simple flow diagram">Flow diagram</button>
           <button type="button" data-cmd="removeFormat" title="Clear inline formatting">Clear</button>
         </div>
-        <div id="s-editor" class="sab-editor" contenteditable="true" role="textbox" aria-label="Editable answer" aria-multiline="true" data-placeholder="Yahan answer likhein ya ChatGPT / DeepSeek ka formatted answer paste karein..."></div>
-        <p class="sab-note">Formatting, tables aur LaTeX maths supported. ∑ Math par click karke expression likhein, jaise \\frac{a+b}{c}, \\sqrt{x}, x^2 ya \\int_0^1 x^2 dx. Preview mein equation render hogi; Word export mein equation markup bhi rakha jayega.</p>
+        <div id="s-editor" class="sab-editor" contenteditable="true" dir="auto" role="textbox" aria-label="Editable answer" aria-multiline="true" data-placeholder="Yahan answer likhein ya ChatGPT / DeepSeek ka formatted answer paste karein..."></div>
+        <p class="sab-note">Formatting, tables, Urdu RTL/LTR, images (PNG/JPG/WebP up to 250 KB; max 4 per answer), flow diagrams aur LaTeX maths supported. RTL/LTR buttons selected paragraph par direction apply karte hain. ∑ Math par click karke expression likhein, jaise \\frac{a+b}{c}, \\sqrt{x}, x^2 ya \\int_0^1 x^2 dx. Preview mein equation render hogi; Word export mein equation markup bhi rakha jayega.</p>
+        <input type="file" id="s-inline-image" accept="image/png,image/jpeg,image/webp" style="display:none" aria-label="Choose an image to insert">
         <textarea id="s-a" style="display:none" aria-hidden="true"></textarea>
       </div>
       <div><label for="s-m">Marks (optional)</label><input type="text" id="s-m" placeholder="e.g. 10"></div>
@@ -150,7 +159,7 @@
     <div class="sab-btns" style="margin-top:0">
       <button type="button" class="sab-btn" id="s-pdf">PDF (current assignment)</button>
       <button type="button" class="sab-btn" id="s-both">PDF Assignment 1 and 2</button>
-      <button type="button" class="sab-btn" id="s-doc">Word (current)</button>
+      <button type="button" class="sab-btn" id="s-doc">Download DOCX (current)</button>
       <button type="button" class="sab-btn gray" id="s-print">Print</button>
       <button type="button" class="sab-btn red" id="s-clear-data">Clear all saved data on this device</button>
     </div>
@@ -159,6 +168,7 @@
 </div>
 <script>window.MathJax={tex:{inlineMath:[["\\(","\\)"],["$","$"]],displayMath:[["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}}</script>\n<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@9.1.0/build/index.umd.js"></script>
 <script>
 //<![CDATA[
 (function () {
@@ -204,7 +214,7 @@
           S.a[n].qs = Array.isArray(saved.qs) ? saved.qs.slice(0, 50).filter(function (q) {
             return q && typeof q.q === 'string' && typeof q.a === 'string';
           }).map(function (q) {
-            return { q: q.q.slice(0, 3000), a: q.a.slice(0, 50000), m: typeof q.m === 'string' ? q.m.slice(0, 30) : '' };
+            return { q: q.q.slice(0, 3000), a: q.a.slice(0, 1500000), m: typeof q.m === 'string' ? q.m.slice(0, 30) : '' };
           }) : [];
         });
         S.cur = o.S.cur === 2 ? 2 : 1;
@@ -249,7 +259,9 @@
   function addQ() {
     var q = v('s-q'), a = $('s-a').value.trim();
     if (!q) { alert('Pehle sawal likhein.'); return; }
-    if (q.length > 3000 || a.length > 50000) { alert('Question 3,000 aur answer 50,000 characters se chhota rakhein.'); return; }
+    if (q.length > 3000 || a.length > 1500000) { alert('Question 3,000 aur answer 1,500,000 characters se chhota rakhein.'); return; }
+    var oldAnswer = editIdx >= 0 && cur().qs[editIdx] ? cur().qs[editIdx].a.length : 0;
+    if (JSON.stringify(S).length - oldAnswer + a.length > 3500000) { alert('Browser draft storage limit ke liye answer/media size kam karein (total 3.5 MB).'); return; }
     if (editIdx < 0 && cur().qs.length >= 50) { alert('Ek assignment mein maximum 50 questions add kar sakte hain.'); return; }
     var o = { q: q, a: a, m: v('s-m').slice(0, 30) };
     if (editIdx >= 0) { cur().qs[editIdx] = o; editIdx = -1; } else { cur().qs.push(o); }
@@ -259,8 +271,8 @@
   function wc(t) { var m = t.trim().match(/\S+/g); return m ? m.length : 0; }
   function safeRich(html) {
     var doc = new DOMParser().parseFromString(String(html || ''), 'text/html');
-    var allowed = /^(A|B|STRONG|I|EM|U|S|DEL|INS|P|DIV|BR|H1|H2|H3|H4|H5|H6|UL|OL|LI|BLOCKQUOTE|TABLE|THEAD|TBODY|TFOOT|TR|TH|TD|SPAN|SUB|SUP|HR|CODE|PRE)$/;
-    var blocked = /^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|FORM|INPUT|BUTTON|TEXTAREA|SELECT|OPTION|LINK|META|SVG|MATH|AUDIO|VIDEO|SOURCE|PICTURE|IMG|TEMPLATE|NOSCRIPT)$/;
+    var allowed = /^(A|B|STRONG|I|EM|U|S|DEL|INS|P|DIV|BR|H1|H2|H3|H4|H5|H6|UL|OL|LI|BLOCKQUOTE|TABLE|THEAD|TBODY|TFOOT|TR|TH|TD|SPAN|SUB|SUP|HR|CODE|PRE|IMG)$/;
+    var blocked = /^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|FORM|INPUT|BUTTON|TEXTAREA|SELECT|OPTION|LINK|META|SVG|MATH|AUDIO|VIDEO|SOURCE|PICTURE|TEMPLATE|NOSCRIPT)$/;
     function clean(parent) {
       Array.prototype.slice.call(parent.children).forEach(function (el) {
         if (blocked.test(el.tagName)) { el.remove(); return; }
@@ -273,9 +285,12 @@
         Array.prototype.slice.call(el.attributes).forEach(function (a) {
           var name = a.name.toLowerCase(), keep = false;
           if (name === 'title' && a.value.length <= 200) { keep = true; }
+          if (name === 'alt' && el.tagName === 'IMG' && a.value.length <= 160) { keep = true; }
+          if (name === 'src' && el.tagName === 'IMG' && a.value.length <= 350000 && /^data:image\/(png|jpeg|webp);base64,[a-z0-9+/]+=*$/i.test(a.value)) { keep = true; }
+          if ((name === 'width' || name === 'height') && el.tagName === 'IMG' && /^(?:[1-9][0-9]{0,3})$/.test(a.value) && Number(a.value) <= 1600) { keep = true; }
           if (name === 'dir' && /^(ltr|rtl|auto)$/i.test(a.value)) { keep = true; }
           if ((name === 'colspan' || name === 'rowspan') && /^(?:[1-9]|1[0-9]|20)$/.test(a.value) && /^(TD|TH)$/.test(el.tagName)) { keep = true; }
-          if (name === 'class' && el.tagName === 'SPAN' && a.value.split(/\s+/).every(function (c) { return c === 'sab-math'; })) { keep = true; }
+          if (name === 'class' && ((el.tagName === 'SPAN' && a.value.split(/\s+/).every(function (c) { return c === 'sab-math'; })) || (el.tagName === 'IMG' && a.value === 'sab-inline-image'))) { keep = true; }
           if (name === 'data-latex' && el.tagName === 'SPAN' && a.value.length <= 500) { keep = true; }
           if (name === 'href' && el.tagName === 'A') {
             try {
@@ -286,6 +301,7 @@
           }
           if (!keep) { el.removeAttribute(a.name); }
         });
+        if (el.tagName === 'IMG' && !/^data:image\/(png|jpeg|webp);base64,/i.test(el.getAttribute('src') || '')) { el.remove(); return; }
         clean(el);
       });
     }
@@ -294,18 +310,18 @@
   }
   function blocks(text) {
     var raw = String(text || '');
-    if (/<(p|div|span|h[1-6]|ul|ol|li|table|blockquote|strong|em|b|i|u)\b/i.test(raw)) {
+    if (/<(p|div|span|h[1-6]|ul|ol|li|table|blockquote|strong|em|b|i|u|img)\b/i.test(raw)) {
       var doc = new DOMParser().parseFromString(safeRich(raw), 'text/html'), richOut = [];
       Array.prototype.slice.call(doc.body.childNodes).forEach(function (node) {
         if (node.nodeType === 3) { var plain = node.textContent.trim(); if (plain) { richOut.push({ t: 'p', x: plain }); } return; }
         if (node.nodeType !== 1) { return; }
         var tag = node.tagName.toLowerCase();
-        if (/^h[1-6]$/.test(tag)) { richOut.push({ t: 'h', x: node.innerHTML }); }
+        if (/^h[1-6]$/.test(tag)) { richOut.push({ t: 'h', x: node.outerHTML }); }
         else if (tag === 'ul' || tag === 'ol') {
           Array.prototype.slice.call(node.querySelectorAll(':scope > li')).forEach(function (li) {
-            richOut.push({ t: 'rich', x: '<' + tag + '><li>' + li.innerHTML + '</li></' + tag + '>' });
+            richOut.push({ t: 'rich', x: '<' + tag + '>' + li.outerHTML + '</' + tag + '>' });
           });
-        } else if (tag === 'p' || tag === 'div' || tag === 'blockquote') { richOut.push({ t: 'rich', x: node.innerHTML }); }
+        } else if (tag === 'p' || tag === 'div' || tag === 'blockquote') { richOut.push({ t: 'rich', x: node.outerHTML }); }
         else { richOut.push({ t: 'rich', x: node.outerHTML }); }
       });
       return richOut;
@@ -368,6 +384,7 @@
     }
     function text(cls, str, ref) {
       var el = mk('div', cls, str);
+      if (/[\u0600-\u06ff]/.test(str)) { el.dir = 'rtl'; }
       if (ref) { el.style.cssText = ''; }
       body.appendChild(el);
       if (fits()) { return; }
@@ -391,9 +408,11 @@
     body.appendChild(mk('div', 'sab-ttl', 'Assignment No. ' + S.cur));
     body.appendChild(mk('div', 'sab-sub', v('s-title') + ' (' + v('s-code') + ') - ' + $('s-semt').value + ' ' + v('s-year')));
     cur().qs.forEach(function (q, i) {
-      unit(mk('div', 'sab-qh', 'Q' + (i + 1) + '. ' + q.q + (q.m ? '  [' + q.m + ' marks]' : '')));
+      var qHeading = mk('div', 'sab-qh', 'Q' + (i + 1) + '. ' + q.q + (q.m ? '  [' + q.m + ' marks]' : ''));
+      if (/[\u0600-\u06ff]/.test(q.q)) { qHeading.dir = 'rtl'; }
+      unit(qHeading);
       blocks(q.a).forEach(function (b) {
-        if (b.t === 'h') { var shEl = mk('div', 'sab-sh'); shEl.innerHTML = safeRich(b.x); unit(shEl); }
+        if (b.t === 'h') { var shEl = mk('div', 'sab-sh'); shEl.innerHTML = safeRich(b.x); if (/[\u0600-\u06ff]/.test(shEl.textContent)) { shEl.dir = 'rtl'; } unit(shEl); }
         else if (b.t === 'rich') { var rich = mk('div', 'sab-rich'); rich.innerHTML = safeRich(b.x); unit(rich); }
         else { text(b.t === 'b' ? 'sab-b' : 'sab-p', b.x); }
       });
@@ -472,18 +491,102 @@
     p.then(function () { S.cur = keep; render(); busy(false); }).catch(function (e) { S.cur = keep; render(); busy(false); alert('PDF Error: ' + e); });
   }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function exportDoc() {
-    var h = '<h2 style="text-align:center">Assignment No. ' + S.cur + '</h2><p align="center"><b>' + esc(v('s-title')) + ' (' + esc(v('s-code')) + ')</b><br>' + esc(v('s-name')) + ' - ' + esc(v('s-id')) + ' - ' + esc($('s-prog').value) + '</p>';
-    cur().qs.forEach(function (q, i) {
-      h += '<p><b>Q' + (i + 1) + '. ' + esc(q.q) + (q.m ? ' [' + esc(q.m) + ' marks]' : '') + '</b></p>';
-      blocks(q.a).forEach(function (b) { h += b.t === 'h' ? '<p><b><u>' + safeRich(b.x) + '</u></b></p>' : (b.t === 'rich' ? '<div>' + safeRich(b.x) + '</div>' : (b.t === 'b' ? '<p style="margin-left:24px">&bull; ' + esc(b.x) + '</p>' : '<p style="text-align:justify">' + esc(b.x) + '</p>')); });
+  function rtlText(s) { return /[\u0600-\u06ff]/.test(String(s || '')); }
+  function docxRuns(node, lib, rtl, style) {
+    var runs = [];
+    if (node.nodeType === 3) {
+      if (node.nodeValue) { runs.push(new lib.TextRun({ text: node.nodeValue, bold: !!style.bold, italics: !!style.italics, underline: style.underline ? { type: 'single' } : undefined, strike: !!style.strike, rightToLeft: rtl })); }
+      return runs;
+    }
+    if (node.nodeType !== 1) { return runs; }
+    if (node.tagName === 'IMG') {
+      var src = node.getAttribute('src') || '';
+      if (/^data:image\/(png|jpeg|webp);base64,/i.test(src) && src.length <= 350000) {
+        try {
+          var raw = atob(src.split(',')[1]), bytes = new Uint8Array(raw.length);
+          for (var z = 0; z < raw.length; z++) { bytes[z] = raw.charCodeAt(z); }
+          var iw = Math.max(1, Math.min(520, parseInt(node.getAttribute('width') || '520', 10)));
+          var ih = Math.max(1, Math.min(420, parseInt(node.getAttribute('height') || '320', 10)));
+          runs.push(new lib.ImageRun({ data: bytes, transformation: { width: iw, height: ih } }));
+        } catch (e) {}
+      }
+      return runs;
+    }
+    if (node.tagName === 'BR') { runs.push(new lib.TextRun({ text: '\n', rightToLeft: rtl })); return runs; }
+    var next = { bold: style.bold || /^(B|STRONG)$/.test(node.tagName), italics: style.italics || /^(I|EM)$/.test(node.tagName), underline: style.underline || node.tagName === 'U', strike: style.strike || /^(S|DEL)$/.test(node.tagName) };
+    Array.prototype.forEach.call(node.childNodes, function (child) { runs = runs.concat(docxRuns(child, lib, rtl, next)); });
+    return runs;
+  }
+  function docxParagraph(node, lib, extra) {
+    var rtl = node.getAttribute && node.getAttribute('dir') === 'rtl';
+    if (node.getAttribute && node.getAttribute('dir') !== 'ltr' && !rtl) { rtl = rtlText(node.textContent); }
+    var runs = docxRuns(node, lib, rtl, {});
+    if (!runs.length) { runs.push(new lib.TextRun({ text: node.textContent || '', rightToLeft: rtl })); }
+    var opts = { children: runs, alignment: rtl ? lib.AlignmentType.RIGHT : lib.AlignmentType.LEFT, bidirectional: rtl, spacing: { after: 120 } };
+    if (extra) { Object.keys(extra).forEach(function (k) { opts[k] = extra[k]; }); }
+    return new lib.Paragraph(opts);
+  }
+  function docxTable(node, lib) {
+    var rows = [];
+    Array.prototype.forEach.call(node.querySelectorAll('tr'), function (tr) {
+      var cells = [];
+      Array.prototype.forEach.call(tr.children, function (td) {
+        if (!/^(TD|TH)$/.test(td.tagName)) { return; }
+        cells.push(new lib.TableCell({ children: [docxParagraph(td, lib, {})], verticalAlign: lib.VerticalAlign.TOP }));
+      });
+      if (cells.length) { rows.push(new lib.TableRow({ children: cells })); }
     });
-    var refs = cur().refs.split('\n').filter(function (x) { return x.trim(); });
-    if (refs.length) { h += '<p><b>References</b></p>'; refs.forEach(function (r) { h += '<p>' + esc(r) + '</p>'; }); }
-    var doc = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Assignment</title><style>body{font-family:"Times New Roman",serif;font-size:12pt}</style></head><body>' + h + '</body></html>';
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob(['\ufeff', doc], { type: 'application/msword;charset=utf-8' }));
-    a.download = 'Assignment_' + S.cur + '.doc'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    return rows.length ? [new lib.Table({ rows: rows, width: { size: 100, type: lib.WidthType.PERCENTAGE } })] : [];
+  }
+  function richDocx(html, lib) {
+    var parsed = new DOMParser().parseFromString(safeRich(html), 'text/html'), out = [];
+    Array.prototype.forEach.call(parsed.body.childNodes, function (node) {
+      if (node.nodeType === 3) { if (node.nodeValue.trim()) { out.push(docxParagraph(node, lib, {})); } return; }
+      if (node.nodeType !== 1) { return; }
+      if (node.tagName === 'TABLE') { out = out.concat(docxTable(node, lib)); return; }
+      if (node.tagName === 'UL' || node.tagName === 'OL') {
+        Array.prototype.forEach.call(node.children, function (li, i) {
+          var extra = node.tagName === 'UL' ? { bullet: { indent: 360 } } : {};
+          if (node.tagName === 'OL') { var runs = [new lib.TextRun({ text: (i + 1) + '. ' })].concat(docxRuns(li, lib, rtlText(li.textContent), {})); out.push(new lib.Paragraph({ children: runs, alignment: rtlText(li.textContent) ? lib.AlignmentType.RIGHT : lib.AlignmentType.LEFT, bidirectional: rtlText(li.textContent), spacing: { after: 80 } })); }
+          else { out.push(docxParagraph(li, lib, extra)); }
+        });
+        return;
+      }
+      if (/^H[1-6]$/.test(node.tagName)) { out.push(docxParagraph(node, lib, { heading: node.tagName === 'H1' ? lib.HeadingLevel.HEADING_1 : lib.HeadingLevel.HEADING_2 })); return; }
+      if (node.tagName === 'IMG') { out.push(docxParagraph(node, lib, {})); return; }
+      if (/^(P|DIV|BLOCKQUOTE|PRE)$/.test(node.tagName)) { out.push(docxParagraph(node, lib, {})); return; }
+      out.push(docxParagraph(node, lib, {}));
+    });
+    return out;
+  }
+  function exportDoc() {
+    var lib = window.docx;
+    if (!lib || !lib.Packer || !lib.Document) { alert('DOCX library load nahi hui. Internet connection check karke page reload karein.'); return; }
+    busy(true);
+    try {
+      var children = [];
+      children.push(new lib.Paragraph({ children: [new lib.TextRun({ text: 'AIOU Assignment', bold: true, size: 34 })], alignment: lib.AlignmentType.CENTER, spacing: { after: 240 } }));
+      [['Student', v('s-name')], ['Roll Number', v('s-id')], ['Programme', $('s-prog').value], ['Course Code', v('s-code')], ['Course Title', v('s-title')], ['Semester', $('s-semt').value + ' ' + v('s-year')], ['Tutor', v('s-tut')]].forEach(function (pair) { if (pair[1]) { children.push(new lib.Paragraph({ children: [new lib.TextRun({ text: pair[0] + ': ', bold: true }), new lib.TextRun({ text: pair[1], rightToLeft: rtlText(pair[1]) })], alignment: rtlText(pair[1]) ? lib.AlignmentType.RIGHT : lib.AlignmentType.LEFT, bidirectional: rtlText(pair[1]), spacing: { after: 100 } })); } });
+      children.push(new lib.Paragraph({ children: [new lib.TextRun({ text: 'Assignment No. ' + S.cur, bold: true, size: 28 })], heading: lib.HeadingLevel.HEADING_1, alignment: lib.AlignmentType.CENTER, pageBreakBefore: true, spacing: { after: 200 } }));
+      cur().qs.forEach(function (q, i) {
+        var qr = [new lib.TextRun({ text: 'Q' + (i + 1) + '. ' + q.q + (q.m ? ' [' + q.m + ' marks]' : ''), bold: true, rightToLeft: rtlText(q.q) })];
+        children.push(new lib.Paragraph({ children: qr, alignment: rtlText(q.q) ? lib.AlignmentType.RIGHT : lib.AlignmentType.LEFT, bidirectional: rtlText(q.q), spacing: { before: 180, after: 100 } }));
+        blocks(q.a).forEach(function (b) {
+          if (b.t === 'h') { children.push.apply(children, richDocx('<h3>' + b.x + '</h3>', lib)); }
+          else if (b.t === 'rich') { children.push.apply(children, richDocx(b.x, lib)); }
+          else { var isRtl = rtlText(b.x); children.push(new lib.Paragraph({ children: [new lib.TextRun({ text: b.t === 'b' ? '• ' + b.x : b.x, rightToLeft: isRtl })], alignment: isRtl ? lib.AlignmentType.RIGHT : lib.AlignmentType.JUSTIFIED, bidirectional: isRtl, spacing: { after: 120 } })); }
+        });
+      });
+      var refs = cur().refs.split('\n').map(function (x) { return x.trim(); }).filter(Boolean);
+      if (refs.length) { children.push(new lib.Paragraph({ text: 'References', heading: lib.HeadingLevel.HEADING_2, spacing: { before: 200, after: 100 } })); refs.forEach(function (r) { children.push(new lib.Paragraph({ children: [new lib.TextRun({ text: r, rightToLeft: rtlText(r) })], alignment: rtlText(r) ? lib.AlignmentType.RIGHT : lib.AlignmentType.LEFT, bidirectional: rtlText(r), spacing: { after: 80 } })); }); }
+      var documentFile = new lib.Document({ sections: [{ properties: { page: { margin: { top: 900, right: 900, bottom: 900, left: 900 } } }, children: children }] });
+      lib.Packer.toBlob(documentFile).then(function (blob) {
+        var link = document.createElement('a'), url = URL.createObjectURL(blob);
+        link.href = url; link.download = 'Assignment_' + S.cur + '_' + (v('s-code').replace(/[^\w-]+/g, '') || 'AIOU') + '.docx';
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1500); busy(false);
+      }).catch(function (e) { busy(false); alert('DOCX export error: ' + e.message); });
+    } catch (e) { busy(false); alert('DOCX export error: ' + e.message); }
   }
   function sample() {
     var s1 = { q: 'What is economics? Explain its basic concept.', m: '10', a: 'Economics studies how people, firms and governments use limited resources to satisfy unlimited wants.\n\n# Key ideas\n\n- Scarcity forces every society to make choices.\n- Every choice has an opportunity cost.\n- Resources are land, labour, capital and enterprise.\n\nIn simple words, economics is the science of choice under scarcity, and it helps us decide how to use what we have in the best possible way.' };
@@ -525,6 +628,38 @@
     var ed = $('s-editor');
     ed.innerHTML = safeRich(ed.innerHTML);
     $('s-a').value = ed.innerHTML;
+  }
+  function applyDirection(dir) {
+    focusEditorRange();
+    var sel = window.getSelection(), node = sel && sel.anchorNode, block = node ? (node.nodeType === 1 ? node : node.parentElement) : null;
+    while (block && block !== $('s-editor') && !/^(P|DIV|H1|H2|H3|H4|H5|H6|LI|TD|TH|BLOCKQUOTE)$/.test(block.tagName)) { block = block.parentElement; }
+    if (!block || block === $('s-editor')) { document.execCommand('formatBlock', false, 'p'); sel = window.getSelection(); node = sel && sel.anchorNode; block = node ? (node.nodeType === 1 ? node : node.parentElement) : null; while (block && block !== $('s-editor') && !/^(P|DIV|H1|H2|H3|H4|H5|H6|LI|TD|TH|BLOCKQUOTE)$/.test(block.tagName)) { block = block.parentElement; } }
+    if (block && block !== $('s-editor')) { block.setAttribute('dir', dir); syncEditor(); rememberEditorRange(); }
+  }
+  function addImageFile(file) {
+    if (!file) { return; }
+    if (!/^image\/(png|jpeg|webp)$/i.test(file.type) || file.size > 250 * 1024) { alert('Image PNG, JPG ya WebP honi chahiye aur 250 KB se chhoti.'); return; }
+    if ($('s-editor').querySelectorAll('img').length >= 4) { alert('Ek answer mein maximum 4 images add kar sakte hain.'); return; }
+    var reader = new FileReader();
+    reader.onload = function (ev) { var data = String(ev.target.result || ''); if (data.length > 350000) { alert('Image size limit se barh gayi.'); return; } editorInsert('<p><img class="sab-inline-image" src="' + data + '" alt="Student inserted image" width="520"></p><p><br></p>'); schedule(); };
+    reader.onerror = function () { alert('Image read nahi ho saki. Dobara try karein.'); };
+    reader.readAsDataURL(file);
+  }
+  function addFlowDiagram() {
+    var raw = prompt('Flow diagram ke 2 se 6 steps | se alag karein. Misal: Input | Process | Output');
+    if (!raw) { return; }
+    var steps = raw.split('|').map(function (x) { return x.trim().slice(0, 70); }).filter(Boolean).slice(0, 6);
+    if (steps.length < 2) { alert('Kam az kam 2 steps enter karein.'); return; }
+    var canvas = document.createElement('canvas'), width = 680, boxH = 68, gap = 34;
+    canvas.width = width; canvas.height = 36 + steps.length * (boxH + gap);
+    var ctx = canvas.getContext('2d'); ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    steps.forEach(function (step, i) {
+      var y = 18 + i * (boxH + gap); ctx.fillStyle = '#eef4ff'; ctx.strokeStyle = '#2459a6'; ctx.lineWidth = 3; ctx.fillRect(80, y, 520, boxH); ctx.strokeRect(80, y, 520, boxH);
+      ctx.fillStyle = '#172554'; ctx.font = 'bold 24px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(step, 340, y + boxH / 2, 480);
+      if (i < steps.length - 1) { ctx.strokeStyle = '#334155'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(340, y + boxH); ctx.lineTo(340, y + boxH + gap - 6); ctx.stroke(); ctx.beginPath(); ctx.moveTo(332, y + boxH + gap - 14); ctx.lineTo(340, y + boxH + gap - 4); ctx.lineTo(348, y + boxH + gap - 14); ctx.stroke(); }
+    });
+    var image = canvas.toDataURL('image/png');
+    editorInsert('<p><img class="sab-inline-image" src="' + image + '" alt="Flow diagram: ' + esc(steps.join(' → ')) + '" width="600"></p><p><br></p>'); schedule();
   }
   function initRichEditor() {
     var ed = $('s-editor');
@@ -571,6 +706,12 @@
       editorInsert('<span class="sab-math" data-latex="' + encoded + '">\\(' + esc(equation) + '\\)</span>&nbsp;');
       typesetMath($('s-editor'));
     });
+    ['sab-dir-rtl', 'sab-dir-ltr'].forEach(function (id) { $(id).addEventListener('mousedown', function (e) { e.preventDefault(); rememberEditorRange(); }); $(id).addEventListener('click', function () { applyDirection(id === 'sab-dir-rtl' ? 'rtl' : 'ltr'); }); });
+    $('sab-add-image').addEventListener('mousedown', function (e) { e.preventDefault(); rememberEditorRange(); });
+    $('sab-add-image').addEventListener('click', function () { $('s-inline-image').click(); });
+    $('s-inline-image').addEventListener('change', function (e) { addImageFile(e.target.files[0]); e.target.value = ''; });
+    $('sab-add-diagram').addEventListener('mousedown', function (e) { e.preventDefault(); rememberEditorRange(); });
+    $('sab-add-diagram').addEventListener('click', addFlowDiagram);
   }
   function init() {
     load();
