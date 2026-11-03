@@ -84,5 +84,5 @@ For current instructions, use [Google Search Central](https://developers.google.
 
 - [Google Search setup](../google-search/README.md)
 - [GEO guide](../geo/README.md)
-- [Blogger Pages guide](../pages/README.md)
-- [Blogger Posts guide](../posts/README.md)
+- [Blogger Pages guide](../p/README.md)
+- [Blogger Posts guide](../post/README.md)

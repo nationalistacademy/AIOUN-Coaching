@@ -1,0 +1,38 @@
+# Quick memory card for AI assistants
+
+> Read `AGENTS.md` and `docs/AI-PROJECT-MEMORY.md` for full context.
+
+- **Project:** AIOU Coaching — independent student-learning support and tools for Pakistani AIOU learners.
+- **Public site:** https://aioucoaching.blogspot.com/
+- **Repo:** https://github.com/nationalistacademy/AIOUN-Coaching
+- **Brand distinction:** AIOU Coaching is the public product; nationalistacademy is the GitHub owner/org.
+- **Institutional disclaimer:** Not affiliated with or endorsed by Allama Iqbal Open University.
+- **Main goal:** Free, useful, mobile-first student tools that help learners understand, practise, improve their own writing, and prepare study documents.
+- **Priority now:** Existing student-facing tools and AI Content Studio.
+- **Not the priority now:** LMS expansion, auth/quiz work, infrastructure projects.
+- **Paused:** Cloudflare changes.
+- **No-go without explicit permission:** production deploys, merges to main, DNS, Cloudflare, Blogger live edits, Firebase/Supabase production config, student records, auth, enrollment, scores.
+- **Cost:** No paid APIs/services or recurring costs without approval.
+- **Integrity:** Students retain authorship. Never facilitate contract cheating, plagiarism, fake citations/data, impersonation, or forged documents.
+- **Legal:** Do not claim AIOU endorsement, legal-practice status, registration, or licences unless verified. Legal information must be current, sourced, and not represented as case-specific legal advice.
+- **Privacy:** Never commit secrets, private emails, student PII, or sensitive account data.
+- **Workflow:** Inspect first, branch, small change, test, PR, report evidence. No merge/deploy by default.
+- **Owner communication:** Roman Urdu is usually helpful.
+- **Source of truth:** Current code and explicit latest owner instructions override stale memory notes.
+
+
+## Blogger source and theme rules
+- Blogger Page HTML body fragments: repository-root `p/<exact-slug>.html` → Blogger `/p/<exact-slug>.html` after manual publishing.
+- Blogger Post HTML sources: repository-root `post/<topic>/post.html`; Blogger controls the public permalink.
+- Standalone web-app HTML stays in `tools/`.
+- Read `docs/BLOGGER-THEME-COMPATIBILITY.md` and `docs/BLOGGER-HTML-CODING-RULES.md`; inspect `theme/aioucoahing.xml` before writing page/post code.
+- Write fragments only (no html/head/body wrappers); scope CSS; preserve theme tokens, dark mode, responsive layout, accessibility and RTL/LTR.
+- A repo commit does not publish Blogger. Never publish or upload XML without explicit owner approval.
+
+
+## Immediate mission: AdSense readiness and Pakistan-wide reach
+- Make the public Blogger site genuinely useful, original, accurate, transparent, accessible, mobile-friendly and compliant before requesting AdSense review.
+- Use `docs/ADSENSE-READINESS-AUDIT.md` as the active audit and submission gate.
+- Compare live Blogger content with repository sources; GitHub edits do not publish to Blogger.
+- Never fabricate operator identity, authorship, credentials, tutor reviews, privacy/security practices or official AIOU affiliation.
+- No thin mass-generated posts, bought traffic, click exchanges, fake clicks, or ad-click incentives. No AdSense review or live publication without owner approval.
