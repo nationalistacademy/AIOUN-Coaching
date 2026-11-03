@@ -299,6 +299,7 @@
           }
           if (!keep) { el.removeAttribute(a.name); }
         });
+        if (el.tagName === 'IMG' && !/^data:image\/(png|jpeg|webp);base64,/i.test(el.getAttribute('src') || '')) { el.remove(); return; }
         clean(el);
       });
     }
