@@ -137,6 +137,7 @@ test.describe('AIOU Solved Assignment Builder', () => {
     });
     await expect(page.locator('#sab-backup-status')).toContainText('Backup restored successfully');
     await expect(page.locator('#s-code')).toHaveValue('260');
+    await page.locator('#s-t1').click();
     await expect(page.locator('#s-list')).toContainText('Explain data communication.');
     await page.locator('#s-t2').click();
     await expect(page.locator('#s-list')).toContainText('Define a computer network.');
