@@ -117,8 +117,19 @@ A daily increment is complete only when:
 
 ## 8. Next engineering actions
 
-1. Reconcile the Phase 2 image-size limit in the code, documentation and PR description (the UI currently describes 250 KB per image; do not claim a different limit without verification).
-2. Add a Phase 3 increment for robust local draft recovery and explicit JSON backup/restore, including schema versioning, malformed-file rejection, quota handling and privacy warnings.
-3. Add tests for empty/oversized assignments, corrupted local storage, switching between Assignment 1/2, media cleanup and failed DOCX/PDF dependencies.
-4. Run manual QA on real mobile browsers and Word/LibreOffice before calling the builder release-ready.
-5. Keep all work in draft PRs until the owner reviews and explicitly approves merging/publishing.
+1. Phase 3 draft recovery and JSON backup/restore are implemented on `feat/assignment-builder-draft-recovery`; verify CI before calling the increment complete.
+2. Remaining Phase 3/4 coverage: empty/oversized assignments, media cleanup and failed DOCX/PDF dependencies.
+3. Run manual QA on real mobile browsers and Word/LibreOffice before calling the builder release-ready.
+4. Keep all work in draft PRs until the owner reviews and explicitly approves merging/publishing.
+
+## 9. Day 5 implementation checkpoint — 2026-11-03
+
+- Feature branch: `feat/assignment-builder-draft-recovery`, based on the verified Phase 2 head commit.
+- Added versioned local draft format (`schemaVersion: 2`) while retaining compatibility with the existing unversioned/v1 browser draft shape.
+- Added explicit JSON backup export and restore controls. Restore requires user confirmation because it replaces the two open assignments and metadata.
+- Imported answer HTML passes through the existing strict rich-content sanitizer; imported fields and question counts/lengths are bounded.
+- Malformed/unsupported backups are rejected. Corrupted local storage pauses autosave instead of silently replacing the damaged value.
+- Storage quota and unavailable-storage errors are surfaced in an accessible status message.
+- Backup privacy warning explains that JSON may contain names, roll numbers and assignment answers.
+- Automated coverage added for round-trip restore of both assignments, unsupported backup rejection and corrupted local-storage preservation.
+- CI is pending; this is not a release-ready claim. No Blogger publishing, merge, Firebase deployment or production setting change occurred.
