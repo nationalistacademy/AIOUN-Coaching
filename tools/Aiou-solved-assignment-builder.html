@@ -180,8 +180,8 @@
   var NS = 'http://www.w3.org/2000/svg', W = 794, H = 1123, KEY = 'sab_v1';
   var FIELDS = ['s-name','s-id','s-prog','s-code','s-title','s-tut','s-uni','s-semt','s-year','s-tpl','s-c1','s-c2','s-src'];
   var COL = { pink: ['#ff26ac', '#000000'], blue: ['#2f6fed', '#0b2a6b'], green: ['#2e9e6b', '#14513a'], orange: ['#f67938', '#7a2e08'], bands: ['#0b4f9c', '#e0a800'], frame: ['#1b5e20', '#c9a227'], none: ['#000000', '#000000'] };
-  var S = { cur: 1, a: { 1: { qs: [], refs: '' }, 2: { qs: [], refs: '' } } };
-  var editIdx = -1, pages = [], timer = null, storageBlocked = false;
+  var S = { cur: 1, a: { 1: { qs: [], refs: '' }, 2: { qs: [], refs: '' } }, drafts: { 1: { q: '', a: '', m: '', editIdx: -1 }, 2: { q: '', a: '', m: '', editIdx: -1 } } };
+  var editIdx = -1, pages = [], timer = null, draftTimer = null, storageBlocked = false;
   function backupStatus(message, isError) { var el = $('sab-backup-status'); if (el) { el.textContent = message; el.style.color = isError ? '#d93a49' : ''; } }
   function mk(tag, cls, text) { var e = document.createElement(tag); if (cls) { e.className = cls; } if (text !== undefined) { e.textContent = text; } return e; }
   function v(id) { return $(id).value.trim(); }
@@ -209,6 +209,7 @@
   function save() {
     if (storageBlocked) { backupStatus('Saved browser data could not be read. Import a valid JSON backup or clear this browser draft before continuing; autosave is paused to protect the damaged data.', true); return false; }
     try {
+      captureActiveDraft();
       var o = { schemaVersion: 2, updatedAt: new Date().toISOString(), S: S, f: {} };
       FIELDS.forEach(function (id) { o.f[id] = $(id).value; });
       var payload = JSON.stringify(o);
@@ -238,22 +239,41 @@
           }) : [];
         });
         S.cur = o.S.cur === 2 ? 2 : 1;
+        [1, 2].forEach(function (n) {
+          var draft = o.S.drafts && o.S.drafts[n];
+          if (draft && typeof draft === 'object') {
+            S.drafts[n] = { q: typeof draft.q === 'string' ? draft.q.slice(0, 3000) : '', a: typeof draft.a === 'string' ? safeRich(draft.a.slice(0, 1500000)) : '', m: typeof draft.m === 'string' ? draft.m.slice(0, 30) : '', editIdx: Number.isInteger(draft.editIdx) && draft.editIdx >= 0 && draft.editIdx < S.a[n].qs.length ? draft.editIdx : -1 };
+          }
+        });
       }
       FIELDS.forEach(function (id) {
         var value = o.f && o.f[id];
         if (typeof value === 'string') { $(id).value = value.slice(0, id === 's-src' ? 50000 : 500); }
       });
+      restoreActiveDraft();
     } catch (e) {
       storageBlocked = true;
       S = { cur: 1, a: { 1: { qs: [], refs: '' }, 2: { qs: [], refs: '' } } };
       backupStatus('A saved draft could not be read (' + e.message + '). Autosave is paused so the damaged data is not overwritten. Restore a valid JSON backup or clear this browser draft.', true);
     }
   }
+  function captureActiveDraft() {
+    if (!S.drafts) { S.drafts = { 1: { q: '', a: '', m: '', editIdx: -1 }, 2: { q: '', a: '', m: '', editIdx: -1 } }; }
+    S.drafts[S.cur] = { q: $('s-q').value.slice(0, 3000), a: safeRich(($('s-editor').innerHTML || $('s-a').value).slice(0, 1500000)), m: $('s-m').value.slice(0, 30), editIdx: editIdx };
+  }
+  function restoreActiveDraft() {
+    var draft = S.drafts && S.drafts[S.cur];
+    if (!draft) { return; }
+    $('s-q').value = draft.q || ''; $('s-m').value = draft.m || '';
+    $('s-editor').innerHTML = safeRich(draft.a || ''); $('s-a').value = $('s-editor').innerHTML;
+    editIdx = Number.isInteger(draft.editIdx) && draft.editIdx >= 0 && draft.editIdx < cur().qs.length ? draft.editIdx : -1;
+  }
+  function scheduleDraftSave() { clearTimeout(draftTimer); draftTimer = setTimeout(save, 250); }
   function validateBackup(o) {
     if (!o || typeof o !== 'object' || Array.isArray(o)) { throw new Error('Backup must be a JSON object.'); }
     if (o.schemaVersion !== 1 && o.schemaVersion !== 2) { throw new Error('Unsupported backup version. Expected version 1 or 2.'); }
     if (!o.S || !o.S.a || typeof o.S.a !== 'object') { throw new Error('Backup is missing assignment data.'); }
-    var clean = { schemaVersion: 2, updatedAt: typeof o.updatedAt === 'string' ? o.updatedAt : new Date().toISOString(), S: { cur: o.S.cur === 2 ? 2 : 1, a: { 1: { qs: [], refs: '' }, 2: { qs: [], refs: '' } } }, f: {} };
+    var clean = { schemaVersion: 2, updatedAt: typeof o.updatedAt === 'string' ? o.updatedAt : new Date().toISOString(), S: { cur: o.S.cur === 2 ? 2 : 1, a: { 1: { qs: [], refs: '' }, 2: { qs: [], refs: '' } }, drafts: { 1: { q: '', a: '', m: '', editIdx: -1 }, 2: { q: '', a: '', m: '', editIdx: -1 } } }, f: {} };
     [1, 2].forEach(function (n) {
       var part = o.S.a[n];
       if (!part || typeof part !== 'object') { return; }
@@ -266,6 +286,13 @@
         if (q.q.length > 3000 || q.a.length > 1500000 || (q.m !== undefined && typeof q.m !== 'string')) { throw new Error('A question or answer exceeds the allowed size.'); }
         return { q: q.q, a: safeRich(q.a), m: String(q.m || '').slice(0, 30) };
       });
+    });
+    [1, 2].forEach(function (n) {
+      var draft = o.S.drafts && o.S.drafts[n];
+      if (!draft || typeof draft !== 'object') { return; }
+      if ((draft.q !== undefined && typeof draft.q !== 'string') || (draft.a !== undefined && typeof draft.a !== 'string') || (draft.m !== undefined && typeof draft.m !== 'string')) { throw new Error('An in-progress answer draft is invalid.'); }
+      if ((draft.q || '').length > 3000 || (draft.a || '').length > 1500000 || (draft.m || '').length > 30) { throw new Error('An in-progress answer exceeds the allowed size.'); }
+      clean.S.drafts[n] = { q: draft.q || '', a: safeRich(draft.a || ''), m: draft.m || '', editIdx: Number.isInteger(draft.editIdx) && draft.editIdx >= 0 && draft.editIdx < clean.S.a[n].qs.length ? draft.editIdx : -1 };
     });
     FIELDS.forEach(function (id) {
       var value = o.f && o.f[id];
@@ -287,9 +314,10 @@
         FIELDS.forEach(function (id) { previous.f[id] = $(id).value; });
         S = imported.S;
         FIELDS.forEach(function (id) { $(id).value = imported.f[id] || ''; });
+        editIdx = -1;
         storageBlocked = false;
         if (!save()) { throw new Error('Browser storage could not save the restored draft. Export the backup and free local storage space.'); }
-        editIdx = -1; $('s-q').value = ''; $('s-a').value = ''; $('s-editor').innerHTML = ''; $('s-m').value = '';
+        restoreActiveDraft();
         setEdit(); renderList(); schedule();
         backupStatus('Backup restored successfully. Review the assignments and export a fresh backup for safekeeping.', false);
       } catch (e) { backupStatus('Backup was not restored: ' + e.message, true); }
@@ -298,6 +326,7 @@
   }
   function exportBackup() {
     try {
+      captureActiveDraft();
       var o = { schemaVersion: 2, exportedAt: new Date().toISOString(), S: S, f: {} };
       FIELDS.forEach(function (id) { o.f[id] = $(id).value; });
       var data = JSON.stringify(o, null, 2);
@@ -710,6 +739,7 @@
     var ed = $('s-editor');
     ed.innerHTML = safeRich(ed.innerHTML);
     $('s-a').value = ed.innerHTML;
+    scheduleDraftSave();
   }
   function applyDirection(dir) {
     focusEditorRange();
@@ -745,7 +775,7 @@
   }
   function initRichEditor() {
     var ed = $('s-editor');
-    ed.addEventListener('input', syncEditor);
+    ed.addEventListener('input', function () { syncEditor(); scheduleDraftSave(); });
     ed.addEventListener('keyup', rememberEditorRange);
     ed.addEventListener('mouseup', rememberEditorRange);
     ed.addEventListener('blur', rememberEditorRange);
@@ -806,10 +836,12 @@
       var r = new FileReader(); r.onload = function (ev) { $('s-logoimg').src = ev.target.result; schedule(); }; r.onerror = function () { alert('Image read nahi ho saki. Dobara try karein.'); }; r.readAsDataURL(f);
     });
     $('s-refs').addEventListener('input', function () { cur().refs = $('s-refs').value; schedule(); });
-    $('s-t1').addEventListener('click', function () { S.cur = 1; editIdx = -1; setEdit(); renderList(); schedule(); });
-    $('s-t2').addEventListener('click', function () { S.cur = 2; editIdx = -1; setEdit(); renderList(); schedule(); });
+    $('s-q').addEventListener('input', scheduleDraftSave);
+    $('s-m').addEventListener('input', scheduleDraftSave);
+    $('s-t1').addEventListener('click', function () { captureActiveDraft(); S.cur = 1; restoreActiveDraft(); setEdit(); renderList(); schedule(); });
+    $('s-t2').addEventListener('click', function () { captureActiveDraft(); S.cur = 2; restoreActiveDraft(); setEdit(); renderList(); schedule(); });
     $('s-add').addEventListener('click', addQ);
-    $('s-cancel').addEventListener('click', function () { editIdx = -1; $('s-q').value = ''; $('s-a').value = ''; $('s-m').value = ''; setEdit(); });
+    $('s-cancel').addEventListener('click', function () { editIdx = -1; $('s-q').value = ''; $('s-a').value = ''; $('s-editor').innerHTML = ''; $('s-m').value = ''; captureActiveDraft(); save(); setEdit(); });
     $('s-sample').addEventListener('click', sample);
     $('s-clear').addEventListener('click', function () { if (confirm('Is assignment ke saray sawalat delete kar dein?')) { S.a[S.cur] = { qs: [], refs: '' }; save(); renderList(); schedule(); } });
     $('s-check').addEventListener('click', check);
