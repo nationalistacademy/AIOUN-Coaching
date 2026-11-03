@@ -13,7 +13,7 @@ Improve the existing `tools/Aiou-solved-assignment-builder.html` rather than cre
 - Removed fabricated default student name/ID and the random student identity generator.
 - Added a clear notice that drafts are stored in the current browser only.
 - Added a user-confirmed **Clear all saved data on this device** action.
-- Replaced the permissive rich-HTML filter with an allowlist. Script/style/iframe/SVG/embedded media and images are removed; event handlers, arbitrary style attributes and unsafe URL schemes are not retained. Basic formatting, tables, safe links and the builder's LaTeX marker remain supported.
+- Replaced the permissive rich-HTML filter with an allowlist and sanitize clipboard HTML before insertion into the live editor DOM. Script/style/iframe/SVG/embedded media and images are removed; event handlers, arbitrary style attributes and unsafe URL schemes are not retained. Basic formatting, tables, safe links and the builder's LaTeX marker remain supported.
 - Added bounds for saved questions, answer length, references and source text.
 - Restricted uploaded cover logos to PNG/JPEG/WebP up to 3 MB.
 - Renamed the originality indicator to a limited text-similarity self-check. Its labels describe overlap only; it does not certify originality or detect plagiarism.
