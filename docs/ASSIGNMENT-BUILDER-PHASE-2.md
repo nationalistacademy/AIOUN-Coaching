@@ -21,7 +21,7 @@
 - English paragraphs remain left-aligned; mixed content can be manually set with the toolbar.
 
 ### Images and diagrams
-- Adds image insertion for PNG/JPEG/WebP files up to 350 KB each, maximum four per answer.
+- Adds image insertion for PNG/JPEG/WebP files up to 250 KB each, maximum four per answer.
 - Only base64 data images are retained in the editor; remote image URLs and invalid image elements are removed by the sanitizer.
 - Adds a simple flow-diagram builder for 2–6 user-provided steps; it creates a PNG locally in the browser.
 - Media remains in the browser's local draft storage. Users on shared devices should clear drafts after exporting.
@@ -35,7 +35,7 @@
 - The Word file is a native DOCX, but equation rendering in Word may differ from MathJax preview; LaTeX markers remain text/markup rather than guaranteed native Office equations.
 - PDF export continues to use the existing page-preview rasterization path.
 - The flow-diagram tool creates a simple vertical process diagram, not a full drag-and-drop diagram editor.
-- Large images are rejected to protect local-storage quota and mobile performance.
+- Large images are rejected to protect local-storage quota and mobile performance. The builder caps one answer at 1.5 million characters and total saved assignment content at 3.5 MB.
 - Browser local storage is device/browser-specific and is not a cloud backup.
 - This is an independent educational preparation tool, not an official AIOU system. Students remain responsible for writing, reviewing and submitting their own assessed work.
 
