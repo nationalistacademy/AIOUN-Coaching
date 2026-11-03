@@ -152,6 +152,7 @@
       <button type="button" class="sab-btn" id="s-both">PDF Assignment 1 and 2</button>
       <button type="button" class="sab-btn" id="s-doc">Word (current)</button>
       <button type="button" class="sab-btn gray" id="s-print">Print</button>
+      <button type="button" class="sab-btn red" id="s-clear-data">Clear all saved data on this device</button>
     </div>
   </div>
   <div class="sab-stage" id="sab-stage"><div class="sab-holder" id="sab-holder"><div class="sab-host" id="sab-host"></div></div></div>
@@ -586,6 +587,11 @@
     $('s-both').addEventListener('click', function () { exportFor([1, 2]); });
     $('s-doc').addEventListener('click', exportDoc);
     $('s-print').addEventListener('click', function () { window.print(); });
+    $('s-clear-data').addEventListener('click', function () {
+      if (!confirm('Is browser par saved assignment details aur drafts delete kar dein?')) { return; }
+      try { localStorage.removeItem(KEY); } catch (e) {}
+      window.location.reload();
+    });
     window.addEventListener('resize', fit);
     renderList(); setEdit(); render();
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(render); }
