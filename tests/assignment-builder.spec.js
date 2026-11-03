@@ -36,11 +36,20 @@ test.describe('AIOU Solved Assignment Builder', () => {
 
   test('sanitizes pasted rich HTML and removes executable or unsupported elements', async ({ page }) => {
     await page.locator('#s-editor').evaluate(el => {
-      el.innerHTML = '<p onclick="window.__xss=1" style="background-image:url(https://tracker.invalid/x)">Safe text</p>' +
+      el.focus();
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      const clipboard = new DataTransfer();
+      clipboard.setData('text/html', '<p onclick="window.__xss=1" style="background-image:url(https://tracker.invalid/x)">Safe text</p>' +
         '<script>window.__xss=2</script><svg onload="window.__xss=3"><text>bad</text></svg>' +
         '<img src="x" onerror="window.__xss=4">' +
-        '<a href="javascript:alert(1)">unsafe link</a>';
-      el.dispatchEvent(new Event('input', { bubbles: true }));
+        '<a href="javascript:alert(1)">unsafe link</a>');
+      clipboard.setData('text/plain', 'Safe text unsafe link');
+      el.dispatchEvent(new ClipboardEvent('paste', { clipboardData: clipboard, bubbles: true, cancelable: true }));
     });
 
     const html = await page.locator('#s-editor').evaluate(el => el.innerHTML);
@@ -60,7 +69,7 @@ test.describe('AIOU Solved Assignment Builder', () => {
 
     await expect(page.locator('#s-res')).toContainText('High overlap');
     await expect(page.locator('#s-res')).not.toContainText('Looks original');
-    await expect(page.getByText(/not a plagiarism detector/i)).toBeVisible();
+    await expect(page.getByText(/plagiarism detector nahi/i)).toBeVisible();
   });
 
   test('exports a Word-compatible document and can clear local saved data', async ({ page }) => {
