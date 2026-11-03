@@ -315,9 +315,9 @@
         S = imported.S;
         FIELDS.forEach(function (id) { $(id).value = imported.f[id] || ''; });
         editIdx = -1;
+        restoreActiveDraft();
         storageBlocked = false;
         if (!save()) { throw new Error('Browser storage could not save the restored draft. Export the backup and free local storage space.'); }
-        restoreActiveDraft();
         setEdit(); renderList(); schedule();
         backupStatus('Backup restored successfully. Review the assignments and export a fresh backup for safekeeping.', false);
       } catch (e) { backupStatus('Backup was not restored: ' + e.message, true); }
