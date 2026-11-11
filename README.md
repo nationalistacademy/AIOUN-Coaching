@@ -19,6 +19,16 @@ Independent study-support tools, Blogger resources, and a separate Supabase-back
 - Blogger HTML coding and QA rules: [docs/BLOGGER-HTML-CODING-RULES.md](docs/BLOGGER-HTML-CODING-RULES.md)
 - LMS security guide: [lms/README.md](lms/README.md)
 
+## Academic library
+
+The programme-wise academic library is maintained separately from the LMS and interactive tools. It contains course-code navigation, original student study guidance and links to AIOU's official book resources:
+
+- Library home: [academic-library/index.html](academic-library/index.html)
+- Matric programme overview: [academic-library/programmes/matric/overview.html](academic-library/programmes/matric/overview.html)
+- Matric course and book guides: [academic-library/programmes/matric/](academic-library/programmes/matric/)
+
+Course codes and programme structures should be checked against the current official AIOU prospectus and programme pages. Study guides are original explanations; use the official Soft Books portal for current textbook editions. Do not assume an overview page is a complete chapter-by-chapter textbook summary.
+
 ## Firebase starter
 The Firebase starter provides email/password Auth, profile documents, password reset, private uploads, notification reads and FCM token registration. Copy `firebase/config.example.js` to `firebase/config.js` and fill values from the actual Firebase project. The local config is ignored by Git. Push sending is implemented as a callable Cloud Function requiring the trusted `admin: true` custom claim and targeting one user per call; never put Admin SDK credentials in browser code.
 
