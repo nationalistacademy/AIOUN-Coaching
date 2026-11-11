@@ -6,7 +6,7 @@
   var basePath = scriptUrl.pathname.replace(/js\/pwa\.js(?:\?.*)?$/, '');
   var appBase = new URL(basePath || '/', scriptUrl.origin);
   var installPrompt = null;
-  var installButton = document.getElementById('pwa-install');
+  var installButtons = Array.prototype.slice.call(document.querySelectorAll('#pwa-install, #pwa-install-card'));
   var statusNode = document.getElementById('pwa-status');
 
   function status(message) {
@@ -14,18 +14,25 @@
     statusNode.textContent = message;
     statusNode.hidden = !message;
   }
+
+  function setInstallButtonsHidden(hidden) {
+    installButtons.forEach(function (button) { button.hidden = hidden; });
+  }
+
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
     navigator.serviceWorker.register(new URL('sw.js', appBase).href, { scope: appBase.pathname })
       .then(function () { status('App ready — previously visited pages may work offline.'); })
       .catch(function () { status('Offline mode could not be enabled on this visit.'); });
   }
+
   window.addEventListener('beforeinstallprompt', function (event) {
     event.preventDefault();
     installPrompt = event;
-    if (installButton) installButton.hidden = false;
+    setInstallButtonsHidden(false);
   });
-  if (installButton) {
-    installButton.addEventListener('click', async function () {
+
+  installButtons.forEach(function (button) {
+    button.addEventListener('click', async function () {
       if (!installPrompt) {
         status('Install option not available in this browser yet. Use the browser menu → Install app / Add to Home screen.');
         return;
@@ -33,11 +40,12 @@
       installPrompt.prompt();
       await installPrompt.userChoice;
       installPrompt = null;
-      installButton.hidden = true;
+      setInstallButtonsHidden(true);
     });
-  }
+  });
+
   window.addEventListener('appinstalled', function () {
-    if (installButton) installButton.hidden = true;
+    setInstallButtonsHidden(true);
     status('AIOU Coaching app installed.');
   });
   window.addEventListener('online', function () { status('Back online.'); });
