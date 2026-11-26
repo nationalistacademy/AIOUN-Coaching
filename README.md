@@ -11,7 +11,7 @@ Independent study-support tools, Blogger resources, and a separate Supabase-back
 - Firebase CLI manifest: [firebase.json](firebase.json)
 - Firestore rules: [firestore.rules](firestore.rules)
 - Storage rules: [storage.rules](storage.rules)
-- Blogger Page HTML sources: [p/](p/README.md) (maps to Blogger `/p/<slug>.html` after manual publication)
+- Blogger Page HTML sources: [p/](p/README.md), including the canonical [Student Login portal](p/student-login.html) (maps to Blogger `/p/<slug>.html` after manual publication)
 - Blogger Post HTML sources: [post/](post/README.md) (Blogger controls public post permalinks)
 - Blogger theme: [theme/aioucoahing.xml](theme/aioucoahing.xml)
 - AdSense readiness audit and approval gate: [docs/ADSENSE-READINESS-AUDIT.md](docs/ADSENSE-READINESS-AUDIT.md)

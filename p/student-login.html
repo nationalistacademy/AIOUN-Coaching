@@ -1,8 +1,40 @@
 <!-- AIOU COACHING STUDENT PORTAL — Blogger Page > HTML view mein paste karein -->
 <style>
-/* Portal full-screen overlay hota hai: Blogger header/sidebar/footer is page par dikhte hi nahi. Baqi pages par koi asar nahi. */
-html.ap-lock,html.ap-lock body{overflow:hidden!important}
-#ap{--ac:#f67938;--ac2:#d9601f;--ink:#1f2328;--mut:#6b7280;--bg:#f3f4f6;--side:#2b2d31;--top:#1f2023;--line:#e5e7eb;position:fixed;inset:0;z-index:2147483000;overflow:auto;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-align:left;direction:ltr}
+/* Blogger-safe full-viewport portal. Scroll belongs to the portal content pane, not the Blogger article wrapper. */
+#ap{--ac:var(--jt-primary,#f67938);--ac2:var(--jt-primary,#d9601f);--ink:var(--jt-heading-color,#1f2328);--mut:var(--jt-text-color,#6b7280);--bg:var(--glass-bg-soft,var(--jt-bg-light,#f3f4f6));--side:var(--jt-header-bg,#292b30);--top:var(--jt-header-bg,#1f2023);--line:var(--glass-border,var(--jt-border-light,#e5e7eb));position:relative;display:block;width:100%;max-width:none;min-height:65vh;height:auto;max-height:none;z-index:1;overflow:visible;background:transparent;color:var(--ink);font:15px/1.55 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;text-align:left;direction:ltr}
+#ap [hidden]{display:none!important}
+/* Match JetTheme shell: keep Blogger header/footer, expand this page, remove its sidebar/comments only. */
+body:has(#ap) #main-content{display:block!important}
+body:has(#ap) #main{width:100%!important;max-width:100%!important;flex:0 0 100%!important}
+body:has(#ap) #sidebar{display:none!important}
+body:has(#ap) .comments,
+body:has(#ap) #comments,
+body:has(#ap) .comment-form,
+body:has(#ap) #comment-editor,
+body:has(#ap) .post-comment-link{display:none!important}
+body:has(#ap) #page-content{max-width:none!important}
+#ap #ap-app{width:100%;min-height:65vh;display:flex;flex-direction:column}
+#ap .top{position:relative;top:auto;flex:0 0 56px;border-bottom:2px solid var(--ac)}
+#ap .wrap{display:flex;min-height:65vh;height:auto;overflow:visible}
+#ap .side{width:240px;align-self:stretch;min-height:100%;overflow:visible;flex-shrink:0}
+#ap .main{flex:1;min-width:0;width:100%;max-width:none;height:auto;min-height:65vh;overflow:visible;padding:22px}
+#ap .foot{display:none}
+#ap .lg{min-height:65vh;height:auto;overflow:visible;align-items:center;padding:28px 12px}
+#ap .lg .card{margin:auto}
+#ap .card{background:var(--glass-bg-strong,var(--bs-body-bg,#fff));border-color:var(--line)}
+#ap .kv{background:var(--glass-bg-soft,var(--bg))}
+#ap .top,#ap .side{color:var(--jt-header-color,#f3f4f6)}
+#ap .side{background:var(--jt-header-bg,#292b30)}
+#ap .btn{background:var(--jt-primary,#f67938)}
+#ap .btn:hover{background:var(--jt-primary-hover,#d9601f)}
+#ap .sc .h{background:linear-gradient(135deg,var(--jt-header-bg,#1f2023),var(--side))}
+@media(max-width:860px){
+ body:has(#ap) #main{padding-left:12px!important;padding-right:12px!important}
+ #ap .wrap{display:block;min-height:0}
+ #ap .side{position:fixed;top:56px;bottom:0;left:0;z-index:1040;height:auto;overflow-y:auto;transform:translateX(-105%)}
+ #ap .side.on{transform:none}
+ #ap .main{min-height:50vh;padding:14px}
+}
 #ap[data-t="gray"]{--ac:#6b7280;--ac2:#4b5563}#ap[data-t="green"]{--ac:#3a7d5c;--ac2:#2c6048}#ap[data-t="brown"]{--ac:#8b5a3c;--ac2:#6e452d}#ap[data-t="cyan"]{--ac:#0891b2;--ac2:#0e7490}#ap[data-t="blue"]{--ac:#c9a227;--ac2:#a8851a;--side:#16254f;--top:#0f1b3d}
 #ap *,#ap *:before,#ap *:after{box-sizing:border-box}
 #ap a{color:var(--ac2)}#ap h1,#ap h2,#ap h3{margin:0;color:inherit}
@@ -47,6 +79,33 @@ html.ap-lock,html.ap-lock body{overflow:hidden!important}
 #ap .menu{display:none}
 @media(max-width:860px){#ap .menu{display:inline-block}#ap .side{position:fixed;top:56px;bottom:0;left:0;z-index:40;transform:translateX(-105%);transition:transform .25s}#ap .side.on{transform:none}#ap .dr{width:100%}#ap .main{padding:14px}}
 @media print{body *{visibility:hidden!important}#ap .sc,#ap .sc *{visibility:visible!important}#ap .sc{position:fixed;left:20px;top:20px;box-shadow:none}}
+
+/* FINAL OVERRIDES — placed last to win over portal component defaults */
+body:has(#ap) #main-content{display:block!important}
+body:has(#ap) #main{width:100%!important;max-width:100%!important;flex:0 0 100%!important}
+body:has(#ap) #sidebar{display:none!important}
+body:has(#ap) .comments,body:has(#ap) #comments,body:has(#ap) .comment-form,body:has(#ap) #comment-editor,body:has(#ap) .post-comment-link{display:none!important}
+body:has(#ap) #page-content{max-width:none!important}
+#ap{position:relative!important;inset:auto!important;width:100%!important;max-width:none!important;height:auto!important;min-height:65vh!important;max-height:none!important;overflow:visible!important;z-index:1!important;background:transparent!important}
+#ap #ap-app{width:100%!important;height:auto!important;min-height:65vh!important;display:flex!important;flex-direction:column!important}
+#ap .top{position:relative!important;top:auto!important;flex:0 0 56px!important;border-bottom:2px solid var(--ac)!important;background:var(--jt-header-bg,#1f2023)!important}
+#ap .wrap{display:flex!important;min-height:65vh!important;height:auto!important;overflow:visible!important}
+#ap .side{position:relative;width:240px;align-self:stretch;height:auto!important;min-height:100%;overflow:visible!important;background:var(--jt-header-bg,#292b30)!important}
+#ap .main{flex:1;min-width:0;width:100%!important;max-width:none!important;height:auto!important;min-height:65vh!important;overflow:visible!important;padding:22px}
+#ap .foot{display:none!important}
+#ap .lg{height:auto!important;min-height:65vh!important;overflow:visible!important;align-items:center!important;padding:28px 12px}
+#ap .card{background:var(--glass-bg-strong,var(--bs-body-bg,#fff))!important;border-color:var(--glass-border,var(--jt-border-light,#e5e7eb))!important}
+#ap .kv{background:var(--glass-bg-soft,var(--jt-bg-light,#f3f4f6))!important}
+#ap .btn{background:var(--jt-primary,#f67938)!important}
+#ap .btn:hover{background:var(--jt-primary-hover,#d9601f)!important}
+#ap .sc .h{background:linear-gradient(135deg,var(--jt-header-bg,#1f2023),var(--side))!important}
+@media(max-width:860px){
+ body:has(#ap) #main{padding-left:12px!important;padding-right:12px!important}
+ #ap .wrap{display:block!important;min-height:0!important}
+ #ap .side{position:fixed!important;top:56px!important;bottom:0!important;left:0!important;z-index:1040!important;height:auto!important;overflow-y:auto!important;transform:translateX(-105%)}
+ #ap .side.on{transform:none}
+ #ap .main{min-height:50vh!important;padding:14px!important}
+}
 </style>
 
 <div id="ap" data-t="orange">
@@ -59,7 +118,6 @@ html.ap-lock,html.ap-lock body{overflow:hidden!important}
       <button class="ib" id="ap-out" type="button" aria-label="Logout">&#x23FB;</button>
     </div>
     <div class="wrap"><nav class="side" id="ap-side" aria-label="Portal"></nav><main class="main" id="ap-main"></main></div>
-    <div class="foot"><b>AIOU Coaching</b> &middot; Landhi Town, Karachi<br>WhatsApp: 03702388998 &middot; Contact: 03032672609<br><span dir="rtl" lang="ur">سب کے لیے تعلیم</span></div>
     <div class="ov" id="ap-ov"></div><aside class="dr" id="ap-dr" aria-label="Settings"></aside>
   </div>
   <div id="ap-boot" style="padding:40px;text-align:center">Loading&hellip;</div>
@@ -119,7 +177,6 @@ html.ap-lock,html.ap-lock body{overflow:hidden!important}
     var st = sb.from('students').select('*').eq('auth_user_id', U.id).maybeSingle().then(function (r) { ST = r.data || null; }, function () {});
     Promise.all([pr, st]).then(function () {
       $('ap-boot').hidden = true; $('ap-login').hidden = true; $('ap-app').hidden = false; root.scrollTop = 0;
-      D.documentElement.classList.add('ap-lock');
       $('ap-who').textContent = (P && P.full_name) || (ST && ST.full_name) || U.email || '';
       buildNav(); go('dash');
     });
@@ -132,7 +189,7 @@ html.ap-lock,html.ap-lock body{overflow:hidden!important}
   }
   function go(p) {
     page = p; var bs = $('ap-side').querySelectorAll('button'); for (var i = 0; i < bs.length; i++) { bs[i].classList.toggle('on', bs[i].getAttribute('data-p') === p); }
-    var m = $('ap-main'); m.innerHTML = ''; root.scrollTop = 0;
+    var m = $('ap-main'); m.scrollTop = 0; m.innerHTML = ''; 
     var V = { dash: vDash, profile: vProfile, courses: vCourses, card: vCard, act: vAct, chat: vChat, notif: vNotif, admin: vAdmin, search: vSearch }[p]; if (V) { V(m); }
   }
   function title(m, t) { m.appendChild(h('h2', 'pt', t)); }
@@ -285,7 +342,7 @@ html.ap-lock,html.ap-lock body{overflow:hidden!important}
     $('ap-menu').addEventListener('click', function () { $('ap-side').classList.toggle('on'); });
     $('ap-gear').addEventListener('click', function () { drawer(true); });
     $('ap-ov').addEventListener('click', function () { drawer(false); $('ap-side').classList.remove('on'); });
-    $('ap-out').addEventListener('click', function () { sb.auth.signOut().then(function () { U = P = ST = null; D.documentElement.classList.remove('ap-lock'); drawer(false); showLogin(); }); });
+    $('ap-out').addEventListener('click', function () { sb.auth.signOut().then(function () { U = P = ST = null; drawer(false); showLogin(); }); });
     sb.auth.getSession().then(function (r) {
       var s = r.data && r.data.session; if (s && s.user) { sb.auth.getUser().then(function (u) { if (u.data && u.data.user) { boot(u.data.user); } else { showLogin(); } }, showLogin); } else { showLogin(); }
     }, function () { showLogin(); });
