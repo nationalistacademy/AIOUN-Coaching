@@ -333,7 +333,7 @@ body:has(#ap) #page-content{max-width:none!important}
       });
       er.appendChild(save);
       er.appendChild(btn('Save Card Controls', '', function () {
-        sb.rpc('admin_set_student_card_fields', { p_student_id: s.id, p_student_mode: a.value || null, p_card_status: b.value }).then(function (x) {
+        sb.schema('private').rpc('admin_set_student_card_fields', { p_student_id: s.id, p_student_mode: a.value || null, p_card_status: b.value }).then(function (x) {
           if (x.error) { msg(card, 'Card controls update nahi huay: ' + x.error.message, 'e'); return; }
           s.student_mode = a.value || null; s.card_status = b.value;
           msg(card, 'Student Mode aur Card Status update ho gaye.', 'o');
