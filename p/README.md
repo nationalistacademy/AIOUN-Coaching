@@ -51,7 +51,7 @@ The shared theme is [`../theme/aioucoahing.xml`](../theme/aioucoahing.xml). It i
 
 ## Student portal source
 
-`student-login.html` is the single canonical Blogger Page source for `/p/student-login.html`. It uses the existing `student-login` Supabase Edge Function and the `tjfqkawhojobdartjoki` project publishable key. It is a page-specific full-screen portal overlay; it does not modify the shared JetTheme XML. Its dashboard main pane and navigation have independent vertical scrolling so long content remains reachable. Courses are limited to available academic records; activities and notification preferences are device-local; chat, notices, and outbound email/SMS are not connected services. Admin UI visibility is not a security boundary; Supabase RLS/RPC remains authoritative.
+`student-login.html` is the single canonical Blogger Page source for `/p/student-login.html`. It uses the existing `student-login` Supabase Edge Function and the `tjfqkawhojobdartjoki` project publishable key. It is a Blogger body fragment that keeps the shared JetTheme header/footer and removes the comments/right sidebar only on this page. The dashboard queries academic records by the authenticated `user_id`; the course catalogue is not the same as a student's enrollment. Activities remain device-local. Theme and notification preferences are stored in `profiles`; this stores preferences only and does not send email/SMS. Chat and notices are not connected services. Admin UI visibility is not a security boundary; Supabase RLS and the admin-only database RPC remain authoritative.
 
 The older `pages/student-login.html` copy is retired; use only this root `p/` source for future Blogger edits.
 
