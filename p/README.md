@@ -20,6 +20,7 @@ This folder contains **Blogger Page body HTML**. Its file names are intentionall
 | `dmca.html` | Copyright notice contact instructions |
 | `aiou-tool-kit.html` | Tool directory page |
 | `tools.html` | All tools directory page |
+| `student-login.html` | Supabase-backed student portal page fragment (Phase 1; email or roll-number login) |
 | `tool-template.html` | Reusable tool-page body starter; not a live page by itself |
 
 ## Publishing workflow
@@ -47,6 +48,12 @@ The shared theme is [`../theme/aioucoahing.xml`](../theme/aioucoahing.xml). It i
 - Avoid duplicate IDs, broken anchors, invalid nesting, and unverified external dependencies.
 - Do not add AdSense code, ad slots, sticky ads, or publisher IDs unless the owner has approved the exact unit and the current theme/ad setup is verified.
 - Structured data must be valid JSON-LD, truthful, match visible content, use absolute canonical URLs, and not duplicate schema already emitted by the theme. Never invent reviews, ratings, credentials, or official AIOU status.
+
+## Student portal source
+
+`student-login.html` is the single canonical Blogger Page source for `/p/student-login.html`. It uses the existing `student-login` Supabase Edge Function and the `tjfqkawhojobdartjoki` project publishable key. It is a page-specific full-screen portal overlay; it does not modify the shared JetTheme XML. Its dashboard main pane and navigation have independent vertical scrolling so long content remains reachable. Courses are limited to available academic records; activities and notification preferences are device-local; chat, notices, and outbound email/SMS are not connected services. Admin UI visibility is not a security boundary; Supabase RLS/RPC remains authoritative.
+
+The older `pages/student-login.html` copy is retired; use only this root `p/` source for future Blogger edits.
 
 ## File readiness
 
