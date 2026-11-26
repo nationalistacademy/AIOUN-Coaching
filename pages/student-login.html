@@ -1,0 +1,296 @@
+<!-- AIOU COACHING STUDENT PORTAL — Blogger Page > HTML view mein paste karein -->
+<style>
+/* Portal full-screen overlay hota hai: Blogger header/sidebar/footer is page par dikhte hi nahi. Baqi pages par koi asar nahi. */
+html.ap-lock,html.ap-lock body{overflow:hidden!important}
+#ap{--ac:#f67938;--ac2:#d9601f;--ink:#1f2328;--mut:#6b7280;--bg:#f3f4f6;--side:#2b2d31;--top:#1f2023;--line:#e5e7eb;position:fixed;inset:0;z-index:2147483000;overflow:auto;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-align:left;direction:ltr}
+#ap[data-t="gray"]{--ac:#6b7280;--ac2:#4b5563}#ap[data-t="green"]{--ac:#3a7d5c;--ac2:#2c6048}#ap[data-t="brown"]{--ac:#8b5a3c;--ac2:#6e452d}#ap[data-t="cyan"]{--ac:#0891b2;--ac2:#0e7490}#ap[data-t="blue"]{--ac:#c9a227;--ac2:#a8851a;--side:#16254f;--top:#0f1b3d}
+#ap *,#ap *:before,#ap *:after{box-sizing:border-box}
+#ap a{color:var(--ac2)}#ap h1,#ap h2,#ap h3{margin:0;color:inherit}
+#ap .top{position:sticky;top:0;z-index:30;height:56px;background:var(--top);color:#fff;display:flex;align-items:center;gap:12px;padding:0 14px}
+#ap .top b{font-size:17px;letter-spacing:.04em}#ap .top b i{color:var(--ac);font-style:normal}
+#ap .sp{flex:1}#ap .ib{background:transparent;border:0;color:#fff;font-size:20px;cursor:pointer;padding:6px 8px;border-radius:8px}#ap .ib:hover{background:rgba(255,255,255,.12)}
+#ap .who{font-size:13px;opacity:.9;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#ap .wrap{display:flex;min-height:calc(100vh - 56px - 0px)}
+#ap .side{width:240px;background:var(--side);color:#e5e7eb;padding:12px 0;flex-shrink:0}
+#ap .side button{display:flex;width:100%;gap:10px;align-items:center;background:none;border:0;border-left:3px solid transparent;color:inherit;font:600 14px inherit;font-family:inherit;padding:11px 18px;cursor:pointer;text-align:left}
+#ap .side button:hover{background:rgba(255,255,255,.07)}#ap .side button.on{background:rgba(255,255,255,.1);border-left-color:var(--ac);color:#fff}
+#ap .side hr{border:0;border-top:1px solid rgba(255,255,255,.12);margin:8px 14px}
+#ap .main{flex:1;min-width:0;padding:22px;max-width:1100px}
+#ap .card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.05);padding:18px;margin:0 0 16px}
+#ap .pt{font-size:22px;font-weight:800;margin:0 0 16px}#ap h3{font-size:16px;margin-bottom:10px}
+#ap .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+#ap .kv{background:var(--bg);border-radius:10px;padding:10px 12px}#ap .kv small{display:block;color:var(--mut);font-size:12px}#ap .kv b{word-break:break-word}
+#ap label{display:block;font-size:13px;font-weight:700;margin:0 0 4px}
+#ap input,#ap select,#ap textarea{width:100%;padding:9px 11px;border:1px solid #d1d5db;border-radius:10px;font:inherit;background:#fff;color:inherit}
+#ap input[readonly]{background:#f3f4f6}#ap input:focus,#ap select:focus,#ap textarea:focus{outline:2px solid var(--ac);border-color:var(--ac)}
+#ap .btn{display:inline-flex;align-items:center;gap:6px;background:var(--ac);color:#fff;border:0;border-radius:10px;padding:9px 18px;font:700 14px inherit;font-family:inherit;cursor:pointer}
+#ap .btn:hover{background:var(--ac2)}#ap .btn:disabled{opacity:.6;cursor:wait}#ap .btn.g{background:#fff;color:var(--ink);border:1px solid #d1d5db}#ap .btn.d{background:#dc2626}
+#ap .msg{margin-top:10px;font-size:13.5px;padding:8px 12px;border-radius:10px}#ap .msg.e{background:#fee2e2;color:#991b1b}#ap .msg.o{background:#dcfce7;color:#166534}#ap .msg.i{background:#e0f2fe;color:#075985}
+#ap .bar{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:8px}#ap .bar i{display:block;height:100%;background:var(--ac)}
+#ap .empty{text-align:center;padding:28px 14px;border:2px dashed #d1d5db;border-radius:14px;color:var(--mut)}
+#ap .badge{display:inline-block;padding:2px 12px;border-radius:99px;font-weight:800;font-size:12px;color:#fff;background:#6b7280}#ap .badge.odl{background:#2563eb}#ap .badge.f2f{background:#c9a227}
+#ap .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:end}#ap .row>*{flex:1;min-width:150px}#ap .row>.btn{flex:0 0 auto;min-width:0}
+#ap .task{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}#ap .task input{width:auto}#ap .task span{flex:1}#ap .task.dn span{text-decoration:line-through;opacity:.6}
+#ap .foot{background:var(--top);color:#cbd5e1;padding:18px 22px;font-size:13px;text-align:center}#ap .foot b{color:#fff}
+/* login */
+#ap .lg{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,var(--top),var(--side))}
+#ap .lg .card{width:100%;max-width:400px;padding:26px}#ap .lg h1{font-size:24px;text-align:center}#ap .lg p{text-align:center;color:var(--mut);margin:4px 0 18px}#ap .lg .fld{margin-bottom:12px}
+/* drawer */
+#ap .dr{position:fixed;top:0;right:0;bottom:0;width:350px;max-width:100%;background:#fff;z-index:60;transform:translateX(105%);transition:transform .25s;box-shadow:-8px 0 30px rgba(0,0,0,.25);overflow:auto;padding:18px}
+#ap .dr.on{transform:none}#ap .ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:none}#ap .ov.on{display:block}
+#ap .th{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}#ap .th button{border:2px solid var(--line);background:#fff;border-radius:10px;padding:8px 4px;font:600 12px inherit;font-family:inherit;cursor:pointer}#ap .th button.on{border-color:var(--ac)}#ap .th i{display:block;height:18px;border-radius:6px;margin-bottom:5px}
+/* card */
+#ap .sc{max-width:430px;border-radius:18px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+#ap .sc .h{background:linear-gradient(135deg,var(--top),var(--side));color:#fff;padding:14px 18px}#ap .sc .h b{letter-spacing:.06em}#ap .sc .h small{display:block;opacity:.8;font-family:"Noto Nastaliq Urdu",serif}
+#ap .sc .bd{display:flex;gap:14px;padding:16px 18px}#ap .sc .ph{width:96px;height:116px;border-radius:12px;background:#e5e7eb;object-fit:cover;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:12px;text-align:center}
+#ap .sc .ft{background:var(--bg);font-size:12px;color:var(--mut);padding:9px 18px}
+#ap .menu{display:none}
+@media(max-width:860px){#ap .menu{display:inline-block}#ap .side{position:fixed;top:56px;bottom:0;left:0;z-index:40;transform:translateX(-105%);transition:transform .25s}#ap .side.on{transform:none}#ap .dr{width:100%}#ap .main{padding:14px}}
+@media print{body *{visibility:hidden!important}#ap .sc,#ap .sc *{visibility:visible!important}#ap .sc{position:fixed;left:20px;top:20px;box-shadow:none}}
+</style>
+
+<div id="ap" data-t="orange">
+  <div id="ap-login" class="lg" hidden></div>
+  <div id="ap-app" hidden>
+    <div class="top">
+      <button class="ib menu" id="ap-menu" type="button" aria-label="Menu">&#9776;</button>
+      <b>AIOU <i>COACHING</i></b><span class="sp"></span><span class="who" id="ap-who"></span>
+      <button class="ib" id="ap-gear" type="button" aria-label="Settings">&#9881;&#65039;</button>
+      <button class="ib" id="ap-out" type="button" aria-label="Logout">&#x23FB;</button>
+    </div>
+    <div class="wrap"><nav class="side" id="ap-side" aria-label="Portal"></nav><main class="main" id="ap-main"></main></div>
+    <div class="foot"><b>AIOU Coaching</b> &middot; Landhi Town, Karachi<br>WhatsApp: 03702388998 &middot; Contact: 03032672609<br><span dir="rtl" lang="ur">سب کے لیے تعلیم</span></div>
+    <div class="ov" id="ap-ov"></div><aside class="dr" id="ap-dr" aria-label="Settings"></aside>
+  </div>
+  <div id="ap-boot" style="padding:40px;text-align:center">Loading&hellip;</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+//<![CDATA[
+(function () {
+  var URL_ = 'https://tjfqkawhojobdartjoki.supabase.co', KEY = 'sb_publishable_s2aZXakyUj-S-5hVZA4djQ_IZpFClWZ';
+  var D = document, root = D.getElementById('ap'), sb = null, U = null, P = null, ST = null, page = 'dash';
+  var NAV = [['dash', 'Dashboard', '\ud83c\udfe0'], ['profile', 'My Profile', '\ud83d\udc64'], ['courses', 'My Courses', '\ud83d\udcda'], ['card', 'My Student Card', '\ud83e\udeaa'], ['act', 'My Activities', '\u2705'], ['chat', 'Chat', '\ud83d\udcac'], ['notif', 'Notifications', '\ud83d\udd14'], ['set', 'Settings', '\u2699\ufe0f']];
+  var ADM = [['admin', 'Admin Dashboard', '\ud83d\udee1\ufe0f'], ['search', 'Student Search', '\ud83d\udd0e']];
+  var THEMES = [['orange', 'Orangutan Orange', '#f67938'], ['gray', 'Colorate Gray', '#6b7280'], ['green', 'Patina Green', '#3a7d5c'], ['brown', 'Brown Boots', '#8b5a3c'], ['cyan', 'Cyan Blue', '#0891b2'], ['blue', 'AIOU Blue', '#1e3a8a']];
+  function $(id) { return D.getElementById(id); }
+  function h(t, c, x) { var e = D.createElement(t); if (c) { e.className = c; } if (x !== undefined && x !== null) { e.textContent = x; } return e; }
+  function ls(k, v) { try { if (v === undefined) { return localStorage.getItem(k); } localStorage.setItem(k, v); } catch (e) {} return null; }
+  function msg(p, t, c) { var o = p.querySelector('.msg'); if (o) { o.remove(); } var m = h('div', 'msg ' + (c || 'i'), t); p.appendChild(m); return m; }
+  function kv(l, v) { var d = h('div', 'kv'); d.appendChild(h('small', '', l)); d.appendChild(h('b', '', (v === null || v === undefined || v === '') ? '\u2014' : v)); return d; }
+  function field(l, v, ro, type) { var w = h('div'), i = h('input'); w.appendChild(h('label', '', l)); i.type = type || 'text'; i.value = v || ''; if (ro) { i.readOnly = true; } w.appendChild(i); return { w: w, i: i }; }
+  function btn(t, c, f) { var b = h('button', 'btn ' + (c || ''), t); b.type = 'button'; if (f) { b.addEventListener('click', f); } return b; }
+
+  /* ---------- theme ---------- */
+  function setTheme(t) { root.setAttribute('data-t', t); ls('ap_theme', t); }
+  setTheme(ls('ap_theme') || 'orange');
+
+  /* ---------- login ---------- */
+  function showLogin(note) {
+    $('ap-boot').hidden = true; $('ap-app').hidden = true; var L = $('ap-login'); L.hidden = false; L.innerHTML = '';
+    var c = h('div', 'card'); c.appendChild(h('h1', '', 'AIOU COACHING')); c.appendChild(h('p', '', 'Student Portal Login'));
+    var a = field('Email ya Roll Number', '', false), b = field('Password', '', false, 'password'); a.i.autocomplete = 'username'; b.i.autocomplete = 'current-password';
+    a.w.className = b.w.className = 'fld'; c.appendChild(a.w); c.appendChild(b.w);
+    var go = btn('Login', '', null); go.style.width = '100%'; c.appendChild(go);
+    if (note) { msg(c, note, 'e'); }
+    function run(e) {
+      if (e) { e.preventDefault(); }
+      var id = a.i.value.trim(), pw = b.i.value; if (!id || !pw) { msg(c, 'Email/Roll Number aur password likhein.', 'e'); return; }
+      go.disabled = true; go.textContent = 'Login ho raha hai\u2026';
+      fetch(URL_ + '/functions/v1/student-login', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ identifier: id, password: pw }) })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }, function () { return { ok: false, d: {} }; }); })
+        .then(function (r) {
+          var d = r.d || {}, s = d.session || (d.data && d.data.session) || d;
+          if (!r.ok || !s.access_token || !s.refresh_token) { throw new Error('login'); }
+          return sb.auth.setSession({ access_token: s.access_token, refresh_token: s.refresh_token });
+        })
+        .then(function (res) { if (res.error || !res.data.session) { throw new Error('session'); } b.i.value = ''; boot(res.data.session.user); })
+        .catch(function () { go.disabled = false; go.textContent = 'Login'; msg(c, 'Login nahi ho saka. Apni details check karein aur dobara koshish karein.', 'e'); });
+    }
+    go.addEventListener('click', run); b.i.addEventListener('keydown', function (e) { if (e.key === 'Enter') { run(e); } });
+    L.appendChild(c);
+  }
+
+  /* ---------- boot ---------- */
+  function boot(user) {
+    U = user; P = null; ST = null;
+    var pr = sb.from('profiles').select('*').eq('id', U.id).maybeSingle().then(function (r) { P = r.data || null; }, function () {});
+    var st = sb.from('students').select('*').eq('auth_user_id', U.id).maybeSingle().then(function (r) { ST = r.data || null; }, function () {});
+    Promise.all([pr, st]).then(function () {
+      $('ap-boot').hidden = true; $('ap-login').hidden = true; $('ap-app').hidden = false; root.scrollTop = 0;
+      D.documentElement.classList.add('ap-lock');
+      $('ap-who').textContent = (P && P.full_name) || (ST && ST.full_name) || U.email || '';
+      buildNav(); go('dash');
+    });
+  }
+  function isAdmin() { return !!(P && P.role === 'admin'); }
+  function buildNav() {
+    var n = $('ap-side'); n.innerHTML = '';
+    function add(it) { var b = h('button', '', it[2] + '  ' + it[1]); b.type = 'button'; b.setAttribute('data-p', it[0]); b.addEventListener('click', function () { if (it[0] === 'set') { drawer(true); } else { go(it[0]); } $('ap-side').classList.remove('on'); }); n.appendChild(b); }
+    NAV.forEach(add); if (isAdmin()) { n.appendChild(h('hr')); ADM.forEach(add); }
+  }
+  function go(p) {
+    page = p; var bs = $('ap-side').querySelectorAll('button'); for (var i = 0; i < bs.length; i++) { bs[i].classList.toggle('on', bs[i].getAttribute('data-p') === p); }
+    var m = $('ap-main'); m.innerHTML = ''; root.scrollTop = 0;
+    var V = { dash: vDash, profile: vProfile, courses: vCourses, card: vCard, act: vAct, chat: vChat, notif: vNotif, admin: vAdmin, search: vSearch }[p]; if (V) { V(m); }
+  }
+  function title(m, t) { m.appendChild(h('h2', 'pt', t)); }
+  function noStudent(m) { var e = h('div', 'empty', 'Aap ke account se abhi koi student record link nahi hai. Admin se rabta karein.'); m.appendChild(e); }
+
+  /* ---------- views ---------- */
+  var PF = ['full_name', 'email', 'phone_number', 'postal_address', 'guardian_name', 'guardian_phone', 'guardian_relation', 'nic_number'];
+  function complete() { if (!P) { return 0; } var n = 0; PF.forEach(function (k) { if (P[k] && String(P[k]).trim()) { n++; } }); return Math.round(n * 100 / PF.length); }
+  function tasks() { try { return JSON.parse(ls('ap_tasks_' + U.id) || '[]'); } catch (e) { return []; } }
+  function vDash(m) {
+    var nm = (P && P.full_name) || (ST && ST.full_name) || 'Student';
+    title(m, 'Welcome, ' + nm); var c = h('div', 'card'), g = h('div', 'grid');
+    g.appendChild(kv('Roll Number', (ST && ST.roll_no) || (P && P.student_id))); g.appendChild(kv('Course / Programme', (ST && ST.course) || (P && P.programme)));
+    g.appendChild(kv('Batch', ST && ST.batch)); g.appendChild(kv('Student Mode', ST && ST.student_mode)); g.appendChild(kv('Card Status', ST && ST.card_status)); c.appendChild(g);
+    if (!ST) { msg(c, 'Student record link nahi hai, is liye roll number/course/batch nahi dikh rahe.', 'i'); } m.appendChild(c);
+    var pc = complete(), c2 = h('div', 'card'); c2.appendChild(h('h3', '', 'Profile completion: ' + pc + '%')); var b = h('div', 'bar'), i = h('i'); i.style.width = pc + '%'; b.appendChild(i); c2.appendChild(b);
+    if (pc < 100) { c2.appendChild(h('p', '', 'My Profile mein baqi details bharein.')); } m.appendChild(c2);
+    var c3 = h('div', 'card'); c3.appendChild(h('h3', '', 'Notice Board')); c3.appendChild(h('div', 'empty', 'Abhi koi notice available nahi hai.')); m.appendChild(c3);
+    var t = tasks(), c4 = h('div', 'card'); c4.appendChild(h('h3', '', 'Activities (is device par)'));
+    var g4 = h('div', 'grid'); g4.appendChild(kv('Total tasks', t.length)); g4.appendChild(kv('Completed', t.filter(function (x) { return x.d; }).length)); g4.appendChild(kv('Pending', t.filter(function (x) { return !x.d; }).length)); c4.appendChild(g4); m.appendChild(c4);
+    var c5 = h('div', 'card'); c5.appendChild(h('h3', '', 'Quick links')); var r = h('div', 'row');
+    [['My Profile', 'profile'], ['My Courses', 'courses'], ['Student Card', 'card'], ['Activities', 'act']].forEach(function (x) { r.appendChild(btn(x[0], 'g', function () { go(x[1]); })); });
+    var wa = h('a', 'btn', 'WhatsApp'); wa.href = 'https://wa.me/923702388998'; wa.target = '_blank'; wa.rel = 'noopener'; r.appendChild(wa); c5.appendChild(r); m.appendChild(c5);
+  }
+
+  function vProfile(m) {
+    title(m, 'My Profile'); var c = h('div', 'card');
+    if (!P) { c.appendChild(h('div', 'empty', 'Profile load nahi ho saka (record ya ijazat maujood nahi).')); m.appendChild(c); return; }
+    var g = h('div', 'grid'), F = {};
+    g.appendChild(field('Full Name', P.full_name || (ST && ST.full_name), true).w); g.appendChild(field('Father Name', ST && ST.father_name, true).w);
+    g.appendChild(field('Email', P.email || U.email, true).w); g.appendChild(field('Roll Number', (ST && ST.roll_no) || P.student_id, true).w);
+    g.appendChild(field('Course', (ST && ST.course) || P.programme, true).w); g.appendChild(field('Batch', ST && ST.batch, true).w);
+    [['phone_number', 'Phone'], ['guardian_name', 'Guardian Name'], ['guardian_phone', 'Guardian Phone'], ['guardian_relation', 'Guardian Relation'], ['nic_number', 'NIC Number'], ['postal_address', 'Postal Address']].forEach(function (x) { F[x[0]] = field(x[1], P[x[0]], false); g.appendChild(F[x[0]].w); });
+    c.appendChild(g); var r = h('div', 'row');
+    var save = btn('Save changes', '', function () {
+      var up = {}; for (var k in F) { if (F[k].i.value.trim() !== String(P[k] || '')) { up[k] = F[k].i.value.trim(); } }
+      if (!Object.keys(up).length) { msg(c, 'Koi tabdeeli nahi hui.', 'i'); return; }
+      save.disabled = true;
+      sb.from('profiles').update(up).eq('id', U.id).select().maybeSingle().then(function (res) {
+        save.disabled = false;
+        if (res.error) { msg(c, 'Save nahi ho saka: ' + res.error.message, 'e'); return; }
+        if (!res.data) { msg(c, 'Save nahi hua (shayad is field ki ijazat nahi). Admin se rabta karein.', 'e'); return; }
+        P = res.data; msg(c, 'Profile save ho gaya.', 'o');
+      }, function () { save.disabled = false; msg(c, 'Network masla.', 'e'); });
+    });
+    r.appendChild(save); c.appendChild(r);
+    c.appendChild(h('p', '', 'Roll number, course, batch, mode aur card status aap khud nahi badal sakte. Profile photo upload abhi enable nahi (storage bucket tasdeeq ke baad).')); m.appendChild(c);
+  }
+
+  function vCourses(m) {
+    title(m, 'My Courses'); var c = h('div', 'card'); m.appendChild(c);
+    if (!ST) { noStudent(c); return; }
+    c.appendChild(h('div', 'empty', 'Records load ho rahe hain\u2026'));
+    sb.from('academic_records').select('*').eq('student_id', ST.id).limit(100).then(function (r) {
+      c.innerHTML = '';
+      if (r.error || !r.data || !r.data.length) { c.appendChild(h('div', 'empty', 'Abhi koi course/academic record available nahi. LMS (lessons, instructors, assignments) backend connect hone par yahan dikhega.')); return; }
+      var g = h('div', 'grid'); r.data.forEach(function (rec) {
+        var d = h('div', 'kv'), n = 0; for (var k in rec) { if (rec.hasOwnProperty(k) && !/(^id$|_id$|created|updated)/.test(k) && rec[k] !== null && n < 5) { var s = h('div'); s.appendChild(h('small', '', k.replace(/_/g, ' '))); s.appendChild(h('b', '', String(rec[k]))); d.appendChild(s); n++; } }
+        g.appendChild(d);
+      }); c.appendChild(h('h3', '', 'Academic records')); c.appendChild(g);
+    }, function () { c.innerHTML = ''; c.appendChild(h('div', 'empty', 'Courses abhi load nahi ho sake.')); });
+  }
+
+  function vCard(m) {
+    title(m, 'My Student Card'); if (!ST) { noStudent(m); return; }
+    var c = h('div', 'sc'), hd = h('div', 'h'); hd.appendChild(h('b', '', 'AIOU COACHING')); hd.appendChild(h('small', '', '\u0633\u0628 \u06a9\u06d2 \u0644\u06cc\u06d2 \u062a\u0639\u0644\u06cc\u0645')); c.appendChild(hd);
+    var bd = h('div', 'bd'), ph;
+    if (ST.photo_url) { ph = h('img', 'ph'); ph.alt = 'Student photo'; ph.src = ST.photo_url; ph.referrerPolicy = 'no-referrer'; ph.onerror = function () { var f = h('div', 'ph', 'Photo load nahi hui'); ph.replaceWith(f); }; } else { ph = h('div', 'ph', 'Photo available nahi'); }
+    bd.appendChild(ph); var t = h('div'); t.appendChild(h('h3', '', ST.full_name || '')); t.appendChild(h('div', '', 'Roll No: ' + (ST.roll_no || '\u2014'))); t.appendChild(h('div', '', 'Course: ' + (ST.course || '\u2014'))); t.appendChild(h('div', '', 'Batch: ' + (ST.batch || '\u2014')));
+    var mo = String(ST.student_mode || ''), b = h('span', 'badge ' + (mo === 'ODL' ? 'odl' : mo === 'F2F' ? 'f2f' : ''), mo || 'Mode set nahi'); b.style.marginTop = '8px'; t.appendChild(b);
+    t.appendChild(h('div', 'h', 'Card status: ' + (ST.card_status || '\u2014'))); bd.appendChild(t); c.appendChild(bd);
+    c.appendChild(h('div', 'ft', 'AIOU Coaching, Landhi Town, Karachi \u00b7 WA 03702388998 \u00b7 03032672609')); m.appendChild(c);
+    var r = h('div', 'row'); r.appendChild(btn('\ud83d\udda8\ufe0f Print', '', function () { window.print(); })); m.appendChild(r);
+    m.appendChild(h('p', '', 'Yeh card AIOU Coaching ka internal preview hai; official verification system maujood nahi.'));
+  }
+
+  function vAct(m) {
+    title(m, 'My Activities'); var c = h('div', 'card'); c.appendChild(msg(c, 'Yeh tasks sirf is device/browser mein save hote hain, server ke sath sync nahi.', 'i') && h('span')); m.appendChild(c);
+    var K = 'ap_tasks_' + U.id, T = tasks(), list = h('div');
+    var r = h('div', 'row'), a = field('Task / Assignment / Target', '', false), d = field('Deadline (optional)', '', false, 'date'); r.appendChild(a.w); r.appendChild(d.w);
+    function save() { ls(K, JSON.stringify(T)); } function paint() {
+      list.innerHTML = ''; if (!T.length) { list.appendChild(h('div', 'empty', 'Abhi koi task nahi.')); }
+      T.forEach(function (x, i) { var row = h('div', 'task' + (x.d ? ' dn' : '')), cb = h('input'); cb.type = 'checkbox'; cb.checked = !!x.d; cb.setAttribute('aria-label', 'Done'); cb.addEventListener('change', function () { x.d = cb.checked; save(); paint(); });
+        row.appendChild(cb); row.appendChild(h('span', '', x.t + (x.dl ? '  (' + x.dl + ')' : ''))); var rm = btn('\u2715', 'g', function () { T.splice(i, 1); save(); paint(); }); rm.setAttribute('aria-label', 'Remove'); row.appendChild(rm); list.appendChild(row); });
+    }
+    r.appendChild(btn('Add', '', function () { var t = a.i.value.trim(); if (!t) { return; } T.push({ t: t, dl: d.i.value, d: false }); a.i.value = ''; save(); paint(); }));
+    c.appendChild(r); c.appendChild(list); paint();
+  }
+
+  function vChat(m) { title(m, 'Chat'); var c = h('div', 'card'); c.appendChild(h('div', 'empty', 'Chat service abhi connected nahi hai. Chat table aur Realtime configure hone ke baad yeh active hoga.')); m.appendChild(c); }
+  function vNotif(m) { title(m, 'Notifications'); var c = h('div', 'card'); c.appendChild(h('div', 'empty', 'Abhi koi notification available nahi.')); m.appendChild(c); }
+
+  function vAdmin(m) {
+    title(m, 'Admin Dashboard'); var c = h('div', 'card'); c.appendChild(h('p', '', 'Admin access database RLS se control hoti hai. Student Search se roll number par record dekhein.')); var g = h('div', 'grid'); c.appendChild(g); m.appendChild(c);
+    sb.from('students').select('id', { count: 'exact', head: true }).then(function (r) { if (!r.error && r.count !== null) { g.appendChild(kv('Students (visible to you)', r.count)); } else { msg(c, 'Count load nahi ho saka (ijazat/RLS).', 'i'); } });
+  }
+  function vSearch(m) {
+    title(m, 'Student Search'); var c = h('div', 'card'), r = h('div', 'row'), q = field('Roll Number', '', false), out = h('div'); r.appendChild(q.w);
+    function run() {
+      var v = q.i.value.trim(); if (!v) { return; } out.innerHTML = '';
+      sb.from('students').select('*').eq('roll_no', v).maybeSingle().then(function (res) {
+        if (res.error) { msg(out, 'Search nahi ho saki: ' + res.error.message, 'e'); return; }
+        if (!res.data) { msg(out, 'Is roll number ka record nahi mila (ya ijazat nahi).', 'i'); return; }
+        var s = res.data, g = h('div', 'grid'); [['Name', s.full_name], ['Father', s.father_name], ['Roll No', s.roll_no], ['Course', s.course], ['Batch', s.batch], ['Mode', s.student_mode], ['Card Status', s.card_status]].forEach(function (x) { g.appendChild(kv(x[0], x[1])); }); out.appendChild(g);
+        var er = h('div', 'row'), sm = h('div'), sc = h('div'), a = h('select'), b = h('select');
+        ['', 'ODL', 'F2F'].forEach(function (x) { a.appendChild(new Option(x || '(none)', x)); }); ['Pending', 'Generated', 'Printed', 'Blocked'].forEach(function (x) { b.appendChild(new Option(x, x)); });
+        a.value = s.student_mode || ''; b.value = s.card_status || 'Pending'; sm.appendChild(h('label', '', 'Student Mode')); sm.appendChild(a); sc.appendChild(h('label', '', 'Card Status')); sc.appendChild(b); er.appendChild(sm); er.appendChild(sc);
+        er.appendChild(btn('Update', '', function () {
+          sb.schema('private').rpc('admin_set_student_card_fields', { p_student_id: s.id, p_student_mode: a.value || null, p_card_status: b.value }).then(function (x) {
+            if (x.error) { msg(out, 'Update nahi hua: ' + x.error.message + ' (private schema RPC client ko expose hona chahiye aur aap admin hon).', 'e'); } else { msg(out, 'Update ho gaya.', 'o'); }
+          });
+        })); out.appendChild(er);
+      }, function () { msg(out, 'Network masla.', 'e'); });
+    }
+    r.appendChild(btn('Search', '', run)); q.i.addEventListener('keydown', function (e) { if (e.key === 'Enter') { run(); } }); c.appendChild(r); c.appendChild(out); m.appendChild(c);
+  }
+
+  /* ---------- settings drawer ---------- */
+  function drawer(open) {
+    var d = $('ap-dr'), o = $('ap-ov');
+    if (open) {
+      d.innerHTML = ''; var hd = h('div', 'row'); hd.style.marginTop = '0'; hd.appendChild(h('h3', '', 'Settings')); hd.appendChild(btn('\u2715', 'g', function () { drawer(false); })); d.appendChild(hd);
+      d.appendChild(h('h3', '', 'Theme')); var th = h('div', 'th');
+      THEMES.forEach(function (t) { var b = h('button', root.getAttribute('data-t') === t[0] ? 'on' : ''), s = h('i'); s.style.background = t[2]; b.appendChild(s); b.appendChild(D.createTextNode(t[1])); b.type = 'button'; b.addEventListener('click', function () { setTheme(t[0]); var bs = th.children; for (var i = 0; i < bs.length; i++) { bs[i].classList.remove('on'); } b.classList.add('on'); }); th.appendChild(b); });
+      d.appendChild(th); d.appendChild(h('hr'));
+      d.appendChild(h('h3', '', 'Change Password')); var cp = field('Current Password', '', false, 'password'), np = field('New Password', '', false, 'password'), cf = field('Confirm New Password', '', false, 'password'), box = h('div');
+      [cp, np, cf].forEach(function (x) { x.w.style.marginBottom = '8px'; box.appendChild(x.w); });
+      var sv = btn('Update password', '', function () {
+        if (np.i.value.length < 8) { msg(box, 'Naya password kam az kam 8 characters ka ho.', 'e'); return; }
+        if (np.i.value !== cf.i.value) { msg(box, 'Naya password aur confirm password match nahi karte.', 'e'); return; }
+        var em = (U && U.email) || (P && P.email); if (!em) { msg(box, 'Account email maujood nahi, password change nahi ho sakta.', 'e'); return; }
+        sv.disabled = true;
+        sb.auth.signInWithPassword({ email: em, password: cp.i.value }).then(function (r) {
+          if (r.error) { throw new Error('cur'); } return sb.auth.updateUser({ password: np.i.value });
+        }).then(function (r) { sv.disabled = false; if (r.error) { msg(box, 'Password update nahi hua: ' + r.error.message, 'e'); return; } cp.i.value = np.i.value = cf.i.value = ''; msg(box, 'Password badal gaya.', 'o'); },
+          function (e) { sv.disabled = false; msg(box, e && e.message === 'cur' ? 'Maujooda password sahi nahi.' : 'Password update nahi ho saka.', 'e'); });
+      });
+      box.appendChild(sv); d.appendChild(box); d.appendChild(h('hr'));
+      d.appendChild(h('h3', '', 'Notification Preferences')); var pf = {}; try { pf = JSON.parse(ls('ap_prefs') || '{}'); } catch (e) {}
+      [['email', 'Email notifications'], ['sms', 'SMS notifications'], ['app', 'In-app notifications']].forEach(function (x) { var l = h('label'), c = h('input'); c.type = 'checkbox'; c.style.width = 'auto'; c.style.marginRight = '8px'; c.checked = pf[x[0]] !== false; c.addEventListener('change', function () { pf[x[0]] = c.checked; ls('ap_prefs', JSON.stringify(pf)); }); l.appendChild(c); l.appendChild(D.createTextNode(x[1])); d.appendChild(l); });
+      d.appendChild(h('p', '', 'Yeh preferences sirf is device par save hoti hain; abhi email/SMS service connected nahi hai.'));
+    }
+    d.classList.toggle('on', open); o.classList.toggle('on', open);
+  }
+
+  /* ---------- start ---------- */
+  function start() {
+    if (!window.supabase || !window.supabase.createClient) { $('ap-boot').textContent = 'Supabase library load nahi hui. Internet check karke page refresh karein.'; return; }
+    sb = window.supabase.createClient(URL_, KEY, { auth: { persistSession: true, autoRefreshToken: true, storageKey: 'aiou-coaching-auth' } });
+    $('ap-menu').addEventListener('click', function () { $('ap-side').classList.toggle('on'); });
+    $('ap-gear').addEventListener('click', function () { drawer(true); });
+    $('ap-ov').addEventListener('click', function () { drawer(false); $('ap-side').classList.remove('on'); });
+    $('ap-out').addEventListener('click', function () { sb.auth.signOut().then(function () { U = P = ST = null; D.documentElement.classList.remove('ap-lock'); drawer(false); showLogin(); }); });
+    sb.auth.getSession().then(function (r) {
+      var s = r.data && r.data.session; if (s && s.user) { sb.auth.getUser().then(function (u) { if (u.data && u.data.user) { boot(u.data.user); } else { showLogin(); } }, showLogin); } else { showLogin(); }
+    }, function () { showLogin(); });
+  }
+  if (D.readyState === 'loading') { D.addEventListener('DOMContentLoaded', start); } else { start(); }
+})();
+//]]>
+</script>
