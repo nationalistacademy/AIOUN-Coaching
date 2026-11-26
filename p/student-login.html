@@ -141,7 +141,14 @@ body:has(#ap) #page-content{max-width:none!important}
   function btn(t, c, f) { var b = h('button', 'btn ' + (c || ''), t); b.type = 'button'; if (f) { b.addEventListener('click', f); } return b; }
 
   /* ---------- theme ---------- */
-  function setTheme(t) { root.setAttribute('data-t', t); ls('ap_theme', t); }
+  var THEME_DB = { orange: 'Orangutan Orange', gray: 'Colorate Gray', green: 'Patina Green', brown: 'Brown Boots', cyan: 'Cyan Blue', blue: 'AIOU Blue' };
+  function setTheme(t, persist) {
+    root.setAttribute('data-t', t); ls('ap_theme', t);
+    if (persist && sb && U && THEME_DB[t]) {
+      sb.from('profiles').update({ theme: THEME_DB[t], updated_at: new Date().toISOString() }).eq('id', U.id)
+        .then(function (r) { if (!r.error && P) P.theme = THEME_DB[t]; });
+    }
+  }
   setTheme(ls('ap_theme') || 'orange');
 
   /* ---------- login ---------- */
@@ -178,6 +185,9 @@ body:has(#ap) #page-content{max-width:none!important}
     Promise.all([pr, st]).then(function () {
       $('ap-boot').hidden = true; $('ap-login').hidden = true; $('ap-app').hidden = false; root.scrollTop = 0;
       $('ap-who').textContent = (P && P.full_name) || (ST && ST.full_name) || U.email || '';
+      if (P && P.theme) {
+        for (var ti = 0; ti < THEMES.length; ti++) { if (THEMES[ti][1] === P.theme) { setTheme(THEMES[ti][0], false); break; } }
+      }
       buildNav(); go('dash');
     });
   }
@@ -313,7 +323,10 @@ body:has(#ap) #page-content{max-width:none!important}
     if (open) {
       d.innerHTML = ''; var hd = h('div', 'row'); hd.style.marginTop = '0'; hd.appendChild(h('h3', '', 'Settings')); hd.appendChild(btn('\u2715', 'g', function () { drawer(false); })); d.appendChild(hd);
       d.appendChild(h('h3', '', 'Theme')); var th = h('div', 'th');
-      THEMES.forEach(function (t) { var b = h('button', root.getAttribute('data-t') === t[0] ? 'on' : ''), s = h('i'); s.style.background = t[2]; b.appendChild(s); b.appendChild(D.createTextNode(t[1])); b.type = 'button'; b.addEventListener('click', function () { setTheme(t[0]); var bs = th.children; for (var i = 0; i < bs.length; i++) { bs[i].classList.remove('on'); } b.classList.add('on'); }); th.appendChild(b); });
+      THEMES.forEach(function (t) { var b = h('button', root.getAttribute('data-t') === t[0] ? 'on' : ''), s = h('i'); s.style.background = t[2]; b.appendChild(s); b.appendChild(D.createTextNode(t[1])); b.type = 'button'; b.addEventListener('click', function () {
+          setTheme(t[0], true);
+          var bs = th.children; for (var i = 0; i < bs.length; i++) { bs[i].classList.remove('on'); } b.classList.add('on');
+        }); th.appendChild(b); });
       d.appendChild(th); d.appendChild(h('hr'));
       d.appendChild(h('h3', '', 'Change Password')); var cp = field('Current Password', '', false, 'password'), np = field('New Password', '', false, 'password'), cf = field('Confirm New Password', '', false, 'password'), box = h('div');
       [cp, np, cf].forEach(function (x) { x.w.style.marginBottom = '8px'; box.appendChild(x.w); });
@@ -328,9 +341,24 @@ body:has(#ap) #page-content{max-width:none!important}
           function (e) { sv.disabled = false; msg(box, e && e.message === 'cur' ? 'Maujooda password sahi nahi.' : 'Password update nahi ho saka.', 'e'); });
       });
       box.appendChild(sv); d.appendChild(box); d.appendChild(h('hr'));
-      d.appendChild(h('h3', '', 'Notification Preferences')); var pf = {}; try { pf = JSON.parse(ls('ap_prefs') || '{}'); } catch (e) {}
-      [['email', 'Email notifications'], ['sms', 'SMS notifications'], ['app', 'In-app notifications']].forEach(function (x) { var l = h('label'), c = h('input'); c.type = 'checkbox'; c.style.width = 'auto'; c.style.marginRight = '8px'; c.checked = pf[x[0]] !== false; c.addEventListener('change', function () { pf[x[0]] = c.checked; ls('ap_prefs', JSON.stringify(pf)); }); l.appendChild(c); l.appendChild(D.createTextNode(x[1])); d.appendChild(l); });
-      d.appendChild(h('p', '', 'Yeh preferences sirf is device par save hoti hain; abhi email/SMS service connected nahi hai.'));
+      d.appendChild(h('h3', '', 'Notification Preferences'));
+      var prefFields = [['notify_email', 'Email notifications'], ['notify_sms', 'SMS notifications'], ['notify_app', 'In-app notifications']], prefChecks = {};
+      prefFields.forEach(function (x) {
+        var l = h('label'), c = h('input'); c.type = 'checkbox'; c.style.width = 'auto'; c.style.marginRight = '8px';
+        c.checked = !P || P[x[0]] === undefined ? true : !!P[x[0]]; prefChecks[x[0]] = c;
+        l.appendChild(c); l.appendChild(D.createTextNode(x[1])); d.appendChild(l);
+      });
+      var prefMsg = h('div', 'msg i', 'Preferences Supabase profile mein save hongi. Email/SMS delivery service abhi connected nahi hai.');
+      d.appendChild(prefMsg);
+      d.appendChild(btn('Save Preferences', 'blue', function () {
+        var values = { notify_email: prefChecks.notify_email.checked, notify_sms: prefChecks.notify_sms.checked, notify_app: prefChecks.notify_app.checked, updated_at: new Date().toISOString() };
+        var save = d.querySelector('.btn.blue'); save.disabled = true;
+        sb.from('profiles').update(values).eq('id', U.id).then(function (r) {
+          save.disabled = false;
+          if (r.error) { msg(d, 'Preferences save nahi ho sakin. Dobara try karein.', 'e'); return; }
+          Object.assign(P, values); msg(d, 'Preferences Supabase mein save ho gayi hain.', 'o');
+        });
+      }));
     }
     d.classList.toggle('on', open); o.classList.toggle('on', open);
   }
