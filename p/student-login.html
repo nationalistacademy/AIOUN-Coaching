@@ -254,7 +254,7 @@ body:has(#ap) #page-content{max-width:none!important}
     title(m, 'My Courses'); var c = h('div', 'card'); m.appendChild(c);
     if (!ST) { noStudent(c); return; }
     c.appendChild(h('div', 'empty', 'Records load ho rahe hain\u2026'));
-    sb.from('academic_records').select('*').eq('user_id', U.id).limit(100).then(function (r) {
+    sb.from('academic_records').select('*').eq('student_id', ST.id).limit(100).then(function (r) {
       c.innerHTML = '';
       if (r.error || !r.data || !r.data.length) { c.appendChild(h('div', 'empty', 'Abhi koi course/academic record available nahi. LMS (lessons, instructors, assignments) backend connect hone par yahan dikhega.')); return; }
       var g = h('div', 'grid'); r.data.forEach(function (rec) {
@@ -309,8 +309,8 @@ body:has(#ap) #page-content{max-width:none!important}
         ['', 'ODL', 'F2F'].forEach(function (x) { a.appendChild(new Option(x || '(none)', x)); }); ['Pending', 'Generated', 'Printed', 'Blocked'].forEach(function (x) { b.appendChild(new Option(x, x)); });
         a.value = s.student_mode || ''; b.value = s.card_status || 'Pending'; sm.appendChild(h('label', '', 'Student Mode')); sm.appendChild(a); sc.appendChild(h('label', '', 'Card Status')); sc.appendChild(b); er.appendChild(sm); er.appendChild(sc);
         er.appendChild(btn('Update', '', function () {
-          sb.rpc('admin_set_student_card_fields', { p_student_id: s.id, p_student_mode: a.value || null, p_card_status: b.value }).then(function (x) {
-            if (x.error) { msg(out, 'Update nahi hua. Admin permission ya server RPC configuration check karein.', 'e'); } else { s.student_mode = a.value || null; s.card_status = b.value; msg(out, 'Student mode aur card status update ho gaye.', 'o'); }
+          sb.schema('private').rpc('admin_set_student_card_fields', { p_student_id: s.id, p_student_mode: a.value || null, p_card_status: b.value }).then(function (x) {
+            if (x.error) { msg(out, 'Update nahi hua: ' + x.error.message + ' (private schema RPC client ko expose hona chahiye aur aap admin hon).', 'e'); } else { msg(out, 'Update ho gaya.', 'o'); }
           });
         })); out.appendChild(er);
       }, function () { msg(out, 'Network masla.', 'e'); });
