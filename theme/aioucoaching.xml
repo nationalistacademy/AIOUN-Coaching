@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html>
-<html b:css='false' b:defaultwidgetversion='2' b:js='true' b:layoutsVersion='3' b:render='true' b:responsive='true' b:templateUrl='https://www.jettheme.com' b:templateVersion='2.9' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr' xmlns:xlink='http://www.w3.org/1999/xlink'><b:attr name='xmlns' value=''/><b:attr name='xmlns:b' value=''/><b:attr name='xmlns:expr' value=''/><b:attr name='xmlns:data' value=''/><head>
+<html b:css='false' b:defaultwidgetversion='2' b:js='true' b:layoutsVersion='3' b:render='true' b:responsive='true' b:templateUrl='https://www.jettheme.com' b:templateVersion='2.9' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'><b:attr name='xmlns' value=''/><b:attr name='xmlns:b' value=''/><b:attr name='xmlns:expr' value=''/><b:attr name='xmlns:data' value=''/><head>
 <b:include data='blog' name='JetAll-head-content'/>
 <b:if cond='!data:view.isLayoutMode'>
 <b:skin><![CDATA[/*
@@ -18,7 +18,7 @@
 <Variable name="separator" description="Separator" type="string" value=" - "/>
 [!] Title separator ( – ), ( | ), ( • )
 
-<Variable name="description" description="Description" type="string" value="AIOU Coaching — independent solved assignments, guess papers and free study tools for Allama Iqbal Open University students in Pakistan."/>
+<Variable name="description" description="Description" type="string" value=""/>
 [!] Default meta description, recommended 155–160 characters
 
 <Variable name="cover" description="Cover" type="string" value=""/>
@@ -1198,320 +1198,6 @@ body { background: #fff !important; }
 
 /*Your custom CSS is here*/
 
-/* ======================================================
-   B16. Mobile menu + search open states, share bar, comments
-   Self-contained: works even if the theme's own JS never loads.
-   ====================================================== */
-#search-header { position: relative; }
-#search-header.search-open .dropdown-menu,
-#search-header #search-toggle:checked ~ .dropdown-menu { display: block !important; }
-#search-header .dropdown-menu {
-right: 0;
-left: auto;
-min-width: min(92vw, 340px);
-z-index: 10050;
-}
-#search-toggler[aria-expanded="true"] { color: var(--jt-primary); }
-@media (max-width: 991.98px) {
-#navbar { display: none; }
-#navbar.is-open { display: block; }
-body.nav-open { overflow: hidden; }
-#navbar.is-open { max-height: calc(100vh - 80px); overflow-y: auto; }
-}
-/* Share bar */
-.post-share {
-display: flex;
-align-items: center;
-gap: .5rem;
-flex-wrap: wrap;
-margin: 0 0 1.5rem;
-padding: .7rem .9rem;
-border-radius: 18px;
-}
-.post-share-label {
-font-size: .78rem;
-font-weight: 800;
-letter-spacing: .08em;
-text-transform: uppercase;
-opacity: .7;
-margin-right: .15rem;
-}
-.post-share a,
-.post-share button {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-width: 38px;
-height: 38px;
-border-radius: 12px;
-border: 1px solid var(--glass-border);
-background: var(--glass-bg-soft);
-color: inherit;
-text-decoration: none;
-cursor: pointer;
-transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
-}
-.post-share svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.post-share a:hover, .post-share button:hover { transform: translateY(-2px); background: var(--jt-primary); border-color: var(--jt-primary); color: #fff; }
-.post-share .share-btn.copied { background: #16a34a; border-color: #16a34a; color: #fff; }
-/* Comments */
-.comments { margin-top: 1.5rem; padding: 1.25rem; }
-.comments-title { font-size: 1.15rem; font-weight: 800; margin: 0 0 .9rem; }
-.comment { padding: .85rem 0; border-bottom: 1px solid var(--glass-border); }
-.comment:last-child { border-bottom: 0; }
-.comment-head { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; font-weight: 700; font-size: .92rem; }
-.comment-head a { color: inherit; text-decoration: none; }
-.comment-head a:hover { color: var(--jt-primary); }
-.comment-time { font-weight: 400; font-size: .76rem; opacity: .68; }
-.comment-body { margin-top: .35rem; font-size: .95rem; line-height: 1.65; }
-.comment-form-wrap { margin-top: 1rem; }
-.blogger-comment-form { width: 100%; border: 0; border-radius: 14px; background: transparent; }
-.comment-hint { font-size: .9rem; opacity: .8; }
-
-/* ======================================================
-   B15. CRYSTAL GLASSMORPHISM — hover / specular layer
-   Brighter rim + inset top highlight + sheen sweep on hover.
-   Reuses the existing --glass-* tokens, changes no brand colour.
-   ====================================================== */
-:root {
---crystal-rim: rgba(255,255,255,.88);
---crystal-inset: inset 0 1px 0 rgba(255,255,255,.78);
---crystal-inset-bottom: inset 0 -1px 0 rgba(255,255,255,.06);
---crystal-lift: 0 20px 48px rgba(0,0,0,.18), 0 8px 26px rgba(246,121,56,.26);
---crystal-filter: blur(22px) saturate(185%);
---crystal-sheen: linear-gradient(115deg, rgba(255,255,255,.44) 0%, rgba(255,255,255,.12) 24%, rgba(255,255,255,0) 46%);
-}
-.dark-mode {
---crystal-rim: rgba(255,255,255,.26);
---crystal-inset: inset 0 1px 0 rgba(255,255,255,.18);
---crystal-lift: 0 22px 50px rgba(0,0,0,.55), 0 8px 26px rgba(246,121,56,.34);
---crystal-sheen: linear-gradient(115deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.07) 24%, rgba(255,255,255,0) 46%);
-}
-.glass,
-.glass-box,
-.bg-archive,
-#sidebar .widget,
-#single-content,
-#page-content,
-#toc-post,
-.comments,
-.post-author,
-.accordion-item,
-.key-takeaways,
-.tp-card,
-.tp-steps li {
-position: relative;
-border-color: var(--crystal-rim) !important;
-box-shadow: var(--crystal-inset), var(--crystal-inset-bottom), var(--glass-shadow);
--webkit-backdrop-filter: var(--crystal-filter);
-backdrop-filter: var(--crystal-filter);
-transition: transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease, border-color .3s ease, background-color .3s ease;
-}
-.bg-archive::after,
-#sidebar .widget::after,
-.glass::after,
-.glass-box::after,
-.tp-card::after {
-content: "";
-position: absolute;
-inset: -1px;
-border-radius: inherit;
-pointer-events: none;
-opacity: 0;
-background: var(--crystal-sheen);
-transition: opacity .35s ease;
-}
-.bg-archive:hover::after,
-#sidebar .widget:hover::after,
-.glass:hover::after,
-.glass-box:hover::after,
-.tp-card:hover::after {
-opacity: 1;
-}
-.bg-archive:hover,
-.tp-card:hover,
-.glass:hover,
-.glass-box:hover {
-transform: translateY(-5px) scale(1.012);
-border-color: var(--crystal-rim) !important;
-box-shadow: var(--crystal-inset), var(--crystal-lift);
-}
-#sidebar .widget:hover {
-transform: translateY(-3px);
-border-color: var(--crystal-rim) !important;
-box-shadow: var(--crystal-inset), var(--glass-shadow-hover);
-}
-.bg-archive:hover .item-thumbnail img {
-transform: scale(1.05);
-}
-#navbar .menu-item > .nav-link {
-transition: background-color .25s ease, color .25s ease, box-shadow .25s ease, transform .25s ease;
-}
-#navbar .navbar-nav > .menu-item > .nav-link:hover {
-background: var(--glass-bg-soft);
-box-shadow: var(--crystal-inset);
-border-radius: 999px;
-transform: translateY(-1px);
-}
-.btn,
-.tp-go,
-.tp-chip {
-transition: transform .2s ease, box-shadow .2s ease, filter .2s ease, border-color .2s ease;
-}
-.btn:hover,
-.tp-go:hover {
-transform: translateY(-2px);
-filter: brightness(1.05);
-border-color: var(--crystal-rim) !important;
-box-shadow: var(--crystal-inset), 0 12px 30px rgba(246,121,56,.34) !important;
-}
-/* B15.1 Shop cart icon (glass) */
-.icobtn,
-.cart-btn {
-position: relative;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-width: 42px;
-height: 42px;
-margin-left: .35rem;
-border-radius: 14px;
-text-decoration: none !important;
-color: var(--jt-header-color);
-background: linear-gradient(150deg, rgba(255,255,255,.34), rgba(255,255,255,.08));
-border: 1px solid var(--crystal-rim);
--webkit-backdrop-filter: var(--crystal-filter);
-backdrop-filter: var(--crystal-filter);
-box-shadow: var(--crystal-inset), 0 6px 18px rgba(0,0,0,.12);
-transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, color .2s ease;
-}
-.dark-mode .icobtn,
-.dark-mode .cart-btn {
-background: linear-gradient(150deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
-}
-.icobtn svg,
-.cart-btn svg {
-width: 20px;
-height: 20px;
-fill: none;
-stroke: currentColor;
-stroke-width: 1.8;
-stroke-linecap: round;
-stroke-linejoin: round;
-}
-.icobtn:hover,
-.cart-btn:hover {
-transform: translateY(-3px) scale(1.05);
-color: var(--jt-primary);
-border-color: var(--jt-primary);
-box-shadow: var(--crystal-inset), 0 12px 28px rgba(246,121,56,.34);
-}
-.cart-badge {
-position: absolute;
-top: -6px;
-right: -6px;
-min-width: 18px;
-height: 18px;
-padding: 0 4px;
-border-radius: 999px;
-background: var(--jt-primary);
-color: #fff !important;
-font-size: 10.5px;
-font-weight: 800;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-box-shadow: 0 3px 10px rgba(246,121,56,.5);
-}
-@media (max-width: 575px) {
-.icobtn,
-.cart-btn {
-width: 38px;
-height: 38px;
-}
-}
-@media (prefers-reduced-motion: reduce) {
-.bg-archive,
-.tp-card,
-.glass,
-.glass-box,
-#sidebar .widget,
-.btn,
-.tp-go,
-.tp-chip,
-.icobtn,
-.cart-btn,
-#navbar .menu-item > .nav-link {
-transition: none !important;
-}
-.bg-archive:hover,
-.tp-card:hover,
-.glass:hover,
-.glass-box:hover,
-#sidebar .widget:hover,
-.btn:hover,
-.tp-go:hover,
-.icobtn:hover,
-.cart-btn:hover {
-transform: none !important;
-}
-.bg-archive::after,
-#sidebar .widget::after,
-.glass::after,
-.glass-box::after,
-.tp-card::after {
-display: none;
-}
-}
-
-/* AIOU Coaching: lightweight responsive mobile navigation */
-#aiou-share-sheet { display:none; position:fixed; z-index:10060; left:12px; right:12px; bottom:calc(86px + env(safe-area-inset-bottom)); padding:16px; gap:10px; flex-direction:column; border:1px solid rgba(120,120,120,.2); border-radius:18px; background:#fff; color:#252525; box-shadow:0 10px 35px rgba(0,0,0,.2); }
-#aiou-share-sheet button, #aiou-share-sheet a { display:block; width:100%; padding:11px 13px; border:1px solid rgba(120,120,120,.18); border-radius:10px; background:transparent; color:inherit; text-align:left; font:600 14px system-ui,sans-serif; cursor:pointer; }
-#aiou-share-sheet [data-aiou-share='close'] { width:34px; align-self:flex-end; text-align:center; padding:4px; font-size:20px; }
-.dark-mode #aiou-share-sheet { background:#202328; color:#f5f5f5; border-color:rgba(255,255,255,.14); }
-@media (min-width:992px) { #aiou-share-sheet { display:none !important; } }
-#aiou-mobile-nav { display:none; }
-@media (max-width: 991.98px) {
-  body { padding-bottom:calc(74px + env(safe-area-inset-bottom)); }
-  #aiou-mobile-nav {
-    position:fixed; left:max(8px,env(safe-area-inset-left)); right:max(8px,env(safe-area-inset-right));
-    bottom:calc(8px + env(safe-area-inset-bottom)); z-index:10050;
-    display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:1px;
-    padding:5px 4px; border:1px solid rgba(120,120,120,.13); border-radius:17px;
-    background:rgba(255,255,255,.82); color:rgba(36,36,36,.86);
-    box-shadow:0 3px 12px rgba(0,0,0,.08);
-    contain:layout paint; -webkit-backface-visibility:hidden; backface-visibility:hidden;
-  }
-  #aiou-mobile-nav a, #aiou-mobile-nav button {
-    min-width:0; min-height:46px; display:flex; flex-direction:column; align-items:center;
-    justify-content:center; gap:2px; padding:3px 0; border:0; border-radius:11px;
-    background:transparent; color:inherit; opacity:.84; text-decoration:none;
-    font:600 10px/1.15 system-ui,-apple-system,sans-serif; white-space:nowrap;
-    cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent;
-  }
-  #aiou-mobile-nav .aiou-nav-icon { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; flex:none; color:#e66d2e; transition:transform .16s ease,color .16s ease; }
-  #aiou-mobile-nav a:active, #aiou-mobile-nav button:active { background:rgba(230,109,46,.13); opacity:1; }
-  #aiou-mobile-nav a:active .aiou-nav-icon, #aiou-mobile-nav button:active .aiou-nav-icon { transform:scale(.9); }
-  #aiou-mobile-nav a:focus-visible, #aiou-mobile-nav button:focus-visible { outline:2px solid #e66d2e; outline-offset:1px; opacity:1; }
-  #aiou-share-sheet { max-height: min(70vh, 420px); overflow:auto; gap:9px; }
-  #aiou-share-sheet strong { font-size:16px; padding:3px 2px 7px; }
-  #aiou-share-sheet button:active, #aiou-share-sheet a:active { background:rgba(230,109,46,.12); }
-  body.dark-mode #aiou-mobile-nav, .dark-mode #aiou-mobile-nav, html[data-theme='dark'] #aiou-mobile-nav {
-    background:rgba(28,30,34,.86); color:rgba(255,255,255,.9);
-    border-color:rgba(255,255,255,.10); box-shadow:0 3px 12px rgba(0,0,0,.18);
-  }
-  #aiou-mobile-nav button:focus-visible, #aiou-mobile-nav a:focus-visible { outline:2px solid #e66d2e; outline-offset:1px; }
-}
-@media (max-width:380px) {
-  #aiou-mobile-nav { left:5px; right:5px; gap:0; padding:4px 2px; border-radius:14px; }
-  #aiou-mobile-nav a, #aiou-mobile-nav button { font-size:9px; min-height:44px; }
-  #aiou-mobile-nav .aiou-nav-icon { width:19px; height:19px; }
-}
-@media (min-width: 992px) {
-  body { padding-bottom:0 !important; }
-  #aiou-mobile-nav { display:none !important; }
-}
-
 ]]></b:skin>
 </b:if>
 <b:if cond='data:view.isLayoutMode'>
@@ -1718,11 +1404,11 @@ width: 50%;
 <b:section cond='data:view.isLayoutMode' id='upload-image' showaddelement='no'>
   <b:widget id='Image10' locked='true' title='Upload Image' type='Image' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='displayUrl'>https://1.bp.blogspot.com/-h5fUZDgfXe8/YR87osMq6UI/AAAAAAAAAYk/18JeDAzajvYhKnMnllSf_DSWAm51cueuQCLcBGAsYHQ/s728/placeholder.jpg</b:widget-setting>
-      <b:widget-setting name='displayHeight'>425</b:widget-setting>
-      <b:widget-setting name='sectionWidth'>1067</b:widget-setting>
+      <b:widget-setting name='displayUrl'>https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhZwFVaNjOU65-nXTV2P-gCdvOC8ZQ4XKAEVTZJmsPUSpJrYsipb2W2hZ9DvKtAgeiC2DZ4a1RBwwGKukwTSYbItxiYyrbGXUZIoeoBLfbFu7jOohKqkYRRMUhYGTp2zYRq-Fp0XTlvdeI7_ZEhZvRRjCaU9wA-7PnWLfhtDrAOZgVCXDi_HUMnZS3qSK1t/s1168/FmDbB.jpg</b:widget-setting>
+      <b:widget-setting name='displayHeight'>1168</b:widget-setting>
+      <b:widget-setting name='sectionWidth'>150</b:widget-setting>
       <b:widget-setting name='shrinkToFit'>false</b:widget-setting>
-      <b:widget-setting name='displayWidth'>728</b:widget-setting>
+      <b:widget-setting name='displayWidth'>784</b:widget-setting>
       <b:widget-setting name='link'>#</b:widget-setting>
       <b:widget-setting name='caption'><![CDATA["Upload image from computer" > Save > Edit Again > Get URL]]></b:widget-setting>
     </b:widget-settings>
@@ -1730,11 +1416,20 @@ width: 50%;
       <b:include name='JetImage'/>
     </b:includable>
     <b:includable id='content'/>
+    <b:includable id='shrinkToFitStyle'>
+  <style type='text/css'>
+    .image-widget-shrink-to-fit {
+      max-width: 100%;
+      height: auto;
+      object-fit: scale-down;
+    }
+  </style>
+</b:includable>
   </b:widget>
   <b:widget id='Label1' locked='false' title='Categories' type='Label' version='2' visible='true'>
     <b:widget-settings>
       <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
-      <b:widget-setting name='display'>LIST</b:widget-setting>
+      <b:widget-setting name='display'>CLOUD</b:widget-setting>
       <b:widget-setting name='selectedLabelsList'/>
       <b:widget-setting name='showType'>ALL</b:widget-setting>
       <b:widget-setting name='showFreqNumbers'>true</b:widget-setting>
@@ -1764,7 +1459,7 @@ width: 50%;
 <b:section class='container position-relative px-3 flex-nowrap' id='header-main' maxwidgets='3' showaddelement='no'>
   <b:widget id='HTML10' locked='true' title='Logo' type='HTML' version='2' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='content'>https://blogger.googleusercontent.com/img/a/AVvXsEjle6YyuiSL-MKSrlA1WKRyliHvjjuV6VU-H1kSOEjs2oD1gD9cKms4jpE5QPJyIrBOn8NDE-MfBaBKfY2R2ygCGy8p627lCNM7tEM9tPxUloqbG_ZX6dvHnd14LYUMQbhp5hMu4_Q94x0V7OitNTaFUosiP6zftbyKRE0ZuOjEh-msJUfXjfotMa1SpeI=s1111</b:widget-setting>
+      <b:widget-setting name='content'>https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi4wprC9NuEEMcfRGRsSfv216DSyQwkXDonVf2k8EBwS2HVAmYxu6S4uANqJ4ktLQSl5U5ufLLg5waDMrD86ukkqr3TkhZ9y5A30ExHbYnO7AmnSSTPn9EJIGpqs3qOgP8JrVU93Ryw9m1m_OAZ-8h85MJ6lqho96MWYveQEHGv98fM6KRKywjf6X9jiKA1/s1600/Gemini_Generated_Image_1dv96k1dv96k1dv9.jpeg</b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
         <b:include name='JetLogo'/>
@@ -1774,7 +1469,7 @@ width: 50%;
     <b:widget-settings>
       <b:widget-setting name='sorting'>NONE</b:widget-setting>
       <b:widget-setting name='text-1'>instagram</b:widget-setting>
-      <b:widget-setting name='link-1'>#</b:widget-setting>
+      <b:widget-setting name='link-1'>https://www.instagram.com/taleemwaly</b:widget-setting>
       <b:widget-setting name='text-0'>facebook</b:widget-setting>
       <b:widget-setting name='link-0'>#</b:widget-setting>
     </b:widget-settings>
@@ -1785,31 +1480,33 @@ width: 50%;
   </b:widget>
   <b:widget id='LinkList11' locked='true' title='Menu' type='LinkList' version='2' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='text-10'>FAQs</b:widget-setting>
+      <b:widget-setting name='text-10'>Tools</b:widget-setting>
       <b:widget-setting name='sorting'>NONE</b:widget-setting>
       <b:widget-setting name='link-1'>/p/programmes.html</b:widget-setting>
-      <b:widget-setting name='link-2'>/</b:widget-setting>
+      <b:widget-setting name='link-2'>#</b:widget-setting>
+      <b:widget-setting name='link-12'>/p/contact.html</b:widget-setting>
       <b:widget-setting name='link-0'>/p/home.html</b:widget-setting>
-      <b:widget-setting name='link-11'>/p/contact.html</b:widget-setting>
-      <b:widget-setting name='link-10'>/p/faqs.html</b:widget-setting>
-      <b:widget-setting name='text-9'>Blog</b:widget-setting>
-      <b:widget-setting name='link-9'>/</b:widget-setting>
+      <b:widget-setting name='link-11'>/p/faqs.html</b:widget-setting>
+      <b:widget-setting name='link-10'>/p/tools.html</b:widget-setting>
+      <b:widget-setting name='text-9'>Sub Menu 1</b:widget-setting>
+      <b:widget-setting name='link-9'>#sub-end</b:widget-setting>
       <b:widget-setting name='text-8'>Guess Paper</b:widget-setting>
-      <b:widget-setting name='link-7'>/search/label/Books</b:widget-setting>
-      <b:widget-setting name='link-8'>/p/aiou-guess-paper-generator.html</b:widget-setting>
+      <b:widget-setting name='link-7'>#</b:widget-setting>
+      <b:widget-setting name='link-8'>#</b:widget-setting>
       <b:widget-setting name='link-5'>/p/get-solved-assignments.html</b:widget-setting>
       <b:widget-setting name='link-6'>/p/academic-calander.html</b:widget-setting>
-      <b:widget-setting name='link-3'>/p/tools.html</b:widget-setting>
+      <b:widget-setting name='link-3'>#sub-start</b:widget-setting>
       <b:widget-setting name='link-4'>/p/aiou-admissions.html</b:widget-setting>
       <b:widget-setting name='text-1'>Programmes</b:widget-setting>
       <b:widget-setting name='text-0'>Home</b:widget-setting>
-      <b:widget-setting name='text-3'>Tools</b:widget-setting>
+      <b:widget-setting name='text-3'>Sub Menu 1</b:widget-setting>
       <b:widget-setting name='text-2'>AIOUN</b:widget-setting>
       <b:widget-setting name='text-5'>Solved Assignments</b:widget-setting>
       <b:widget-setting name='text-4'>Admissions</b:widget-setting>
       <b:widget-setting name='text-7'>Original Books</b:widget-setting>
       <b:widget-setting name='text-6'>Academic Calandar</b:widget-setting>
-      <b:widget-setting name='text-11'>Contact</b:widget-setting>
+      <b:widget-setting name='text-11'>FAQs</b:widget-setting>
+      <b:widget-setting name='text-12'>Contact</b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
       <b:include name='JetMenu'/>
@@ -1817,13 +1514,6 @@ width: 50%;
     <b:includable id='content'/>
   </b:widget>
 </b:section>
-<!-- ============ SHOP CART ICON (crystal glass) ============
-     Points at the Solved Assignments / order page. Change this one href to
-     point at your own shop or cart page. -->
-<a aria-label='Shop cart - order page' class='icobtn cart-btn' href='/p/get-solved-assignments.html' title='Shop / Cart'>
-<svg aria-hidden='true' viewBox='0 0 24 24'><circle cx='9.5' cy='20' r='1.5'/><circle cx='18' cy='20' r='1.5'/><path d='M2.5 3h2.1l2.3 11.2h11.6L21 7.2H5.4'/></svg>
-<span class='cart-badge'>0</span>
-</a>
 </header>
 
 <!-- ============ MAIN CONTENT (semantic <main>) ============ -->
@@ -1833,34 +1523,37 @@ width: 50%;
 <div class='col-lg-8 px-3' id='main'>
 <b:if cond='data:view.isMultipleItems and !data:view.isError or !data:numPosts == 0'><b:with value='data:view.isHomepage ? &quot;Homepage &quot; + data:blog.title : data:blog.pageName ? data:blog.pageName : &quot;Latest Posts&quot;' var='auto_heading'><h1 class='d-none'><data:auto_heading/></h1></b:with></b:if>
 <b:section class='pt-4' cond='data:view.isMultipleItems and !data:view.search.query' id='before-blog' showaddelement='yes'>
-  <b:widget id='Header1' locked='false' title='AIOU Coaching  - Solved Assignment  (Header)' type='Header' visible='true'>
+  <b:widget id='Header1' locked='false' title='AIOUCoaching  (Header)' type='Header' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='displayUrl'>https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhstDlFn2wBztrJwCbVQuhpxv9zyRYwZJYTlj5EtFK6U7kkLbJK09AGY2eQ1ChR2Ct32j1OP8WpGh8CoYszvkixf5R77jlj1uSmdukXbE8xveheh4c2B-d1MT-0HEGQIkhgCIrQsgGsrbvTlu_96vxWuOvq0ks2BEjc4dYC5zg3QIHIyiZzUjfKqOeWe7sG/s963/Header%20(2).jpg</b:widget-setting>
-      <b:widget-setting name='displayHeight'>197</b:widget-setting>
+      <b:widget-setting name='displayUrl'>https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwAWClFKI8VLSZRAfrvYLLpnzFIr29MBmcYI3DxQdA8mWFJ6I9lX8SKAq2RWZ8ylAfggmPGJQNtkx_wdW05aSXAo5porMVGFLWAbkwsxqpOLq7duTx-f1vKq_5Mw6SbohZmxCXvjk_Y3IQbXfq_5o1Co-ee4x9YHvMlI_UOXMUmpTDH0lfjgSjxVyWY3Fu/s1600/Gemini_Generated_Image_gjjklhgjjklhgjjk.jpeg</b:widget-setting>
+      <b:widget-setting name='displayHeight'>450</b:widget-setting>
       <b:widget-setting name='sectionWidth'>150</b:widget-setting>
       <b:widget-setting name='useImage'>true</b:widget-setting>
       <b:widget-setting name='shrinkToFit'>false</b:widget-setting>
       <b:widget-setting name='imagePlacement'>REPLACE</b:widget-setting>
-      <b:widget-setting name='displayWidth'>963</b:widget-setting>
+      <b:widget-setting name='displayWidth'>1600</b:widget-setting>
     </b:widget-settings>
     <b:includable id='main' var='this'>
     <div class='header-widget'>
       <b:include cond='data:imagePlacement in {&quot;REPLACE&quot;, &quot;BEFORE_DESCRIPTION&quot;}' name='image'/>
       <b:include cond='data:imagePlacement not in {&quot;REPLACE&quot;, &quot;BEFORE_DESCRIPTION&quot;}' name='title'/>
       <b:include cond='data:imagePlacement != &quot;REPLACE&quot;' name='description'/>
+      <b:include cond='data:shrinkToFit and data:imagePlacement != &quot;BEHIND&quot;' name='shrinkToFitStyle'/>
     </div>
     <b:include cond='data:imagePlacement == &quot;BEHIND&quot;' name='behindImageStyle'/>
   </b:includable>
     <b:includable id='behindImageStyle'>
     <b:if cond='data:sourceUrl'>
       <b:include cond='data:this.image' data='{                    image: data:this.image,                    selector: &quot;.header-widget&quot;                  }' name='responsiveImageStyle'/>
+      <b:with value='data:shrinkToFit ? &quot;100%&quot; : &quot;cover&quot;' var='backgroundSize'>
       <style type='text/css'>
         .header-widget {
           background-position: <data:blog.locale.languageAlignment/>;
           background-repeat: no-repeat;
-          background-size: cover;
+          background-size: <data:backgroundSize/>;
         }
       </style>
+      </b:with>
     </b:if>
   </b:includable>
     <b:includable id='description'>
@@ -1870,8 +1563,19 @@ width: 50%;
   </b:includable>
     <b:includable id='image'>
     <a class='header-image-wrapper' expr:href='data:blog.homepageUrl'>
-      <b:include data='{                                                 image: data:image,                                                 altText: data:blog.title.escaped,                                                 originalWidth: data:width,                                                 originalHeight: data:height                                               }' name='responsiveImage'/>
+      <b:with value='data:shrinkToFit ? &quot;header-widget-img-shrink-to-fit&quot;: &quot;&quot;' var='imageClass'>
+      <b:include data='{                                                 image: data:image,                                                 imageClass: data:imageClass,                                                 altText: data:blog.title.escaped,                                                 originalWidth: data:width,                                                 originalHeight: data:height                                               }' name='responsiveImage'/>
+      </b:with>
     </a>
+  </b:includable>
+    <b:includable id='shrinkToFitStyle'>
+    <style type='text/css'>
+      .header-widget-img-shrink-to-fit {
+        max-width: 100%;
+        height: auto;
+        object-fit: scale-down;
+      }
+    </style>
   </b:includable>
     <b:includable id='title'>
     <h1>
@@ -1889,7 +1593,7 @@ width: 50%;
       <b:include name='JetHtml'/>
     </b:includable>
   </b:widget>
-  <b:widget cond='data:view.isHomepage or data:view.url.canonical == data:blog.canonicalHomepageUrl path &quot;/search?max-results=10&quot;' id='FeaturedPost1' locked='false' title='Featured Post' type='FeaturedPost' visible='true'>
+  <b:widget cond='data:view.isHomepage or data:view.url.canonical == data:blog.canonicalHomepageUrl path &quot;/search?max-results=10&quot;' id='FeaturedPost1' locked='false' title='Featured Post' type='FeaturedPost' visible='false'>
     <b:widget-settings>
       <b:widget-setting name='showSnippet'>true</b:widget-setting>
       <b:widget-setting name='showPostTitle'>true</b:widget-setting>
@@ -1938,7 +1642,7 @@ width: 50%;
     <b:widget-settings>
       <b:widget-setting name='content'><![CDATA[<div class="ad-slot ad-header" aria-label="Advertisement"><!-- ADSENSE: paste Display ad unit here --><hr class="example-ads"/></div>]]></b:widget-setting>
     </b:widget-settings>
-    
+    <b:includable id='main'><b:include name='JetHtml'/></b:includable>
   </b:widget>
 </b:section>
 <b:section class='pt-4 pb-5' id='blog-post' maxwidgets='1' showaddelement='no'>
@@ -1962,42 +1666,6 @@ width: 50%;
       <b:widget-setting name='showInlineAds'>false</b:widget-setting>
       <b:widget-setting name='showReactions'>false</b:widget-setting>
     </b:widget-settings>
-    <b:includable id='postShareButtons' var='post'>
-<div class='post-share' expr:data-url='data:post.url.canonical'>
-<span class='post-share-label'>Share</span>
-<a class='share-btn wa' expr:href='&quot;https://api.whatsapp.com/send?text=&quot; + data:post.url.canonical' aria-label='Share on WhatsApp' rel='noopener nofollow' target='_blank' title='WhatsApp'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20.5 3.5A11 11 0 0 0 3.2 16.7L2 22l5.5-1.2A11 11 0 1 0 20.5 3.5z'/><path d='M8.4 8.7c.2-.4.4-.4.7-.4h.5c.2 0 .4 0 .6.5l.7 1.6c.1.2 0 .4-.1.6l-.5.6c-.1.2-.2.3 0 .6.5.9 1.3 1.7 2.3 2.2.2.1.4.1.6-.1l.6-.6c.2-.2.4-.2.6-.1l1.5.7c.2.1.3.2.3.4 0 .8-.6 1.5-1.3 1.7-.6.2-1.3.2-2.1-.1-1.6-.5-3-1.8-3.8-3.3-.4-.8-.6-1.6-.4-2.2.1-.4.2-.7.4-1z'/></svg></a>
-<a class='share-btn fb' expr:href='&quot;https://www.facebook.com/sharer/sharer.php?u=&quot; + data:post.url.canonical' aria-label='Share on Facebook' rel='noopener nofollow' target='_blank' title='Facebook'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H7v3h3v7h3v-7h2.5l.5-3H13v-2c0-.6.4-1 1-1z'/></svg></a>
-<a class='share-btn x' expr:href='&quot;https://twitter.com/intent/tweet?url=&quot; + data:post.url.canonical' aria-label='Share on X' rel='noopener nofollow' target='_blank' title='X (Twitter)'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 4l7.2 9.2L4.4 20h2.3l5.5-5.5 4.3 5.5H20l-7.5-9.6L19.5 4h-2.3l-5.1 5.1L8 4H4z'/></svg></a>
-<a class='share-btn tg' expr:href='&quot;https://t.me/share/url?url=&quot; + data:post.url.canonical' aria-label='Share on Telegram' rel='noopener nofollow' target='_blank' title='Telegram'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M21 4L3 11l5 1.6L10 20l3-3.6 4.5 3L21 4z'/><path d='M8 12.6L18 6l-7.5 8.5'/></svg></a>
-<a class='share-btn li' expr:href='&quot;https://www.linkedin.com/sharing/share-offsite/?url=&quot; + data:post.url.canonical' aria-label='Share on LinkedIn' rel='noopener nofollow' target='_blank' title='LinkedIn'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 9h3v11H4zM5.5 4.5a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6zM10 9h3v1.6c.5-.9 1.6-1.8 3.3-1.8 2.6 0 3.7 1.6 3.7 4.4V20h-3v-6c0-1.5-.6-2.3-1.8-2.3-1.3 0-2.2.9-2.2 2.4V20h-3z'/></svg></a>
-<button class='share-btn copy' type='button' aria-label='Copy link' title='Copy link'><svg viewBox='0 0 24 24' aria-hidden='true'><rect x='9' y='9' width='11' height='11' rx='2'/><path d='M15 5H6a2 2 0 0 0-2 2v9'/></svg></button>
-</div>
-    </b:includable>
-    <b:includable id='comments' var='post'>
-<section class='comments' id='comments'>
-<h3 class='comments-title'>Comments<b:if cond='data:post.numberOfComments gt 0'> (<data:post.numberOfComments/>)</b:if></h3>
-<b:if cond='data:post.comments'>
-<div class='comment-list'>
-<b:loop values='data:post.comments' var='comment'>
-<article class='comment'>
-<div class='comment-head'>
-<span class='comment-author'><b:if cond='data:comment.authorUrl'><a expr:href='data:comment.authorUrl' rel='nofollow noopener'><data:comment.author/></a><b:else/><data:comment.author/></b:if></span>
-<time class='comment-time'><data:comment.timestamp/></time>
-</div>
-<div class='comment-body'><data:comment.body/></div>
-</article>
-</b:loop>
-</div>
-</b:if>
-<b:if cond='data:post.commentSrc'>
-<div class='comment-form-wrap'>
-<iframe allowtransparency='true' class='blogger-comment-form' frameborder='0' height='430' id='comment-editor' expr:src='data:post.commentSrc' scrolling='no' title='Comment form' width='100%'></iframe>
-</div>
-<b:else/>
-<p class='comment-hint'><a expr:href='data:post.url.canonical'>Open the post to leave a comment</a></p>
-</b:if>
-</section>
-    </b:includable>
     <b:includable id='main' var='top'>
       <b:include name='JetBlog'/>
     </b:includable>
@@ -2013,7 +1681,7 @@ width: 50%;
     <b:includable id='commentItem'/>
     <b:includable id='commentList'/>
     <b:includable id='commentPicker'/>
-    
+    <b:includable id='comments'/>
     <b:includable id='commentsLink'/>
     <b:includable id='commentsLinkIframe'/>
     <b:includable id='commentsTitle'/>
@@ -2050,7 +1718,7 @@ width: 50%;
     <b:includable id='postMetadataJSONPublisher'/>
     <b:includable id='postPagination'/>
     <b:includable id='postReactions'/>
-    
+    <b:includable id='postShareButtons'/>
     <b:includable id='postTimestamp'/>
     <b:includable id='postTitle'/>
     <b:includable id='previousPageLink'/>
@@ -2063,7 +1731,6 @@ width: 50%;
     <b:includable id='threadedCommentJs'/>
     <b:includable id='threadedComments'/>
     <b:includable id='tooltipCss'>
-  <!-- LINT.IfChange -->
   <style>
     .post-body a.b-tooltip-container {
       position: relative;
@@ -2098,7 +1765,6 @@ width: 50%;
       }
     }
   </style>
-  <!-- LINT.ThenChange(//depot/google3/java/com/google/blogger/b2/layouts/widgets/v2-style.css) -->
 </b:includable>
   </b:widget>
 </b:section>
@@ -2170,9 +1836,223 @@ width: 50%;
 <b:section class='pt-4' id='sidebar-static' itemscope='itemscope'>
   <b:widget id='HTML1' locked='false' title='Solved assignments' type='HTML' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='content'><![CDATA[<!-- Elfsight Google Reviews | AIOU Coaching Google Reviews -->
-<script src="https://elfsightcdn.com/platform.js" async="async"></script>
-<div class="elfsight-app-60c9d5c4-73bf-49b1-a221-5b552194fb47" data-elfsight-app-lazy></div>]]></b:widget-setting>
+      <b:widget-setting name='content'><![CDATA[<!-- ================================================================ -->
+<!-- AIOU MENU + SOCIAL MEDIA + DIGISKILLS — NATIONALIST ACADEMY      -->
+<!-- Optimized for Plus UI Right Sidebar | Mobile + Desktop Ready     -->
+<!-- DigiSkills.pk pinned at TOP                                       -->
+<!-- ================================================================ -->
+
+<style>
+  .na-quick-links {
+    --ql-primary: var(--linkB, #1e6f3f);
+    --ql-accent: var(--linkC, #f5b042);
+    --ql-bg: var(--contentB, #ffffff);
+    --ql-border: var(--contentL, #e2e8f0);
+    --ql-text: var(--bodyC, #1e293b);
+    --ql-radius: 12px;
+    --ql-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    --ql-shadow-hover: 0 10px 22px rgba(0, 0, 0, 0.10);
+    font-family: inherit;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .drK .na-quick-links, :root.drK .na-quick-links,
+  .dark .na-quick-links, html[data-theme='dark'] .na-quick-links {
+    --ql-bg: #252526;
+    --ql-border: #444444;
+    --ql-text: #ffffff;
+    --ql-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+    --ql-shadow-hover: 0 10px 22px rgba(0, 0, 0, 0.45);
+  }
+
+  .na-quick-links .ql-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 897px) and (max-width: 1200px) {
+    .sideB .na-quick-links .ql-grid,
+    .sideS .na-quick-links .ql-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 897px) {
+    .sideB .na-quick-links .ql-grid,
+    .sideS .na-quick-links .ql-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+
+  .na-quick-links .ql-card {
+    display: block;
+    text-decoration: none !important;
+    background: var(--ql-bg);
+    border: 1px solid var(--ql-border);
+    border-radius: var(--ql-radius);
+    overflow: hidden;
+    transition: transform 0.22s ease, box-shadow 0.25s ease, border-color 0.22s ease;
+    box-shadow: var(--ql-shadow);
+    position: relative;
+    line-height: 0;
+    box-sizing: border-box;
+  }
+
+  .na-quick-links .ql-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--ql-shadow-hover);
+    border-color: var(--ql-primary);
+    text-decoration: none !important;
+  }
+
+  .na-quick-links .ql-card:focus-visible {
+    outline: 2px solid var(--ql-primary);
+    outline-offset: 2px;
+  }
+
+  .na-quick-links .ql-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0;
+    transition: transform 0.3s ease;
+    object-fit: cover;
+  }
+
+  .na-quick-links .ql-card:hover .ql-img {
+    transform: scale(1.03);
+  }
+
+  .na-quick-links .ql-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 5px 8px;
+    background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    line-height: 1.3;
+    letter-spacing: 0.2px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .na-quick-links .ql-card:hover .ql-label,
+  .na-quick-links .ql-card:focus-visible .ql-label {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .na-quick-links .ql-label {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 896px) {
+    .na-quick-links .ql-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .na-quick-links .ql-radius { border-radius: 12px; }
+  }
+
+  @media (max-width: 420px) {
+    .na-quick-links .ql-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .na-quick-links .ql-card {
+      border-radius: 10px;
+    }
+    .na-quick-links .ql-label {
+      font-size: 0.65rem;
+      padding: 5px 8px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .na-quick-links .ql-card,
+    .na-quick-links .ql-img { transition: none; }
+    .na-quick-links .ql-card:hover { transform: none; }
+    .na-quick-links .ql-card:hover .ql-img { transform: none; }
+  }
+</style>
+
+<div class="na-quick-links" role="navigation" aria-label="AIOU quick links and social media">
+
+  <div class="ql-grid">
+
+  
+    <!-- ===== Card 2: AIOU Assignments ===== -->
+    <a class="ql-card"
+       href="/p/get-solved-assignments.html"
+       target="_blank"
+       rel="noopener"
+       aria-label="AIOU Solved Assignments">
+      <img class="ql-img" 
+ src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg0RYXQqsalGLUOjLDEvK5V3p5guGD5jcJL1t8iyNOPIi2iLPRrzeERejIHHKBQ-8cmzVnVKJc09O7Hi8B8aqP0hNWRHicUGGoFNBckgSD_rrYZZdw-x0UHSSOQd4psTVWnRMX0omBx3YtGTVPlPtnUoiqlJaMVtiizfwz5HxUwoT9tKnYYL8mE9Kbeq5Q/s320/1-2.jpg" 
+ alt="AIOU Assignments" 
+ width="1284" height="46" 
+ loading="lazy" decoding="async" />
+      <span class="ql-label">AIOU Assignments</span>
+    </a>
+
+    <!-- ===== Card 3: AIOU Original Books ===== -->
+    <a class="ql-card"
+       href="https://assignmentwaly.blogspot.com/p/aiou-original-books.html"
+       target="_blank"
+       rel="noopener"
+       aria-label="AIOU Original Soft Books">
+      <img class="ql-img" 
+ src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhWmd6AW6d36d4qnAYKD1botd2iDPi3zvG1W1Cz6v8y8LWYsp3JNRU26AmbPBo52N4Q5FjuTrC-FDwhopPPofsbISWu04KpwPERjnQDtCmEGvOsV-9uX-oRXiKeislVGhQ5sPfV3G_JSaqtqGKfUzvNKTUGm2YTuQxAZdYQ5ymy8q7nb0TX0c6CpHGLwTI/s320/1-3.jpg" 
+ alt="AIOU Original Books" 
+ width="1284" height="46" 
+ loading="lazy" decoding="async" />
+      <span class="ql-label">AIOU Soft Books</span>
+    </a>
+
+    <!-- ===== Card 4: AIOU Academic Schedule ===== -->
+    <a class="ql-card"
+       href="/p/academic-calander.html"
+       target="_blank"
+       rel="noopener"
+       aria-label="AIOU Academic Schedule">
+      <img class="ql-img" 
+ src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEinLPbvURA-qeG4gb7XjxjscawotWCMNdhhrf1i_ZaWOy2rPgUbis66WAOcYfHv5bhFUdt-277S1yg3W8Iu1oH4YVpipIOeIUmPHdT9wArMJdzYBv5bWDnP5q9NSWnWnIG-rB-73wMpAy2WZO2xJO_Jb1PlIy8Slj2v8_rj0J_RyV7bSod_YvPyOKFCg94/s320/1.jpg" 
+ alt="AIOU Academic Schedule" 
+ width="1284" height="46" 
+ loading="lazy" decoding="async" />
+      <span class="ql-label">Academic Schedule</span>
+    </a>
+
+    <!-- ===== Card 5: WhatsApp Channel ===== -->
+    <a class="ql-card"
+       href="https://whatsapp.com/channel/0029Va8EGw3InlqLVo7aak3a"
+       target="_blank"
+       rel="noopener"
+       aria-label="Join WhatsApp Channel">
+      <img class="ql-img" 
+ src="https://blogger.googleusercontent.com/img/a/AVvXsEjM897QIUZ7hpby8OcBLSgql6llcRmY0tWBciFEONnt-diMVwI6Ko2JQx7Ah7ZZWAKnxptJluMswXu4WXXlwA0fMdTu3DZMke67dCifzzCXDll6SpYE0zRVkBkim5yE_EiKb9Egmi-fo5a_le6tOIc-P0HgNba8orIPAEIfEfnVZRLJ0CPCZJS1I6KLUbzt=s215" 
+ alt="Join WhatsApp Channel" 
+ width="1284" height="46" 
+ loading="lazy" decoding="async" />
+      <span class="ql-label">WhatsApp Channel</span>
+    </a>
+
+  </div>
+
+</div>]]></b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
       <b:include name='JetHtml'/>
@@ -2180,21 +2060,185 @@ width: 50%;
   </b:widget>
   <b:widget id='HTML25' locked='false' title='About AIOU Coaching' type='HTML' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='content'><![CDATA[<div class="glass-about-card">
-  <p class="mb-3">
-    <strong>AIOU Coaching</strong> helps Allama Iqbal Open University students with 
-    admission guidance, assignment help and exam preparation. We are an 
-    independent service and are <em>not affiliated with AIOU</em>.
-  </p>
-  <p class="mb-0">
+      <b:widget-setting name='content'><![CDATA[<style>
+/* ===== AIOU About Card – matches JetTheme glass system ===== */
+.glass-about {
+  --about-accent: var(--jt-primary, #f67938);
+  --about-accent-soft: rgba(246, 121, 56, 0.12);
+  --about-accent-border: rgba(246, 121, 56, 0.28);
+  font-family: inherit;
+  margin: -0.25rem 0 0; /* tight inside sidebar widget */
+}
+
+.glass-about-inner {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--glass-radius-sm, 14px);
+  padding: 1.1rem 1.15rem 1.25rem;
+  background: var(--glass-bg-soft, rgba(255,255,255,.38));
+  border: 1px solid var(--glass-border, rgba(255,255,255,.70));
+  box-shadow: var(--glass-shadow, 0 8px 32px rgba(0,0,0,.10));
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+
+.glass-about-inner:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--glass-shadow-hover, 0 14px 40px rgba(246,121,56,.25));
+  border-color: rgba(246, 121, 56, 0.45);
+}
+
+/* soft orange glow (same family as body background) */
+.glass-about-inner::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20% auto -20%;
+  height: 120%;
+  background: radial-gradient(circle at 20% 10%, var(--glow-a, rgba(246,121,56,.30)), transparent 55%);
+  pointer-events: none;
+  opacity: .7;
+}
+
+.glass-about-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-about-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2.5px solid rgba(255,255,255,.55);
+  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  background: var(--jt-bg-light, #f3f7f9);
+}
+
+.glass-about-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--jt-heading-color, #000);
+  margin: 0;
+  line-height: 1.25;
+  letter-spacing: -0.2px;
+}
+
+.glass-about-subtitle {
+  font-size: 0.8rem;
+  color: var(--bs-body-color, #686868);
+  margin: 2px 0 0;
+  opacity: .9;
+  font-weight: 500;
+}
+
+.glass-about-text {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--bs-body-color, #686868);
+  margin: 0 0 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-about-text strong {
+  color: var(--jt-heading-color, #000);
+  font-weight: 600;
+}
+
+.glass-about-text em {
+  color: var(--about-accent);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.glass-about-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--about-accent);
+  text-decoration: none;
+  padding: 7px 14px;
+  background: var(--about-accent-soft);
+  border: 1px solid var(--about-accent-border);
+  border-radius: 999px;
+  transition: all .25s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-about-link:hover {
+  background: var(--about-accent);
+  border-color: var(--about-accent);
+  color: #fff;
+  transform: translateX(2px);
+  box-shadow: 0 6px 18px rgba(246, 121, 56, 0.35);
+}
+
+.glass-about-link svg {
+  transition: transform .25s ease;
+}
+
+.glass-about-link:hover svg {
+  transform: translateX(3px);
+}
+
+/* Dark mode (theme uses .dark-mode) */
+.dark-mode .glass-about-inner {
+  background: var(--glass-bg-soft);
+  border-color: var(--glass-border);
+}
+
+.dark-mode .glass-about-title {
+  color: var(--jt-heading-color);
+}
+
+.dark-mode .glass-about-text strong {
+  color: var(--jt-heading-color);
+}
+
+.dark-mode .glass-about-avatar {
+  border-color: rgba(255,255,255,.18);
+}
+</style>
+
+<div class="glass-about">
+  <div class="glass-about-inner">
+
+    <div class="glass-about-header">
+      <!-- Apni image URL yahan lagao (recommended 150×150 or larger) -->
+      <img class="glass-about-avatar" 
+ src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi97P2Gn7lZdj9xvckEFRAsppVg3zYOPbu7xqyt6SLCXTdakHVkxI-Grl6kpgYvgxiU_if1Gw4rgFZUtia0NJgWzAS0I5AUlxdEQb7H7HuBFiJLNPd1wMxYEYsgsgfuVSwdhaLqu_aOuhrxsPPdFNSVp531BU24KxeTV0PTwNY2FJzg7xZlk9ZdCYeccfEO/s1600/FmDbB.jpg" 
+ alt="AIOU Coaching" 
+ width="58" 
+ height="58" 
+ loading="lazy" />
+      <div>
+        <h3 class="glass-about-title">AIOU Coaching</h3>
+        <p class="glass-about-subtitle">Independent Support for Students</p>
+      </div>
+    </div>
+
+    <p class="glass-about-text">
+      <strong>AIOU Coaching</strong> helps Allama Iqbal Open University students with
+      admission guidance, assignment help and exam preparation. We are an
+      independent service and are <em>not affiliated with AIOU</em>.
+    </p>
+
     <a href="/p/about.html" class="glass-about-link">
       Read more about us
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-left:4px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <line x1="5" y1="12" x2="19" y2="12"></line>
         <polyline points="12 5 19 12 12 19"></polyline>
       </svg>
     </a>
-  </p>
+
+  </div>
 </div>]]></b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
@@ -2258,21 +2302,6 @@ width: 50%;
     <b:includable id='content'/>
     <b:includable id='list'/>
   </b:widget>
-  <b:widget id='Label11' locked='false' title='Hashtag' type='Label' visible='true'>
-    <b:widget-settings>
-      <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
-      <b:widget-setting name='display'>CLOUD</b:widget-setting>
-      <b:widget-setting name='selectedLabelsList'/>
-      <b:widget-setting name='showType'>ALL</b:widget-setting>
-      <b:widget-setting name='showFreqNumbers'>false</b:widget-setting>
-    </b:widget-settings>
-    <b:includable id='main'>
-      <b:include name='JetLabel'/>
-    </b:includable>
-    <b:includable id='cloud'/>
-    <b:includable id='content'/>
-    <b:includable id='list'/>
-  </b:widget>
   <b:widget id='BlogArchive10' locked='false' title='Blog Archive' type='BlogArchive' visible='true'>
     <b:widget-settings>
       <b:widget-setting name='showStyle'>FLAT</b:widget-setting>
@@ -2302,18 +2331,16 @@ width: 50%;
       <b:include name='JetHtml'/>
     </b:includable>
   </b:widget>
+  <b:widget id='Label11' locked='false' title='Hashtag' type='Label' visible='false'>
+    <b:includable id='main'>
+      <b:include name='JetLabel'/>
+    </b:includable>
+    <b:includable id='cloud'/>
+    <b:includable id='content'/>
+    <b:includable id='list'/>
+  </b:widget>
 </b:section>
 <b:section class='position-sticky py-4 top-0' id='sidebar-sticky' itemscope='itemscope'>
-  <b:widget id='HTML2' locked='false' title='Free tools' type='HTML' visible='true'>
-    <b:widget-settings>
-      <b:widget-setting name='content'><![CDATA[<!-- Elfsight Instagram Feed | AIOU Coaching Instagram Feed -->
-<script src="https://elfsightcdn.com/platform.js" async="async"></script>
-<div class="elfsight-app-5cef92ac-fafb-441d-8ad5-a895864bae99" data-elfsight-app-lazy></div>]]></b:widget-setting>
-    </b:widget-settings>
-    <b:includable id='main'>
-      <b:include name='JetHtml'/>
-    </b:includable>
-  </b:widget>
   <b:widget id='HTML20' locked='false' title='#Advertisement' type='HTML' visible='true'>
     <b:widget-settings>
       <b:widget-setting name='content'><![CDATA[<div class="ad-slot ad-sidebar" aria-label="Advertisement"><!-- ADSENSE: Sidebar display ad (300x250 / 300x600) --><hr class="example-ads"/></div>]]></b:widget-setting>
@@ -2410,7 +2437,7 @@ width: 50%;
 <b:section class='container px-3' id='copyright' maxwidgets='1' showaddelement='no'>
   <b:widget id='HTML23' locked='true' title='Copyright' type='HTML' version='2' visible='true'>
     <b:widget-settings>
-      <b:widget-setting name='content'><![CDATA[Copyright &copy; 2026 Design by <a href="https://www.aioucoaching.blogspot.com">AIOU-Coaching</a>]]></b:widget-setting>
+      <b:widget-setting name='content'><![CDATA[Copyright &copy; 2026 Design by <a href="https://aioucoaching.blogspot.com/p/home.html">AIOU-Coaching</a>]]></b:widget-setting>
     </b:widget-settings>
     <b:includable id='main'>
       <b:include name='JetCopyRight'/>
@@ -2483,7 +2510,7 @@ width: 50%;
     <b:includable id='JetSocial'>
       <b:include name='JetWidgetTitle'/>
       <div class='widget-content social-media mb-3'>
-          <b:loop index='i' values='data:links' var='link'><a expr:aria-label='data:link.name' expr:class='&quot;mb-2 btn btn-sm jt-btn-light hover-btn-primary rounded-pill jt-icon-center i-&quot; + data:link.name' expr:href='data:link.target' rel='noopener' target='_blank'><b:class cond='data:i != data:links.size - 1' name='me-2'/><svg aria-hidden='true' class='jt-icon'><use expr:href='&quot;#i-&quot; + data:link.name'/></svg></a></b:loop>
+          <b:loop index='i' values='data:links' var='link'><a expr:aria-label='data:link.name' expr:class='&quot;mb-2 btn btn-sm jt-btn-light hover-btn-primary rounded-pill jt-icon-center i-&quot; + data:link.name' expr:href='data:link.target' rel='noopener' target='_blank'><b:class cond='data:i != data:links.size - 1' name='me-2'/><svg aria-hidden='true' class='jt-icon'><use expr:xlink:href='&quot;#i-&quot; + data:link.name'/></svg></a></b:loop>
       </div>
     </b:includable>
     <b:includable id='JetPopularPosts'>
@@ -2601,7 +2628,7 @@ width: 50%;
     <b:includable id='JetSearch'>
       <b:class name='d-flex align-self-stretch align-items-center order-lg-1 ms-auto'/>
       <b:if cond='data:title not contains &quot;#Icons&quot;'>
-      <div class='header-social d-flex pe-1'><b:loop values='data:links' var='link'><a expr:aria-label='data:link.name' expr:class='&quot;px-2 text-reset jt-icon-center i-&quot; + data:link.name' expr:href='data:link.target' rel='noopener' target='_blank'><svg aria-hidden='true' class='jt-icon'><use expr:href='&quot;#i-&quot; + data:link.name'/></svg></a></b:loop></div>
+      <div class='header-social d-flex pe-1'><b:loop values='data:links' var='link'><a expr:aria-label='data:link.name' expr:class='&quot;px-2 text-reset jt-icon-center i-&quot; + data:link.name' expr:href='data:link.target' rel='noopener' target='_blank'><svg aria-hidden='true' class='jt-icon'><use expr:xlink:href='&quot;#i-&quot; + data:link.name'/></svg></a></b:loop></div>
       </b:if>
       <b:if cond='data:title not contains &quot;#Dark&quot;'>
       <div class='d-flex align-self-stretch align-items-center ps-1' id='dark-header'>
@@ -3032,8 +3059,6 @@ width: 50%;
 </div>
 </div>
 </b:if>
-<b:include data='post' name='postShareButtons'/>
-<b:include data='post' name='comments'/>
 </article>
 <div expr:class='&quot;position-fixed start-0 top-50 &quot; + data:post.adminClass'>
 <a class='d-block btn btn-sm jt-btn-light rounded-0' expr:href='&quot;https://www.blogger.com/blog/posts/&quot; + data:blog.blogId' rel='nofollow noopener noreferrer' target='_blank' title='Dashboard'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-menu'/></svg></a><a class='d-block btn btn-sm jt-btn-light rounded-0' expr:href='&quot;https://www.blogger.com/blog/post/edit/&quot; + data:blog.blogId + &quot;/&quot; + data:post.id' rel='nofollow noopener noreferrer' target='_blank' title='Edit post'><svg aria-hidden='true' class='jt-icon'><use xlink:href='#i-edit'/></svg></a>
@@ -3322,6 +3347,7 @@ width: 50%;
     <b:includable id='commentItem'/>
     <b:includable id='commentList'/>
     <b:includable id='commentPicker'/>
+    <b:includable id='comments'/>
     <b:includable id='commentsLink'/>
     <b:includable id='commentsLinkIframe'/>
     <b:includable id='commentsTitle'/>
@@ -3358,6 +3384,7 @@ width: 50%;
     <b:includable id='postMetadataJSONPublisher'/>
     <b:includable id='postPagination'/>
     <b:includable id='postReactions'/>
+    <b:includable id='postShareButtons'/>
     <b:includable id='postTimestamp'/>
     <b:includable id='postTitle'/>
     <b:includable id='previousPageLink'/>
@@ -3486,94 +3513,7 @@ function jtCallback(){
 
 }
 /*]]>*/</script>
-<script src='https://cdn.jsdelivr.net/gh/jettheme/js@0.5.5/main.js'></script>
-<script>/*<![CDATA[*/
-(function () {
-  'use strict';
-  var nav = document.getElementById('navbar');
-  var navCheck = document.getElementById('navbar-toggle');
-  var searchWrap = document.getElementById('search-header');
-  var searchCheck = document.getElementById('search-toggle');
-  var searchInput = document.getElementById('search-input');
-
-  function labels() { return document.querySelectorAll('label[for="navbar-toggle"]'); }
-
-  function setMenu(open) {
-    if (!nav) return;
-    nav.classList.toggle('is-open', open);
-    if (navCheck) navCheck.checked = open;
-    document.body.classList.toggle('nav-open', open);
-    Array.prototype.forEach.call(labels(), function (l) {
-      l.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-  }
-
-  function setSearch(open) {
-    if (!searchWrap) return;
-    searchWrap.classList.toggle('search-open', open);
-    if (searchCheck) searchCheck.checked = open;
-    var t = document.getElementById('search-toggler');
-    if (t) t.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open && searchInput) {
-      try { searchInput.focus({ preventScroll: true }); } catch (err) { searchInput.focus(); }
-    }
-  }
-
-  function closeAll() { setMenu(false); setSearch(false); }
-
-  Array.prototype.forEach.call(labels(), function (label) {
-    label.setAttribute('role', 'button');
-    label.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      setMenu(!(nav && nav.classList.contains('is-open')));
-    });
-  });
-
-  var searchToggler = document.getElementById('search-toggler');
-  if (searchToggler) {
-    searchToggler.setAttribute('role', 'button');
-    searchToggler.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      setSearch(!(searchWrap && searchWrap.classList.contains('search-open')));
-    });
-  }
-
-  if (nav) {
-    nav.addEventListener('click', function (e) {
-      if (e.target.closest && e.target.closest('a')) setMenu(false);
-    });
-  }
-
-  document.addEventListener('click', function (e) {
-    var t = e.target;
-    if (nav && nav.classList.contains('is-open') && !nav.contains(t) &&
-        !(t.closest && t.closest('label[for="navbar-toggle"]'))) setMenu(false);
-    if (searchWrap && searchWrap.classList.contains('search-open') && !searchWrap.contains(t) &&
-        !(t.closest && t.closest('#search-toggler'))) setSearch(false);
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' || e.keyCode === 27) closeAll();
-  });
-
-  Array.prototype.forEach.call(document.querySelectorAll('.post-share'), function (bar) {
-    var btn = bar.querySelector('.share-btn.copy');
-    if (!btn) return;
-    var url = bar.getAttribute('data-url') || location.href;
-    btn.addEventListener('click', function () {
-      var done = function () {
-        btn.classList.add('copied');
-        setTimeout(function () { btn.classList.remove('copied'); }, 1600);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(done, function () {});
-      }
-    });
-  });
-})();
-/*]]>*/</script>
+<script src='https://cdn.jsdelivr.net/gh/jettheme/js@0.5.5/main.js'/>
 
 <!-- NEW: GEO "Quick answer" box + cookie notice (plain JS, no dependencies) -->
 <script>/*<![CDATA[*/
@@ -3628,148 +3568,178 @@ function jtCallback(){
 /*]]>*/</script>
 
 <!-- Your Style and Script before </body> is here -->
-
-
-<!-- AIOU Coaching mobile bottom navigation: same five actions across views -->
-<b:if cond='data:view.isHomepage or data:view.isPost or data:view.isPage'>
-<nav aria-label='Mobile navigation' id='aiou-mobile-nav'>
-  <a href='/' aria-label='Home'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><path d='m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z'/></svg><span>Home</span></a>
-  <button aria-label='Open search' data-aiou-nav='search' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><circle cx='10.8' cy='10.8' r='6.8'/><path d='m16 16 5 5'/></svg><span>Search</span></button>
-  <button aria-label='Open menu' data-aiou-nav='menu' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><path d='M4 6h16M4 12h16M4 18h16'/></svg><span>Menu</span></button>
-  <button aria-label='Open comments' data-aiou-nav='comments' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><path d='M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z'/><path d='M8 11h8M8 14h5'/></svg><span>Comments</span></button>
-  <button aria-label='Share this page' data-aiou-nav='share' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><circle cx='18' cy='5' r='3'/><circle cx='6' cy='12' r='3'/><circle cx='18' cy='19' r='3'/><path d='m8.7 10.6 6.6-4.2M8.7 13.4l6.6 4.2'/></svg><span>Share</span></button>
-  <button aria-label='Toggle dark mode' data-aiou-nav='dark' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><path d='M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z'/></svg><span>Theme</span></button>
-  <button aria-label='Scroll to top' data-aiou-nav='top' type='button'><svg class='aiou-nav-icon' viewBox='0 0 24 24' aria-hidden='true'><path d='m5 12 7-7 7 7M12 5v14'/></svg><span>Top</span></button>
-</nav>
-<div aria-hidden='true' aria-label='Share this page' id='aiou-share-sheet' role='dialog'>
-  <button aria-label='Close share panel' data-aiou-share='close' type='button'>×</button>
-  <strong>Share this page</strong>
-  <button data-aiou-share='native' type='button'>Share link</button>
-  <button data-aiou-share='copy' type='button'>Copy page link</button>
-  <a data-aiou-share='whatsapp' rel='noopener' target='_blank'>WhatsApp</a>
-</div>
-</b:if>
+  
+  <style>/*<![CDATA[*/
+/* ===== JetTheme Header Pro (jh-) — theme variables + .dark-mode ke saath ===== */
+#header{--jh-h:68px}
+#header #header-main{min-height:var(--jh-h);align-items:center}
+#header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;pointer-events:none;background:linear-gradient(90deg,transparent,var(--jt-primary,#f67938),transparent);opacity:.55}
+#header.jh-scrolled{box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.logo-wrap img{max-height:46px;width:auto;object-fit:contain;transition:transform .3s ease}
+.logo-wrap a:hover img,a.navbar-brand:hover img{transform:scale(1.04)}
+ 
+/* round icon buttons */
+#dark-toggler,#search-toggler,#navbar-toggler{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--glass-bg-soft,rgba(255,255,255,.4));border:1px solid var(--glass-border,rgba(255,255,255,.7));cursor:pointer;transition:background-color .2s,color .2s,transform .2s}
+#dark-toggler:hover,#search-toggler:hover,#navbar-toggler:hover{background:var(--jt-primary,#f67938);color:#fff;transform:translateY(-1px)}
+ 
+/* menu icon + badge */
+.jh-mi{display:none;margin-right:8px;opacity:.85}
+.jh-mi svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
+.jh-bd{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--jt-primary,#f67938);color:#fff;font:700 9.5px/1.5 inherit;font-style:normal;letter-spacing:.04em;text-transform:uppercase;vertical-align:middle;animation:jhPulse 2.4s ease-in-out infinite}
+@keyframes jhPulse{0%,100%{box-shadow:0 0 0 0 rgba(246,121,56,.5)}50%{box-shadow:0 0 0 6px rgba(246,121,56,0)}}
+ 
+@media (min-width:992px){
+#navbar .navbar-nav{gap:2px;align-items:center}
+#navbar .navbar-nav>.menu-item{align-items:center}
+#navbar .navbar-nav>.menu-item>.nav-link{padding:.5rem .8rem;border-radius:999px;font-size:14px;white-space:nowrap;transition:background-color .2s,color .2s}
+#navbar .navbar-nav>.menu-item:hover>.nav-link{background:var(--glass-bg-soft,rgba(255,255,255,.4));color:var(--jt-primary,#f67938)}
+#navbar .navbar-nav>.menu-item>.nav-link.active{background:var(--jt-primary,#f67938);color:#fff}
+#navbar .navbar-nav>.menu-item:has(>.dropdown-toggle)>.nav-link{padding-right:1.55rem}
+#navbar .navbar-nav>.menu-item>.dropdown-toggle{top:50%;bottom:auto;right:.6rem;transform:translateY(-50%)}
+#navbar .navbar-nav>.menu-item>.nav-link.active ~ .dropdown-toggle{color:#fff}
+#navbar .dropdown-menu{min-width:210px;padding:.4rem;margin-top:8px;border-radius:16px}
+#navbar .dropdown-menu .menu-item>.nav-link{padding:.55rem .8rem;border-radius:10px;border:0}
+#navbar .dropdown-menu .menu-item:hover>.nav-link{background:var(--glass-bg-soft,rgba(255,255,255,.4))}
+}
+/* inline search pill (wide screens) */
+@media (min-width:1200px){
+#search-header #search-toggler{display:none}
+#search-header .dropdown-menu{display:block!important;position:static;min-width:0;width:220px;padding:0;margin:0 6px;border-radius:999px!important;overflow:hidden}
+#search-header .dropdown-menu form{flex-wrap:nowrap}
+#search-header .form-control{padding:.4rem .9rem;min-height:0}
+#search-header .btn{padding:.35rem .95rem;margin:2px}
+}
+/* mobile drawer */
+@media (max-width:991.98px){
+.jh-mi{display:inline-block}
+#navbar .nav-link{display:flex;align-items:center;margin-bottom:8px;padding:.8rem 1rem;border:0!important;border-radius:14px;background:var(--glass-bg-soft,rgba(255,255,255,.4));font-weight:600}
+#navbar .nav-link.active{background:var(--jt-primary,#f67938);color:#fff!important}
+#navbar .dropdown-menu{padding-left:.6rem}
+}
+@media (prefers-reduced-motion:reduce){.jh-bd{animation:none}}
+/*]]>*/</style>
+ 
 <script>/*<![CDATA[*/
 (function () {
-  var nav = document.getElementById('aiou-mobile-nav');
-  if (!nav) return;
-  var sheet = document.getElementById('aiou-share-sheet');
-  var pageUrl = window.location.href.split('#')[0];
-  var pageTitle = document.title || 'AIOU Coaching';
+  var D = document, W = window;
+  function q(s, r) { return (r || D).querySelector(s); }
+  function all(s, r) { return Array.prototype.slice.call((r || D).querySelectorAll(s)); }
+ 
+  /* ---- CONFIG: yahan apne menu badges badlein ---- */
+  var BADGES = [['/p/tools.html', 'New'], ['/p/get-solved-assignments.html', 'Free']];
+ 
+  var IC = {
+    home: 'M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10',
+    grid: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',
+    user: 'M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM19 8v6M22 11h-6',
+    file: 'M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8zM14 3v5h5M9 13h6M9 17h6',
+    cal: 'M3 5h18v16H3zM3 10h18M8 3v4M16 3v4',
+    tool: 'M14.7 6.3a4 4 0 00-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 005.4-5.4l-2.4 2.4-2.1-.6-.6-2.1z',
+    help: 'M12 22a10 10 0 100-20 10 10 0 000 20zM9.1 9a3 3 0 015.8 1c0 2-3 3-3 3M12 17h.01',
+    mail: 'M3 5h18v14H3zM3 7l9 6 9-6',
+    book: 'M4 19.5A2.5 2.5 0 016.5 17H20V3H6.5A2.5 2.5 0 004 5.5zM4 19.5V21h16',
+    dot: 'M12 12h.01'
+  };
+  function pick(h, t) {
+    var s = h + ' ' + t;
+    if (/\/p\/home|^\/$|home/.test(s)) { return 'home'; }
+    if (/program/.test(s)) { return 'grid'; }
+    if (/admission/.test(s)) { return 'user'; }
+    if (/assign|solved/.test(s)) { return 'file'; }
+    if (/calend|calan|schedule/.test(s)) { return 'cal'; }
+    if (/tool/.test(s)) { return 'tool'; }
+    if (/faq|help/.test(s)) { return 'help'; }
+    if (/contact|mail/.test(s)) { return 'mail'; }
+    if (/book|aioun|guess|paper/.test(s)) { return 'book'; }
+    return 'dot';
+  }
+ 
+  /* 1. Menu: icons (mobile drawer), badges, aria-current */
+  function menu() {
+    var nav = q('#navbar'); if (nav) { nav.setAttribute('aria-label', 'Main navigation'); }
+    all('#navbar a.nav-link').forEach(function (a) {
+      if (a.getAttribute('data-jh')) { return; } a.setAttribute('data-jh', '1');
+      var h = (a.getAttribute('href') || '').toLowerCase(), t = (a.textContent || '').toLowerCase();
+      var s = D.createElement('span'); s.className = 'jh-mi'; s.setAttribute('aria-hidden', 'true');
+      s.innerHTML = '<svg viewBox="0 0 24 24"><path d="' + IC[pick(h, t)] + '"/></svg>';
+      a.insertBefore(s, a.firstChild);
+      BADGES.forEach(function (b) {
+        if (h.indexOf(b[0]) !== -1) { var e = D.createElement('em'); e.className = 'jh-bd'; e.textContent = b[1]; a.appendChild(e); }
+      });
+      if (a.classList.contains('active')) { a.setAttribute('aria-current', 'page'); }
+    });
+  }
+ 
+  /* 2. Header shadow on scroll */
+  function scrolled() {
+    var hd = q('#header'); if (!hd) { return; }
+    var tick = false;
+    function u() { hd.classList.toggle('jh-scrolled', (W.pageYOffset || 0) > 8); tick = false; }
+    W.addEventListener('scroll', function () { if (!tick) { tick = true; W.requestAnimationFrame(u); } }, { passive: true }); u();
+  }
+ 
+  /* 3. Technical SEO / Core Web Vitals helpers */
+  function seo() {
+    var h1 = q('h1.entry-title') || q('h1'), title = h1 ? h1.textContent.trim() : D.title;
+    var imgs = all('.entry-text img');
+    imgs.forEach(function (im, i) {
+      if (!im.getAttribute('alt')) { im.setAttribute('alt', title); }
+      if (!im.hasAttribute('decoding')) { im.setAttribute('decoding', 'async'); }
+      if (i === 0) { if (!im.hasAttribute('fetchpriority')) { im.setAttribute('fetchpriority', 'high'); } im.removeAttribute('loading'); }
+      else if (!im.hasAttribute('loading')) { im.setAttribute('loading', 'lazy'); }
+    });
+    all('.item-thumbnail img').forEach(function (im) { if (!im.getAttribute('alt')) { im.setAttribute('alt', 'Post thumbnail'); } });
+    ['https://blogger.googleusercontent.com', 'https://fonts.gstatic.com'].forEach(function (u) {
+      if (!q('link[rel="preconnect"][href="' + u + '"]')) {
+        var l = D.createElement('link'); l.rel = 'preconnect'; l.href = u; if (u.indexOf('gstatic') !== -1) { l.crossOrigin = ''; } D.head.appendChild(l);
+      }
+    });
+  }
+ 
+  function run() { menu(); scrolled(); seo(); }
+  if (D.readyState === 'loading') { D.addEventListener('DOMContentLoaded', run); } else { run(); }
+})();
+/*]]>*/</script>
+ 
 
-  function showShare() {
-    if (!sheet) return;
-    sheet.style.display = 'flex';
-    sheet.setAttribute('aria-hidden', 'false');
-    var wa = sheet.querySelector("[data-aiou-share='whatsapp']");
-    if (wa) wa.href = 'https://wa.me/?text=' + encodeURIComponent(pageTitle + ' ' + pageUrl);
-    var firstAction = sheet.querySelector("[data-aiou-share='native']");
-    if (firstAction) firstAction.focus();
-  }
-  function hideShare() {
-    if (!sheet) return;
-    sheet.style.display = 'none';
-    sheet.setAttribute('aria-hidden', 'true');
-  }
-  function copyPageLink(button) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(pageUrl).then(function () {
-        if (button) button.textContent = 'Link copied!';
-      }).catch(function () { fallbackCopy(button); });
-    } else {
-      fallbackCopy(button);
-    }
-  }
-  function fallbackCopy(button) {
-    var field = document.createElement('textarea');
-    field.value = pageUrl;
-    field.setAttribute('readonly', 'readonly');
-    field.style.position = 'fixed';
-    field.style.opacity = '0';
-    document.body.appendChild(field);
-    field.select();
-    try {
-      var copied = document.execCommand('copy');
-      if (button) button.textContent = copied ? 'Link copied!' : 'Select and copy the page URL';
-    } catch (e) {
-      if (button) button.textContent = 'Copy unavailable - use address bar';
-    }
-    document.body.removeChild(field);
-  }
 
-  nav.addEventListener('click', function (event) {
-    var button = event.target.closest('[data-aiou-nav]');
-    if (!button) return;
-    var action = button.getAttribute('data-aiou-nav');
-
-    if (action === 'search') {
-      var searchToggle = document.getElementById('search-toggle');
-      var searchLabel = document.getElementById('search-toggler');
-      var searchInput = document.getElementById('search-input');
-      if (searchToggle && !searchToggle.checked && searchLabel) searchLabel.click();
-      window.requestAnimationFrame(function () {
-        if (searchInput) {
-          searchInput.focus();
-          searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+<!-- AIOUCOACHING_SUPABASE_BRIDGE: Supabase client bootstrap; publishable key only. -->
+<script src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'/>
+<script>/*<![CDATA[*/
+(function (w) {
+  'use strict';
+  var config = {
+    url: 'https://tjfqkawhojobdartjoki.supabase.co',
+    publishableKey: 'sb_publishable_s2aZXakyUj-S-5hVZA4djQ_IZpFClWZ'
+  };
+  w.AIOUCoachingConfig = Object.freeze({
+    projectName: 'aioucoaching',
+    supabaseUrl: config.url
+  });
+  function initialise() {
+    if (!w.supabase || typeof w.supabase.createClient !== 'function') return;
+    if (!w.aiouSupabase) {
+      w.aiouSupabase = w.supabase.createClient(config.url, config.publishableKey, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
         }
       });
-    } else if (action === 'menu') {
-      var menuToggle = document.getElementById('navbar-toggle');
-      var menuLabel = document.getElementById('navbar-toggler');
-      if (menuToggle && menuLabel) menuLabel.click();
-    } else if (action === 'comments') {
-      var comments = document.getElementById('comments');
-      var addComment = document.getElementById('add-comment');
-      var commentButton = document.getElementById('comment-button');
-      var destination = comments || addComment;
-      if (destination) {
-        destination.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        if (window.history && window.history.replaceState) {
-          window.history.replaceState(null, '', '#comments');
-        }
-        if (comments) {
-          comments.setAttribute('tabindex', '-1');
-          window.setTimeout(function () { comments.focus({ preventScroll: true }); }, 350);
-        } else if (commentButton) {
-          commentButton.focus({ preventScroll: true });
-        }
-      } else {
-        window.alert('Comments are available inside individual posts. Please open a post first.');
-      }
-    } else if (action === 'share') {
-      showShare();
-    } else if (action === 'dark') {
-      var darkToggle = document.getElementById('dark-toggler');
-      if (darkToggle) darkToggle.click();
-    } else if (action === 'top') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  });
-
-  if (sheet) {
-    sheet.addEventListener('click', function (event) {
-      var action = event.target.closest('[data-aiou-share]');
-      if (!action) {
-        if (event.target === sheet) hideShare();
-        return;
-      }
-      var type = action.getAttribute('data-aiou-share');
-      if (type === 'close') hideShare();
-      if (type === 'native') {
-        if (navigator.share) {
-          navigator.share({ title: pageTitle, text: pageTitle, url: pageUrl }).then(hideShare).catch(function () {});
-        } else {
-          copyPageLink(action);
-        }
-      }
-      if (type === 'copy') copyPageLink(action);
-    });
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && sheet.getAttribute('aria-hidden') === 'false') hideShare();
-    });
+    w.dispatchEvent(new CustomEvent('aiou:supabase-ready'));
   }
-})();;
- /*]]>*/</script>
+  if (w.supabase && w.supabase.createClient) {
+    initialise();
+  } else {
+    var sdk = document.querySelector('script[src*="supabase-js@2"]');
+    if (sdk) {
+      sdk.addEventListener('load', initialise, { once: true });
+    }
+  }
+})(window);
+/*]]>*/</script>
+<!-- End AIOUCOACHING_SUPABASE_BRIDGE -->
 
 <b:if cond='!data:view.isPreview'>&lt;textarea disabled readonly id=&quot;element-b&quot; style=&quot;display:none&quot;&gt;&lt;style&gt;/*</b:if></body><b:if cond='!data:view.isPreview'>*/&lt;/style&gt;&lt;/textarea&gt;<script>/*<![CDATA[*/const _eh=document.getElementById("element-h"),_eb=document.getElementById("element-b"),_WidgetManager={_PopupConfig:function(){}};null!==_eh&&(_eh.outerHTML=""),null!==_eb&&(_eb.outerHTML="");/*]]>*/</script>
 &lt;/body&gt;</b:if>
