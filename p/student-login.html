@@ -322,6 +322,12 @@ body:has(#ap) #page-content{max-width:none!important}
           var value = F[k].i.value.trim();
           if (value !== String(s[k] || '')) { updates[k] = value || null; }
         });
+        var requiredFields = ['full_name', 'father_name', 'course', 'batch'];
+        var missingFields = requiredFields.filter(function (k) { return !F[k].i.value.trim(); });
+        if (missingFields.length) {
+          msg(card, 'Full Name, Father Name, Course aur Batch khaali nahi chhor sakte.', 'e');
+          return;
+        }
         if (!Object.keys(updates).length) { msg(card, 'Student details mein koi tabdeeli nahi.', 'i'); return; }
         save.disabled = true;
         sb.rpc('admin_update_student_details', { p_student_id: s.id, p_updates: updates }).then(function (x) {
@@ -342,8 +348,8 @@ body:has(#ap) #page-content{max-width:none!important}
       card.appendChild(er); out.appendChild(card);
     }
     function run() {
-      var v = q.i.value.trim().replace(/[,%()]/g, ' ');
-      if (!v) { msg(out, 'Roll Number ya Student Name likhein.', 'i'); return; }
+      var v = q.i.value.trim().replace(/[^\\p{L}\\p{N} -]/gu, '').replace(/\\s+/g, ' ').trim();
+      if (!v) { msg(out, 'Letters, numbers ya hyphen wala Roll Number/Student Name likhein.', 'i'); return; }
       out.innerHTML = '';
       sb.from('students').select('*').or('roll_no.eq.' + v + ',full_name.ilike.%' + v + '%').limit(20).then(function (res) {
         if (res.error) { msg(out, 'Search nahi ho saki: ' + res.error.message, 'e'); return; }
