@@ -1,16 +1,40 @@
 <!-- AIOU COACHING STUDENT PORTAL — Blogger Page > HTML view mein paste karein -->
 <style>
 /* Blogger-safe full-viewport portal. Scroll belongs to the portal content pane, not the Blogger article wrapper. */
-#ap{--ac:#f67938;--ac2:#d9601f;--ink:#1f2328;--mut:#6b7280;--bg:#f3f4f6;--side:#2b2d31;--top:#1f2023;--line:#e5e7eb;position:fixed;inset:0;width:100%;height:100vh;height:100dvh;min-height:0;max-height:none;z-index:2147483000;overflow:hidden;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-align:left;direction:ltr}
+#ap{--ac:var(--jt-primary,#f67938);--ac2:var(--jt-primary,#d9601f);--ink:var(--jt-heading-color,#1f2328);--mut:var(--jt-text-color,#6b7280);--bg:var(--glass-bg-soft,var(--jt-bg-light,#f3f4f6));--side:var(--jt-header-bg,#292b30);--top:var(--jt-header-bg,#1f2023);--line:var(--glass-border,var(--jt-border-light,#e5e7eb));position:relative;display:block;width:100%;max-width:none;min-height:65vh;height:auto;max-height:none;z-index:1;overflow:visible;background:transparent;color:var(--ink);font:15px/1.55 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;text-align:left;direction:ltr}
 #ap [hidden]{display:none!important}
-#ap #ap-app{height:100%;min-height:0;display:flex;flex-direction:column}
-#ap .top{flex:0 0 56px}
-#ap .wrap{flex:1 1 auto;min-height:0;height:auto;overflow:hidden}
-#ap .side{height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain}
-#ap .main{height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
-#ap .foot{flex:0 0 auto}
-#ap .lg{height:100%;min-height:100%;overflow-y:auto;align-items:flex-start}
+/* Match JetTheme shell: keep Blogger header/footer, expand this page, remove its sidebar/comments only. */
+body:has(#ap) #main-content{display:block!important}
+body:has(#ap) #main{width:100%!important;max-width:100%!important;flex:0 0 100%!important}
+body:has(#ap) #sidebar{display:none!important}
+body:has(#ap) .comments,
+body:has(#ap) #comments,
+body:has(#ap) .comment-form,
+body:has(#ap) #comment-editor,
+body:has(#ap) .post-comment-link{display:none!important}
+body:has(#ap) #page-content{max-width:none!important}
+#ap #ap-app{width:100%;min-height:65vh;display:flex;flex-direction:column}
+#ap .top{position:relative;top:auto;flex:0 0 56px;border-bottom:2px solid var(--ac)}
+#ap .wrap{display:flex;min-height:65vh;height:auto;overflow:visible}
+#ap .side{width:240px;align-self:stretch;min-height:100%;overflow:visible;flex-shrink:0}
+#ap .main{flex:1;min-width:0;width:100%;max-width:none;height:auto;min-height:65vh;overflow:visible;padding:22px}
+#ap .foot{display:none}
+#ap .lg{min-height:65vh;height:auto;overflow:visible;align-items:center;padding:28px 12px}
 #ap .lg .card{margin:auto}
+#ap .card{background:var(--glass-bg-strong,var(--bs-body-bg,#fff));border-color:var(--line)}
+#ap .kv{background:var(--glass-bg-soft,var(--bg))}
+#ap .top,#ap .side{color:var(--jt-header-color,#f3f4f6)}
+#ap .side{background:var(--jt-header-bg,#292b30)}
+#ap .btn{background:var(--jt-primary,#f67938)}
+#ap .btn:hover{background:var(--jt-primary-hover,#d9601f)}
+#ap .sc .h{background:linear-gradient(135deg,var(--jt-header-bg,#1f2023),var(--side))}
+@media(max-width:860px){
+ body:has(#ap) #main{padding-left:12px!important;padding-right:12px!important}
+ #ap .wrap{display:block;min-height:0}
+ #ap .side{position:fixed;top:56px;bottom:0;left:0;z-index:1040;height:auto;overflow-y:auto;transform:translateX(-105%)}
+ #ap .side.on{transform:none}
+ #ap .main{min-height:50vh;padding:14px}
+}
 #ap[data-t="gray"]{--ac:#6b7280;--ac2:#4b5563}#ap[data-t="green"]{--ac:#3a7d5c;--ac2:#2c6048}#ap[data-t="brown"]{--ac:#8b5a3c;--ac2:#6e452d}#ap[data-t="cyan"]{--ac:#0891b2;--ac2:#0e7490}#ap[data-t="blue"]{--ac:#c9a227;--ac2:#a8851a;--side:#16254f;--top:#0f1b3d}
 #ap *,#ap *:before,#ap *:after{box-sizing:border-box}
 #ap a{color:var(--ac2)}#ap h1,#ap h2,#ap h3{margin:0;color:inherit}
@@ -67,7 +91,6 @@
       <button class="ib" id="ap-out" type="button" aria-label="Logout">&#x23FB;</button>
     </div>
     <div class="wrap"><nav class="side" id="ap-side" aria-label="Portal"></nav><main class="main" id="ap-main"></main></div>
-    <div class="foot"><b>AIOU Coaching</b> &middot; Landhi Town, Karachi<br>WhatsApp: 03702388998 &middot; Contact: 03032672609<br><span dir="rtl" lang="ur">سب کے لیے تعلیم</span></div>
     <div class="ov" id="ap-ov"></div><aside class="dr" id="ap-dr" aria-label="Settings"></aside>
   </div>
   <div id="ap-boot" style="padding:40px;text-align:center">Loading&hellip;</div>
