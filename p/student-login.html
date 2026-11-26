@@ -240,6 +240,25 @@ body:has(#ap) #page-content{max-width:none!important}
   }
   setTheme(ls('ap_theme') || 'orange');
 
+  /* ---------- registration API ---------- */
+  function registrationRequest(action, payload, authenticated) {
+    return (authenticated ? sb.auth.getSession() : Promise.resolve({ data: { session: null } })).then(function (sessionResult) {
+      var session = sessionResult && sessionResult.data && sessionResult.data.session;
+      if (authenticated && !session) { throw new Error('session'); }
+      var headers = { 'Content-Type': 'application/json', apikey: KEY };
+      if (session && session.access_token) { headers.Authorization = 'Bearer ' + session.access_token; }
+      return fetch(URL_ + '/functions/v1/student-registration', {
+        method: 'POST', headers: headers,
+        body: JSON.stringify(Object.assign({ action: action }, payload || {}))
+      }).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (data) {
+          if (!r.ok) { throw new Error(data.error || 'Request complete nahi ho saki.'); }
+          return data;
+        });
+      });
+    });
+  }
+
   /* ---------- login ---------- */
   function showLogin(note) {
     $('ap-boot').hidden = true; $('ap-app').hidden = true; var L = $('ap-login'); L.hidden = false; L.innerHTML = '';
@@ -247,6 +266,33 @@ body:has(#ap) #page-content{max-width:none!important}
     var a = field('Email ya Roll Number', '', false), b = field('Password', '', false, 'password'); a.i.autocomplete = 'username'; b.i.autocomplete = 'current-password';
     a.w.className = b.w.className = 'fld'; c.appendChild(a.w); c.appendChild(b.w);
     var go = btn('Login', '', null); go.style.width = '100%'; go.style.justifyContent = 'center'; c.appendChild(go);
+    var regBox = h('div', 'card'); regBox.hidden = true; regBox.style.marginTop = '14px';
+    var regToggle = btn('Create Student Account', 'g', function () { regBox.hidden = !regBox.hidden; });
+    regToggle.style.width = '100%'; regToggle.style.justifyContent = 'center'; regToggle.style.marginTop = '10px'; c.appendChild(regToggle);
+    regBox.appendChild(h('h3', '', 'Student Registration'));
+    regBox.appendChild(h('p', '', 'Admin se mila hua single-use Registration Code, apna email aur password enter karein. Email verify hone ke baad account ko student record se link kiya jayega.'));
+    var rc = field('Registration Code', '', false), re = field('Email Address', '', false, 'email'), rp = field('Create Password (minimum 8 characters)', '', false, 'password'), rn = field('Full Name (optional)', '', false);
+    rc.i.autocomplete = 'off'; re.i.autocomplete = 'email'; rp.i.autocomplete = 'new-password';
+    [rc,re,rp,rn].forEach(function (f) { f.w.className = 'fld'; regBox.appendChild(f.w); });
+    var register = btn('Verify Code & Create Account', '', function () {
+      var code = rc.i.value.trim(), email = re.i.value.trim().toLowerCase(), password = rp.i.value;
+      if (!code || !email || password.length < 8) { msg(regBox, 'Registration Code, valid email aur kam az kam 8-character password zaroori hain.', 'e'); return; }
+      register.disabled = true;
+      registrationRequest('validate', { code: code }).then(function () {
+        return sb.auth.signUp({
+          email: email, password: password,
+          options: { data: { full_name: rn.i.value.trim() }, emailRedirectTo: window.location.href }
+        });
+      }).then(function (res) {
+        if (res.error) { throw res.error; }
+        rp.i.value = '';
+        msg(regBox, 'Account request ban gayi. Apni email inbox mein verification link kholein. Verification ke baad portal mein login karke Dashboard par Registration Code dobara enter karein taake student record link ho.', 'o');
+      }).catch(function (e) {
+        msg(regBox, e && e.message ? e.message : 'Registration complete nahi hui. Details check karein.', 'e');
+      }).finally(function () { register.disabled = false; });
+    });
+    register.style.width = '100%'; register.style.justifyContent = 'center'; regBox.appendChild(register);
+    c.appendChild(regBox);
     if (note) { msg(c, note, 'e'); }
     function run(e) {
       if (e) { e.preventDefault(); }
@@ -308,7 +354,27 @@ body:has(#ap) #page-content{max-width:none!important}
     title(m, 'Welcome, ' + nm); var c = h('div', 'card'), g = h('div', 'grid');
     g.appendChild(kv('Roll Number', (ST && ST.roll_no) || (P && P.student_id))); g.appendChild(kv('Course / Programme', (ST && ST.course) || (P && P.programme)));
     g.appendChild(kv('Batch', ST && ST.batch)); g.appendChild(kv('Student Mode', ST && ST.student_mode)); g.appendChild(kv('Card Status', ST && ST.card_status)); c.appendChild(g);
-    if (!ST) { msg(c, 'Student record link nahi hai, is liye roll number/course/batch nahi dikh rahe.', 'i'); } m.appendChild(c);
+    if (!ST) {
+      msg(c, 'Aap ka portal account bana hua hai lekin student record abhi link nahi hua.', 'i');
+      var linkCard = h('div', 'card'); linkCard.appendChild(h('h3', '', 'Link AIOU Student Record'));
+      linkCard.appendChild(h('p', '', 'Admin se mila hua Registration Code enter karein. Yeh code ek martaba use hota hai aur verified email account ke sath link hota hai.'));
+      var codeField = field('Registration Code', '', false); codeField.i.autocomplete = 'off'; linkCard.appendChild(codeField.w);
+      linkCard.appendChild(btn('Verify & Link Student Record', '', function () {
+        var code = codeField.i.value.trim(); if (!code) { msg(linkCard, 'Registration Code enter karein.', 'e'); return; }
+        var linkBtn = linkCard.querySelector('button'); linkBtn.disabled = true;
+        registrationRequest('link', { code: code }, true).then(function () {
+          return sb.from('students').select('*').eq('auth_user_id', U.id).maybeSingle();
+        }).then(function (r) {
+          linkBtn.disabled = false;
+          if (r.error || !r.data) { msg(linkCard, 'Link request hui lekin student record refresh nahi ho saka. Refresh karke dobara check karein.', 'e'); return; }
+          ST = r.data; msg(linkCard, 'Student record successfully link ho gaya.', 'o'); buildNav(); go('dash');
+        }).catch(function (e) {
+          linkBtn.disabled = false; msg(linkCard, e && e.message ? e.message : 'Code verify/link nahi ho saka.', 'e');
+        });
+      }, 'link'));
+      m.appendChild(linkCard);
+    }
+    m.appendChild(c);
     var pc = complete(), c2 = h('div', 'card'); c2.appendChild(h('h3', '', 'Profile completion: ' + pc + '%')); var b = h('div', 'bar'), i = h('i'); i.style.width = pc + '%'; b.appendChild(i); c2.appendChild(b);
     if (pc < 100) { c2.appendChild(h('p', '', 'My Profile mein baqi details bharein.')); } m.appendChild(c2);
     var c3 = h('div', 'card'); c3.appendChild(h('h3', '', 'Notice Board')); c3.appendChild(h('div', 'empty', 'Abhi koi notice available nahi hai.')); m.appendChild(c3);
@@ -438,7 +504,27 @@ body:has(#ap) #page-content{max-width:none!important}
           msg(card, 'Student Mode aur Card Status update ho gaye.', 'o');
         }, function () { msg(card, 'Network masla. Dobara try karein.', 'e'); });
       }, 'idcard'));
-      card.appendChild(er); out.appendChild(card);
+      card.appendChild(er);
+      if (!s.auth_user_id) {
+        var issueBtn = btn('Generate Registration Code', 'g', function () {
+          var existing = card.querySelector('.registration-code-output'); if (existing) { existing.remove(); }
+          issueBtn.disabled = true;
+          registrationRequest('issue', { student_id: s.id }, true).then(function (data) {
+            var output = h('div', 'card'); output.classList.add('registration-code-output');
+            output.appendChild(h('h3', '', 'One-time Registration Code'));
+            var codeInput = field('Share this code with the student (shown once)', data.code, true); output.appendChild(codeInput.w);
+            output.appendChild(h('p', '', 'Expiry: ' + data.expires_at + '. Is code ko private channel se student ko dein. Naya code generate karne par purana unused code revoke ho jayega.'));
+            output.appendChild(btn('Copy Code', 'g', function () {
+              if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(data.code).then(function () { msg(output, 'Code copy ho gaya.', 'o'); }, function () { codeInput.i.select(); msg(output, 'Code manually copy karein.', 'i'); }); }
+              else { codeInput.i.select(); msg(output, 'Code select hai; manually copy karein.', 'i'); }
+            }));
+            card.appendChild(output);
+          }).catch(function (e) { msg(card, e && e.message ? e.message : 'Code generate nahi hua.', 'e'); })
+            .finally(function () { issueBtn.disabled = false; });
+        });
+        card.appendChild(issueBtn);
+      }
+      out.appendChild(card);
     }
     function run() {
       var v = q.i.value.trim().replace(/[^\p{L}\p{N} -]/gu, '').replace(/\s+/g, ' ').trim();
