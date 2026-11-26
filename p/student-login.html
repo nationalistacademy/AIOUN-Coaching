@@ -348,7 +348,7 @@ body:has(#ap) #page-content{max-width:none!important}
       card.appendChild(er); out.appendChild(card);
     }
     function run() {
-      var v = q.i.value.trim().replace(/[^\\p{L}\\p{N} -]/gu, '').replace(/\\s+/g, ' ').trim();
+      var v = q.i.value.trim().replace(/[^\p{L}\p{N} -]/gu, '').replace(/\s+/g, ' ').trim();
       if (!v) { msg(out, 'Letters, numbers ya hyphen wala Roll Number/Student Name likhein.', 'i'); return; }
       out.innerHTML = '';
       sb.from('students').select('*').or('roll_no.eq.' + v + ',full_name.ilike.%' + v + '%').limit(20).then(function (res) {
