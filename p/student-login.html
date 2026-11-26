@@ -298,24 +298,63 @@ body:has(#ap) #page-content{max-width:none!important}
     sb.from('students').select('id', { count: 'exact', head: true }).then(function (r) { if (!r.error && r.count !== null) { g.appendChild(kv('Students (visible to you)', r.count)); } else { msg(c, 'Count load nahi ho saka (ijazat/RLS).', 'i'); } });
   }
   function vSearch(m) {
-    title(m, 'Student Search'); var c = h('div', 'card'), r = h('div', 'row'), q = field('Roll Number', '', false), out = h('div'); r.appendChild(q.w);
+    title(m, 'Student Search & Management');
+    var c = h('div', 'card'), r = h('div', 'row'), q = field('Roll Number ya Student Name', '', false), out = h('div');
+    r.appendChild(q.w);
+    function renderStudent(s) {
+      var card = h('div', 'card'), head = h('h3', '', (s.full_name || 'Student') + ' — ' + (s.roll_no || 'No roll number'));
+      card.appendChild(head);
+      var g = h('div', 'grid'), F = {};
+      [['full_name','Full Name',s.full_name],['father_name','Father Name',s.father_name],['phone','Phone',s.phone],['course','Course',s.course],['batch','Batch',s.batch],['photo_url','Photo URL',s.photo_url]].forEach(function (x) {
+        F[x[0]] = field(x[1], x[2], false); g.appendChild(F[x[0]].w);
+      });
+      card.appendChild(g);
+      var er = h('div', 'row'), sm = h('div'), sc = h('div'), a = h('select'), b = h('select');
+      ['', 'ODL', 'F2F'].forEach(function (x) { a.appendChild(new Option(x || '(none)', x)); });
+      ['Pending', 'Generated', 'Printed', 'Blocked'].forEach(function (x) { b.appendChild(new Option(x, x)); });
+      a.value = s.student_mode || ''; b.value = s.card_status || 'Pending';
+      sm.appendChild(h('label', '', 'Student Mode')); sm.appendChild(a);
+      sc.appendChild(h('label', '', 'Card Status')); sc.appendChild(b);
+      er.appendChild(sm); er.appendChild(sc);
+      var save = btn('Save Student Details', '', function () {
+        var updates = {};
+        Object.keys(F).forEach(function (k) {
+          var value = F[k].i.value.trim();
+          if (value !== String(s[k] || '')) { updates[k] = value || null; }
+        });
+        if (!Object.keys(updates).length) { msg(card, 'Student details mein koi tabdeeli nahi.', 'i'); return; }
+        save.disabled = true;
+        sb.rpc('admin_update_student_details', { p_student_id: s.id, p_updates: updates }).then(function (x) {
+          save.disabled = false;
+          if (x.error) { msg(card, 'Details update nahi huin: ' + x.error.message, 'e'); return; }
+          Object.keys(updates).forEach(function (k) { s[k] = updates[k]; });
+          msg(card, 'Student details successfully update ho gayi hain.', 'o');
+        }, function () { save.disabled = false; msg(card, 'Network masla. Dobara try karein.', 'e'); });
+      });
+      er.appendChild(save);
+      er.appendChild(btn('Save Card Controls', '', function () {
+        sb.rpc('admin_set_student_card_fields', { p_student_id: s.id, p_student_mode: a.value || null, p_card_status: b.value }).then(function (x) {
+          if (x.error) { msg(card, 'Card controls update nahi huay: ' + x.error.message, 'e'); return; }
+          s.student_mode = a.value || null; s.card_status = b.value;
+          msg(card, 'Student Mode aur Card Status update ho gaye.', 'o');
+        }, function () { msg(card, 'Network masla. Dobara try karein.', 'e'); });
+      }));
+      card.appendChild(er); out.appendChild(card);
+    }
     function run() {
-      var v = q.i.value.trim(); if (!v) { return; } out.innerHTML = '';
-      sb.from('students').select('*').eq('roll_no', v).maybeSingle().then(function (res) {
+      var v = q.i.value.trim().replace(/[,%()]/g, ' ');
+      if (!v) { msg(out, 'Roll Number ya Student Name likhein.', 'i'); return; }
+      out.innerHTML = '';
+      sb.from('students').select('*').or('roll_no.eq.' + v + ',full_name.ilike.%' + v + '%').limit(20).then(function (res) {
         if (res.error) { msg(out, 'Search nahi ho saki: ' + res.error.message, 'e'); return; }
-        if (!res.data) { msg(out, 'Is roll number ka record nahi mila (ya ijazat nahi).', 'i'); return; }
-        var s = res.data, g = h('div', 'grid'); [['Name', s.full_name], ['Father', s.father_name], ['Roll No', s.roll_no], ['Course', s.course], ['Batch', s.batch], ['Mode', s.student_mode], ['Card Status', s.card_status]].forEach(function (x) { g.appendChild(kv(x[0], x[1])); }); out.appendChild(g);
-        var er = h('div', 'row'), sm = h('div'), sc = h('div'), a = h('select'), b = h('select');
-        ['', 'ODL', 'F2F'].forEach(function (x) { a.appendChild(new Option(x || '(none)', x)); }); ['Pending', 'Generated', 'Printed', 'Blocked'].forEach(function (x) { b.appendChild(new Option(x, x)); });
-        a.value = s.student_mode || ''; b.value = s.card_status || 'Pending'; sm.appendChild(h('label', '', 'Student Mode')); sm.appendChild(a); sc.appendChild(h('label', '', 'Card Status')); sc.appendChild(b); er.appendChild(sm); er.appendChild(sc);
-        er.appendChild(btn('Update', '', function () {
-          sb.rpc('admin_set_student_card_fields', { p_student_id: s.id, p_student_mode: a.value || null, p_card_status: b.value }).then(function (x) {
-            if (x.error) { msg(out, 'Update nahi hua. Admin permission ya server RPC configuration check karein.', 'e'); } else { s.student_mode = a.value || null; s.card_status = b.value; msg(out, 'Student mode aur card status update ho gaye.', 'o'); }
-          });
-        })); out.appendChild(er);
+        if (!res.data || !res.data.length) { msg(out, 'Is naam ya roll number ka student nahi mila.', 'i'); return; }
+        msg(out, res.data.length + ' student record(s) mile.', 'o');
+        res.data.forEach(renderStudent);
       }, function () { msg(out, 'Network masla.', 'e'); });
     }
-    r.appendChild(btn('Search', '', run)); q.i.addEventListener('keydown', function (e) { if (e.key === 'Enter') { run(); } }); c.appendChild(r); c.appendChild(out); m.appendChild(c);
+    r.appendChild(btn('Search', '', run));
+    q.i.addEventListener('keydown', function (e) { if (e.key === 'Enter') { run(); } });
+    c.appendChild(r); c.appendChild(out); m.appendChild(c);
   }
 
   /* ---------- settings drawer ---------- */
