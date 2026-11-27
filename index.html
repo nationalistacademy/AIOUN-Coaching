@@ -1,13 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html>
-<html lang="en">
+<html b:version='2' class='v2' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111111">
-  <meta name="description" content="AIOU Coaching — Independent study help, assignments, notes, guess papers and academic tools.">
-  <title>AIOU Coaching | Student Learning Hub</title>
+  <meta charset="UTF-8"/>
+  <meta content='width=device-width, initial-scale=1' name='viewport'/>
+  <meta content='#111111' name='theme-color'/>
+  <b:include data='blog' name='all-head-content'/>
+  <title><data:blog.pageTitle/></title>
 
   <style>
+    /* --- Aapka GitHub CSS Yahan Integrate Kiya Gaya Hai --- */
     :root {
       --primary: #f67938;
       --primary-light: #ff9b63;
@@ -20,533 +22,70 @@
       --radius: 20px;
       --shadow: 0 20px 60px rgba(0,0,0,.25);
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
+      background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden;
     }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    .container {
-      width: min(1160px, calc(100% - 40px));
-      margin-inline: auto;
-    }
-
-    .blob {
-      position: fixed;
-      width: 360px;
-      height: 360px;
-      border-radius: 50%;
-      background: var(--primary);
-      filter: blur(130px);
-      opacity: .13;
-      pointer-events: none;
-      z-index: -1;
-      animation: float 12s ease-in-out infinite alternate;
-    }
-
-    .blob.one {
-      top: 80px;
-      left: -180px;
-    }
-
-    .blob.two {
-      right: -180px;
-      top: 55%;
-      animation-delay: -5s;
-    }
-
-    @keyframes float {
-      from { transform: translate(0, 0) scale(1); }
-      to { transform: translate(70px, 45px) scale(1.2); }
-    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .container { width: min(1160px, calc(100% - 40px)); margin-inline: auto; }
+    
+    .blob { position: fixed; width: 360px; height: 360px; border-radius: 50%; background: var(--primary); filter: blur(130px); opacity: .13; pointer-events: none; z-index: -1; animation: float 12s ease-in-out infinite alternate; }
+    .blob.one { top: 80px; left: -180px; }
+    .blob.two { right: -180px; top: 55%; animation-delay: -5s; }
+    @keyframes float { from { transform: translate(0, 0) scale(1); } to { transform: translate(70px, 45px) scale(1.2); } }
 
     /* Navbar */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(16,17,20,.78);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-inner {
-      min-height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      font-weight: 800;
-      font-size: 19px;
-      letter-spacing: -.5px;
-    }
-
-    .brand-mark {
-      width: 39px;
-      height: 39px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: var(--primary);
-      color: #171717;
-      font-weight: 900;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 25px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .nav-links a:hover {
-      color: var(--primary-light);
-    }
-
-    .nav-cta,
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      border: 0;
-      border-radius: 12px;
-      padding: 12px 19px;
-      background: var(--primary);
-      color: #171717;
-      font-weight: 750;
-      cursor: pointer;
-      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
-    }
-
-    .nav-cta:hover,
-    .btn:hover {
-      transform: scale(1.045);
-      background: var(--primary-light);
-      box-shadow: 0 10px 30px rgba(246,121,56,.22);
-    }
+    .navbar { position: sticky; top: 0; z-index: 100; background: rgba(16,17,20,.78); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-bottom: 1px solid var(--border); }
+    .nav-inner { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; font-size: 19px; letter-spacing: -.5px; }
+    .brand-mark { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 12px; background: var(--primary); color: #171717; font-weight: 900; }
+    .nav-links { display: flex; align-items: center; gap: 25px; color: var(--muted); font-size: 14px; }
+    .nav-links a:hover { color: var(--primary-light); }
+    .nav-cta, .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 12px; padding: 12px 19px; background: var(--primary); color: #171717; font-weight: 750; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+    .nav-cta:hover, .btn:hover { transform: scale(1.045); background: var(--primary-light); box-shadow: 0 10px 30px rgba(246,121,56,.22); }
 
     /* Hero */
-    .hero {
-      padding: 105px 0 85px;
-      text-align: center;
-    }
+    .hero { padding: 105px 0 85px; text-align: center; }
+    .eyebrow { display: inline-flex; padding: 7px 13px; border: 1px solid rgba(246,121,56,.3); border-radius: 99px; background: rgba(246,121,56,.09); color: var(--primary-light); font-size: 13px; font-weight: 700; margin-bottom: 24px; }
+    .hero h1 { max-width: 850px; margin: auto; font-size: clamp(38px, 6vw, 70px); line-height: 1.08; letter-spacing: -2.8px; }
+    .hero h1 span { color: var(--primary); }
+    .hero-copy { max-width: 720px; margin: 25px auto 0; color: var(--muted); font-size: clamp(15px, 2vw, 18px); }
+    .hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 13px; margin-top: 32px; }
+    .btn-secondary { border: 1px solid var(--border); background: rgba(255,255,255,.04); color: var(--text); }
+    .btn-secondary:hover { background: rgba(255,255,255,.09); }
 
-    .eyebrow {
-      display: inline-flex;
-      padding: 7px 13px;
-      border: 1px solid rgba(246,121,56,.3);
-      border-radius: 99px;
-      background: rgba(246,121,56,.09);
-      color: var(--primary-light);
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 24px;
-    }
+    /* Sections & Grids */
+    .section { padding: 75px 0; }
+    .section-heading { max-width: 650px; margin: 0 auto 38px; text-align: center; }
+    .section-heading h2 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -1px; }
+    .section-heading p { margin-top: 10px; color: var(--muted); }
 
-    .hero h1 {
-      max-width: 850px;
-      margin: auto;
-      font-size: clamp(38px, 6vw, 70px);
-      line-height: 1.08;
-      letter-spacing: -2.8px;
-    }
-
-    .hero h1 span {
-      color: var(--primary);
-    }
-
-    .hero-copy {
-      max-width: 720px;
-      margin: 25px auto 0;
-      color: var(--muted);
-      font-size: clamp(15px, 2vw, 18px);
-    }
-
-    .hero-actions {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 13px;
-      margin-top: 32px;
-    }
-
-    .btn-secondary {
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255,255,255,.09);
-    }
-
-    .hero-note {
-      margin-top: 27px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    /* Sections */
-    .section {
-      padding: 75px 0;
-    }
-
-    .section-heading {
-      max-width: 650px;
-      margin: 0 auto 38px;
-      text-align: center;
-    }
-
-    .section-heading h2 {
-      font-size: clamp(28px, 4vw, 40px);
-      letter-spacing: -1px;
-    }
-
-    .section-heading p {
-      margin-top: 10px;
-      color: var(--muted);
-    }
-
-    /* Stats */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .stat-card,
-    .program-card,
-    .tool-card,
-    .worker-card {
-      border: 1px solid var(--border);
-      background: linear-gradient(145deg, rgba(255,255,255,.065), rgba(255,255,255,.025));
-      backdrop-filter: blur(12px);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      transition: transform .25s ease, border-color .25s ease;
-    }
-
-    .stat-card {
-      padding: 30px 20px;
-      text-align: center;
-    }
-
-    .stat-card:hover,
-    .program-card:hover,
-    .tool-card:hover,
-    .worker-card:hover {
-      transform: translateY(-7px);
-      border-color: rgba(246,121,56,.5);
-    }
-
-    .stat-number {
-      display: block;
-      color: var(--primary);
-      font-size: clamp(30px, 4vw, 42px);
-      font-weight: 850;
-      line-height: 1.2;
-    }
-
-    .stat-label {
-      display: block;
-      margin-top: 9px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* Programs */
-    .program-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 17px;
-    }
-
-    .program-card {
-      min-height: 145px;
-      padding: 24px;
-    }
-
-    .program-icon {
-      display: grid;
-      place-items: center;
-      width: 43px;
-      height: 43px;
-      border-radius: 13px;
-      background: rgba(246,121,56,.13);
-      color: var(--primary-light);
-      font-weight: 850;
-      margin-bottom: 17px;
-    }
-
-    .program-card h3 {
-      font-size: 17px;
-    }
-
-    .program-card p {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* Tools */
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 17px;
-    }
-
-    .tool-card {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 25px;
-      min-height: 190px;
-    }
-
-    .tool-card h3 {
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-
-    .tool-card p {
-      color: var(--muted);
-      font-size: 13px;
-      flex: 1;
-      margin-bottom: 18px;
-    }
-
-    .tool-link {
-      color: var(--primary-light);
-      font-size: 14px;
-      font-weight: 750;
-    }
-
-    .tool-link:hover {
-      text-decoration: underline;
-    }
-
-    /* Worker setup */
-    .worker-card {
-      padding: 30px;
-      overflow: hidden;
-    }
-
-    .worker-card h3 {
-      font-size: 22px;
-      margin-bottom: 10px;
-    }
-
-    .worker-card p {
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
-
-    .commands {
-      overflow-x: auto;
-      padding: 20px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: #090a0c;
-      color: #f5b18d;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 13px;
-      line-height: 2;
-      white-space: pre;
-    }
-
-    /* Contact */
-    .contact-panel {
-      padding: 45px 25px;
-      border: 1px solid rgba(246,121,56,.25);
-      border-radius: 26px;
-      background: linear-gradient(130deg, rgba(246,121,56,.14), rgba(255,255,255,.025));
-      text-align: center;
-    }
-
-    .contact-panel h2 {
-      font-size: clamp(25px, 4vw, 36px);
-    }
-
-    .contact-panel p {
-      max-width: 580px;
-      margin: 12px auto 24px;
-      color: var(--muted);
-    }
+    /* Blogger Post Grid */
+    .program-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+    .program-card { border: 1px solid var(--border); background: linear-gradient(145deg, rgba(255,255,255,.065), rgba(255,255,255,.025)); backdrop-filter: blur(12px); border-radius: var(--radius); box-shadow: var(--shadow); transition: transform .25s ease, border-color .25s ease; padding: 24px; display: flex; flex-direction: column; }
+    .program-card:hover { transform: translateY(-7px); border-color: rgba(246,121,56,.5); }
+    .program-card img { width: 100%; height: auto; border-radius: 10px; margin-bottom: 15px; }
+    .program-card h3 { font-size: 18px; margin-bottom: 8px; line-height: 1.4; }
+    .program-card p { color: var(--muted); font-size: 14px; flex: 1; }
+    .post-meta { font-size: 12px; color: var(--primary-light); margin-top: 15px; }
 
     /* Footer */
-    footer {
-      padding: 45px 0 25px;
-      border-top: 1px solid var(--border);
-      background: rgba(0,0,0,.15);
-    }
+    footer { padding: 45px 0 25px; border-top: 1px solid var(--border); background: rgba(0,0,0,.15); }
+    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 30px; padding-bottom: 30px; }
+    .footer-brand p { margin-top: 10px; max-width: 350px; color: var(--muted); font-size: 13px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 20px; color: var(--muted); font-size: 13px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
 
-    .footer-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 30px;
-      padding-bottom: 30px;
-    }
-
-    .footer-brand p {
-      margin-top: 10px;
-      max-width: 350px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .footer-links a:hover {
-      color: var(--primary-light);
-    }
-
-    .footer-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .admin-link {
-      color: var(--muted);
-      opacity: .7;
-      font-size: 11px;
-    }
-
-    .admin-link:hover {
-      color: var(--primary-light);
-      opacity: 1;
-    }
-
-    /* Reveal animation */
-    .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity .7s ease, transform .7s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important;
-      }
-
-      .reveal {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    @media (max-width: 850px) {
-      .nav-links {
-        gap: 13px;
-      }
-
-      .program-grid,
-      .tools-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 620px) {
-      .container {
-        width: min(100% - 30px, 1160px);
-      }
-
-      .nav-inner {
-        min-height: 66px;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      .nav-cta {
-        padding: 10px 13px;
-        font-size: 12px;
-      }
-
-      .hero {
-        padding: 78px 0 60px;
-      }
-
-      .hero h1 {
-        letter-spacing: -1.5px;
-      }
-
-      .section {
-        padding: 55px 0;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .program-grid,
-      .tools-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-top {
-        flex-direction: column;
-      }
-
-      .footer-bottom {
-        align-items: flex-start;
-        flex-direction: column;
-      }
+    @media (max-width: 850px) { .program-grid { grid-template-columns: repeat(2, 1fr); } .nav-links { gap: 13px; } }
+    @media (max-width: 620px) { 
+      .container { width: min(100% - 30px, 1160px); }
+      .nav-links { display: none; } 
+      .program-grid { grid-template-columns: 1fr; } 
+      .footer-top, .footer-bottom { flex-direction: column; } 
+      .hero h1 { letter-spacing: -1.5px; }
     }
   </style>
 </head>
@@ -555,268 +94,113 @@
   <div class="blob one"></div>
   <div class="blob two"></div>
 
+  <!-- Navbar -->
   <header class="navbar">
     <div class="container nav-inner">
-      <a class="brand" href="index.html" aria-label="AIOU Coaching Home">
+      <a class="brand" href="/">
         <span class="brand-mark">A</span>
         <span>AIOU Coaching</span>
       </a>
-
-      <nav class="nav-links" aria-label="Main navigation">
-        <a href="#programs">Programs</a>
-        <a href="#tools">Tools</a>
-        <a href="#worker">Worker Setup</a>
+      <nav class="nav-links">
+        <a href="#posts-section">Posts</a>
         <a href="https://aioucoaching.blogspot.com/p/tools.html">All Tools</a>
       </nav>
-
-      <a class="nav-cta" href="lms/signin-signup.html">LMS Sign In ↗</a>
+      <a class="nav-cta" href="https://wa.me/923702388998" target="_blank">Contact Us ↗</a>
     </div>
   </header>
 
   <main>
+    <!-- Hero Section -->
     <section class="hero">
       <div class="container">
         <span class="eyebrow">Your Independent Study Companion</span>
-
-        <h1>Learn smarter.<br><span>Build your success.</span></h1>
-
-        <p class="hero-copy">
-          Samjho · Khud likho · Guess paper banao · Cover page lagao · Word file download karo
-        </p>
-
+        <h1>Learn smarter.<br/><span>Build your success.</span></h1>
+        <p class="hero-copy">Samjho · Khud likho · Guess paper banao · Cover page lagao · Word file download karo</p>
         <div class="hero-actions">
-          <a class="btn" href="https://aioucoaching.blogspot.com/p/tools.html">
-            Explore All Tools ↗
-          </a>
-
-          <a class="btn btn-secondary" href="lms/signin-signup.html">
-            LMS Sign In
-          </a>
+          <a class="btn" href="https://aioucoaching.blogspot.com/p/tools.html">Explore All Tools ↗</a>
+          <a class="btn btn-secondary" href="#posts-section">Latest Posts</a>
         </div>
-
-        <p class="hero-note">
-          Independent study help. Not affiliated with AIOU.
-        </p>
+        <p style="margin-top: 27px; color: var(--muted); font-size: 12px;">Independent study help. Not affiliated with AIOU.</p>
       </div>
     </section>
 
-    <section class="section" aria-label="Platform statistics">
+    <!-- Blogger Posts Section -->
+    <section class="section" id="posts-section">
       <div class="container">
-        <div class="stats-grid">
-          <article class="stat-card reveal">
-            <span class="stat-number">50,000+</span>
-            <span class="stat-label">Students</span>
-          </article>
-
-          <article class="stat-card reveal">
-            <span class="stat-number">500+</span>
-            <span class="stat-label">Solved Assignments</span>
-          </article>
-
-          <article class="stat-card reveal">
-            <span class="stat-number">4.9</span>
-            <span class="stat-label">Rating</span>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="programs">
-      <div class="container">
-        <div class="section-heading reveal">
-          <h2>Explore Academic Programs</h2>
-          <p>Study support for different academic levels and programs.</p>
+        <div class="section-heading">
+          <h2>Latest Updates</h2>
+          <p>Check out our latest admissions and study materials.</p>
         </div>
 
         <div class="program-grid">
-          <article class="program-card reveal">
-            <div class="program-icon">BA</div>
-            <h3>BA Programs</h3>
-            <p>Academic study support and resources.</p>
-          </article>
-
-          <article class="program-card reveal">
-            <div class="program-icon">B.Ed</div>
-            <h3>B.Ed Programs</h3>
-            <p>1.5 Year · 2.5 Year · 4 Year</p>
-          </article>
-
-          <article class="program-card reveal">
-            <div class="program-icon">BS</div>
-            <h3>BS Programs</h3>
-            <p>Study support and academic resources.</p>
-          </article>
-
-          <article class="program-card reveal">
-            <div class="program-icon">MA</div>
-            <h3>MA / MSc</h3>
-            <p>Academic learning assistance.</p>
-          </article>
-
-          <article class="program-card reveal">
-            <div class="program-icon">M.Ed</div>
-            <h3>M.Ed Programs</h3>
-            <p>Education program study support.</p>
-          </article>
-
-          <article class="program-card reveal">
-            <div class="program-icon">FA</div>
-            <h3>FA / FSc / Matric</h3>
-            <p>Learning resources for school and college levels.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="tools">
-      <div class="container">
-        <div class="section-heading reveal">
-          <h2>Learning Tools & Resources</h2>
-          <p>Useful tools and services for your academic workflow.</p>
-        </div>
-
-        <div class="tools-grid">
-          <article class="tool-card reveal">
-            <h3>AI Studio</h3>
-            <p>Open the AI Studio workspace.</p>
-            <a class="tool-link" href="tools/studio.html">Open AI Studio ↗</a>
-          </article>
-
-          <article class="tool-card reveal">
-            <h3>All Tools</h3>
-            <p>Explore the complete collection of available tools.</p>
-            <a class="tool-link" href="https://aioucoaching.blogspot.com/p/tools.html">Explore Tools ↗</a>
-          </article>
-
-          <article class="tool-card reveal">
-            <h3>Firebase</h3>
-            <p>Open the Firebase section.</p>
-            <a class="tool-link" href="firebase/index.html">Open Firebase ↗</a>
-          </article>
-
-          <article class="tool-card reveal">
-            <h3>Report Engine</h3>
-            <p>Access the academic report engine.</p>
-            <a class="tool-link" href="tools/aiou-report-engine.html">Open Report Engine ↗</a>
-          </article>
-
-          <article class="tool-card reveal">
-            <h3>Chapter Workspace</h3>
-            <p>Open the academic chapter workspace.</p>
-            <a class="tool-link" href="tools/academic-report-generator.html">Open Workspace ↗</a>
-          </article>
-
-          <article class="tool-card reveal">
-            <h3>LMS Sign In</h3>
-            <p>Access the learning management system.</p>
-            <a class="tool-link" href="lms/signin-signup.html">Open LMS ↗</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="worker">
-      <div class="container">
-        <div class="worker-card reveal">
-          <h3>Worker Setup</h3>
-          <p>Existing setup commands — run these in your worker project directory.</p>
-
-          <pre class="commands">cd worker
-npx wrangler secret put DEEPSEEK_API_KEY
-npx wrangler secret put AUTH_TOKEN
-npx wrangler deploy</pre>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="contact-panel reveal">
-          <h2>Need Study Support?</h2>
-          <p>
-            Contact AIOU Coaching for notes and assignment order inquiries.
-          </p>
-
-          <a
-            class="btn"
-            href="https://wa.me/923702388998?text=Assalam-o-Alaikum!%20AIOU%20notes%2Fassignment%20order%20karna%20hai"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Contact on WhatsApp ↗
-          </a>
+          <b:section class='main' id='main' showaddelement='no'>
+            <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='2'>
+              <b:widget-settings>
+                <b:widget-setting name='showDateHeader'>false</b:widget-setting>
+                <b:widget-setting name='style.textcolor'>#ffffff</b:widget-setting>
+                <b:widget-setting name='showShareButtons'>false</b:widget-setting>
+                <b:widget-setting name='showAuthor'>false</b:widget-setting>
+                <b:widget-setting name='showTimestamp'>true</b:widget-setting>
+                <b:widget-setting name='showCommentLink'>false</b:widget-setting>
+                <b:widget-setting name='showLabels'>false</b:widget-setting>
+                <b:widget-setting name='showBacklinks'>false</b:widget-setting>
+                <b:widget-setting name='showLocation'>false</b:widget-setting>
+              </b:widget-settings>
+              <b:includable id='main' var='top'>
+                <b:loop values='data:posts' var='post'>
+                  <article class="program-card">
+                    <b:if cond='data:post.featuredImage'>
+                      <a expr:href='data:post.url'>
+                        <img expr:src='resizeImage(data:post.featuredImage, 400, "16:9")' alt='Post Image'/>
+                      </a>
+                    </b:if>
+                    <h3><a expr:href='data:post.url'><data:post.title/></a></h3>
+                    <p><data:post.snippet/></p>
+                    <div class="post-meta">
+                      <data:post.author.name/> · <data:post.timestamp/>
+                    </div>
+                  </article>
+                </b:loop>
+                
+                <!-- Pagination -->
+                <div style="grid-column: 1 / -1; text-align: center; margin-top: 30px;">
+                  <b:if cond='data:olderPageUrl'>
+                    <a class='btn' expr:href='data:olderPageUrl'>Older Posts</a>
+                  </b:if>
+                  <b:if cond='data:newerPageUrl'>
+                    <a class='btn btn-secondary' expr:href='data:newerPageUrl'>Newer Posts</a>
+                  </b:if>
+                </div>
+              </b:includable>
+            </b:widget>
+          </b:section>
         </div>
       </div>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer>
     <div class="container">
       <div class="footer-top">
         <div class="footer-brand">
-          <a class="brand" href="index.html">
+          <a class="brand" href="/">
             <span class="brand-mark">A</span>
             <span>AIOU Coaching</span>
           </a>
-
-          <p>
-            Independent study help. Not affiliated with AIOU.
-          </p>
+          <p>Independent study help. Not affiliated with AIOU.</p>
         </div>
-
-        <nav class="footer-links" aria-label="Footer links">
-          <a href="https://aioucoaching.blogspot.com/p/privacy-policy.html">Privacy</a>
-          <a href="https://aioucoaching.blogspot.com/p/terms-and-conditions.html">Terms</a>
-          <a href="https://aioucoaching.blogspot.com/p/disclaimer.html">Disclaimer</a>
-          <a href="https://aioucoaching.blogspot.com/p/contact.html">Contact</a>
+        <nav class="footer-links">
+          <a href="/p/privacy-policy.html">Privacy</a>
+          <a href="/p/terms-and-conditions.html">Terms</a>
+          <a href="/p/contact.html">Contact</a>
         </nav>
       </div>
-
       <div class="footer-bottom">
-        <span>© <span id="current-year"></span> AIOU Coaching. All rights reserved.</span>
-        <a class="admin-link" href="lms/signin-signup.html">Admin Login</a>
+        <span>© <script>document.write(new Date().getFullYear())</script> AIOU Coaching. All rights reserved.</span>
       </div>
     </div>
   </footer>
 
-  <script src="js/ui.js"></script>
-  <script src="js/tools.js"></script>
-  <script src="js/hub.js"></script>
-  <script src="js/pwa.js"></script>
-
-  <script>
-    // Existing AIOU hub reference
-    // http://AIOU.hub.render
-
-    document.getElementById('current-year').textContent =
-      new Date().getFullYear();
-
-    // Scroll reveal animation
-    (function () {
-      const elements = document.querySelectorAll('.reveal');
-
-      if (!('IntersectionObserver' in window)) {
-        elements.forEach(function (element) {
-          element.classList.add('visible');
-        });
-        return;
-      }
-
-      const observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.12
-      });
-
-      elements.forEach(function (element) {
-        observer.observe(element);
-      });
-    })();
-  </script>
 </body>
 </html>
