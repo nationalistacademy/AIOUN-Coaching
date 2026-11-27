@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#292b30">
+<meta name="description" content="AIOU Coaching Student Portal">
+<title>AIOU Coaching — Student Portal</title>
+</head>
+<body>
+<!-- AIOU COACHING STUDENT PORTAL — Blogger Page > HTML view mein paste karein
+     DRAFT — NOT APPROVED FOR PUBLISHING. Pehle ek temporary Blogger Page par test karein.
+     Changes vs previous version: emoji -> inline SVG icons, restrained motion (reduced-motion safe),
+     skeleton loading, focus-visible, Esc closes drawer, brand mark, pinned Supabase script version.
+     Portal logic / Supabase calls / RPC names are unchanged. -->
+<style>
+/* Standalone Vercel portal layout. */
+#ap{--ac:var(--jt-primary,#f67938);--ac2:var(--jt-primary,#d9601f);--ink:var(--jt-heading-color,#1f2328);--mut:var(--jt-text-color,#6b7280);--bg:var(--glass-bg-soft,var(--jt-bg-light,#f3f4f6));--side:var(--jt-header-bg,#292b30);--top:var(--jt-header-bg,#1f2023);--line:var(--glass-border,var(--jt-border-light,#e5e7eb));position:relative;display:block;width:100%;max-width:none;min-height:65vh;height:auto;max-height:none;z-index:1;overflow:visible;background:transparent;color:var(--ink);font:15px/1.55 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;text-align:left;direction:ltr}
+#ap [hidden]{display:none!important}
+/* Match JetTheme shell: keep Blogger header/footer, expand this page, remove its sidebar/comments only. */
+#ap #ap-app{width:100%;min-height:65vh;display:flex;flex-direction:column}
+#ap .top{position:relative;top:auto;flex:0 0 56px;border-bottom:2px solid var(--ac)}
+#ap .wrap{display:flex;min-height:65vh;height:auto;overflow:visible}
+#ap .side{width:240px;align-self:stretch;min-height:100%;overflow:visible;flex-shrink:0}
+#ap .main{flex:1;min-width:0;width:100%;max-width:none;height:auto;min-height:65vh;overflow:visible;padding:22px}
+#ap .foot{display:none}
+#ap .lg{min-height:65vh;height:auto;overflow:visible;align-items:center;padding:28px 12px}
+#ap .lg .card{margin:auto}
+#ap .card{background:var(--glass-bg-strong,var(--bs-body-bg,#fff));border-color:var(--line)}
+#ap .kv{background:var(--glass-bg-soft,var(--bg))}
+#ap .top,#ap .side{color:var(--jt-header-color,#f3f4f6)}
+#ap .side{background:var(--jt-header-bg,#292b30)}
+#ap .btn{background:var(--jt-primary,#f67938)}
+#ap .btn:hover{background:var(--jt-primary-hover,#d9601f)}
+#ap .btn.blue{background:#1769aa!important;color:#fff!important;border-color:#1769aa!important}
+#ap .sc .h{background:linear-gradient(135deg,var(--jt-header-bg,#1f2023),var(--side))}
+@media(max-width:860px){
+ #ap .wrap{display:block;min-height:0}
+ #ap .side{position:fixed;top:56px;bottom:0;left:0;z-index:1040;height:auto;overflow-y:auto;transform:translateX(-105%)}
+ #ap .side.on{transform:none}
+ #ap .main{min-height:50vh;padding:14px}
+}
+#ap[data-t="gray"]{--ac:#6b7280;--ac2:#4b5563}#ap[data-t="green"]{--ac:#3a7d5c;--ac2:#2c6048}#ap[data-t="brown"]{--ac:#8b5a3c;--ac2:#6e452d}#ap[data-t="cyan"]{--ac:#0891b2;--ac2:#0e7490}#ap[data-t="blue"]{--ac:#c9a227;--ac2:#a8851a;--side:#16254f;--top:#0f1b3d}
+#ap *,#ap *:before,#ap *:after{box-sizing:border-box}
+#ap a{color:var(--ac2)}#ap h1,#ap h2,#ap h3{margin:0;color:inherit}
+#ap .top{position:sticky;top:0;z-index:30;height:56px;background:var(--top);color:#fff;display:flex;align-items:center;gap:12px;padding:0 14px}
+#ap .top b{font-size:17px;letter-spacing:.04em}#ap .top b i{color:var(--ac);font-style:normal}
+#ap .sp{flex:1}#ap .ib{background:transparent;border:0;color:#fff;font-size:20px;cursor:pointer;padding:6px 8px;border-radius:8px}#ap .ib:hover{background:rgba(255,255,255,.12)}
+#ap .who{font-size:13px;opacity:.9;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#ap .wrap{display:flex;min-height:calc(100vh - 56px - 0px)}
+#ap .side{width:240px;background:var(--side);color:#e5e7eb;padding:12px 0;flex-shrink:0}
+#ap .side button{display:flex;width:100%;gap:10px;align-items:center;background:none;border:0;border-left:3px solid transparent;color:inherit;font:600 14px inherit;font-family:inherit;padding:11px 18px;cursor:pointer;text-align:left}
+#ap .side button:hover{background:rgba(255,255,255,.07)}#ap .side button.on{background:rgba(255,255,255,.1);border-left-color:var(--ac);color:#fff}
+#ap .side hr{border:0;border-top:1px solid rgba(255,255,255,.12);margin:8px 14px}
+#ap .main{flex:1;min-width:0;padding:22px;max-width:1100px}
+#ap .card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.05);padding:18px;margin:0 0 16px}
+#ap .pt{font-size:22px;font-weight:800;margin:0 0 16px}#ap h3{font-size:16px;margin-bottom:10px}
+#ap .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+#ap .kv{background:var(--bg);border-radius:10px;padding:10px 12px}#ap .kv small{display:block;color:var(--mut);font-size:12px}#ap .kv b{word-break:break-word}
+#ap label{display:block;font-size:13px;font-weight:700;margin:0 0 4px}
+#ap input,#ap select,#ap textarea{width:100%;padding:9px 11px;border:1px solid #d1d5db;border-radius:10px;font:inherit;background:#fff;color:inherit}
+#ap input[readonly]{background:#f3f4f6}#ap input:focus,#ap select:focus,#ap textarea:focus{outline:2px solid var(--ac);border-color:var(--ac)}
+#ap .btn{display:inline-flex;align-items:center;gap:6px;background:var(--ac);color:#fff;border:0;border-radius:10px;padding:9px 18px;font:700 14px inherit;font-family:inherit;cursor:pointer}
+#ap .btn:hover{background:var(--ac2)}#ap .btn:disabled{opacity:.6;cursor:wait}#ap .btn.g{background:#fff;color:var(--ink);border:1px solid #d1d5db}#ap .btn.d{background:#dc2626}
+#ap .msg{margin-top:10px;font-size:13.5px;padding:8px 12px;border-radius:10px}#ap .msg.e{background:#fee2e2;color:#991b1b}#ap .msg.o{background:#dcfce7;color:#166534}#ap .msg.i{background:#e0f2fe;color:#075985}
+#ap .bar{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:8px}#ap .bar i{display:block;height:100%;background:var(--ac)}
+#ap .empty{text-align:center;padding:28px 14px;border:2px dashed #d1d5db;border-radius:14px;color:var(--mut)}
+#ap .badge{display:inline-block;padding:2px 12px;border-radius:99px;font-weight:800;font-size:12px;color:#fff;background:#6b7280}#ap .badge.odl{background:#2563eb}#ap .badge.f2f{background:#c9a227}
+#ap .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:end}#ap .row>*{flex:1;min-width:150px}#ap .row>.btn{flex:0 0 auto;min-width:0}
+#ap .task{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}#ap .task input{width:auto}#ap .task span{flex:1}#ap .task.dn span{text-decoration:line-through;opacity:.6}
+#ap .foot{background:var(--top);color:#cbd5e1;padding:18px 22px;font-size:13px;text-align:center}#ap .foot b{color:#fff}
+/* login */
+#ap .lg{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,var(--top),var(--side))}
+#ap .lg .card{width:100%;max-width:400px;padding:26px}#ap .lg h1{font-size:24px;text-align:center}#ap .lg p{text-align:center;color:var(--mut);margin:4px 0 18px}#ap .lg .fld{margin-bottom:12px}
+/* drawer */
+#ap .dr{position:fixed;top:0;right:0;bottom:0;width:350px;max-width:100%;background:#fff;z-index:60;transform:translateX(105%);transition:transform .25s;box-shadow:-8px 0 30px rgba(0,0,0,.25);overflow:auto;padding:18px}
+#ap .dr.on{transform:none}#ap .ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:none}#ap .ov.on{display:block}
+#ap .th{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}#ap .th button{border:2px solid var(--line);background:#fff;border-radius:10px;padding:8px 4px;font:600 12px inherit;font-family:inherit;cursor:pointer}#ap .th button.on{border-color:var(--ac)}#ap .th i{display:block;height:18px;border-radius:6px;margin-bottom:5px}
+/* card */
+#ap .sc{max-width:430px;border-radius:18px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+#ap .sc .h{background:linear-gradient(135deg,var(--top),var(--side));color:#fff;padding:14px 18px}#ap .sc .h b{letter-spacing:.06em}#ap .sc .h small{display:block;opacity:.8;font-family:"Noto Nastaliq Urdu",serif}
+#ap .sc .bd{display:flex;gap:14px;padding:16px 18px}#ap .sc .ph{width:96px;height:116px;border-radius:12px;background:#e5e7eb;object-fit:cover;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:12px;text-align:center}
+#ap .sc .ft{background:var(--bg);font-size:12px;color:var(--mut);padding:9px 18px}
+#ap .menu{display:none}
+@media(max-width:860px){#ap .menu{display:inline-block}#ap .side{position:fixed;top:56px;bottom:0;left:0;z-index:40;transform:translateX(-105%);transition:transform .25s}#ap .side.on{transform:none}#ap .dr{width:100%}#ap .main{padding:14px}}
+@media print{body *{visibility:hidden!important}#ap .sc,#ap .sc *{visibility:visible!important}#ap .sc{position:fixed;left:20px;top:20px;box-shadow:none}}
+
+/* FINAL OVERRIDES — placed last to win over portal component defaults */
+#ap{position:relative!important;inset:auto!important;width:100%!important;max-width:none!important;height:auto!important;min-height:65vh!important;max-height:none!important;overflow:visible!important;z-index:1!important;background:transparent!important}
+#ap #ap-app{width:100%!important;height:auto!important;min-height:65vh!important;display:flex!important;flex-direction:column!important}
+#ap .top{position:relative!important;top:auto!important;flex:0 0 56px!important;border-bottom:2px solid var(--ac)!important;background:var(--jt-header-bg,#1f2023)!important}
+#ap .wrap{display:flex!important;min-height:65vh!important;height:auto!important;overflow:visible!important}
+#ap .side{position:relative;width:240px;align-self:stretch;height:auto!important;min-height:100%;overflow:visible!important;background:var(--jt-header-bg,#292b30)!important}
+#ap .main{flex:1;min-width:0;width:100%!important;max-width:none!important;height:auto!important;min-height:65vh!important;overflow:visible!important;padding:22px}
+#ap .foot{display:none!important}
+#ap .lg{height:auto!important;min-height:65vh!important;overflow:visible!important;align-items:center!important;padding:28px 12px}
+#ap .card{background:var(--glass-bg-strong,var(--bs-body-bg,#fff))!important;border-color:var(--glass-border,var(--jt-border-light,#e5e7eb))!important}
+#ap .kv{background:var(--glass-bg-soft,var(--jt-bg-light,#f3f4f6))!important}
+#ap .btn{background:var(--jt-primary,#f67938)!important}
+#ap .btn:hover{background:var(--jt-primary-hover,#d9601f)!important}
+#ap .sc .h{background:linear-gradient(135deg,var(--jt-header-bg,#1f2023),var(--side))!important}
+@media(max-width:860px){
+ #ap .wrap{display:block!important;min-height:0!important}
+ #ap .side{position:fixed!important;top:56px!important;bottom:0!important;left:0!important;z-index:1040!important;height:auto!important;overflow-y:auto!important;transform:translateX(-105%)}
+ #ap .side.on{transform:none}
+ #ap .main{min-height:50vh!important;padding:14px!important}
+}
+
+/* ===== ICONS, MOTION, A11Y (added) — everything scoped under #ap ===== */
+#ap .ic{width:1.15em;height:1.15em;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em}
+#ap .ib .ic{width:22px;height:22px}
+#ap .side button .ic{width:19px;height:19px;opacity:.85;transition:transform .2s ease,opacity .2s ease}
+#ap .side button:hover .ic,#ap .side button.on .ic{opacity:1;transform:translateX(2px)}
+#ap .side button{transition:background .2s ease,border-color .2s ease}
+#ap .btn .ic{width:17px;height:17px}
+#ap .btn{transition:background .2s ease,transform .12s ease}
+#ap .btn:active:not(:disabled){transform:translateY(1px)}
+#ap .ib{display:inline-flex;align-items:center;justify-content:center}
+#ap .mk{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9px;background:var(--ac);color:#fff;flex:0 0 auto}
+#ap .mk .ic{width:19px;height:19px}
+#ap .top .brand{display:inline-flex;align-items:center;gap:10px}
+#ap .lg .mk{width:48px;height:48px;border-radius:14px;margin:0 auto 10px;display:flex}
+#ap .lg .mk .ic{width:28px;height:28px}
+#ap .th button,#ap .btn,#ap .side button,#ap .ib{-webkit-tap-highlight-color:transparent}
+#ap button:focus-visible,#ap a:focus-visible,#ap input:focus-visible,#ap select:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+#ap input,#ap select,#ap textarea{background:var(--glass-bg-strong,#fff)}
+#ap input[readonly]{background:var(--glass-bg-soft,#f3f4f6)}
+
+/* One entrance moment: each new view settles in, in a short stagger. */
+@keyframes ap-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes ap-pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+@keyframes ap-fill{from{width:0}}
+@keyframes ap-sheen{from{transform:translateX(-120%)}to{transform:translateX(220%)}}
+@keyframes ap-sk{from{background-position:200% 0}to{background-position:-200% 0}}
+@keyframes ap-spin{to{transform:rotate(360deg)}}
+#ap .main>*{animation:ap-in .38s cubic-bezier(.2,.7,.2,1) both}
+#ap .main>*:nth-child(2){animation-delay:.05s}
+#ap .main>*:nth-child(3){animation-delay:.1s}
+#ap .main>*:nth-child(4){animation-delay:.15s}
+#ap .main>*:nth-child(5){animation-delay:.2s}
+#ap .main>*:nth-child(n+6){animation-delay:.25s}
+#ap .lg .card{animation:ap-pop .35s cubic-bezier(.2,.7,.2,1) both}
+#ap .bar i{animation:ap-fill .8s .15s cubic-bezier(.2,.7,.2,1) both}
+#ap .msg{animation:ap-in .25s ease both}
+#ap .sc{position:relative}
+#ap .sc:after{content:"";position:absolute;top:0;bottom:0;left:0;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);pointer-events:none;animation:ap-sheen 1.1s .45s ease-out both}
+#ap .sk{display:grid;gap:12px}
+#ap .sk i{display:block;height:48px;border-radius:10px;background:linear-gradient(90deg,rgba(128,128,128,.12) 25%,rgba(128,128,128,.24) 50%,rgba(128,128,128,.12) 75%);background-size:200% 100%;animation:ap-sk 1.4s linear infinite}
+#ap .sk i:first-child{width:45%;height:20px}
+#ap .spin{display:inline-block;width:22px;height:22px;border:3px solid rgba(128,128,128,.3);border-top-color:var(--ac);border-radius:50%;animation:ap-spin .8s linear infinite;vertical-align:middle;margin-inline-end:8px}
+@media (prefers-reduced-motion:reduce){
+ #ap *,#ap *:before,#ap *:after{animation:none!important;transition:none!important}
+ #ap .dr,#ap .side{transition:none!important}
+}
+
+/* Standalone document shell — scoped portal layout */
+html,body{margin:0!important;min-height:100%;background:#f3f4f6}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+#ap{min-height:100vh!important;height:100vh!important;overflow:hidden!important;background:var(--bg)!important}
+#ap #ap-app{min-height:100vh!important;height:100vh!important}
+#ap .wrap{flex:1;min-height:calc(100vh - 56px)!important;height:calc(100vh - 56px)!important;overflow:hidden!important}
+#ap .side{min-height:100%!important;height:100%;overflow-y:auto!important}
+#ap .main{height:100%;min-height:0!important;overflow-y:auto!important}
+#ap .lg{min-height:100vh!important;height:100vh!important}
+@media(max-width:760px){#ap .wrap{min-height:calc(100vh - 56px)!important;height:calc(100vh - 56px)!important}#ap .side{height:100%!important}}
+</style>
+
+<div id="ap" data-t="orange">
+  <div id="ap-login" class="lg" hidden></div>
+  <div id="ap-app" hidden>
+    <div class="top">
+      <button class="ib menu" id="ap-menu" type="button" aria-label="Menu"></button>
+      <span class="brand"><span class="mk" id="ap-mk"></span><b>AIOU <i>COACHING</i></b></span><span class="sp"></span><span class="who" id="ap-who"></span>
+      <button class="ib" id="ap-gear" type="button" aria-label="Settings"></button>
+      <button class="ib" id="ap-out" type="button" aria-label="Logout"></button>
+    </div>
+    <div class="wrap"><nav class="side" id="ap-side" aria-label="Portal"></nav><main class="main" id="ap-main"></main></div>
+    <div class="ov" id="ap-ov"></div><aside class="dr" id="ap-dr" aria-label="Settings"></aside>
+  </div>
+  <div id="ap-boot" style="padding:40px;text-align:center"><span class="spin" aria-hidden="true"></span>Loading&hellip;</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+//<![CDATA[
+(function () {
+  var URL_ = 'https://tjfqkawhojobdartjoki.supabase.co', KEY = 'sb_publishable_s2aZXakyUj-S-5hVZA4djQ_IZpFClWZ';
+  var D = document, root = D.getElementById('ap'), sb = null, U = null, P = null, ST = null, page = 'dash';
+  var NAV = [['dash', 'Dashboard', 'home'], ['profile', 'My Profile', 'user'], ['courses', 'My Courses', 'book'], ['card', 'My Student Card', 'idcard'], ['act', 'My Activities', 'check'], ['chat', 'Chat', 'chat'], ['notif', 'Notifications', 'bell'], ['set', 'Settings', 'gear']];
+  var ADM = [['admin', 'Admin Dashboard', 'shield'], ['search', 'Student Search', 'search']];
+  var THEMES = [['orange', 'Orangutan Orange', '#f67938'], ['gray', 'Colorate Gray', '#6b7280'], ['green', 'Patina Green', '#3a7d5c'], ['brown', 'Brown Boots', '#8b5a3c'], ['cyan', 'Cyan Blue', '#0891b2'], ['blue', 'AIOU Blue', '#1e3a8a']];
+
+  /* ---------- icons (Lucide-style, inline SVG; constant strings only, never user content) ---------- */
+  var NS = 'http://www.w3.org/2000/svg';
+  var ICONS = {
+    home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+    user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    book: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+    idcard: '<path d="M16 10h2"/><path d="M16 14h2"/><path d="M6.17 15a3 3 0 0 1 5.66 0"/><circle cx="9" cy="11" r="2"/><rect x="2" y="5" width="20" height="14" rx="2"/>',
+    check: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+    chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+    gear: '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+    shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+    search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+    menu: '<line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>',
+    power: '<path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.77.04"/>',
+    x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+    printer: '<path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/>',
+    plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+    save: '<path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/>',
+    wa: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+    cap: '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>'
+  };
+  function ic(n) {
+    var s = D.createElementNS(NS, 'svg');
+    s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('class', 'ic'); s.setAttribute('aria-hidden', 'true'); s.setAttribute('focusable', 'false');
+    s.innerHTML = ICONS[n] || ''; return s;
+  }
+  function mark() { var m = D.createElement('span'); m.className = 'mk'; m.appendChild(ic('cap')); return m; }
+
+  function $(id) { return D.getElementById(id); }
+  function h(t, c, x) { var e = D.createElement(t); if (c) { e.className = c; } if (x !== undefined && x !== null) { e.textContent = x; } return e; }
+  function ls(k, v) { try { if (v === undefined) { return localStorage.getItem(k); } localStorage.setItem(k, v); } catch (e) {} return null; }
+  function msg(p, t, c) { var o = p.querySelector('.msg'); if (o) { o.remove(); } var m = h('div', 'msg ' + (c || 'i'), t); m.setAttribute('role', (c === 'e') ? 'alert' : 'status'); p.appendChild(m); return m; }
+  function kv(l, v) { var d = h('div', 'kv'); d.appendChild(h('small', '', l)); d.appendChild(h('b', '', (v === null || v === undefined || v === '') ? '\u2014' : v)); return d; }
+  function field(l, v, ro, type) { var w = h('div'), i = h('input'); w.appendChild(h('label', '', l)); i.type = type || 'text'; i.value = v || ''; if (ro) { i.readOnly = true; } w.appendChild(i); return { w: w, i: i }; }
+  /* btn(text, extraClass, onClick, iconName) — icon is optional and prepended */
+  function btn(t, c, f, icon) {
+    var b = h('button', 'btn ' + (c || '')); b.type = 'button';
+    if (icon) { b.appendChild(ic(icon)); }
+    if (t) { b.appendChild(D.createTextNode(t)); }
+    if (f) { b.addEventListener('click', f); } return b;
+  }
+  function skeleton() { var s = h('div', 'sk'); s.setAttribute('aria-busy', 'true'); s.setAttribute('aria-label', 'Loading'); s.appendChild(h('i')); s.appendChild(h('i')); s.appendChild(h('i')); return s; }
+
+  /* ---------- theme ---------- */
+  var THEME_DB = { orange: 'Orangutan Orange', gray: 'Colorate Gray', green: 'Patina Green', brown: 'Brown Boots', cyan: 'Cyan Blue', blue: 'AIOU Blue' };
+  function setTheme(t, persist) {
+    root.setAttribute('data-t', t); ls('ap_theme', t);
+    if (persist && sb && U && THEME_DB[t]) {
+      sb.from('profiles').update({ theme: THEME_DB[t], updated_at: new Date().toISOString() }).eq('id', U.id)
+        .then(function (r) { if (!r.error && P) P.theme = THEME_DB[t]; });
+    }
+  }
+  setTheme(ls('ap_theme') || 'orange');
+
+  /* ---------- registration API ---------- */
+  function registrationRequest(action, payload, authenticated) {
+    return (authenticated ? sb.auth.getSession() : Promise.resolve({ data: { session: null } })).then(function (sessionResult) {
+      var session = sessionResult && sessionResult.data && sessionResult.data.session;
+      if (authenticated && !session) { throw new Error('session'); }
+      var headers = { 'Content-Type': 'application/json', apikey: KEY };
+      if (session && session.access_token) { headers.Authorization = 'Bearer ' + session.access_token; }
+      return fetch(URL_ + '/functions/v1/student-registration', {
+        method: 'POST', headers: headers,
+        body: JSON.stringify(Object.assign({ action: action }, payload || {}))
+      }).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (data) {
+          if (!r.ok) { throw new Error(data.error || 'Request complete nahi ho saki.'); }
+          return data;
+        });
+      });
+    });
+  }
+
+  /* ---------- login ---------- */
+  function showLogin(note) {
+    $('ap-boot').hidden = true; $('ap-app').hidden = true; var L = $('ap-login'); L.hidden = false; L.innerHTML = '';
+    var c = h('div', 'card'); c.appendChild(mark()); c.appendChild(h('h1', '', 'AIOU COACHING')); c.appendChild(h('p', '', 'Student Portal Login'));
+    var a = field('Email ya Roll Number', '', false), b = field('Password', '', false, 'password'); a.i.autocomplete = 'username'; b.i.autocomplete = 'current-password';
+    a.w.className = b.w.className = 'fld'; c.appendChild(a.w); c.appendChild(b.w);
+    var go = btn('Login', '', null); go.style.width = '100%'; go.style.justifyContent = 'center'; c.appendChild(go);
+    var regBox = h('div', 'card'); regBox.hidden = true; regBox.style.marginTop = '14px';
+    var regToggle = btn('Create Student Account', 'g', function () { regBox.hidden = !regBox.hidden; });
+    regToggle.style.width = '100%'; regToggle.style.justifyContent = 'center'; regToggle.style.marginTop = '10px'; c.appendChild(regToggle);
+    regBox.appendChild(h('h3', '', 'Student Registration'));
+    regBox.appendChild(h('p', '', 'Admin se mila hua single-use Registration Code, apna email aur password enter karein. Email verify hone ke baad account ko student record se link kiya jayega.'));
+    var rc = field('Registration Code', '', false), re = field('Email Address', '', false, 'email'), rp = field('Create Password (minimum 8 characters)', '', false, 'password'), rn = field('Full Name (optional)', '', false);
+    rc.i.autocomplete = 'off'; re.i.autocomplete = 'email'; rp.i.autocomplete = 'new-password';
+    [rc,re,rp,rn].forEach(function (f) { f.w.className = 'fld'; regBox.appendChild(f.w); });
+    var register = btn('Verify Code & Create Account', '', function () {
+      var code = rc.i.value.trim(), email = re.i.value.trim().toLowerCase(), password = rp.i.value;
+      if (!code || !email || password.length < 8) { msg(regBox, 'Registration Code, valid email aur kam az kam 8-character password zaroori hain.', 'e'); return; }
+      register.disabled = true;
+      registrationRequest('validate', { code: code }).then(function () {
+        return sb.auth.signUp({
+          email: email, password: password,
+          options: { data: { full_name: rn.i.value.trim() }, emailRedirectTo: window.location.href }
+        });
+      }).then(function (res) {
+        if (res.error) { throw res.error; }
+        rp.i.value = '';
+        msg(regBox, 'Account request ban gayi. Apni email inbox mein verification link kholein. Verification ke baad portal mein login karke Dashboard par Registration Code dobara enter karein taake student record link ho.', 'o');
+      }).catch(function (e) {
+        msg(regBox, e && e.message ? e.message : 'Registration complete nahi hui. Details check karein.', 'e');
+      }).finally(function () { register.disabled = false; });
+    });
+    register.style.width = '100%'; register.style.justifyContent = 'center'; regBox.appendChild(register);
+    c.appendChild(regBox);
+    if (note) { msg(c, note, 'e'); }
+    function run(e) {
+      if (e) { e.preventDefault(); }
+      var id = a.i.value.trim(), pw = b.i.value; if (!id || !pw) { msg(c, 'Email/Roll Number aur password likhein.', 'e'); return; }
+      go.disabled = true; go.textContent = 'Login ho raha hai\u2026';
+      fetch(URL_ + '/functions/v1/student-login', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ identifier: id, password: pw }) })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }, function () { return { ok: false, d: {} }; }); })
+        .then(function (r) {
+          var d = r.d || {}, s = d.session || (d.data && d.data.session) || d;
+          if (!r.ok || !s.access_token || !s.refresh_token) { throw new Error('login'); }
+          return sb.auth.setSession({ access_token: s.access_token, refresh_token: s.refresh_token });
+        })
+        .then(function (res) { if (res.error || !res.data.session) { throw new Error('session'); } b.i.value = ''; boot(res.data.session.user); })
+        .catch(function () { go.disabled = false; go.textContent = 'Login'; msg(c, 'Login nahi ho saka. Apni details check karein aur dobara koshish karein.', 'e'); });
+    }
+    go.addEventListener('click', run); b.i.addEventListener('keydown', function (e) { if (e.key === 'Enter') { run(e); } });
+    L.appendChild(c);
+  }
+
+  /* ---------- boot ---------- */
+  function boot(user) {
+    U = user; P = null; ST = null;
+    var pr = sb.from('profiles').select('*').eq('id', U.id).maybeSingle().then(function (r) { P = r.data || null; }, function () {});
+    var st = sb.from('students').select('*').eq('auth_user_id', U.id).maybeSingle().then(function (r) { ST = r.data || null; }, function () {});
+    Promise.all([pr, st]).then(function () {
+      $('ap-boot').hidden = true; $('ap-login').hidden = true; $('ap-app').hidden = false; root.scrollTop = 0;
+      $('ap-who').textContent = (P && P.full_name) || (ST && ST.full_name) || U.email || '';
+      if (P && P.theme) {
+        for (var ti = 0; ti < THEMES.length; ti++) { if (THEMES[ti][1] === P.theme) { setTheme(THEMES[ti][0], false); break; } }
+      }
+      buildNav(); go('dash');
+    });
+  }
+  function isAdmin() { return !!(P && P.role === 'admin'); }
+  function buildNav() {
+    var n = $('ap-side'); n.innerHTML = '';
+    function add(it) {
+      var b = h('button'); b.type = 'button'; b.setAttribute('data-p', it[0]);
+      b.appendChild(ic(it[2])); b.appendChild(h('span', '', it[1]));
+      b.addEventListener('click', function () { if (it[0] === 'set') { drawer(true); } else { go(it[0]); } $('ap-side').classList.remove('on'); }); n.appendChild(b);
+    }
+    NAV.forEach(add); if (isAdmin()) { n.appendChild(h('hr')); ADM.forEach(add); }
+  }
+  function go(p) {
+    page = p; var bs = $('ap-side').querySelectorAll('button');
+    for (var i = 0; i < bs.length; i++) { var on = bs[i].getAttribute('data-p') === p; bs[i].classList.toggle('on', on); if (on) { bs[i].setAttribute('aria-current', 'page'); } else { bs[i].removeAttribute('aria-current'); } }
+    var m = $('ap-main'); m.scrollTop = 0; m.innerHTML = '';
+    var V = { dash: vDash, profile: vProfile, courses: vCourses, card: vCard, act: vAct, chat: vChat, notif: vNotif, admin: vAdmin, search: vSearch }[p]; if (V) { V(m); }
+  }
+  function title(m, t) { m.appendChild(h('h2', 'pt', t)); }
+  function noStudent(m) { var e = h('div', 'empty', 'Aap ke account se abhi koi student record link nahi hai. Admin se rabta karein.'); m.appendChild(e); }
+
+  /* ---------- views ---------- */
+  var PF = ['full_name', 'email', 'phone_number', 'postal_address', 'guardian_name', 'guardian_phone', 'guardian_relation', 'nic_number'];
+  function complete() { if (!P) { return 0; } var n = 0; PF.forEach(function (k) { if (P[k] && String(P[k]).trim()) { n++; } }); return Math.round(n * 100 / PF.length); }
+  function tasks() { try { return JSON.parse(ls('ap_tasks_' + U.id) || '[]'); } catch (e) { return []; } }
+  function vDash(m) {
+    var nm = (P && P.full_name) || (ST && ST.full_name) || 'Student';
+    title(m, 'Welcome, ' + nm); var c = h('div', 'card'), g = h('div', 'grid');
+    g.appendChild(kv('Roll Number', (ST && ST.roll_no) || (P && P.student_id))); g.appendChild(kv('Course / Programme', (ST && ST.course) || (P && P.programme)));
+    g.appendChild(kv('Batch', ST && ST.batch)); g.appendChild(kv('Student Mode', ST && ST.student_mode)); g.appendChild(kv('Card Status', ST && ST.card_status)); c.appendChild(g);
+    if (!ST) {
+      msg(c, 'Aap ka portal account bana hua hai lekin student record abhi link nahi hua.', 'i');
+      var linkCard = h('div', 'card'); linkCard.appendChild(h('h3', '', 'Link AIOU Student Record'));
+      linkCard.appendChild(h('p', '', 'Admin se mila hua Registration Code enter karein. Yeh code ek martaba use hota hai aur verified email account ke sath link hota hai.'));
+      var codeField = field('Registration Code', '', false); codeField.i.autocomplete = 'off'; linkCard.appendChild(codeField.w);
+      linkCard.appendChild(btn('Verify & Link Student Record', '', function () {
+        var code = codeField.i.value.trim(); if (!code) { msg(linkCard, 'Registration Code enter karein.', 'e'); return; }
+        var linkBtn = linkCard.querySelector('button'); linkBtn.disabled = true;
+        registrationRequest('link', { code: code }, true).then(function () {
+          return sb.from('students').select('*').eq('auth_user_id', U.id).maybeSingle();
+        }).then(function (r) {
+          linkBtn.disabled = false;
+          if (r.error || !r.data) { msg(linkCard, 'Link request hui lekin student record refresh nahi ho saka. Refresh karke dobara check karein.', 'e'); return; }
+          ST = r.data; msg(linkCard, 'Student record successfully link ho gaya.', 'o'); buildNav(); go('dash');
+        }).catch(function (e) {
+          linkBtn.disabled = false; msg(linkCard, e && e.message ? e.message : 'Code verify/link nahi ho saka.', 'e');
+        });
+      }, 'link'));
+      m.appendChild(linkCard);
+    }
+    m.appendChild(c);
+    var pc = complete(), c2 = h('div', 'card'); c2.appendChild(h('h3', '', 'Profile completion: ' + pc + '%')); var b = h('div', 'bar'), i = h('i'); i.style.width = pc + '%'; b.appendChild(i); c2.appendChild(b);
+    if (pc < 100) { c2.appendChild(h('p', '', 'My Profile mein baqi details bharein.')); } m.appendChild(c2);
+    var c3 = h('div', 'card'); c3.appendChild(h('h3', '', 'Notice Board')); c3.appendChild(h('div', 'empty', 'Abhi koi notice available nahi hai.')); m.appendChild(c3);
+    var t = tasks(), c4 = h('div', 'card'); c4.appendChild(h('h3', '', 'Activities (is device par)'));
+    var g4 = h('div', 'grid'); g4.appendChild(kv('Total tasks', t.length)); g4.appendChild(kv('Completed', t.filter(function (x) { return x.d; }).length)); g4.appendChild(kv('Pending', t.filter(function (x) { return !x.d; }).length)); c4.appendChild(g4); m.appendChild(c4);
+    var c5 = h('div', 'card'); c5.appendChild(h('h3', '', 'Quick links')); var r = h('div', 'row');
+    [['My Profile', 'profile', 'user'], ['My Courses', 'courses', 'book'], ['Student Card', 'card', 'idcard'], ['Activities', 'act', 'check']].forEach(function (x) { r.appendChild(btn(x[0], 'g', function () { go(x[1]); }, x[2])); });
+    var wa = h('a', 'btn'); wa.appendChild(ic('wa')); wa.appendChild(D.createTextNode('WhatsApp')); wa.href = 'https://wa.me/923702388998'; wa.target = '_blank'; wa.rel = 'noopener'; r.appendChild(wa); c5.appendChild(r); m.appendChild(c5);
+  }
+
+  function vProfile(m) {
+    title(m, 'My Profile'); var c = h('div', 'card');
+    if (!P) { c.appendChild(h('div', 'empty', 'Profile load nahi ho saka (record ya ijazat maujood nahi).')); m.appendChild(c); return; }
+    var g = h('div', 'grid'), F = {};
+    g.appendChild(field('Full Name', P.full_name || (ST && ST.full_name), true).w); g.appendChild(field('Father Name', ST && ST.father_name, true).w);
+    g.appendChild(field('Email', P.email || U.email, true).w); g.appendChild(field('Roll Number', (ST && ST.roll_no) || P.student_id, true).w);
+    g.appendChild(field('Course', (ST && ST.course) || P.programme, true).w); g.appendChild(field('Batch', ST && ST.batch, true).w);
+    [['phone_number', 'Phone'], ['guardian_name', 'Guardian Name'], ['guardian_phone', 'Guardian Phone'], ['guardian_relation', 'Guardian Relation'], ['nic_number', 'NIC Number'], ['postal_address', 'Postal Address']].forEach(function (x) { F[x[0]] = field(x[1], P[x[0]], false); g.appendChild(F[x[0]].w); });
+    c.appendChild(g); var r = h('div', 'row');
+    var save = btn('Save changes', '', function () {
+      var up = {}; for (var k in F) { if (F[k].i.value.trim() !== String(P[k] || '')) { up[k] = F[k].i.value.trim(); } }
+      if (!Object.keys(up).length) { msg(c, 'Koi tabdeeli nahi hui.', 'i'); return; }
+      save.disabled = true;
+      sb.from('profiles').update(up).eq('id', U.id).select().maybeSingle().then(function (res) {
+        save.disabled = false;
+        if (res.error) { msg(c, 'Save nahi ho saka: ' + res.error.message, 'e'); return; }
+        if (!res.data) { msg(c, 'Save nahi hua (shayad is field ki ijazat nahi). Admin se rabta karein.', 'e'); return; }
+        P = res.data; msg(c, 'Profile save ho gaya.', 'o');
+      }, function () { save.disabled = false; msg(c, 'Network masla.', 'e'); });
+    }, 'save');
+    r.appendChild(save); c.appendChild(r);
+    c.appendChild(h('p', '', 'Roll number, course, batch, mode aur card status aap khud nahi badal sakte. Profile photo upload abhi enable nahi (storage bucket tasdeeq ke baad).')); m.appendChild(c);
+  }
+
+  function vCourses(m) {
+    title(m, 'My Courses'); var c = h('div', 'card'); m.appendChild(c);
+    if (!ST) { noStudent(c); return; }
+    c.appendChild(skeleton());
+    sb.from('academic_records').select('*').eq('student_id', ST.id).limit(100).then(function (r) {
+      c.innerHTML = '';
+      if (r.error || !r.data || !r.data.length) { c.appendChild(h('div', 'empty', 'Abhi koi course/academic record available nahi. LMS (lessons, instructors, assignments) backend connect hone par yahan dikhega.')); return; }
+      var g = h('div', 'grid'); r.data.forEach(function (rec) {
+        var d = h('div', 'kv'), n = 0; for (var k in rec) { if (rec.hasOwnProperty(k) && !/(^id$|_id$|created|updated)/.test(k) && rec[k] !== null && n < 5) { var s = h('div'); s.appendChild(h('small', '', k.replace(/_/g, ' '))); s.appendChild(h('b', '', String(rec[k]))); d.appendChild(s); n++; } }
+        g.appendChild(d);
+      }); c.appendChild(h('h3', '', 'Academic records')); c.appendChild(g);
+    }, function () { c.innerHTML = ''; c.appendChild(h('div', 'empty', 'Courses abhi load nahi ho sake.')); });
+  }
+
+  function vCard(m) {
+    title(m, 'My Student Card'); if (!ST) { noStudent(m); return; }
+    var c = h('div', 'sc'), hd = h('div', 'h'); hd.appendChild(h('b', '', 'AIOU COACHING')); hd.appendChild(h('small', '', '\u0633\u0628 \u06a9\u06d2 \u0644\u06cc\u06d2 \u062a\u0639\u0644\u06cc\u0645')); c.appendChild(hd);
+    var bd = h('div', 'bd'), ph;
+    if (ST.photo_url) { ph = h('img', 'ph'); ph.alt = 'Student photo'; ph.src = ST.photo_url; ph.referrerPolicy = 'no-referrer'; ph.onerror = function () { var f = h('div', 'ph', 'Photo load nahi hui'); ph.replaceWith(f); }; } else { ph = h('div', 'ph', 'Photo available nahi'); }
+    bd.appendChild(ph); var t = h('div'); t.appendChild(h('h3', '', ST.full_name || '')); t.appendChild(h('div', '', 'Roll No: ' + (ST.roll_no || '\u2014'))); t.appendChild(h('div', '', 'Course: ' + (ST.course || '\u2014'))); t.appendChild(h('div', '', 'Batch: ' + (ST.batch || '\u2014')));
+    var mo = String(ST.student_mode || ''), b = h('span', 'badge ' + (mo === 'ODL' ? 'odl' : mo === 'F2F' ? 'f2f' : ''), mo || 'Mode set nahi'); b.style.marginTop = '8px'; t.appendChild(b);
+    t.appendChild(h('div', 'h', 'Card status: ' + (ST.card_status || '\u2014'))); bd.appendChild(t); c.appendChild(bd);
+    c.appendChild(h('div', 'ft', 'AIOU Coaching, Landhi Town, Karachi \u00b7 WA 03702388998 \u00b7 03032672609')); m.appendChild(c);
+    var r = h('div', 'row'); r.appendChild(btn('Print', '', function () { window.print(); }, 'printer')); m.appendChild(r);
+    m.appendChild(h('p', '', 'Yeh card AIOU Coaching ka internal preview hai; official verification system maujood nahi.'));
+  }
+
+  function vAct(m) {
+    title(m, 'My Activities'); var c = h('div', 'card'); c.appendChild(msg(c, 'Yeh tasks sirf is device/browser mein save hote hain, server ke sath sync nahi.', 'i') && h('span')); m.appendChild(c);
+    var K = 'ap_tasks_' + U.id, T = tasks(), list = h('div');
+    var r = h('div', 'row'), a = field('Task / Assignment / Target', '', false), d = field('Deadline (optional)', '', false, 'date'); r.appendChild(a.w); r.appendChild(d.w);
+    function save() { ls(K, JSON.stringify(T)); } function paint() {
+      list.innerHTML = ''; if (!T.length) { list.appendChild(h('div', 'empty', 'Abhi koi task nahi.')); }
+      T.forEach(function (x, i) { var row = h('div', 'task' + (x.d ? ' dn' : '')), cb = h('input'); cb.type = 'checkbox'; cb.checked = !!x.d; cb.setAttribute('aria-label', 'Done'); cb.addEventListener('change', function () { x.d = cb.checked; save(); paint(); });
+        row.appendChild(cb); row.appendChild(h('span', '', x.t + (x.dl ? '  (' + x.dl + ')' : ''))); var rm = btn('', 'g', function () { T.splice(i, 1); save(); paint(); }, 'x'); rm.setAttribute('aria-label', 'Remove'); row.appendChild(rm); list.appendChild(row); });
+    }
+    r.appendChild(btn('Add', '', function () { var t = a.i.value.trim(); if (!t) { return; } T.push({ t: t, dl: d.i.value, d: false }); a.i.value = ''; save(); paint(); }, 'plus'));
+    c.appendChild(r); c.appendChild(list); paint();
+  }
+
+  function vChat(m) { title(m, 'Chat'); var c = h('div', 'card'); c.appendChild(h('div', 'empty', 'Chat service abhi connected nahi hai. Chat table aur Realtime configure hone ke baad yeh active hoga.')); m.appendChild(c); }
+  function vNotif(m) { title(m, 'Notifications'); var c = h('div', 'card'); c.appendChild(h('div', 'empty', 'Abhi koi notification available nahi.')); m.appendChild(c); }
+
+  function vAdmin(m) {
+    title(m, 'Admin Dashboard'); var c = h('div', 'card'); c.appendChild(h('p', '', 'Admin access database RLS se control hoti hai. Student Search se roll number par record dekhein.')); var g = h('div', 'grid'); c.appendChild(g); m.appendChild(c);
+    sb.from('students').select('id', { count: 'exact', head: true }).then(function (r) { if (!r.error && r.count !== null) { g.appendChild(kv('Students (visible to you)', r.count)); } else { msg(c, 'Count load nahi ho saka (ijazat/RLS).', 'i'); } });
+  }
+  function vSearch(m) {
+    title(m, 'Student Search & Management');
+    var c = h('div', 'card'), r = h('div', 'row'), q = field('Roll Number ya Student Name', '', false), out = h('div');
+    r.appendChild(q.w);
+    function renderStudent(s) {
+      var card = h('div', 'card'), head = h('h3', '', (s.full_name || 'Student') + ' \u2014 ' + (s.roll_no || 'No roll number'));
+      card.appendChild(head);
+      var g = h('div', 'grid'), F = {};
+      [['full_name','Full Name',s.full_name],['father_name','Father Name',s.father_name],['phone','Phone',s.phone],['course','Course',s.course],['batch','Batch',s.batch],['photo_url','Photo URL',s.photo_url]].forEach(function (x) {
+        F[x[0]] = field(x[1], x[2], false); g.appendChild(F[x[0]].w);
+      });
+      card.appendChild(g);
+      var er = h('div', 'row'), sm = h('div'), sc = h('div'), a = h('select'), b = h('select');
+      ['', 'ODL', 'F2F'].forEach(function (x) { a.appendChild(new Option(x || '(none)', x)); });
+      ['Pending', 'Generated', 'Printed', 'Blocked'].forEach(function (x) { b.appendChild(new Option(x, x)); });
+      a.value = s.student_mode || ''; b.value = s.card_status || 'Pending';
+      sm.appendChild(h('label', '', 'Student Mode')); sm.appendChild(a);
+      sc.appendChild(h('label', '', 'Card Status')); sc.appendChild(b);
+      er.appendChild(sm); er.appendChild(sc);
+      var save = btn('Save Student Details', '', function () {
+        var updates = {};
+        Object.keys(F).forEach(function (k) {
+          var value = F[k].i.value.trim();
+          if (value !== String(s[k] || '')) { updates[k] = value || null; }
+        });
+        var requiredFields = ['full_name', 'father_name', 'course', 'batch'];
+        var missingFields = requiredFields.filter(function (k) { return !F[k].i.value.trim(); });
+        if (missingFields.length) {
+          msg(card, 'Full Name, Father Name, Course aur Batch khaali nahi chhor sakte.', 'e');
+          return;
+        }
+        if (!Object.keys(updates).length) { msg(card, 'Student details mein koi tabdeeli nahi.', 'i'); return; }
+        save.disabled = true;
+        sb.rpc('admin_update_student_details', { p_student_id: s.id, p_updates: updates }).then(function (x) {
+          save.disabled = false;
+          if (x.error) { msg(card, 'Details update nahi huin: ' + x.error.message, 'e'); return; }
+          Object.keys(updates).forEach(function (k) { s[k] = updates[k]; });
+          msg(card, 'Student details successfully update ho gayi hain.', 'o');
+        }, function () { save.disabled = false; msg(card, 'Network masla. Dobara try karein.', 'e'); });
+      }, 'save');
+      er.appendChild(save);
+      er.appendChild(btn('Save Card Controls', '', function () {
+        sb.schema('private').rpc('admin_set_student_card_fields', { p_student_id: s.id, p_student_mode: a.value || null, p_card_status: b.value }).then(function (x) {
+          if (x.error) { msg(card, 'Card controls update nahi huay: ' + x.error.message, 'e'); return; }
+          s.student_mode = a.value || null; s.card_status = b.value;
+          msg(card, 'Student Mode aur Card Status update ho gaye.', 'o');
+        }, function () { msg(card, 'Network masla. Dobara try karein.', 'e'); });
+      }, 'idcard'));
+      card.appendChild(er);
+      if (!s.auth_user_id) {
+        var issueBtn = btn('Generate Registration Code', 'g', function () {
+          var existing = card.querySelector('.registration-code-output'); if (existing) { existing.remove(); }
+          issueBtn.disabled = true;
+          registrationRequest('issue', { student_id: s.id }, true).then(function (data) {
+            var output = h('div', 'card'); output.classList.add('registration-code-output');
+            output.appendChild(h('h3', '', 'One-time Registration Code'));
+            var codeInput = field('Share this code with the student (shown once)', data.code, true); output.appendChild(codeInput.w);
+            output.appendChild(h('p', '', 'Expiry: ' + data.expires_at + '. Is code ko private channel se student ko dein. Naya code generate karne par purana unused code revoke ho jayega.'));
+            output.appendChild(btn('Copy Code', 'g', function () {
+              if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(data.code).then(function () { msg(output, 'Code copy ho gaya.', 'o'); }, function () { codeInput.i.select(); msg(output, 'Code manually copy karein.', 'i'); }); }
+              else { codeInput.i.select(); msg(output, 'Code select hai; manually copy karein.', 'i'); }
+            }));
+            card.appendChild(output);
+          }).catch(function (e) { msg(card, e && e.message ? e.message : 'Code generate nahi hua.', 'e'); })
+            .finally(function () { issueBtn.disabled = false; });
+        });
+        card.appendChild(issueBtn);
+      }
+      out.appendChild(card);
+    }
+    function run() {
+      var v = q.i.value.trim().replace(/[^\p{L}\p{N} -]/gu, '').replace(/\s+/g, ' ').trim();
+      if (!v) { msg(out, 'Letters, numbers ya hyphen wala Roll Number/Student Name likhein.', 'i'); return; }
+      out.innerHTML = '';
+      sb.from('students').select('*').or('roll_no.eq.' + v + ',full_name.ilike.%' + v + '%').limit(20).then(function (res) {
+        if (res.error) { msg(out, 'Search nahi ho saki: ' + res.error.message, 'e'); return; }
+        if (!res.data || !res.data.length) { msg(out, 'Is naam ya roll number ka student nahi mila.', 'i'); return; }
+        msg(out, res.data.length + ' student record(s) mile.', 'o');
+        res.data.forEach(renderStudent);
+      }, function () { msg(out, 'Network masla.', 'e'); });
+    }
+    r.appendChild(btn('Search', '', run, 'search'));
+    q.i.addEventListener('keydown', function (e) { if (e.key === 'Enter') { run(); } });
+    c.appendChild(r); c.appendChild(out); m.appendChild(c);
+  }
+
+  /* ---------- settings drawer ---------- */
+  function drawer(open) {
+    var d = $('ap-dr'), o = $('ap-ov');
+    if (open) {
+      d.innerHTML = ''; var hd = h('div', 'row'); hd.style.marginTop = '0'; hd.appendChild(h('h3', '', 'Settings'));
+      var cl = btn('', 'g', function () { drawer(false); }, 'x'); cl.setAttribute('aria-label', 'Close settings'); hd.appendChild(cl); d.appendChild(hd);
+      d.appendChild(h('h3', '', 'Theme')); var th = h('div', 'th');
+      THEMES.forEach(function (t) { var b = h('button', root.getAttribute('data-t') === t[0] ? 'on' : ''), s = h('i'); s.style.background = t[2]; b.appendChild(s); b.appendChild(D.createTextNode(t[1])); b.type = 'button'; b.addEventListener('click', function () {
+          setTheme(t[0], true);
+          var bs = th.children; for (var i = 0; i < bs.length; i++) { bs[i].classList.remove('on'); } b.classList.add('on');
+        }); th.appendChild(b); });
+      d.appendChild(th); d.appendChild(h('hr'));
+      d.appendChild(h('h3', '', 'Change Password')); var cp = field('Current Password', '', false, 'password'), np = field('New Password', '', false, 'password'), cf = field('Confirm New Password', '', false, 'password'), box = h('div');
+      [cp, np, cf].forEach(function (x) { x.w.style.marginBottom = '8px'; box.appendChild(x.w); });
+      var sv = btn('Update password', '', function () {
+        if (np.i.value.length < 8) { msg(box, 'Naya password kam az kam 8 characters ka ho.', 'e'); return; }
+        if (np.i.value !== cf.i.value) { msg(box, 'Naya password aur confirm password match nahi karte.', 'e'); return; }
+        var em = (U && U.email) || (P && P.email); if (!em) { msg(box, 'Account email maujood nahi, password change nahi ho sakta.', 'e'); return; }
+        sv.disabled = true;
+        sb.auth.signInWithPassword({ email: em, password: cp.i.value }).then(function (r) {
+          if (r.error) { throw new Error('cur'); } return sb.auth.updateUser({ password: np.i.value });
+        }).then(function (r) { sv.disabled = false; if (r.error) { msg(box, 'Password update nahi hua: ' + r.error.message, 'e'); return; } cp.i.value = np.i.value = cf.i.value = ''; msg(box, 'Password badal gaya.', 'o'); },
+          function (e) { sv.disabled = false; msg(box, e && e.message === 'cur' ? 'Maujooda password sahi nahi.' : 'Password update nahi ho saka.', 'e'); });
+      });
+      box.appendChild(sv); d.appendChild(box); d.appendChild(h('hr'));
+      d.appendChild(h('h3', '', 'Notification Preferences'));
+      var prefFields = [['notify_email', 'Email notifications'], ['notify_sms', 'SMS notifications'], ['notify_app', 'In-app notifications']], prefChecks = {};
+      prefFields.forEach(function (x) {
+        var l = h('label'), c = h('input'); c.type = 'checkbox'; c.style.width = 'auto'; c.style.marginRight = '8px';
+        c.checked = !P || P[x[0]] === undefined ? true : !!P[x[0]]; prefChecks[x[0]] = c;
+        l.appendChild(c); l.appendChild(D.createTextNode(x[1])); d.appendChild(l);
+      });
+      var prefMsg = h('div', 'msg i', 'Preferences Supabase profile mein save hongi. Email/SMS delivery service abhi connected nahi hai.');
+      d.appendChild(prefMsg);
+      d.appendChild(btn('Save Preferences', 'blue', function () {
+        var values = { notify_email: prefChecks.notify_email.checked, notify_sms: prefChecks.notify_sms.checked, notify_app: prefChecks.notify_app.checked, updated_at: new Date().toISOString() };
+        var save = d.querySelector('.btn.blue'); save.disabled = true;
+        sb.from('profiles').update(values).eq('id', U.id).then(function (r) {
+          save.disabled = false;
+          if (r.error) { msg(d, 'Preferences save nahi ho sakin. Dobara try karein.', 'e'); return; }
+          Object.assign(P, values); msg(d, 'Preferences Supabase mein save ho gayi hain.', 'o');
+        });
+      }, 'save'));
+    }
+    d.classList.toggle('on', open); o.classList.toggle('on', open);
+  }
+
+  /* ---------- start ---------- */
+  function start() {
+    if (!window.supabase || !window.supabase.createClient) { $('ap-boot').textContent = 'Supabase library load nahi hui. Internet check karke page refresh karein.'; return; }
+    sb = window.supabase.createClient(URL_, KEY, { auth: { persistSession: true, autoRefreshToken: true, storageKey: 'aiou-coaching-auth' } });
+    $('ap-menu').appendChild(ic('menu')); $('ap-gear').appendChild(ic('gear')); $('ap-out').appendChild(ic('power')); $('ap-mk').appendChild(ic('cap'));
+    $('ap-menu').addEventListener('click', function () { $('ap-side').classList.toggle('on'); });
+    $('ap-gear').addEventListener('click', function () { drawer(true); });
+    $('ap-ov').addEventListener('click', function () { drawer(false); $('ap-side').classList.remove('on'); });
+    root.addEventListener('keydown', function (e) { if (e.key === 'Escape') { drawer(false); $('ap-side').classList.remove('on'); } });
+    $('ap-out').addEventListener('click', function () { sb.auth.signOut().then(function () { U = P = ST = null; drawer(false); showLogin(); }); });
+    sb.auth.getSession().then(function (r) {
+      var s = r.data && r.data.session; if (s && s.user) { sb.auth.getUser().then(function (u) { if (u.data && u.data.user) { boot(u.data.user); } else { showLogin(); } }, showLogin); } else { showLogin(); }
+    }, function () { showLogin(); });
+  }
+  if (D.readyState === 'loading') { D.addEventListener('DOMContentLoaded', start); } else { start(); }
+})();
+//]]>
+</script>
+</body>
+</html>
