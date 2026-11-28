@@ -1,822 +1,564 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111111">
-  <meta name="description" content="AIOU Coaching — Independent study help, assignments, notes, guess papers and academic tools.">
-  <title>AIOU Coaching | Student Learning Hub</title>
-
-  <style>
-    :root {
-      --primary: #f67938;
-      --primary-light: #ff9b63;
-      --bg: #101114;
-      --surface: #191b20;
-      --surface-light: #20232a;
-      --text: #f5f5f5;
-      --muted: #a6a8b0;
-      --border: rgba(255,255,255,.09);
-      --radius: 20px;
-      --shadow: 0 20px 60px rgba(0,0,0,.25);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    .container {
-      width: min(1160px, calc(100% - 40px));
-      margin-inline: auto;
-    }
-
-    .blob {
-      position: fixed;
-      width: 360px;
-      height: 360px;
-      border-radius: 50%;
-      background: var(--primary);
-      filter: blur(130px);
-      opacity: .13;
-      pointer-events: none;
-      z-index: -1;
-      animation: float 12s ease-in-out infinite alternate;
-    }
-
-    .blob.one {
-      top: 80px;
-      left: -180px;
-    }
-
-    .blob.two {
-      right: -180px;
-      top: 55%;
-      animation-delay: -5s;
-    }
-
-    @keyframes float {
-      from { transform: translate(0, 0) scale(1); }
-      to { transform: translate(70px, 45px) scale(1.2); }
-    }
-
-    /* Navbar */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(16,17,20,.78);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-inner {
-      min-height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      font-weight: 800;
-      font-size: 19px;
-      letter-spacing: -.5px;
-    }
-
-    .brand-mark {
-      width: 39px;
-      height: 39px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: var(--primary);
-      color: #171717;
-      font-weight: 900;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 25px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .nav-links a:hover {
-      color: var(--primary-light);
-    }
-
-    .nav-cta,
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      border: 0;
-      border-radius: 12px;
-      padding: 12px 19px;
-      background: var(--primary);
-      color: #171717;
-      font-weight: 750;
-      cursor: pointer;
-      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
-    }
-
-    .nav-cta:hover,
-    .btn:hover {
-      transform: scale(1.045);
-      background: var(--primary-light);
-      box-shadow: 0 10px 30px rgba(246,121,56,.22);
-    }
-
-    /* Hero */
-    .hero {
-      padding: 105px 0 85px;
-      text-align: center;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      padding: 7px 13px;
-      border: 1px solid rgba(246,121,56,.3);
-      border-radius: 99px;
-      background: rgba(246,121,56,.09);
-      color: var(--primary-light);
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 24px;
-    }
-
-    .hero h1 {
-      max-width: 850px;
-      margin: auto;
-      font-size: clamp(38px, 6vw, 70px);
-      line-height: 1.08;
-      letter-spacing: -2.8px;
-    }
-
-    .hero h1 span {
-      color: var(--primary);
-    }
-
-    .hero-copy {
-      max-width: 720px;
-      margin: 25px auto 0;
-      color: var(--muted);
-      font-size: clamp(15px, 2vw, 18px);
-    }
-
-    .hero-actions {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 13px;
-      margin-top: 32px;
-    }
-
-    .btn-secondary {
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255,255,255,.09);
-    }
-
-    .hero-note {
-      margin-top: 27px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    /* Sections */
-    .section {
-      padding: 75px 0;
-    }
-
-    .section-heading {
-      max-width: 650px;
-      margin: 0 auto 38px;
-      text-align: center;
-    }
-
-    .section-heading h2 {
-      font-size: clamp(28px, 4vw, 40px);
-      letter-spacing: -1px;
-    }
-
-    .section-heading p {
-      margin-top: 10px;
-      color: var(--muted);
-    }
-
-    /* Stats */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .stat-card,
-    .program-card,
-    .tool-card,
-    .worker-card {
-      border: 1px solid var(--border);
-      background: linear-gradient(145deg, rgba(255,255,255,.065), rgba(255,255,255,.025));
-      backdrop-filter: blur(12px);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      transition: transform .25s ease, border-color .25s ease;
-    }
-
-    .stat-card {
-      padding: 30px 20px;
-      text-align: center;
-    }
-
-    .stat-card:hover,
-    .program-card:hover,
-    .tool-card:hover,
-    .worker-card:hover {
-      transform: translateY(-7px);
-      border-color: rgba(246,121,56,.5);
-    }
-
-    .stat-number {
-      display: block;
-      color: var(--primary);
-      font-size: clamp(30px, 4vw, 42px);
-      font-weight: 850;
-      line-height: 1.2;
-    }
-
-    .stat-label {
-      display: block;
-      margin-top: 9px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    /* Programs */
-    .program-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 17px;
-    }
-
-    .program-card {
-      min-height: 145px;
-      padding: 24px;
-    }
-
-    .program-icon {
-      display: grid;
-      place-items: center;
-      width: 43px;
-      height: 43px;
-      border-radius: 13px;
-      background: rgba(246,121,56,.13);
-      color: var(--primary-light);
-      font-weight: 850;
-      margin-bottom: 17px;
-    }
-
-    .program-card h3 {
-      font-size: 17px;
-    }
-
-    .program-card p {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* Tools */
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 17px;
-    }
-
-    .tool-card {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 25px;
-      min-height: 190px;
-    }
-
-    .tool-card h3 {
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-
-    .tool-card p {
-      color: var(--muted);
-      font-size: 13px;
-      flex: 1;
-      margin-bottom: 18px;
-    }
-
-    .tool-link {
-      color: var(--primary-light);
-      font-size: 14px;
-      font-weight: 750;
-    }
-
-    .tool-link:hover {
-      text-decoration: underline;
-    }
-
-    /* Worker setup */
-    .worker-card {
-      padding: 30px;
-      overflow: hidden;
-    }
-
-    .worker-card h3 {
-      font-size: 22px;
-      margin-bottom: 10px;
-    }
-
-    .worker-card p {
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
-
-    .commands {
-      overflow-x: auto;
-      padding: 20px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: #090a0c;
-      color: #f5b18d;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 13px;
-      line-height: 2;
-      white-space: pre;
-    }
-
-    /* Contact */
-    .contact-panel {
-      padding: 45px 25px;
-      border: 1px solid rgba(246,121,56,.25);
-      border-radius: 26px;
-      background: linear-gradient(130deg, rgba(246,121,56,.14), rgba(255,255,255,.025));
-      text-align: center;
-    }
-
-    .contact-panel h2 {
-      font-size: clamp(25px, 4vw, 36px);
-    }
-
-    .contact-panel p {
-      max-width: 580px;
-      margin: 12px auto 24px;
-      color: var(--muted);
-    }
-
-    /* Footer */
-    footer {
-      padding: 45px 0 25px;
-      border-top: 1px solid var(--border);
-      background: rgba(0,0,0,.15);
-    }
-
-    .footer-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 30px;
-      padding-bottom: 30px;
-    }
-
-    .footer-brand p {
-      margin-top: 10px;
-      max-width: 350px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .footer-links a:hover {
-      color: var(--primary-light);
-    }
-
-    .footer-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .admin-link {
-      color: var(--muted);
-      opacity: .7;
-      font-size: 11px;
-    }
-
-    .admin-link:hover {
-      color: var(--primary-light);
-      opacity: 1;
-    }
-
-    /* Reveal animation */
-    .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity .7s ease, transform .7s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important;
-      }
-
-      .reveal {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    @media (max-width: 850px) {
-      .nav-links {
-        gap: 13px;
-      }
-
-      .program-grid,
-      .tools-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 620px) {
-      .container {
-        width: min(100% - 30px, 1160px);
-      }
-
-      .nav-inner {
-        min-height: 66px;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      .nav-cta {
-        padding: 10px 13px;
-        font-size: 12px;
-      }
-
-      .hero {
-        padding: 78px 0 60px;
-      }
-
-      .hero h1 {
-        letter-spacing: -1.5px;
-      }
-
-      .section {
-        padding: 55px 0;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .program-grid,
-      .tools-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-top {
-        flex-direction: column;
-      }
-
-      .footer-bottom {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <div class="blob one"></div>
-  <div class="blob two"></div>
-
-  <header class="navbar">
-    <div class="container nav-inner">
-      <a class="brand" href="index.html" aria-label="AIOU Coaching Home">
-        <span class="brand-mark">A</span>
-        <span>AIOU Coaching</span>
-      </a>
-
-      <nav class="nav-links" aria-label="Main navigation">
-        <a href="#programs">Programs</a>
-        <a href="#tools">Tools</a>
-        <a href="#worker">Worker Setup</a>
-        <a href="https://aioucoaching.blogspot.com/p/tools.html">All Tools</a>
-      </nav>
-
-      <a class="nav-cta" href="lms/signin-signup.html">LMS Sign In ↗</a>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="container">
-        <span class="eyebrow">Your Independent Study Companion</span>
-
-        <h1>Learn smarter.<br><span>Build your success.</span></h1>
-
-        <p class="hero-copy">
-          Samjho · Khud likho · Guess paper banao · Cover page lagao · Word file download karo
-        </p>
-
-        <div class="hero-actions">
-          <a class="btn" href="https://aioucoaching.blogspot.com/p/tools.html">
-            Explore All Tools ↗
-          </a>
-
-          <a class="btn btn-secondary" href="lms/signin-signup.html">
-            LMS Sign In
-          </a>
-        </div>
-
-        <p class="hero-note">
-          Independent study help. Not affiliated with AIOU.
-        </p>
-      </div>
-    </section>
-
-    <section class="section" aria-label="Platform statistics">
-      <div class="container">
-        <div class="stats-grid">
-          <article class="stat-card reveal">
-            <span class="stat-number">50,000+</span>
-            <span class="stat-label">Students</span>
-          </article>
-
-          <article class="stat-card reveal">
-            <span class="stat-number">500+</span>
-            <span class="stat-label">Solved Assignments</span>
-          </article>
-
-          <article class="stat-card reveal">
-            <span class="stat-number">4.9</span>
-            <span class="stat-label">Rating</span>
-          </article>
+<!-- AIOU COACHING — HOME PAGE (Blogger Page > HTML view). Suggested page URL: /p/home.html
+     DRAFT — test on a temporary page first. Uses JetTheme tokens (--jt-*, --glass-*, .dark-mode).
+     Theme already provides: header, footer, back-to-top, cookie bar — so none are repeated here. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&display=swap">
+
+<style>
+/* ---------- page shell: full width inside the theme, no sidebar/comments/title on this page only ---------- */
+html:has(#hm){scroll-padding-top:92px}
+body:has(#hm) #main-content{display:block!important}
+body:has(#hm) #main{width:100%!important;max-width:100%!important;flex:0 0 100%!important}
+body:has(#hm) #sidebar,body:has(#hm) #comments,body:has(#hm) .comments,body:has(#hm) nav[aria-label="Breadcrumb"],body:has(#hm) #page-content>.entry-header{display:none!important}
+body:has(#hm) #page-content{background:transparent!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:0!important;border-radius:0!important}
+body:has(#hm) #page-content .entry-text{margin-bottom:0!important}
+
+/* ---------- tokens ---------- */
+.hm{--ac:var(--jt-primary,#f67938);--ac2:var(--jt-btn-primary-hover,#c9531a);--ink:var(--bs-body-color,#686868);--head:var(--jt-heading-color,#000);--soft:var(--jt-bg-light,#f3f7f9);--line:var(--jt-border-light,#efefef);--card:var(--glass-bg,rgba(255,255,255,.55));--bd:var(--glass-border,rgba(255,255,255,.7));--sh:var(--glass-shadow,0 8px 32px rgba(0,0,0,.1));--fx:var(--glass-filter,blur(15px) saturate(180%));--r:var(--glass-radius,20px);--mut:rgba(104,104,104,.88);--night:#17171a;position:relative;width:100%;color:var(--ink);line-height:1.6;font-family:inherit;text-align:left}
+.dark-mode .hm{--mut:rgba(184,184,184,.9)}
+.hm *,.hm *:before,.hm *:after{box-sizing:border-box}
+.hm a{color:var(--head);text-decoration:none;transition:color .25s}
+.hm a:hover{color:var(--ac)}
+.hm a:focus-visible,.hm summary:focus-visible{outline:3px solid var(--ac);outline-offset:3px;border-radius:8px}
+.hm h1,.hm h2,.hm h3{font-family:'Bricolage Grotesque',Arial,sans-serif!important;margin:0!important;padding:0!important;letter-spacing:-.01em;color:var(--head);line-height:1.1}
+.hm p{margin:0}.hm ul,.hm ol{margin:0;padding:0;list-style:none}.hm li{margin:0!important}
+.hm-i{width:1.2em;height:1.2em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em}
+.hm-eb{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-weight:600;font-size:13.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.hm-dot{width:10px;height:10px;border-radius:50%;background:var(--ac);display:inline-block;flex:none}
+.hm-sec{padding-top:88px}
+.hm-title{font-size:clamp(28px,3.8vw,44px)!important;font-weight:800!important;max-width:780px;color:var(--head)}
+.hm-sub{max-width:640px;margin-top:14px;color:var(--mut);font-size:17px}
+.hm-glass,.hm-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);-webkit-backdrop-filter:var(--fx);backdrop-filter:var(--fx);box-shadow:var(--sh)}
+
+/* ---------- buttons (magnetic offset via --bx/--by) ---------- */
+.hm-btn{display:inline-flex;align-items:center;gap:9px;background:var(--ac);color:#fff!important;font-weight:600;font-size:16.5px;padding:14px 28px;border-radius:999px;border:2px solid var(--ac);transform:translate(var(--bx,0px),var(--by,0px));transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,background .25s}
+.hm-btn:hover{transform:translate(var(--bx,0px),calc(var(--by,0px) - 3px));box-shadow:0 14px 26px -14px rgba(246,121,56,.55);background:var(--ac2);border-color:var(--ac2);color:#fff!important}
+.hm-btn.g{background:transparent;color:var(--head)!important;border-color:var(--line)}
+.hm-btn.g:hover{background:var(--ac);border-color:var(--ac);color:#fff!important}
+.hm-row{display:flex;flex-wrap:wrap;gap:14px}
+
+/* ---------- reveal ---------- */
+.hm.js .rv{opacity:0;translate:0 36px;transition:opacity .8s cubic-bezier(.2,.7,.2,1),translate .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.hm.js .rv.in{opacity:1;translate:none}
+@keyframes hmfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes hmmq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes hmpulse{0%{box-shadow:0 0 0 0 rgba(246,121,56,.6)}100%{box-shadow:0 0 0 16px rgba(246,121,56,0)}}
+@keyframes hmdrift{to{transform:translate(70px,40px) scale(1.15)}}
+@keyframes hmgrad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes hmsheen{from{transform:translateX(-120%) skewX(-18deg)}to{transform:translateX(320%) skewX(-18deg)}}
+@keyframes hmblink{50%{opacity:.25}}
+#hm-bar{position:fixed;top:0;left:0;right:0;height:3px;background:var(--ac);transform:scaleX(0);transform-origin:left;z-index:1100;pointer-events:none;will-change:transform}
+
+/* ---------- hero ---------- */
+.hm-hero{position:relative;isolation:isolate}
+.hm-aur{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:-1}
+.hm-aur i{position:absolute;width:420px;height:420px;border-radius:50%;filter:blur(80px);opacity:.24;background:var(--ac);animation:hmdrift 18s ease-in-out infinite alternate}
+.hm-aur i:nth-child(1){top:-140px;right:4%}.hm-aur i:nth-child(2){bottom:-180px;left:-80px;background:#ffb27d;animation-duration:24s}
+.dark-mode .hm-aur i{opacity:.14}
+.hm-hin{display:flex;flex-wrap:wrap;gap:48px;align-items:center;padding-top:40px}
+.hm-hl{flex:1 1 460px;min-width:0}
+.hm-hr{flex:1 1 360px;min-width:0;position:relative;min-height:380px;transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.hm-hero h1{font-size:clamp(34px,5.2vw,62px)!important;line-height:1.05;font-weight:800!important;letter-spacing:-.02em}
+.hm-lead{font-size:18.5px;line-height:1.55;color:var(--mut);max-width:560px;margin:24px 0 30px!important}
+.hm.js h1.hm-split.rv{opacity:1;translate:none}
+.hm-w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
+.hm-wi{display:inline-block;opacity:0;transform:translateY(105%);filter:blur(6px);transition:transform .8s cubic-bezier(.2,.7,.2,1),opacity .8s ease,filter .8s ease;transition-delay:calc(var(--i,0)*70ms + .1s)}
+.hm-split.in .hm-wi{opacity:1;transform:none;filter:none}
+.hm-plan{background:var(--night);color:#fff;border-radius:28px;padding:26px;max-width:410px;margin-left:auto;box-shadow:0 30px 60px -30px rgba(0,0,0,.5);animation:hmfl 6s ease-in-out infinite}
+.dark-mode .hm-plan{border:1px solid var(--bd)}
+.hm-plan small{display:block;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:#cfc8c0}
+.hm-plan b{display:block;font:800 26px 'Bricolage Grotesque',Arial,sans-serif;margin:6px 0 20px;color:#fff}
+.hm-br{display:flex;justify-content:space-between;font-size:14.5px;margin-bottom:8px;color:#fff}
+.hm-bar{height:8px;background:rgba(255,255,255,.1);border-radius:99px;margin-bottom:16px;overflow:hidden}
+.hm-bar i{display:block;height:8px;width:0;border-radius:99px;background:var(--ac);position:relative;overflow:hidden;transition:width 1.4s cubic-bezier(.2,.7,.2,1) .5s}
+.hm-bar i:after{content:'';position:absolute;top:0;bottom:0;left:0;width:30%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(-120%) skewX(-18deg)}
+.hm.js .in .hm-bar i,.hm:not(.js) .hm-bar i{width:var(--w)}
+.hm.js .in .hm-bar i:after{animation:hmsheen 2.4s 1.9s ease-in-out infinite}
+.hm-badge{position:absolute;left:0;bottom:4px;background:var(--ac);border-radius:20px;padding:16px 20px;max-width:225px;box-shadow:0 20px 40px -22px rgba(246,121,56,.55);animation:hmfl 7.5s ease-in-out -2s infinite}
+.hm-badge b{display:block;font:800 20px/1.15 'Bricolage Grotesque',Arial,sans-serif;color:#fff}
+.hm-badge span{font-size:13.5px;color:#fff}
+
+/* ---------- ticker ---------- */
+.hm-tk{background:var(--night);overflow:hidden;padding:20px 0;margin-top:64px;border-radius:var(--r);-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.hm-mq{display:flex;gap:52px;width:max-content;animation:hmmq 38s linear infinite;font:600 22px 'Bricolage Grotesque',Arial,sans-serif}
+.hm-mq span{display:inline-flex;align-items:center;gap:52px;white-space:nowrap;color:#fff}
+.hm-tk:hover .hm-mq{animation-play-state:paused}
+
+/* ---------- glance ---------- */
+.hm-gl{display:flex;flex-wrap:wrap;gap:44px;align-items:flex-start}.hm-gl>div{flex:1 1 380px;min-width:0}
+.hm-def{font-size:20px;line-height:1.55;margin-bottom:24px!important;color:var(--ink)}
+.hm-facts{display:flex;flex-wrap:wrap;gap:12px}
+.hm-fact{flex:1 1 170px;padding:15px 18px}
+.hm-fact small{display:block;font-size:12.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.hm-fact b{font-weight:700;color:var(--head)}
+
+/* ---------- interactive cards: tilt (--rx/--ry), lift, spotlight (--mx/--my) ---------- */
+.hm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:36px}
+.hm-card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:10px;padding:26px;transform:perspective(900px) translateY(var(--lift,0px)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s}
+.hm-card.tilting{transition:transform .08s linear,box-shadow .35s,border-color .35s}
+.hm-card:before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.hm-card:after{content:'';position:absolute;inset:0;background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(246,121,56,.15),transparent 62%);opacity:0;transition:opacity .3s;pointer-events:none}
+.hm-card:hover:before{transform:scaleX(1)}.hm-card:hover:after{opacity:1}
+.hm-card:hover{--lift:-6px;border-color:var(--ac);box-shadow:var(--glass-shadow-hover,0 22px 40px -18px rgba(246,121,56,.3))}
+.hm-card h3{font-size:22px!important;font-weight:800!important}
+.hm-card p,.hm-card small{color:var(--mut);font-size:14.5px;line-height:1.55}
+.hm-ico{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:14px;background:rgba(246,121,56,.14);color:var(--ac);font-size:22px}
+.hm-go{margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;color:var(--ac)}
+.hm-go .hm-i{transition:transform .25s cubic-bezier(.2,.7,.2,1)}.hm-card:hover .hm-go .hm-i{transform:translateX(5px)}
+.hm-tag{align-self:flex-start;background:var(--ac);color:#fff;font-weight:700;font-size:11.5px;padding:4px 13px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase}
+.hm-new{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:var(--ac);color:#fff;font:700 10px/1.6 inherit;letter-spacing:.05em;text-transform:uppercase;vertical-align:middle}
+.hm-q{padding:22px}.hm-q b{font-size:17px;color:var(--head);display:block}
+
+/* ---------- student portal (LMS) panel ---------- */
+.hm-pn{display:flex;flex-wrap:wrap;gap:40px;align-items:center;background:var(--night);color:#e8e8ea;border-radius:32px;padding:clamp(24px,4vw,52px);position:relative;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.55)}
+.hm-pn:before{content:'';position:absolute;top:-120px;right:-80px;width:340px;height:340px;border-radius:50%;background:var(--ac);filter:blur(100px);opacity:.28;pointer-events:none}
+.hm-pn>div{position:relative;flex:1 1 380px;min-width:0}
+.hm-pn h2{color:#fff!important;font-size:clamp(26px,3.4vw,40px)!important;font-weight:800!important}
+.hm-pn .hm-eb{color:#c9c9cf}
+.hm-pn p{color:#c9c9cf;margin-top:14px;max-width:520px}
+.hm-ft{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:26px 0 30px}
+.hm-ft li{display:flex;gap:10px;align-items:flex-start;color:#e8e8ea;font-size:15px}
+.hm-ft .hm-i{color:var(--ac);margin-top:3px;width:1.1em;height:1.1em}
+.hm-pt{background:#101114;border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden;box-shadow:0 24px 50px -24px rgba(0,0,0,.7);transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.hm-pt.tilting{transition:transform .08s linear}
+.hm-pt-top{display:flex;align-items:center;gap:10px;padding:11px 14px;background:#1f2023;border-bottom:2px solid var(--ac);color:#fff;font-size:13px}
+.hm-pt-top b{letter-spacing:.04em}.hm-pt-top i{color:var(--ac);font-style:normal}
+.hm-mk{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--ac);color:#fff}
+.hm-mk .hm-i{width:15px;height:15px}
+.hm-pt-tag{margin-left:auto;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 9px;border-radius:99px;border:1px solid rgba(255,255,255,.25);color:#c9c9cf}
+.hm-pt-bd{display:flex;min-height:250px}
+.hm-pt-sd{width:132px;background:#292b30;padding:10px 0;flex:none}
+.hm-pt-sd span{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:12px;color:#d1d5db;border-left:3px solid transparent}
+.hm-pt-sd span .hm-i{width:15px;height:15px}
+.hm-pt-sd span.on{background:rgba(255,255,255,.1);border-left-color:var(--ac);color:#fff}
+.hm-pt-mn{flex:1;padding:16px;min-width:0}
+.hm-ln{height:10px;border-radius:6px;background:rgba(255,255,255,.14);margin-bottom:10px}
+.hm-ln.t{height:16px;width:55%;background:rgba(255,255,255,.28);margin-bottom:14px}
+.hm-kvs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.hm-kvs span{background:rgba(255,255,255,.07);border-radius:9px;padding:8px 9px;font-size:10.5px;color:#9ca3af}
+.hm-kvs span i{display:block;height:8px;width:70%;border-radius:5px;background:rgba(255,255,255,.22);margin-top:6px}
+.hm-pt-mn .hm-bar{margin:8px 0 0}
+.hm-pt-mn small{display:block;font-size:11px;color:#9ca3af;margin-top:12px}
+.hm-caret{display:inline-block;width:7px;height:12px;background:var(--ac);margin-left:4px;vertical-align:-2px;animation:hmblink 1s steps(2) infinite}
+
+/* ---------- steps ---------- */
+.hm-steps{display:flex;flex-wrap:wrap;gap:26px;margin-top:40px!important}
+.hm-step{flex:1 1 220px;min-width:0;position:relative;padding-top:24px}
+.hm-step:before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:4px;background:var(--ac);transform-origin:left;transition:transform .9s cubic-bezier(.4,.1,.2,1) .25s}
+.hm.js .hm-step:before{transform:scaleX(0)}.hm.js .hm-step.in:before{transform:none}
+.hm-n{font:800 52px/1 'Bricolage Grotesque',Arial,sans-serif;color:var(--ac)}
+.hm-step h3{font-size:20px!important;font-weight:800!important;margin:12px 0 8px!important}
+.hm-step p{color:var(--mut);font-size:15px}
+
+/* ---------- why us: icons draw themselves ---------- */
+.hm-why .hm-card svg{width:40px;height:40px;fill:none;stroke:var(--ac);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hm.js .hm-why .hm-card svg *{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.3s cubic-bezier(.4,.1,.2,1) .35s}
+.hm.js .hm-why .hm-card.in svg *{stroke-dashoffset:0}
+
+/* ---------- FAQ ---------- */
+.hm-faq{max-width:900px;margin:0 auto}
+.hm-faq details{background:transparent!important;border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;padding:20px 0!important;margin:0!important}
+.hm-faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;font:600 19px 'Bricolage Grotesque',Arial,sans-serif;color:var(--head)}
+.hm-faq summary::-webkit-details-marker{display:none}
+.hm-pl{flex:none;width:34px;height:34px;border-radius:50%;background:var(--ac);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:22px;line-height:1;transition:transform .3s}
+.hm-faq details[open] .hm-pl{transform:rotate(45deg)}
+.hm-faq details p{margin-top:14px;color:var(--mut);font-size:16px;max-width:720px;line-height:1.65}
+
+/* ---------- CTA + notice ---------- */
+.hm-cta{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--ac),#b8470f,var(--ac));background-size:200% 200%;animation:hmgrad 12s ease infinite;border-radius:34px;padding:52px 42px;display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between;color:#fff;box-shadow:0 20px 40px -20px rgba(246,121,56,.45)}
+.hm-cta:after{content:'';position:absolute;top:0;bottom:0;left:0;width:18%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);transform:translateX(-120%) skewX(-18deg);animation:hmsheen 5s 1.5s ease-in-out infinite;pointer-events:none}
+.hm-cta>*{position:relative;z-index:1}
+.hm-cta h2{font-size:clamp(26px,3.8vw,42px)!important;font-weight:800!important;color:#fff!important;flex:1 1 400px}
+.hm-cta p{font-size:17.5px;margin-top:14px;max-width:520px;color:rgba(255,255,255,.92)}
+.hm-cta .hm-btn{background:#fff;color:#b8470f!important;border-color:#fff}
+.hm-cta .hm-btn:hover{background:#f5f5f5;color:#b8470f!important}
+.hm-cta .hm-btn.g{background:transparent;color:#fff!important;border-color:rgba(255,255,255,.6)}
+.hm-cta .hm-btn.g:hover{background:rgba(255,255,255,.18);border-color:#fff;color:#fff!important}
+.hm-note{margin:34px 0 8px;padding:18px 22px;font-size:14px;color:var(--mut);text-align:center}
+.hm-note a{font-weight:600;text-decoration:underline;text-underline-offset:3px}
+
+@media (max-width:900px){.hm-hin{gap:36px}.hm-hr{min-height:auto}.hm-plan{margin:0 auto}.hm-badge{position:relative;bottom:auto;margin:14px auto 0;display:block}}
+@media (max-width:640px){.hm-sec{padding-top:60px}.hm-hero h1{font-size:clamp(28px,7.4vw,40px)!important}.hm-lead{font-size:16px}.hm-n{font-size:40px}.hm-faq summary{font-size:17px}.hm-cta{padding:36px 24px;border-radius:22px}.hm-pn{border-radius:22px}.hm-pt-sd{width:44px}.hm-pt-sd span{font-size:0;justify-content:center;padding:10px 0}.hm-pt-sd span .hm-i{width:17px;height:17px}.hm-kvs{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:reduce){
+ .hm.js .rv{opacity:1;translate:none;transition:none}
+ .hm-plan,.hm-badge,.hm-mq,.hm-aur i,.hm-cta,.hm-cta:after,.hm-bar i:after,.hm-caret{animation:none!important}
+ .hm-bar i{transition:none}.hm-card,.hm-card:before,.hm-btn,.hm-pt{transition:none}
+ .hm-wi{opacity:1;transform:none;filter:none;transition:none}
+ .hm.js .hm-why .hm-card svg *{stroke-dasharray:none;stroke-dashoffset:0;transition:none}
+ .hm.js .hm-step:before{transform:none;transition:none}
+}
+</style>
+
+<div id="hm-bar"></div>
+
+<!-- icon sprite (inline SVG, no emoji, no external requests) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+ <symbol id="hm-wa" viewBox="0 0 512 512"><path fill="currentColor" stroke="none" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></symbol>
+ <symbol id="hm-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+ <symbol id="hm-cap" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></symbol>
+ <symbol id="hm-login" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></symbol>
+ <symbol id="hm-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+ <symbol id="hm-id" viewBox="0 0 24 24"><path d="M16 10h2"/><path d="M16 14h2"/><path d="M6.17 15a3 3 0 0 1 5.66 0"/><circle cx="9" cy="11" r="2"/><rect x="2" y="5" width="20" height="14" rx="2"/></symbol>
+ <symbol id="hm-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+ <symbol id="hm-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+ <symbol id="hm-doc" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></symbol>
+ <symbol id="hm-cal" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+ <symbol id="hm-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></symbol>
+ <symbol id="hm-dash" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol>
+ <symbol id="hm-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></symbol>
+ <symbol id="hm-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15v4"/><path d="M17 17h4"/></symbol>
+</svg>
+
+<div class="hm" id="hm">
+
+  <!-- HERO -->
+  <section class="hm-hero">
+    <div class="hm-aur" aria-hidden="true"><i></i><i></i></div>
+    <div class="hm-hin">
+      <div class="hm-hl">
+        <p class="hm-eb rv"><span class="hm-dot" style="animation:hmpulse 2s infinite"></span>Independent AIOU coaching · Admissions guidance</p>
+        <h1 class="rv">AIOU coaching online for assignments, exams and admission.</h1>
+        <p class="hm-lead rv">Allama Iqbal Open University ke students ke liye clear study plans, assignment guidance aur exam preparation. Aap kahin bhi parhein, hum structure dete hain.</p>
+        <div class="hm-row rv">
+          <a class="hm-btn" href="https://wa.me/923702388998?text=Assalam-o-Alaikum!%20AIOU%20coaching%20chahiye" rel="noopener" target="_blank"><svg class="hm-i" aria-hidden="true"><use href="#hm-wa"/></svg>Start with WhatsApp</a>
+          <a class="hm-btn g" href="/p/student-login.html"><svg class="hm-i" aria-hidden="true"><use href="#hm-login"/></svg>Student Login</a>
         </div>
       </div>
-    </section>
-
-    <section class="section" id="programs">
-      <div class="container">
-        <div class="section-heading reveal">
-          <h2>Explore Academic Programs</h2>
-          <p>Study support for different academic levels and programs.</p>
+      <div class="hm-hr rv" data-tilt="4">
+        <div class="hm-plan">
+          <small>Sample study plan</small>
+          <b>Your Program</b>
+          <div class="hm-br"><span>Assignment 1</span><span>Done</span></div>
+          <div class="hm-bar" style="--w:100%"><i></i></div>
+          <div class="hm-br"><span>Assignment 2</span><span>In progress</span></div>
+          <div class="hm-bar" style="--w:60%"><i></i></div>
+          <div class="hm-br"><span>Exam revision</span><span>Next</span></div>
+          <div class="hm-bar" style="--w:25%"><i></i></div>
         </div>
-
-        <div class="program-grid">
-          <article class="program-card reveal">
-            <div class="program-icon">BA</div>
-            <h3>BA Programs</h3>
-            <p>Academic study support and resources.</p>
-          </article>
-
-          <article class="program-card reveal">
-            <div class="program-icon">B.Ed</div>
-            <h3>B.Ed Programs</h3>
-            <p>1.5 Year · 2.5 Year · 4 Year</p>
-          </article>
-
-          <article class="program-card reveal">
-            <div class="program-icon">BS</div>
-            <h3>BS Programs</h3>
-            <p>Study support and academic resources.</p>
-          </article>
-
-          <article class="program-card reveal">
-            <div class="program-icon">MA</div>
-            <h3>MA / MSc</h3>
-            <p>Academic learning assistance.</p>
-          </article>
-
-          <article class="program-card reveal">
-            <div class="program-icon">M.Ed</div>
-            <h3>M.Ed Programs</h3>
-            <p>Education program study support.</p>
-          </article>
-
-          <article class="program-card reveal">
-            <div class="program-icon">FA</div>
-            <h3>FA / FSc / Matric</h3>
-            <p>Learning resources for school and college levels.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="tools">
-      <div class="container">
-        <div class="section-heading reveal">
-          <h2>Learning Tools & Resources</h2>
-          <p>Useful tools and services for your academic workflow.</p>
-        </div>
-
-        <div class="tools-grid">
-          <article class="tool-card reveal">
-            <h3>AI Studio</h3>
-            <p>Open the AI Studio workspace.</p>
-            <a class="tool-link" href="tools/studio.html">Open AI Studio ↗</a>
-          </article>
-
-          <article class="tool-card reveal">
-            <h3>All Tools</h3>
-            <p>Explore the complete collection of available tools.</p>
-            <a class="tool-link" href="https://aioucoaching.blogspot.com/p/tools.html">Explore Tools ↗</a>
-          </article>
-
-          <article class="tool-card reveal">
-            <h3>Firebase</h3>
-            <p>Open the Firebase section.</p>
-            <a class="tool-link" href="firebase/index.html">Open Firebase ↗</a>
-          </article>
-
-          <article class="tool-card reveal">
-            <h3>Report Engine</h3>
-            <p>Access the academic report engine.</p>
-            <a class="tool-link" href="tools/aiou-report-engine.html">Open Report Engine ↗</a>
-          </article>
-
-          <article class="tool-card reveal">
-            <h3>Chapter Workspace</h3>
-            <p>Open the academic chapter workspace.</p>
-            <a class="tool-link" href="tools/academic-report-generator.html">Open Workspace ↗</a>
-          </article>
-
-          <article class="tool-card reveal">
-            <h3>LMS Sign In</h3>
-            <p>Access the learning management system.</p>
-            <a class="tool-link" href="lms/signin-signup.html">Open LMS ↗</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="worker">
-      <div class="container">
-        <div class="worker-card reveal">
-          <h3>Worker Setup</h3>
-          <p>Existing setup commands — run these in your worker project directory.</p>
-
-          <pre class="commands">cd worker
-npx wrangler secret put DEEPSEEK_API_KEY
-npx wrangler secret put AUTH_TOKEN
-npx wrangler deploy</pre>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="contact-panel reveal">
-          <h2>Need Study Support?</h2>
-          <p>
-            Contact AIOU Coaching for notes and assignment order inquiries.
-          </p>
-
-          <a
-            class="btn"
-            href="https://wa.me/923702388998?text=Assalam-o-Alaikum!%20AIOU%20notes%2Fassignment%20order%20karna%20hai"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Contact on WhatsApp ↗
-          </a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <a class="brand" href="index.html">
-            <span class="brand-mark">A</span>
-            <span>AIOU Coaching</span>
-          </a>
-
-          <p>
-            Independent study help. Not affiliated with AIOU.
-          </p>
-        </div>
-
-        <nav class="footer-links" aria-label="Footer links">
-          <a href="https://aioucoaching.blogspot.com/p/privacy-policy.html">Privacy</a>
-          <a href="https://aioucoaching.blogspot.com/p/terms-and-conditions.html">Terms</a>
-          <a href="https://aioucoaching.blogspot.com/p/disclaimer.html">Disclaimer</a>
-          <a href="https://aioucoaching.blogspot.com/p/contact.html">Contact</a>
-        </nav>
-      </div>
-
-      <div class="footer-bottom">
-        <span>© <span id="current-year"></span> AIOU Coaching. All rights reserved.</span>
-        <a class="admin-link" href="lms/signin-signup.html">Admin Login</a>
+        <div class="hm-badge"><b>Study plan fast</b><span>Within 24 hours</span></div>
       </div>
     </div>
-  </footer>
+  </section>
 
-  <script src="js/ui.js"></script>
-  <script src="js/tools.js"></script>
-  <script src="js/hub.js"></script>
-  <script src="js/pwa.js"></script>
+  <!-- TICKER -->
+  <div class="hm-tk" aria-label="Programs we support">
+    <div class="hm-mq">
+      <span>Matric<i class="hm-dot"></i></span><span>FA / F.Sc<i class="hm-dot"></i></span><span>BA / B.Sc<i class="hm-dot"></i></span><span>B.Ed<i class="hm-dot"></i></span><span>BS<i class="hm-dot"></i></span><span>MA / M.Sc<i class="hm-dot"></i></span><span>M.Ed<i class="hm-dot"></i></span><span>MPhil<i class="hm-dot"></i></span>
+      <span>Matric<i class="hm-dot"></i></span><span>FA / F.Sc<i class="hm-dot"></i></span><span>BA / B.Sc<i class="hm-dot"></i></span><span>B.Ed<i class="hm-dot"></i></span><span>BS<i class="hm-dot"></i></span><span>MA / M.Sc<i class="hm-dot"></i></span><span>M.Ed<i class="hm-dot"></i></span><span>MPhil<i class="hm-dot"></i></span>
+    </div>
+  </div>
 
-  <script>
-    // Existing AIOU hub reference
-    // http://AIOU.hub.render
+  <!-- AT A GLANCE -->
+  <section class="hm-sec">
+    <div class="hm-gl">
+      <div class="rv">
+        <p class="hm-eb">At a glance</p>
+        <h2 class="hm-title">What is AIOU coaching?</h2>
+      </div>
+      <div class="rv">
+        <p class="hm-def">AIOU coaching is guided academic support for students of Allama Iqbal Open University: help with course planning, assignment writing, workshops and exam preparation, delivered online or in class.</p>
+        <div class="hm-facts">
+          <div class="hm-glass hm-fact"><small>City</small><b>Online (All Pakistan)</b></div>
+          <div class="hm-glass hm-fact"><small>Mode</small><b>WhatsApp + Video Call</b></div>
+          <div class="hm-glass hm-fact"><small>Fees</small><b>From PKR <span data-count="999">999</span></b></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    document.getElementById('current-year').textContent =
-      new Date().getFullYear();
+  <!-- QUICK ACCESS -->
+  <section class="hm-sec" id="hm-quick">
+    <div class="rv">
+      <p class="hm-eb">Quick access</p>
+      <h2 class="hm-title">Everything you need, one tap away.</h2>
+    </div>
+    <div class="hm-grid">
+      <a class="hm-card hm-q rv" href="/p/get-solved-assignments.html"><span class="hm-ico"><svg class="hm-i" aria-hidden="true"><use href="#hm-doc"/></svg></span><b>Solved Assignments</b><small>Browse assignment help, semester by semester.</small><span class="hm-go">Open <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card hm-q rv" href="/p/aiou-admissions.html"><span class="hm-ico"><svg class="hm-i" aria-hidden="true"><use href="#hm-user"/></svg></span><b>Admissions</b><small>Admission guidance and what to prepare.</small><span class="hm-go">Open <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card hm-q rv" href="/p/academic-calander.html"><span class="hm-ico"><svg class="hm-i" aria-hidden="true"><use href="#hm-cal"/></svg></span><b>Academic Calendar</b><small>Important dates and schedules in one place.</small><span class="hm-go">Open <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card hm-q rv" href="https://assignmentwaly.blogspot.com/p/aiou-original-books.html" target="_blank" rel="noopener"><span class="hm-ico"><svg class="hm-i" aria-hidden="true"><use href="#hm-book"/></svg></span><b>Original Books</b><small>AIOU soft books (opens in a new tab).</small><span class="hm-go">Open <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card hm-q rv" href="/p/tools.html"><span class="hm-ico"><svg class="hm-i" aria-hidden="true"><use href="#hm-tool"/></svg></span><b>Study Tools <span class="hm-new">New</span></b><small>Report, chapter and AI study workspaces.</small><span class="hm-go">Open <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card hm-q rv" href="/p/programmes.html"><span class="hm-ico"><svg class="hm-i" aria-hidden="true"><use href="#hm-layers"/></svg></span><b>Programmes</b><small>From Matric to MPhil, all in one list.</small><span class="hm-go">Open <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card hm-q rv" href="https://whatsapp.com/channel/0029Va8EGw3InlqLVo7aak3a" target="_blank" rel="noopener"><span class="hm-ico"><svg class="hm-i" aria-hidden="true"><use href="#hm-wa"/></svg></span><b>WhatsApp Channel</b><small>Get updates straight on WhatsApp.</small><span class="hm-go">Join <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card hm-q rv" href="/p/student-login.html"><span class="hm-ico"><svg class="hm-i" aria-hidden="true"><use href="#hm-login"/></svg></span><b>Student Portal</b><small>Log in to your dashboard and student card.</small><span class="hm-go">Log in <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+    </div>
+  </section>
 
-    // Scroll reveal animation
-    (function () {
-      const elements = document.querySelectorAll('.reveal');
+  <!-- STUDENT PORTAL / LMS -->
+  <section class="hm-sec" id="hm-portal">
+    <div class="hm-pn rv">
+      <div>
+        <p class="hm-eb">Student portal</p>
+        <h2>Your AIOU Coaching dashboard, in one login.</h2>
+        <p>Sign in with your email or roll number to see your details, your student card and your own to-do list.</p>
+        <ul class="hm-ft">
+          <li><svg class="hm-i" aria-hidden="true"><use href="#hm-dash"/></svg>Dashboard with roll number, course and batch</li>
+          <li><svg class="hm-i" aria-hidden="true"><use href="#hm-user"/></svg>Profile you can update (phone, guardian, address)</li>
+          <li><svg class="hm-i" aria-hidden="true"><use href="#hm-id"/></svg>Student card preview with print</li>
+          <li><svg class="hm-i" aria-hidden="true"><use href="#hm-check"/></svg>Activities checklist, saved on your device</li>
+          <li><svg class="hm-i" aria-hidden="true"><use href="#hm-book"/></svg>My Courses, when your academic records are linked</li>
+          <li><svg class="hm-i" aria-hidden="true"><use href="#hm-cap"/></svg>Six colour themes to choose from</li>
+        </ul>
+        <div class="hm-row">
+          <a class="hm-btn" href="/p/student-login.html"><svg class="hm-i" aria-hidden="true"><use href="#hm-login"/></svg>Student Login</a>
+          <a class="hm-btn g" style="color:#fff!important;border-color:rgba(255,255,255,.35)" href="https://wa.me/923702388998?text=Assalam-o-Alaikum!%20Student%20portal%20login%20mein%20madad%20chahiye" rel="noopener" target="_blank"><svg class="hm-i" aria-hidden="true"><use href="#hm-wa"/></svg>Need login help?</a>
+        </div>
+      </div>
+      <div>
+        <div class="hm-pt" data-tilt="3" role="img" aria-label="Preview of the student portal dashboard">
+          <div class="hm-pt-top"><span class="hm-mk"><svg class="hm-i" aria-hidden="true"><use href="#hm-cap"/></svg></span><b>AIOU <i>COACHING</i></b><span class="hm-pt-tag">Preview</span></div>
+          <div class="hm-pt-bd">
+            <div class="hm-pt-sd">
+              <span class="on"><svg class="hm-i" aria-hidden="true"><use href="#hm-dash"/></svg>Dashboard</span>
+              <span><svg class="hm-i" aria-hidden="true"><use href="#hm-user"/></svg>My Profile</span>
+              <span><svg class="hm-i" aria-hidden="true"><use href="#hm-book"/></svg>My Courses</span>
+              <span><svg class="hm-i" aria-hidden="true"><use href="#hm-id"/></svg>Student Card</span>
+              <span><svg class="hm-i" aria-hidden="true"><use href="#hm-check"/></svg>Activities</span>
+            </div>
+            <div class="hm-pt-mn">
+              <div class="hm-ln t"></div>
+              <div class="hm-ln" style="width:80%"></div>
+              <div class="hm-kvs"><span>Roll No<i></i></span><span>Course<i></i></span><span>Batch<i></i></span></div>
+              <div class="hm-br" style="font-size:12px;color:#c9c9cf"><span>Profile completion</span><span></span></div>
+              <div class="hm-bar" style="--w:70%"><i></i></div>
+              <small>Your details appear here after login<span class="hm-caret"></span></small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      if (!('IntersectionObserver' in window)) {
-        elements.forEach(function (element) {
-          element.classList.add('visible');
-        });
-        return;
+  <!-- PROGRAMS -->
+  <section class="hm-sec" id="hm-programs">
+    <div class="rv">
+      <p class="hm-eb">Programs</p>
+      <h2 class="hm-title">AIOU programs we coach, from Matric to MPhil.</h2>
+    </div>
+    <div class="hm-grid">
+      <a class="hm-card rv" href="/p/programmes.html"><span class="hm-tag">Secondary</span><h3>Matric</h3><p>Core subjects, assignment help and exam practice for the secondary school certificate.</p><span class="hm-go">See programmes <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card rv" href="/p/programmes.html"><span class="hm-tag">Intermediate</span><h3>FA / F.Sc</h3><p>Subject-wise planning for arts and science tracks, with notes and revision tests.</p><span class="hm-go">See programmes <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card rv" href="/p/programmes.html"><span class="hm-tag">Bachelor</span><h3>BA / B.Sc</h3><p>Semester planner, assignment structure and exam preparation for associate and bachelor degrees.</p><span class="hm-go">See programmes <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card rv" href="/p/programmes.html"><span class="hm-tag">Teacher training</span><h3>B.Ed</h3><p>1.5 year, 2.5 year and 4 year options: assignments, teaching practice files and workshop preparation.</p><span class="hm-go">See programmes <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card rv" href="/p/programmes.html"><span class="hm-tag">Degree</span><h3>BS</h3><p>Study support and academic resources for BS programs.</p><span class="hm-go">See programmes <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card rv" href="/p/programmes.html"><span class="hm-tag">Master / Research</span><h3>MA, M.Sc, M.Ed, MPhil</h3><p>Course work, term papers, synopsis and thesis structure guidance with regular check-ins.</p><span class="hm-go">See programmes <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="hm-sec" id="hm-tools">
+    <div class="rv">
+      <p class="hm-eb">Study tools</p>
+      <h2 class="hm-title">Samjho. Khud likho. Report banao.</h2>
+      <p class="hm-sub">Tools that help you understand a topic, write it in your own words and prepare a clean report to download.</p>
+    </div>
+    <div class="hm-grid">
+      <a class="hm-card rv" href="/p/tools.html"><span class="hm-ico"><svg class="hm-i" aria-hidden="true"><use href="#hm-doc"/></svg></span><h3>Report Engine</h3><p>A guided workflow for academic reports, ready for a cover page and a Word download.</p><span class="hm-go">Explore tools <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card rv" href="/p/tools.html"><span class="hm-ico"><svg class="hm-i" aria-hidden="true"><use href="#hm-layers"/></svg></span><h3>Chapter Workspace</h3><p>Organise chapters and sections for assignments and reports in one place.</p><span class="hm-go">Explore tools <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+      <a class="hm-card rv" href="/p/tools.html"><span class="hm-ico"><svg class="hm-i" aria-hidden="true"><use href="#hm-spark"/></svg></span><h3>AI Studio</h3><p>An AI-assisted workspace to help you study. Use it to learn, then write your own answers.</p><span class="hm-go">Explore tools <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></span></a>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="hm-sec" id="hm-process">
+    <div class="rv">
+      <p class="hm-eb">How it works</p>
+      <h2 class="hm-title">Four steps from admission to exam day.</h2>
+    </div>
+    <ol class="hm-steps">
+      <li class="hm-step rv"><div class="hm-n">01</div><h3>Choose your program</h3><p>Share your program, semester and course codes so we know what you need.</p></li>
+      <li class="hm-step rv"><div class="hm-n">02</div><h3>Get a study plan</h3><p>We map assignments, workshops and exams onto a week-by-week calendar.</p></li>
+      <li class="hm-step rv"><div class="hm-n">03</div><h3>Learn and submit</h3><p>Work through each assignment with a tutor and submit before the deadline.</p></li>
+      <li class="hm-step rv"><div class="hm-n">04</div><h3>Prepare for exams</h3><p>Revise with short notes and past-paper practice until exam day.</p></li>
+    </ol>
+    <p class="rv" style="margin-top:26px"><a class="hm-go" href="/p/how-it-works.html">Read the full process <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></a></p>
+  </section>
+
+  <!-- WHY US -->
+  <section class="hm-sec hm-why" id="hm-why">
+    <div class="rv">
+      <p class="hm-eb">Why students choose us</p>
+      <h2 class="hm-title">Clear guidance, so open-university study never feels like going alone.</h2>
+    </div>
+    <div class="hm-grid">
+      <div class="hm-card rv">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path pathLength="1" d="M4 4h16v16H4z"/><path pathLength="1" d="M8 9h8M8 13h8M8 17h5"/></svg>
+        <h3>Assignment guidance</h3><p>Understand the question, structure your answer and submit before the deadline, in your own words.</p>
+      </div>
+      <div class="hm-card rv">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><circle pathLength="1" cx="12" cy="12" r="9"/><path pathLength="1" d="M12 7v5l3 2"/></svg>
+        <h3>Exam-focused revision</h3><p>Short notes, past-paper practice and a revision calendar built around your date sheet.</p>
+      </div>
+      <div class="hm-card rv">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path pathLength="1" d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>
+        <h3>Reply on WhatsApp</h3><p>Ask a question any day and get a clear answer from a tutor, not an automated message.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="hm-sec" id="hm-faq">
+    <div class="hm-faq">
+      <div class="rv">
+        <p class="hm-eb">FAQ</p>
+        <h2 class="hm-title">Common questions about AIOU coaching.</h2>
+      </div>
+      <div style="margin-top:28px">
+        <details class="rv"><summary><span>What is AIOU coaching?</span><span class="hm-pl" aria-hidden="true">+</span></summary><p>AIOU coaching is guided support for Allama Iqbal Open University students. It covers study planning, assignment guidance, workshop preparation and exam revision.</p></details>
+        <details class="rv"><summary><span>Which AIOU programs do you coach?</span><span class="hm-pl" aria-hidden="true">+</span></summary><p>We coach Matric, FA and F.Sc, BA and B.Sc, B.Ed, BS, MA and M.Sc, M.Ed and MPhil. Message us your program and course codes to confirm availability.</p></details>
+        <details class="rv"><summary><span>Is AIOU coaching available online?</span><span class="hm-pl" aria-hidden="true">+</span></summary><p>Yes. Sessions and replies run online, so you can study from any city in Pakistan.</p></details>
+        <details class="rv"><summary><span>How much does it cost?</span><span class="hm-pl" aria-hidden="true">+</span></summary><p>Fees depend on your program and semester. Starting from PKR 999. We share the exact amount before you start, with no hidden charges.</p></details>
+        <details class="rv"><summary><span>Will you write my assignments for me?</span><span class="hm-pl" aria-hidden="true">+</span></summary><p>No. We explain the questions and help you structure answers so the work you submit is your own.</p></details>
+        <details class="rv"><summary><span>How do I log in to the student portal?</span><span class="hm-pl" aria-hidden="true">+</span></summary><p>Open the Student Login page and sign in with your email or roll number and password. If you cannot log in, message us on WhatsApp and we will help.</p></details>
+      </div>
+      <p class="rv" style="margin-top:22px"><a class="hm-go" href="/p/faqs.html">See all FAQs <svg class="hm-i" aria-hidden="true"><use href="#hm-arrow"/></svg></a></p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="hm-sec" id="hm-contact">
+    <div class="hm-cta rv">
+      <div>
+        <h2>Talk to a tutor before you pay for anything.</h2>
+        <p>Tell us your program and semester. We reply with a study roadmap and what to expect.</p>
+      </div>
+      <div class="hm-row">
+        <a class="hm-btn" href="https://wa.me/923702388998" rel="noopener" target="_blank"><svg class="hm-i" aria-hidden="true"><use href="#hm-wa"/></svg>WhatsApp</a>
+        <a class="hm-btn g" href="/p/contact.html">Contact page</a>
+      </div>
+    </div>
+    <p class="hm-glass hm-note">AIOU Coaching is an independent service and is not affiliated with Allama Iqbal Open University. Read our <a href="/p/disclaimer.html">Disclaimer</a>, <a href="/p/privacy.html">Privacy Policy</a> and <a href="/p/terms.html">Terms</a>.</p>
+  </section>
+
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {"@type": "WebPage", "name": "AIOU Coaching — Home", "url": "https://aioucoaching.blogspot.com/p/home.html", "inLanguage": "en", "description": "Independent online coaching for Allama Iqbal Open University students: study planning, assignment guidance, exam preparation and a student portal."},
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "What is AIOU coaching?", "acceptedAnswer": {"@type": "Answer", "text": "AIOU coaching is guided support for Allama Iqbal Open University students. It covers study planning, assignment guidance, workshop preparation and exam revision."}},
+        {"@type": "Question", "name": "Which AIOU programs do you coach?", "acceptedAnswer": {"@type": "Answer", "text": "We coach Matric, FA and F.Sc, BA and B.Sc, B.Ed, BS, MA and M.Sc, M.Ed and MPhil. Message us your program and course codes to confirm availability."}},
+        {"@type": "Question", "name": "Is AIOU coaching available online?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Sessions and replies run online, so you can study from any city in Pakistan."}},
+        {"@type": "Question", "name": "Will you write my assignments for me?", "acceptedAnswer": {"@type": "Answer", "text": "No. We explain the questions and help you structure answers so the work you submit is your own."}},
+        {"@type": "Question", "name": "How do I log in to the student portal?", "acceptedAnswer": {"@type": "Answer", "text": "Open the Student Login page and sign in with your email or roll number and password. If you cannot log in, message us on WhatsApp and we will help."}}
+      ]
+    }
+  ]
+}
+</script>
+
+<script>
+//<![CDATA[
+(function () {
+  var d = document, root = d.getElementById('hm');
+  if (!root) { return; }
+  var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var fine = !!(window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches);
+  var each = function (l, f) { Array.prototype.forEach.call(l, f); };
+  root.className += ' js';
+
+  /* headline: word-by-word reveal (text preserved, aria-label keeps it readable) */
+  var h1 = root.querySelector('.hm-hero h1');
+  if (h1 && !reduce) {
+    var full = h1.textContent.trim();
+    h1.setAttribute('aria-label', full); h1.className += ' hm-split'; h1.textContent = '';
+    full.split(/\s+/).forEach(function (word, i) {
+      var w = d.createElement('span'), s = d.createElement('span');
+      w.className = 'hm-w'; w.setAttribute('aria-hidden', 'true');
+      s.className = 'hm-wi'; s.style.setProperty('--i', i); s.textContent = word;
+      w.appendChild(s); h1.appendChild(w); h1.appendChild(d.createTextNode(' '));
+    });
+  }
+
+  /* reveal on scroll, stagger by position among siblings */
+  var els = root.querySelectorAll('.rv');
+  each(els, function (el) {
+    var n = 0, s = el.previousElementSibling;
+    while (s) { if (s.classList.contains('rv')) { n++; } s = s.previousElementSibling; }
+    el.style.setProperty('--d', (Math.min(n, 6) * 0.08) + 's');
+  });
+  if (!('IntersectionObserver' in window)) { each(els, function (el) { el.classList.add('in'); }); }
+  else {
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } });
+    }, { threshold: 0.12 });
+    each(els, function (el) { io.observe(el); });
+  }
+
+  /* count-up (final value is already in the HTML) */
+  function countUp(el) {
+    var to = parseInt(el.getAttribute('data-count'), 10), t0 = null;
+    if (isNaN(to)) { return; }
+    function step(t) {
+      if (t0 === null) { t0 = t; }
+      var p = Math.min((t - t0) / 1300, 1), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(to * e);
+      if (p < 1) { window.requestAnimationFrame(step); }
+    }
+    el.textContent = '0'; window.requestAnimationFrame(step);
+  }
+  if (!reduce && 'IntersectionObserver' in window) {
+    var cio = new IntersectionObserver(function (en) {
+      en.forEach(function (x) { if (x.isIntersecting) { countUp(x.target); cio.unobserve(x.target); } });
+    }, { threshold: 0.6 });
+    each(root.querySelectorAll('[data-count]'), function (el) { cio.observe(el); });
+  }
+
+  /* spotlight + tilt (mouse devices only; tilt skipped for reduced motion) + magnetic buttons */
+  if (fine) {
+    each(root.querySelectorAll('.hm-card'), function (el) { el.setAttribute('data-tilt', '5'); });
+    each(root.querySelectorAll('[data-tilt]'), function (el) {
+      var max = parseFloat(el.getAttribute('data-tilt')) || 5, raf = 0, ev = null;
+      function paint() {
+        raf = 0; if (!ev) { return; }
+        var r = el.getBoundingClientRect(), px = (ev.clientX - r.left) / r.width, py = (ev.clientY - r.top) / r.height;
+        el.style.setProperty('--mx', (ev.clientX - r.left) + 'px'); el.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+        if (!reduce) { el.style.setProperty('--rx', ((0.5 - py) * max).toFixed(2) + 'deg'); el.style.setProperty('--ry', ((px - 0.5) * max).toFixed(2) + 'deg'); }
       }
-
-      const observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
+      el.addEventListener('pointerenter', function () { el.classList.add('tilting'); });
+      el.addEventListener('pointermove', function (e) { ev = e; if (!raf) { raf = window.requestAnimationFrame(paint); } });
+      el.addEventListener('pointerleave', function () { ev = null; el.classList.remove('tilting'); el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
+    });
+    if (!reduce) {
+      each(root.querySelectorAll('.hm-btn'), function (b) {
+        b.addEventListener('pointermove', function (e) {
+          var r = b.getBoundingClientRect();
+          b.style.setProperty('--bx', Math.max(-8, Math.min(8, (e.clientX - (r.left + r.width / 2)) * 0.22)).toFixed(1) + 'px');
+          b.style.setProperty('--by', Math.max(-6, Math.min(6, (e.clientY - (r.top + r.height / 2)) * 0.28)).toFixed(1) + 'px');
         });
-      }, {
-        threshold: 0.12
+        b.addEventListener('pointerleave', function () { b.style.setProperty('--bx', '0px'); b.style.setProperty('--by', '0px'); });
       });
+    }
+  }
 
-      elements.forEach(function (element) {
-        observer.observe(element);
-      });
-    })();
-  </script>
-</body>
-</html>
+  /* FAQ: smooth open/close (Web Animations API; native toggle as fallback) */
+  each(root.querySelectorAll('.hm-faq details'), function (dt) {
+    var sm = dt.querySelector('summary'), anim = null;
+    sm.addEventListener('click', function (e) {
+      if (reduce || !dt.animate) { return; }
+      e.preventDefault(); if (anim) { return; }
+      var opening = !dt.open, from = dt.offsetHeight, to;
+      dt.style.overflow = 'hidden';
+      if (opening) { dt.open = true; to = dt.offsetHeight; } else { dt.open = false; to = dt.offsetHeight; dt.open = true; }
+      anim = dt.animate({ height: [from + 'px', to + 'px'] }, { duration: 320, easing: 'cubic-bezier(.2,.7,.2,1)' });
+      anim.onfinish = function () { dt.open = opening; dt.style.overflow = ''; anim = null; };
+    });
+  });
+
+  /* scroll progress (the theme already provides back-to-top, cookie bar and dark mode) */
+  var bar = d.getElementById('hm-bar'), busy = false;
+  function upd() {
+    var h = d.documentElement, st = h.scrollTop || d.body.scrollTop, max = h.scrollHeight - h.clientHeight;
+    if (bar) { bar.style.transform = 'scaleX(' + (max > 0 ? st / max : 0) + ')'; }
+    busy = false;
+  }
+  window.addEventListener('scroll', function () { if (!busy) { busy = true; window.requestAnimationFrame(upd); } }, { passive: true });
+  upd();
+})();
+//]]>
+</script>
